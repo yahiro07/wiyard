@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+iframe {
+  touch-action: none;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}

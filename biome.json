@@ -1,0 +1,27 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "useImportType": "off",
+        "noNonNullAssertion": "off"
+      },
+      "correctness": {
+        "noConstantCondition": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "a11y": {
+        "noStaticElementInteractions": "off",
+        "useKeyWithClickEvents": "off"
+      }
+    }
+  }
+}

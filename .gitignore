@@ -1,2 +1,4 @@
 .local/
 node_modules/
+*.code-workspace
+src/unit-inventories.json
