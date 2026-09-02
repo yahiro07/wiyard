@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "types": [
+      "node",
+      "vite/client",
+    ],
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "preserveSymlinks": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "beams/*": [
+        "../../beam/beams/src/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "../../beam/beams/src/*"
+  ]
+}

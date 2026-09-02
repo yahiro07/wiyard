@@ -1,0 +1,330 @@
+{
+  "wavicle": {
+    "catalogKey": "wavicle",
+    "name": "wavicle",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 700,
+      "height": 394
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/wavicle/index.html",
+    "loaderPageUrl": "/inventory-units/wavicle/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/wavicle/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "specbar": {
+    "catalogKey": "specbar",
+    "name": "specbar",
+    "unitType": "effect",
+    "preferredSize": {
+      "width": 700,
+      "height": 110
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/specbar/index.html",
+    "loaderPageUrl": "/inventory-units/specbar/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/specbar/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "protoEnginePtmOsc": {
+    "catalogKey": "protoEnginePtmOsc",
+    "name": "proto-engine-ptm-osc",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 800,
+      "height": 380
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/proto-engine-ptm-osc/index.html",
+    "loaderPageUrl": "/inventory-units/protoEnginePtmOsc/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/proto-engine-ptm-osc/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "protoEnginePdFm": {
+    "catalogKey": "protoEnginePdFm",
+    "name": "proto-engine-pd-fm",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 660,
+      "height": 384
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/proto-engine-pd-fm/index.html",
+    "loaderPageUrl": "/inventory-units/protoEnginePdFm/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/proto-engine-pd-fm/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "miniSynth": {
+    "catalogKey": "miniSynth",
+    "name": "mini-synth",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 640,
+      "height": 320
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/mini-synth/index.html",
+    "loaderPageUrl": "/inventory-units/miniSynth/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/mini-synth/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "miniSynthGe": {
+    "catalogKey": "miniSynthGe",
+    "name": "mini-synth-ge",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 560,
+      "height": 270
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/mini-synth-ge/index.html",
+    "loaderPageUrl": "/inventory-units/miniSynthGe/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/mini-synth-ge/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "miniSynthGp": {
+    "catalogKey": "miniSynthGp",
+    "name": "mini-synth-gp",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 680,
+      "height": 420
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/mini-synth-gp/index.html",
+    "loaderPageUrl": "/inventory-units/miniSynthGp/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/mini-synth-gp/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "useq": {
+    "catalogKey": "useq",
+    "name": "useq",
+    "unitType": "sequencer",
+    "preferredSize": {
+      "width": 390,
+      "height": 230
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/useq/index.html",
+    "loaderPageUrl": "/inventory-units/useq/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/useq/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "lseq1": {
+    "catalogKey": "lseq1",
+    "name": "lseq1",
+    "unitType": "sequencer",
+    "preferredSize": {
+      "width": 530,
+      "height": 320
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/lseq1/index.html",
+    "loaderPageUrl": "/inventory-units/lseq1/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-units@r6/lseq1/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/wus-units"
+  },
+  "additive": {
+    "catalogKey": "additive",
+    "name": "additive",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 800,
+      "height": 500
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/additive/index.html",
+    "loaderPageUrl": "/inventory-units/additive/index.html",
+    "originalRepositoryUrl": "https://github.com/BrendanJamesLynskey/Synth_Additive.git"
+  },
+  "drumMachine": {
+    "catalogKey": "drumMachine",
+    "name": "drum-machine",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 800,
+      "height": 500
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/drum-machine/index.html",
+    "loaderPageUrl": "/inventory-units/drumMachine/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/drum-machine/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/secanakbulut/drum-machine"
+  },
+  "wasyn1": {
+    "catalogKey": "wasyn1",
+    "name": "wasyn-1",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 720,
+      "height": 360
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/wasyn-1/index.html",
+    "loaderPageUrl": "/inventory-units/wasyn1/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/wasyn-1/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/errozero/poly-synth"
+  },
+  "webaudioTinysynthSimple": {
+    "catalogKey": "webaudioTinysynthSimple",
+    "name": "webaudio-tinysynth-simple",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 520,
+      "height": 280
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/webaudio-tinysynth-simple/index.html",
+    "loaderPageUrl": "/inventory-units/webaudioTinysynthSimple/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/webaudio-tinysynth-simple/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/g200kg/webaudio-tinysynth"
+  },
+  "bc010": {
+    "catalogKey": "bc010",
+    "name": "bc-010",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 750,
+      "height": 500
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/bc-010/index.html",
+    "loaderPageUrl": "/inventory-units/bc010/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/bc-010/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/bcimbali/bc-010"
+  },
+  "koodori": {
+    "catalogKey": "koodori",
+    "name": "koodori",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 800,
+      "height": 500
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/koodori/index.html",
+    "loaderPageUrl": "/inventory-units/koodori/index.html",
+    "originalRepositoryUrl": "https://github.com/naberyo34/koodori.git"
+  },
+  "webaudioSynthV2": {
+    "catalogKey": "webaudioSynthV2",
+    "name": "webaudio-synth-v2",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 700,
+      "height": 400
+    },
+    "originalPageUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/webaudio-synth-v2/index.html",
+    "loaderPageUrl": "/inventory-units/webaudioSynthV2/index.html",
+    "thumbnailUrl": "https://cdn.jsdelivr.net/gh/yahiro07/wus-custom-units@r8/webaudio-synth-v2/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/aike/webaudiosynthv2"
+  },
+  "myDrumMachine": {
+    "catalogKey": "myDrumMachine",
+    "name": "my-drum-machine",
+    "unitType": "instrument",
+    "preferredSize": {
+      "width": 620,
+      "height": 320
+    },
+    "outputSignalTypes": "audio",
+    "inputSignalTypes": "",
+    "unitTypesVersion": "0.2.3",
+    "originalPageUrl": "file:///Users/ore/wus-units/my-drum-machine/index.html",
+    "loaderPageUrl": "/inventory-units/myDrumMachine/index.html",
+    "thumbnailUrl": "/inventory-units/myDrumMachine/unit-thumbnail.png",
+    "originalRepositoryUrl": "unpublished",
+    "originalAuthor": "yahiro",
+    "license": "MIT"
+  },
+  "twsq1": {
+    "catalogKey": "twsq1",
+    "name": "twsq1",
+    "unitType": "sequencer",
+    "preferredSize": {
+      "width": 350,
+      "height": 350
+    },
+    "originalPageUrl": "file:///Users/ore/wus-units/twsq1/index.html",
+    "loaderPageUrl": "/inventory-units/twsq1/index.html",
+    "thumbnailUrl": "/inventory-units/twsq1/unit-thumbnail.png",
+    "originalRepositoryUrl": "unpublished"
+  },
+  "mu1Instrument": {
+    "catalogKey": "mu1Instrument",
+    "name": "mu1-instrument",
+    "unitType": "instrument",
+    "category": "synthesizer",
+    "preferredSize": {
+      "width": 300,
+      "height": 150
+    },
+    "outputSignalTypes": "audio",
+    "inputSignalTypes": "note",
+    "unitTypesVersion": "0.2.0",
+    "originalPageUrl": "file:///Users/ore/Documents/projects/yahiro/webaudio-unit-system/unit-examples/dist/mu1-instrument/index.html",
+    "loaderPageUrl": "/inventory-units/mu1Instrument/index.html",
+    "originalRepositoryUrl": "https://github.com/yahiro07/webaudio-unit-system",
+    "originalAuthor": "yahiro",
+    "license": "MIT"
+  },
+  "mu2Sequencer": {
+    "catalogKey": "mu2Sequencer",
+    "name": "mu2-sequencer",
+    "unitType": "sequencer",
+    "category": "stepSequencer",
+    "preferredSize": {
+      "width": 300,
+      "height": 150
+    },
+    "outputSignalTypes": "note",
+    "inputSignalTypes": "",
+    "unitTypesVersion": "0.2.0",
+    "originalPageUrl": "file:///Users/ore/Documents/projects/yahiro/webaudio-unit-system/unit-examples/dist/mu2-sequencer/index.html",
+    "loaderPageUrl": "/inventory-units/mu2Sequencer/index.html",
+    "originalRepositoryUrl": "https://github.com/yahiro07/webaudio-unit-system",
+    "originalAuthor": "yahiro",
+    "license": "MIT"
+  },
+  "mu3Effect": {
+    "catalogKey": "mu3Effect",
+    "name": "mu3-effect",
+    "unitType": "effect",
+    "category": "effect",
+    "preferredSize": {
+      "width": 300,
+      "height": 150
+    },
+    "outputSignalTypes": "audio",
+    "inputSignalTypes": "audio",
+    "unitTypesVersion": "0.2.0",
+    "originalPageUrl": "file:///Users/ore/Documents/projects/yahiro/webaudio-unit-system/unit-examples/dist/mu3-effect/index.html",
+    "loaderPageUrl": "/inventory-units/mu3Effect/index.html",
+    "originalRepositoryUrl": "https://github.com/yahiro07/webaudio-unit-system",
+    "originalAuthor": "yahiro",
+    "license": "MIT"
+  },
+  "mu4Keyboard": {
+    "catalogKey": "mu4Keyboard",
+    "name": "mu4-keyboard",
+    "unitType": "sequencer",
+    "category": "keyboard",
+    "preferredSize": {
+      "width": 300,
+      "height": 150
+    },
+    "outputSignalTypes": "note",
+    "inputSignalTypes": "note",
+    "unitTypesVersion": "0.2.0",
+    "originalPageUrl": "file:///Users/ore/Documents/projects/yahiro/webaudio-unit-system/unit-examples/dist/mu4-keyboard/index.html",
+    "loaderPageUrl": "/inventory-units/mu4Keyboard/index.html",
+    "thumbnailUrl": "/inventory-units/mu4Keyboard/unit-thumbnail.png",
+    "originalRepositoryUrl": "https://github.com/yahiro07/webaudio-unit-system",
+    "originalAuthor": "yahiro",
+    "license": "MIT"
+  },
+  "mu5Visualizer": {
+    "catalogKey": "mu5Visualizer",
+    "name": "mu5-visualizer",
+    "unitType": "effect",
+    "category": "visualizer",
+    "preferredSize": {
+      "width": 300,
+      "height": 150
+    },
+    "outputSignalTypes": "audio",
+    "inputSignalTypes": "audio",
+    "unitTypesVersion": "0.2.0",
+    "originalPageUrl": "file:///Users/ore/Documents/projects/yahiro/webaudio-unit-system/unit-examples/dist/mu5-visualizer/index.html",
+    "loaderPageUrl": "/inventory-units/mu5Visualizer/index.html",
+    "originalRepositoryUrl": "https://github.com/yahiro07/webaudio-unit-system",
+    "originalAuthor": "yahiro",
+    "license": "MIT"
+  }
+}
