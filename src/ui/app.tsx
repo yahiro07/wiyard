@@ -14,7 +14,7 @@ type UnitItem = {
   unitId: string;
   catalogKey: CatalogKey;
   destSpec: string;
-  position: Point;
+  cardPosition: Point;
 };
 
 const ox = 100;
@@ -24,19 +24,19 @@ const initialUnitItems: UnitItem[] = [
     unitId: "drum1",
     catalogKey: "js808",
     destSpec: "$output",
-    position: { x: ox + 200, y: oy },
+    cardPosition: { x: ox + 200, y: oy },
   },
   {
     unitId: "synth1",
     catalogKey: "webaudioTinysynthMini",
     destSpec: "effect1",
-    position: { x: ox + 500, y: oy + 350 },
+    cardPosition: { x: ox + 500, y: oy + 350 },
   },
   {
     unitId: "effect1",
     catalogKey: "sunsetDelay",
     destSpec: "$output",
-    position: { x: ox + 700, y: oy },
+    cardPosition: { x: ox + 700, y: oy },
   },
 ];
 
@@ -60,7 +60,7 @@ const actionsInternal = {
 
 const actions = {
   setUnitPosition(unitId: string, newPos: Point) {
-    actionsInternal.patchUnitAttrs(unitId, { position: newPos });
+    actionsInternal.patchUnitAttrs(unitId, { cardPosition: newPos });
   },
 };
 
@@ -71,7 +71,7 @@ const unitCardHandlers = {
     e0: React.PointerEvent<HTMLDivElement>,
     unitItem: UnitItem,
   ) {
-    const unitOriginalPos = unitItem.position;
+    const unitOriginalPos = unitItem.cardPosition;
     startDragSession(e0.nativeEvent, {
       onMove(e) {
         const deltaX = e.position.x - e.originalPosition.x;
@@ -93,8 +93,8 @@ const UnitCard = ({ unitItem }: { unitItem: UnitItem }) => {
     <div
       className="absolute w-200px h-100px bg-white"
       style={{
-        left: unitItem.position.x,
-        top: unitItem.position.y,
+        left: unitItem.cardPosition.x,
+        top: unitItem.cardPosition.y,
       }}
       onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
     >
