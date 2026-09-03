@@ -1,49 +1,7 @@
 import { createStore } from "snap-store";
 import { createHostSystem } from "wafer-host/core";
-import catalog from "../unit-inventories.json";
-
-export type CatalogKey = keyof typeof catalog;
-
-type Point = { x: number; y: number };
-type Size = { width: number; height: number };
-
-export type UnitItem = {
-  unitId: string;
-  catalogKey: CatalogKey;
-  destSpec: string;
-  cardPosition: Point;
-  windowPosition: Point;
-};
-
-const ox = 100;
-const oy = 40;
-const defaultWindowPosition: Point = { x: -1, y: -1 };
-const initialUnitItems: UnitItem[] = [
-  {
-    unitId: "drum1",
-    catalogKey: "js808",
-    destSpec: "$output",
-    cardPosition: { x: ox + 200, y: oy },
-    windowPosition: defaultWindowPosition,
-  },
-  {
-    unitId: "synth1",
-    catalogKey: "webaudioTinysynthMini",
-    destSpec: "effect1",
-    cardPosition: { x: ox + 500, y: oy + 350 },
-    windowPosition: defaultWindowPosition,
-  },
-  {
-    unitId: "effect1",
-    catalogKey: "sunsetDelay",
-    destSpec: "$output",
-    cardPosition: { x: ox + 700, y: oy },
-    windowPosition: defaultWindowPosition,
-  },
-];
-initialUnitItems.forEach((item) => {
-  item.windowPosition = item.cardPosition;
-});
+import { initialUnitItems, UnitItem } from "@/ui/definitions";
+import { Point } from "@/utils/drag-session";
 
 type StoreState = {
   unitItems: UnitItem[];
@@ -53,12 +11,15 @@ type StoreState = {
 
 export const store = createStore<StoreState>({
   unitItems: initialUnitItems,
-  currentEffectUnitId: "drum1",
+  currentEffectUnitId: null,
   windowsEvacuated: false,
 });
 
 const actionsInternal = {
-  patchUnitAttrs(unitId: string, attrs: Partial<UnitItem>) {
+  patchUnitAttrs(
+    unitId: string,
+    attrs: Partial<{ cardPosition: Point; windowPosition: Point }>,
+  ) {
     store.setUnitItems((prev) =>
       prev.map((item) =>
         item.unitId === unitId ? { ...item, ...attrs } : item,

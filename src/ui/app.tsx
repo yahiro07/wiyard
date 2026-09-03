@@ -1,6 +1,17 @@
 import React from "react";
-import { HostAppProvider, UnitFrameScaled } from "wafer-host/react";
-import { actions, hostSystem, store, UnitItem } from "@/ui/store";
+import {
+  Connection,
+  HostAppProvider,
+  ReactUnitFrame,
+  UnitFrameScaled,
+} from "wafer-host/react";
+import {
+  GeneralUnitItem,
+  InternalUnitItem,
+  internalUnitSpecs,
+  UnitItem,
+} from "@/ui/definitions";
+import { actions, hostSystem, store } from "@/ui/store";
 import { startDragSession } from "@/utils/drag-session";
 import catalog from "../unit-inventories.json";
 
@@ -21,15 +32,16 @@ const unitCardHandlers = {
         actions.setUnitCardPosition(unitItem.unitId, newPos);
       },
       onTap() {
-        actions.setCurrentEffectUnitId(unitItem.unitId);
-        actions.endWindowsEvacuation();
+        if (unitItem.type === "general") {
+          actions.setCurrentEffectUnitId(unitItem.unitId);
+          actions.endWindowsEvacuation();
+        }
       },
     });
   },
 };
 
-const UnitCard = ({ unitItem }: { unitItem: UnitItem }) => {
-  const active = false;
+const GeneralUnitCard = ({ unitItem }: { unitItem: GeneralUnitItem }) => {
   const catalogItem = catalog[unitItem.catalogKey];
   return (
     <div
@@ -50,10 +62,35 @@ const UnitCard = ({ unitItem }: { unitItem: UnitItem }) => {
   );
 };
 
+const InternalUnitCard = ({ unitItem }: { unitItem: InternalUnitItem }) => {
+  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  return (
+    <div
+      className="absolute"
+      style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
+    >
+      <div
+        className="w-100px h-100px bg-white/50 flex-c"
+        onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
+      >
+        <internalUnitSpec.iconComponent size={55} />
+      </div>
+    </div>
+  );
+};
+
+const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
+  if (unitItem.type === "general") {
+    return <GeneralUnitCard unitItem={unitItem} />;
+  } else if (unitItem.type === "internal") {
+    return <InternalUnitCard unitItem={unitItem} />;
+  }
+};
+
 const unitWindowHandlers = {
   handleTitleBarPointerDown(
     e0: React.PointerEvent<HTMLDivElement>,
-    unitItem: UnitItem,
+    unitItem: GeneralUnitItem,
   ) {
     const unitOriginalPos = unitItem.windowPosition;
     startDragSession(e0.nativeEvent, {
@@ -73,12 +110,12 @@ const unitWindowHandlers = {
   },
 };
 
-const UnitWindow = ({
+const GeneralUnitWindow = ({
   unitItem,
   isCurrent,
   evacuated,
 }: {
-  unitItem: UnitItem;
+  unitItem: GeneralUnitItem;
   isCurrent: boolean;
   evacuated: boolean;
 }) => {
@@ -110,11 +147,21 @@ const UnitWindow = ({
           <UnitFrameScaled
             unitId={unitItem.unitId}
             unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
-            destSpec={unitItem.destSpec}
+            // destSpec={unitItem.destSpec}
           />
         </div>
       </div>
     </div>
+  );
+};
+
+const InternalUnitWindow = ({ unitItem }: { unitItem: InternalUnitItem }) => {
+  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  return (
+    <ReactUnitFrame
+      unitId={unitItem.unitId}
+      unitTemplateFn={internalUnitSpec.factory}
+    />
   );
 };
 
@@ -139,16 +186,21 @@ const DeskArea = () => {
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       {unitItems.map((item) => (
-        <UnitCard key={item.unitId} unitItem={item} />
+        <UnitCardRoot key={item.unitId} unitItem={item} />
       ))}
-      {unitItems.map((item) => (
-        <UnitWindow
-          key={item.unitId}
-          unitItem={item}
-          isCurrent={item.unitId === currentEffectUnitId}
-          evacuated={windowsEvacuated}
-        />
-      ))}
+      {unitItems.map((item) =>
+        item.type === "general" ? (
+          <GeneralUnitWindow
+            key={item.unitId}
+            unitItem={item}
+            isCurrent={item.unitId === currentEffectUnitId}
+            evacuated={windowsEvacuated}
+          />
+        ) : (
+          <InternalUnitWindow key={item.unitId} unitItem={item} />
+        ),
+      )}
+      <Connection source="speakerPort" destination="$output" />
     </div>
   );
 };
