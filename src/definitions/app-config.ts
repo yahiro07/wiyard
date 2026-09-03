@@ -5,7 +5,7 @@ export const appConfig = {
 };
 if (1) {
   Object.assign(appConfig, {
-    // evacuateWindowsOnTapDesk: true,
+    evacuateWindowsOnTapDesk: true,
     shareWindowCoordForUnits: true,
   });
 }

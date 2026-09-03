@@ -24,11 +24,16 @@ export const unitCardHandlers = {
       onTap() {
         if (unitItem.type === "board") {
           if (store.state.currentEffectUnitId === unitItem.unitId) {
-            actions.toggleWindowsEvacuated();
+            actions.setCurrentEffectUnitId(null);
           } else {
             actions.setCurrentEffectUnitId(unitItem.unitId);
             actions.setWindowsEvacuated(false);
           }
+        } else if (
+          unitItem.type === "edge" &&
+          unitItem.internalUnitKey === "noteInputPort"
+        ) {
+          actions.toggleSequencerWindowVisible();
         }
       },
     });

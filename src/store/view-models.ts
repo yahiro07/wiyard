@@ -31,3 +31,13 @@ export const useWindowCoordViewModel = (
     };
   }
 };
+
+export const useSequencerWindowViewModel = (): WindowCoordViewModel => {
+  const { sequencerWindowPosition } = store.useSnapshot();
+  return {
+    position: sequencerWindowPosition,
+    setPosition: (position: Point) => {
+      store.setSequencerWindowPosition(position);
+    },
+  };
+};

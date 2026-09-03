@@ -27,4 +27,10 @@ export const actions = {
   setWindowsEvacuated(evacuated: boolean) {
     store.setWindowsEvacuated(evacuated);
   },
+  setSequencerWindowVisible(visible: boolean) {
+    store.setSequencerWindowVisible(visible);
+  },
+  toggleSequencerWindowVisible() {
+    store.toggleSequencerWindowVisible();
+  },
 };

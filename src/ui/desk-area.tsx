@@ -6,7 +6,10 @@ import {
   UnitItem,
 } from "@/definitions/unit-entries";
 import { store } from "@/store/store";
-import { useWindowCoordViewModel } from "@/store/view-models";
+import {
+  useSequencerWindowViewModel,
+  useWindowCoordViewModel,
+} from "@/store/view-models";
 import {
   deskAreaHandlers,
   unitCardHandlers,
@@ -138,27 +141,76 @@ const UnitWindowRoot = ({
   }
 };
 
+const SequencerWindow = ({
+  visible,
+  evacuated,
+}: {
+  visible: boolean;
+  evacuated: boolean;
+}) => {
+  const windowCoordVm = useSequencerWindowViewModel();
+  return (
+    <div
+      className="absolute"
+      style={{
+        left: windowCoordVm.position.x,
+        top: evacuated ? 0 : windowCoordVm.position.y,
+        display: visible ? "block" : "none",
+      }}
+    >
+      <div style={{ width: 600 }}>
+        <div
+          className="bg-gray-500 flex-c py-1 cursor-pointer"
+          onPointerDown={(e) =>
+            unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
+          }
+        >
+          sequencer
+        </div>
+        <div
+          className="bg-white/50 text-black"
+          style={{ height: 400, display: evacuated ? "none" : "block" }}
+        >
+          aaa
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const DeskArea = () => {
-  const { unitItems, currentEffectUnitId, windowsEvacuated } =
-    store.useSnapshot();
+  const {
+    unitItems,
+    currentEffectUnitId,
+    windowsEvacuated,
+    sequencerWindowVisible,
+  } = store.useSnapshot();
   return (
     <div
       className="grow relative bg-gray-400"
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
-      {unitItems.map((item) => (
-        <UnitCardRoot key={item.unitId} unitItem={item} />
-      ))}
-      {unitItems.map((item) => {
-        return (
-          <UnitWindowRoot
-            key={item.unitId}
-            unitItem={item}
-            currentEffectUnitId={currentEffectUnitId}
-            windowsEvacuated={windowsEvacuated}
-          />
-        );
-      })}
+      <div>
+        {unitItems.map((item) => (
+          <UnitCardRoot key={item.unitId} unitItem={item} />
+        ))}
+      </div>
+      <div>
+        {unitItems.map((item) => {
+          return (
+            <UnitWindowRoot
+              key={item.unitId}
+              unitItem={item}
+              currentEffectUnitId={currentEffectUnitId}
+              windowsEvacuated={windowsEvacuated}
+            />
+          );
+        })}
+      </div>
+      <SequencerWindow
+        visible={sequencerWindowVisible}
+        evacuated={windowsEvacuated}
+      />
       <Connection source="speakerPort" destination="$output" />
     </div>
   );

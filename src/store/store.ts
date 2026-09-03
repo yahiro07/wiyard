@@ -11,6 +11,8 @@ type StoreState = {
   currentEffectUnitId: string | null;
   windowsEvacuated: boolean;
   sharedWindowPosition: Point;
+  sequencerWindowVisible: boolean;
+  sequencerWindowPosition: Point;
 };
 
 // biome-ignore lint/suspicious/noAssignInExpressions: preserve store instance for hmr
@@ -19,4 +21,10 @@ export const store = ((window as any).store ??= createStore<StoreState>({
   currentEffectUnitId: null,
   windowsEvacuated: false,
   sharedWindowPosition: defaultWindowPosition,
+  sequencerWindowVisible: false,
+  sequencerWindowPosition: defaultWindowPosition,
 })) as Store<StoreState>;
+
+if (0) {
+  store.setSequencerWindowVisible(true);
+}
