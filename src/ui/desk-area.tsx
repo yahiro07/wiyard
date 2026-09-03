@@ -166,7 +166,7 @@ const deskAreaHandlers = {
     if (e0.currentTarget === e0.target) {
       startDragSession(e0.nativeEvent, {
         onTap() {
-          actions.toggleWindowsEvacuated();
+          // actions.toggleWindowsEvacuated();
         },
       });
     }
