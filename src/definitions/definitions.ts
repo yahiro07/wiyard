@@ -48,7 +48,7 @@ export type UnitItem = GeneralUnitItem | InternalUnitItem;
 
 const ox = 100;
 const oy = 40;
-const defaultWindowPosition: Point = { x: -1, y: -1 };
+export const defaultWindowPosition: Point = { x: -1, y: -1 };
 export const initialUnitItems: UnitItem[] = [
   {
     type: "internal",

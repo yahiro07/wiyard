@@ -1,0 +1,33 @@
+import { appConfig } from "@/definitions/app-config";
+import { UnitItem } from "@/definitions/definitions";
+import { actionsInternal } from "@/store/actions";
+import { store } from "@/store/store";
+import { Point } from "@/utils/drag-session";
+
+export type WindowCoordViewModel = {
+  position: Point;
+  setPosition: (position: Point) => void;
+};
+
+export const useWindowCoordViewModel = (
+  unitItem: UnitItem,
+): WindowCoordViewModel => {
+  const { sharedWindowPosition } = store.useSnapshot();
+  if (appConfig.shareWindowCoordForUnits) {
+    return {
+      position: sharedWindowPosition,
+      setPosition: (position: Point) => {
+        store.setSharedWindowPosition(position);
+      },
+    };
+  } else {
+    return {
+      position: unitItem.windowPosition,
+      setPosition: (position: Point) => {
+        actionsInternal.patchUnitAttrs(unitItem.unitId, {
+          windowPosition: position,
+        });
+      },
+    };
+  }
+};

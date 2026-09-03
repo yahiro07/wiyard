@@ -1,5 +1,6 @@
 import React from "react";
 import { Connection, ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
+import { appConfig } from "@/definitions/app-config";
 import {
   GeneralUnitItem,
   InternalUnitItem,
@@ -8,6 +9,10 @@ import {
 } from "@/definitions/definitions";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import {
+  useWindowCoordViewModel,
+  WindowCoordViewModel,
+} from "@/store/view-models";
 import { startDragSession } from "@/utils/drag-session";
 import catalog from "../unit-inventories.json";
 
@@ -29,8 +34,12 @@ const unitCardHandlers = {
       },
       onTap() {
         if (unitItem.type === "general") {
-          actions.setCurrentEffectUnitId(unitItem.unitId);
-          actions.endWindowsEvacuation();
+          if (store.state.currentEffectUnitId === unitItem.unitId) {
+            actions.toggleWindowsEvacuated();
+          } else {
+            actions.setCurrentEffectUnitId(unitItem.unitId);
+            actions.setWindowsEvacuated(false);
+          }
         }
       },
     });
@@ -86,9 +95,9 @@ const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
 const unitWindowHandlers = {
   handleTitleBarPointerDown(
     e0: React.PointerEvent<HTMLDivElement>,
-    unitItem: GeneralUnitItem,
+    windowCoordVm: WindowCoordViewModel,
   ) {
-    const unitOriginalPos = unitItem.windowPosition;
+    const unitOriginalPos = windowCoordVm.position;
     startDragSession(e0.nativeEvent, {
       onMove(e) {
         const deltaX = e.position.x - e.originalPosition.x;
@@ -97,7 +106,7 @@ const unitWindowHandlers = {
           x: unitOriginalPos.x + deltaX,
           y: unitOriginalPos.y + deltaY,
         };
-        actions.setUnitWindowPosition(unitItem.unitId, newPos);
+        windowCoordVm.setPosition(newPos);
       },
       onTap() {
         actions.toggleWindowsEvacuated();
@@ -115,12 +124,13 @@ const GeneralUnitWindow = ({
   isCurrent: boolean;
   evacuated: boolean;
 }) => {
+  const windowCoordVm = useWindowCoordViewModel(unitItem);
   return (
     <div
       className="absolute"
       style={{
-        left: unitItem.windowPosition.x,
-        top: evacuated ? 0 : unitItem.windowPosition.y,
+        left: windowCoordVm.position.x,
+        top: evacuated ? 0 : windowCoordVm.position.y,
         display: isCurrent ? "block" : "none",
       }}
     >
@@ -128,7 +138,7 @@ const GeneralUnitWindow = ({
         <div
           className="bg-gray-500 flex-c py-1 cursor-pointer"
           onPointerDown={(e) =>
-            unitWindowHandlers.handleTitleBarPointerDown(e, unitItem)
+            unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
           }
         >
           {unitItem.unitId}
@@ -166,7 +176,9 @@ const deskAreaHandlers = {
     if (e0.currentTarget === e0.target) {
       startDragSession(e0.nativeEvent, {
         onTap() {
-          // actions.toggleWindowsEvacuated();
+          if (appConfig.evacuateWindowsOnTapDesk) {
+            actions.toggleWindowsEvacuated();
+          }
         },
       });
     }
