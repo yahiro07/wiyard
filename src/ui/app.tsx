@@ -1,5 +1,5 @@
 import React from "react";
-import { HostAppProvider } from "wafer-host/react";
+import { HostAppProvider, UnitFrameScaled } from "wafer-host/react";
 import { actions, hostSystem, store, UnitItem } from "@/ui/store";
 import { startDragSession } from "@/utils/drag-session";
 import catalog from "../unit-inventories.json";
@@ -66,6 +66,9 @@ const unitWindowHandlers = {
         };
         actions.setUnitWindowPosition(unitItem.unitId, newPos);
       },
+      onTap() {
+        actions.toggleWindowsEvacuated();
+      },
     });
   },
 };
@@ -103,7 +106,13 @@ const UnitWindow = ({
             height: 400,
             display: evacuated ? "none" : "block",
           }}
-        ></div>
+        >
+          <UnitFrameScaled
+            unitId={unitItem.unitId}
+            unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
+            destSpec={unitItem.destSpec}
+          />
+        </div>
       </div>
     </div>
   );
@@ -112,7 +121,11 @@ const UnitWindow = ({
 const deskAreaHandlers = {
   handlePointerDown(e0: React.PointerEvent<HTMLDivElement>) {
     if (e0.currentTarget === e0.target) {
-      actions.toggleWindowsEvacuated();
+      startDragSession(e0.nativeEvent, {
+        onTap() {
+          actions.toggleWindowsEvacuated();
+        },
+      });
     }
   },
 };
