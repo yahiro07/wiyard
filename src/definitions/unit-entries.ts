@@ -26,20 +26,34 @@ export const internalUnitSpecs = {
 
 type InternalUnitKey = keyof typeof internalUnitSpecs;
 
-export type GeneralUnitItem = {
-  type: "general";
+//instrument and effects, placed on board area
+export type BoardUnitItem = {
+  type: "board";
   unitId: string;
   catalogKey: CatalogKey;
   cardPosition: Point;
   windowPosition: Point;
 };
 
-export type InternalUnitItem = {
-  type: "internal";
+//note input port and speaker output port, used for input/output of the board area
+export type EdgeUnitItem = {
+  type: "edge";
   unitId: string;
+  noteChannel: number;
   internalUnitKey: InternalUnitKey;
   cardPosition: Point;
   windowPosition: Point;
 };
 
-export type UnitItem = GeneralUnitItem | InternalUnitItem;
+//units placed on board area
+export type StageUnitItem = BoardUnitItem | EdgeUnitItem;
+
+//sequencer units, internally managed and not displayed on the board
+export type OffStageUnitItem = {
+  type: "offStage";
+  unitId: string;
+  noteChannel: number;
+  catalogKey: CatalogKey;
+};
+
+export type UnitItem = BoardUnitItem | EdgeUnitItem | OffStageUnitItem;

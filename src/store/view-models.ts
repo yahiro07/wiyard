@@ -1,5 +1,5 @@
 import { appConfig } from "@/definitions/app-config";
-import { UnitItem } from "@/definitions/unit-entries";
+import { StageUnitItem } from "@/definitions/unit-entries";
 import { actionsInternal } from "@/store/actions";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
@@ -10,7 +10,7 @@ export type WindowCoordViewModel = {
 };
 
 export const useWindowCoordViewModel = (
-  unitItem: UnitItem,
+  unitItem: StageUnitItem,
 ): WindowCoordViewModel => {
   const { sharedWindowPosition } = store.useSnapshot();
   if (appConfig.shareWindowCoordForUnits) {

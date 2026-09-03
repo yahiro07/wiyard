@@ -2,9 +2,10 @@ import React from "react";
 import { Connection, ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { appConfig } from "@/definitions/app-config";
 import {
-  GeneralUnitItem,
-  InternalUnitItem,
+  BoardUnitItem,
+  EdgeUnitItem,
   internalUnitSpecs,
+  StageUnitItem,
   UnitItem,
 } from "@/definitions/unit-entries";
 import { actions } from "@/store/actions";
@@ -19,7 +20,7 @@ import catalog from "../unit-inventories.json";
 const unitCardHandlers = {
   handlePointerDown(
     e0: React.PointerEvent<HTMLDivElement>,
-    unitItem: UnitItem,
+    unitItem: StageUnitItem,
   ) {
     const unitOriginalPos = unitItem.cardPosition;
     startDragSession(e0.nativeEvent, {
@@ -33,7 +34,7 @@ const unitCardHandlers = {
         actions.setUnitCardPosition(unitItem.unitId, newPos);
       },
       onTap() {
-        if (unitItem.type === "general") {
+        if (unitItem.type === "board") {
           if (store.state.currentEffectUnitId === unitItem.unitId) {
             actions.toggleWindowsEvacuated();
           } else {
@@ -46,7 +47,7 @@ const unitCardHandlers = {
   },
 };
 
-const GeneralUnitCard = ({ unitItem }: { unitItem: GeneralUnitItem }) => {
+const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const catalogItem = catalog[unitItem.catalogKey];
   return (
     <div
@@ -67,7 +68,7 @@ const GeneralUnitCard = ({ unitItem }: { unitItem: GeneralUnitItem }) => {
   );
 };
 
-const InternalUnitCard = ({ unitItem }: { unitItem: InternalUnitItem }) => {
+const EdgeUnitCard = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
   return (
     <div
@@ -85,10 +86,10 @@ const InternalUnitCard = ({ unitItem }: { unitItem: InternalUnitItem }) => {
 };
 
 const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
-  if (unitItem.type === "general") {
-    return <GeneralUnitCard unitItem={unitItem} />;
-  } else if (unitItem.type === "internal") {
-    return <InternalUnitCard unitItem={unitItem} />;
+  if (unitItem.type === "board") {
+    return <BoardUnitCard unitItem={unitItem} />;
+  } else if (unitItem.type === "edge") {
+    return <EdgeUnitCard unitItem={unitItem} />;
   }
 };
 
@@ -115,12 +116,12 @@ const unitWindowHandlers = {
   },
 };
 
-const GeneralUnitWindow = ({
+const BoardUnitWindow = ({
   unitItem,
   isCurrent,
   evacuated,
 }: {
-  unitItem: GeneralUnitItem;
+  unitItem: BoardUnitItem;
   isCurrent: boolean;
   evacuated: boolean;
 }) => {
@@ -161,7 +162,7 @@ const GeneralUnitWindow = ({
   );
 };
 
-const InternalUnitWindow = ({ unitItem }: { unitItem: InternalUnitItem }) => {
+const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
   return (
     <ReactUnitFrame
@@ -169,6 +170,31 @@ const InternalUnitWindow = ({ unitItem }: { unitItem: InternalUnitItem }) => {
       unitTemplateFn={internalUnitSpec.factory}
     />
   );
+};
+
+const UnitWindowRoot = ({
+  unitItem,
+  currentEffectUnitId,
+  windowsEvacuated,
+}: {
+  unitItem: UnitItem;
+  currentEffectUnitId: string | null;
+  windowsEvacuated: boolean;
+}) => {
+  if (unitItem.type === "board") {
+    return (
+      <BoardUnitWindow
+        key={unitItem.unitId}
+        unitItem={unitItem}
+        isCurrent={unitItem.unitId === currentEffectUnitId}
+        evacuated={windowsEvacuated}
+      />
+    );
+  } else if (unitItem.type === "edge") {
+    return <EdgeUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
+  } else {
+    return null;
+  }
 };
 
 const deskAreaHandlers = {
@@ -196,18 +222,16 @@ export const DeskArea = () => {
       {unitItems.map((item) => (
         <UnitCardRoot key={item.unitId} unitItem={item} />
       ))}
-      {unitItems.map((item) =>
-        item.type === "general" ? (
-          <GeneralUnitWindow
+      {unitItems.map((item) => {
+        return (
+          <UnitWindowRoot
             key={item.unitId}
             unitItem={item}
-            isCurrent={item.unitId === currentEffectUnitId}
-            evacuated={windowsEvacuated}
+            currentEffectUnitId={currentEffectUnitId}
+            windowsEvacuated={windowsEvacuated}
           />
-        ) : (
-          <InternalUnitWindow key={item.unitId} unitItem={item} />
-        ),
-      )}
+        );
+      })}
       <Connection source="speakerPort" destination="$output" />
     </div>
   );
