@@ -1,9 +1,9 @@
-import { HostAppProvider } from "wafer-host/react";
-import { createHostSystem } from "wafer-host/core";
-import catalog from "../unit-inventories.json";
-import { createStore } from "snap-store";
 import React from "react";
+import { createStore } from "snap-store";
+import { createHostSystem } from "wafer-host/core";
+import { HostAppProvider } from "wafer-host/react";
 import { startDragSession } from "@/utils/drag-session";
+import catalog from "../unit-inventories.json";
 
 type CatalogKey = keyof typeof catalog;
 
@@ -51,11 +51,13 @@ initialUnitItems.forEach((item) => {
 type StoreState = {
   unitItems: UnitItem[];
   currentEffectUnitId: string | null;
+  windowsEvacuated: boolean;
 };
 
 const store = createStore<StoreState>({
   unitItems: initialUnitItems,
   currentEffectUnitId: "drum1",
+  windowsEvacuated: false,
 });
 
 const actionsInternal = {
@@ -77,6 +79,9 @@ const actions = {
   },
   setCurrentEffectUnitId(unitId: string | null) {
     store.setCurrentEffectUnitId(unitId);
+  },
+  toggleWindowsEvacuated() {
+    store.toggleWindowsEvacuated();
   },
 };
 
@@ -119,6 +124,7 @@ const UnitCard = ({ unitItem }: { unitItem: UnitItem }) => {
         <img
           src={catalogItem.thumbnailUrl}
           className="w-full h-full object-contain"
+          alt={catalogItem.name}
         />
       </div>
     </div>
@@ -148,22 +154,24 @@ const unitWindowHandlers = {
 const UnitWindow = ({
   unitItem,
   isCurrent,
+  evacuated,
 }: {
   unitItem: UnitItem;
   isCurrent: boolean;
+  evacuated: boolean;
 }) => {
   return (
     <div
       className="absolute"
       style={{
         left: unitItem.windowPosition.x,
-        top: unitItem.windowPosition.y,
+        top: evacuated ? 0 : unitItem.windowPosition.y,
         display: isCurrent ? "block" : "none",
       }}
     >
-      <div className="flex-vc">
+      <div style={{ width: 600 }}>
         <div
-          className="w-full bg-gray-500 flex-c py-1 cursor-pointer"
+          className="bg-gray-500 flex-c py-1 cursor-pointer"
           onPointerDown={(e) =>
             unitWindowHandlers.handleTitleBarPointerDown(e, unitItem)
           }
@@ -172,17 +180,32 @@ const UnitWindow = ({
         </div>
         <div
           className="bg-white/50 text-black"
-          style={{ width: 600, height: 400 }}
+          style={{
+            height: 400,
+            display: evacuated ? "none" : "block",
+          }}
         ></div>
       </div>
     </div>
   );
 };
 
-const DeskSection = () => {
-  const { unitItems, currentEffectUnitId } = store.useSnapshot();
+const deskAreaHandlers = {
+  handlePointerDown(e0: React.PointerEvent<HTMLDivElement>) {
+    if (e0.currentTarget === e0.target) {
+      actions.toggleWindowsEvacuated();
+    }
+  },
+};
+
+const DeskArea = () => {
+  const { unitItems, currentEffectUnitId, windowsEvacuated } =
+    store.useSnapshot();
   return (
-    <div className="bg-sky-300 grow relative">
+    <div
+      className="grow relative bg-gray-400"
+      onPointerDown={deskAreaHandlers.handlePointerDown}
+    >
       {unitItems.map((item) => (
         <UnitCard key={item.unitId} unitItem={item} />
       ))}
@@ -191,6 +214,7 @@ const DeskSection = () => {
           key={item.unitId}
           unitItem={item}
           isCurrent={item.unitId === currentEffectUnitId}
+          evacuated={windowsEvacuated}
         />
       ))}
     </div>
@@ -201,10 +225,8 @@ export const App = () => {
   return (
     <HostAppProvider hostSystem={hostSystem}>
       <div className="h-dvh flex-v text-white">
-        <div className="h-50px bg-gray-500"></div>
-        <div className="flex-grow bg-gray-400">
-          <DeskSection />
-        </div>
+        <div className="h-50px bg-gray-600"></div>
+        <DeskArea />
       </div>
     </HostAppProvider>
   );
