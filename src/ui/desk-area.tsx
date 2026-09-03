@@ -6,7 +6,7 @@ import {
   InternalUnitItem,
   internalUnitSpecs,
   UnitItem,
-} from "@/definitions/definitions";
+} from "@/definitions/unit-entries";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import {

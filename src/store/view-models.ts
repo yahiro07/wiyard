@@ -1,5 +1,5 @@
 import { appConfig } from "@/definitions/app-config";
-import { UnitItem } from "@/definitions/definitions";
+import { UnitItem } from "@/definitions/unit-entries";
 import { actionsInternal } from "@/store/actions";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
