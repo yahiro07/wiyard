@@ -7,8 +7,8 @@ export const defaultWindowPosition: Point = { x: -1, y: -1 };
 export const initialUnitItems: UnitItem[] = [
   {
     type: "internal",
-    unitId: "keyboardPort",
-    internalUnitKey: "keyboardPort",
+    unitId: "noteInputPort1",
+    internalUnitKey: "noteInputPort",
     cardPosition: { x: ox + 50, y: oy },
     windowPosition: defaultWindowPosition,
   },

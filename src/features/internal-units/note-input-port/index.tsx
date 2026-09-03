@@ -1,6 +1,6 @@
 import { ReactUnitTemplateFn } from "wafer-host/react";
 
-export const createKeyboardPortUnit: ReactUnitTemplateFn = (unitInterface) => {
+export const createNoteInputPortUnit: ReactUnitTemplateFn = (unitInterface) => {
   const noteOutputPort = unitInterface.createNoteOutputPort();
 
   unitInterface.completeSetup({

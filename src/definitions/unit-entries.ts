@@ -1,7 +1,7 @@
 import { IconType } from "react-icons";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { Icons } from "@/common/icons";
-import { createKeyboardPortUnit } from "@/features/internal-units/keyboard-port";
+import { createNoteInputPortUnit } from "@/features/internal-units/note-input-port";
 import { createSpeakerPortUnit } from "@/features/internal-units/speaker-port";
 import { Point } from "@/utils/drag-session";
 import catalog from "../unit-inventories.json";
@@ -18,8 +18,8 @@ export const internalUnitSpecs = {
     factory: createSpeakerPortUnit,
     iconComponent: Icons.ArrowRightToBracket,
   },
-  keyboardPort: {
-    factory: createKeyboardPortUnit,
+  noteInputPort: {
+    factory: createNoteInputPortUnit,
     iconComponent: Icons.ArrowRightFromBracket,
   },
 } satisfies Record<string, InternalUnitSpec>;
