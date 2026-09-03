@@ -1,5 +1,8 @@
-import { App } from "@/app";
-import { mountAppRoot } from "@/utils/mount-app-root";
+import { App } from "@/ui/app";
 import "virtual:uno.css";
+import "./page.css";
+import { createRoot } from "react-dom/client";
 
-mountAppRoot(<App />);
+const rootElement = document.getElementById("app")!;
+const root = createRoot(rootElement);
+root.render(<App />);
