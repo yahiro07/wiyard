@@ -80,6 +80,9 @@ export const actions = {
   toggleWindowsEvacuated() {
     store.toggleWindowsEvacuated();
   },
+  endWindowsEvacuation() {
+    store.setWindowsEvacuated(false);
+  },
 };
 
 export const hostSystem = createHostSystem();

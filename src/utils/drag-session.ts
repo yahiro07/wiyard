@@ -12,9 +12,12 @@ export function startDragSession(
     onUp?(e: DragHandlerEvent): void;
     onCancel?(e: DragHandlerEvent): void;
     onUpOrCancel?(e: DragHandlerEvent): void;
+    onTap?(): void;
   },
   options?: {
     coordinate?: "relative" | "page" | "screen";
+    tapDurationTh?: number;
+    tapDistanceTh?: number;
   },
 ) {
   const el = e0.currentTarget as HTMLDivElement;
@@ -41,6 +44,10 @@ export function startDragSession(
 
   const originalPosition = getPointerPosition(e0);
 
+  const startTime = Date.now();
+  let lastPosition = originalPosition;
+  let trackDistance = 0;
+
   const onDown = (e: PointerEvent) => {
     const position = getPointerPosition(e);
     callbacks.onDown?.({
@@ -55,6 +62,11 @@ export function startDragSession(
       position,
       originalPosition,
     });
+    trackDistance += Math.hypot(
+      position.x - lastPosition.x,
+      position.y - lastPosition.y,
+    );
+    lastPosition = position;
   };
   const cleanup = () => {
     try {
@@ -78,6 +90,13 @@ export function startDragSession(
       position: getPointerPosition(e),
       originalPosition,
     });
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    const durationTh = options?.tapDurationTh ?? 200;
+    const distanceTh = options?.tapDistanceTh ?? 6;
+    if (duration < durationTh && trackDistance < distanceTh) {
+      callbacks.onTap?.();
+    }
     cleanup();
   };
   const onPointerCancel = (e: PointerEvent) => {

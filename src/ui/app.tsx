@@ -9,8 +9,6 @@ const unitCardHandlers = {
     e0: React.PointerEvent<HTMLDivElement>,
     unitItem: UnitItem,
   ) {
-    actions.setCurrentEffectUnitId(unitItem.unitId);
-
     const unitOriginalPos = unitItem.cardPosition;
     startDragSession(e0.nativeEvent, {
       onMove(e) {
@@ -21,6 +19,10 @@ const unitCardHandlers = {
           y: unitOriginalPos.y + deltaY,
         };
         actions.setUnitCardPosition(unitItem.unitId, newPos);
+      },
+      onTap() {
+        actions.setCurrentEffectUnitId(unitItem.unitId);
+        actions.endWindowsEvacuation();
       },
     });
   },
