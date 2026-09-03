@@ -55,7 +55,7 @@ type StoreState = {
 
 const store = createStore<StoreState>({
   unitItems: initialUnitItems,
-  currentEffectUnitId: null,
+  currentEffectUnitId: "drum1",
 });
 
 const actionsInternal = {
@@ -75,6 +75,9 @@ const actions = {
   setUnitWindowPosition(unitId: string, newPos: Point) {
     actionsInternal.patchUnitAttrs(unitId, { windowPosition: newPos });
   },
+  setCurrentEffectUnitId(unitId: string | null) {
+    store.setCurrentEffectUnitId(unitId);
+  },
 };
 
 const hostSystem = createHostSystem();
@@ -84,6 +87,8 @@ const unitCardHandlers = {
     e0: React.PointerEvent<HTMLDivElement>,
     unitItem: UnitItem,
   ) {
+    actions.setCurrentEffectUnitId(unitItem.unitId);
+
     const unitOriginalPos = unitItem.cardPosition;
     startDragSession(e0.nativeEvent, {
       onMove(e) {
@@ -108,7 +113,7 @@ const UnitCard = ({ unitItem }: { unitItem: UnitItem }) => {
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
       <div
-        className="w-200px h-100px bg-white"
+        className="w-200px h-100px bg-white cursor-pointer"
         onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
       >
         <img
@@ -140,39 +145,53 @@ const unitWindowHandlers = {
   },
 };
 
-const UnitWindow = ({ unitItem }: { unitItem: UnitItem }) => {
+const UnitWindow = ({
+  unitItem,
+  isCurrent,
+}: {
+  unitItem: UnitItem;
+  isCurrent: boolean;
+}) => {
   return (
     <div
       className="absolute"
       style={{
         left: unitItem.windowPosition.x,
         top: unitItem.windowPosition.y,
+        display: isCurrent ? "block" : "none",
       }}
     >
       <div className="flex-vc">
         <div
-          className="w-full bg-gray-500 flex-c py-1"
+          className="w-full bg-gray-500 flex-c py-1 cursor-pointer"
           onPointerDown={(e) =>
             unitWindowHandlers.handleTitleBarPointerDown(e, unitItem)
           }
         >
           {unitItem.unitId}
         </div>
-        <div className="bg-white/50 w-400px h-250px text-black"></div>
+        <div
+          className="bg-white/50 text-black"
+          style={{ width: 600, height: 400 }}
+        ></div>
       </div>
     </div>
   );
 };
 
 const DeskSection = () => {
-  const { unitItems } = store.useSnapshot();
+  const { unitItems, currentEffectUnitId } = store.useSnapshot();
   return (
     <div className="bg-sky-300 grow relative">
       {unitItems.map((item) => (
         <UnitCard key={item.unitId} unitItem={item} />
       ))}
       {unitItems.map((item) => (
-        <UnitWindow key={item.unitId} unitItem={item} />
+        <UnitWindow
+          key={item.unitId}
+          unitItem={item}
+          isCurrent={item.unitId === currentEffectUnitId}
+        />
       ))}
     </div>
   );
