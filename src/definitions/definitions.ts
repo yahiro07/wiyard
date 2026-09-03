@@ -1,8 +1,8 @@
 import { IconType } from "react-icons";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { Icons } from "@/common/icons";
-import { createKeyboardPortUnit } from "@/internal-units/keyboard-port";
-import { createSpeakerPortUnit } from "@/internal-units/speaker-port";
+import { createKeyboardPortUnit } from "@/features/internal-units/keyboard-port";
+import { createSpeakerPortUnit } from "@/features/internal-units/speaker-port";
 import catalog from "../unit-inventories.json";
 
 type Point = { x: number; y: number };

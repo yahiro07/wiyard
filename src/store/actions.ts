@@ -1,20 +1,5 @@
-import { createStore, Store } from "snap-store";
-import { createHostSystem } from "wafer-host/core";
-import { initialUnitItems, UnitItem } from "@/ui/definitions";
+import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
-
-type StoreState = {
-  unitItems: UnitItem[];
-  currentEffectUnitId: string | null;
-  windowsEvacuated: boolean;
-};
-
-// biome-ignore lint/suspicious/noAssignInExpressions: preserve store instance for hmr
-export const store = ((window as any).store ??= createStore<StoreState>({
-  unitItems: initialUnitItems,
-  currentEffectUnitId: null,
-  windowsEvacuated: false,
-})) as Store<StoreState>;
 
 const actionsInternal = {
   patchUnitAttrs(
@@ -46,5 +31,3 @@ export const actions = {
     store.setWindowsEvacuated(false);
   },
 };
-
-export const hostSystem = createHostSystem();
