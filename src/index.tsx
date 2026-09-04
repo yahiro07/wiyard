@@ -1,8 +1,6 @@
-import { mountAppRoot } from "@/utils/mount-app-root";
+import { App } from "@/ui/app";
 import "virtual:uno.css";
-
-const App = () => {
-  return <div className="text-red-500">hello</div>;
-};
+import "./page.css";
+import { mountAppRoot } from "@/utils/mount-app-root";
 
 mountAppRoot(<App />);
