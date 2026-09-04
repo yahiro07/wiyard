@@ -16,7 +16,7 @@ import {
 } from "@/store/view-models";
 import { BoardWindow } from "@/ui/board-window";
 import { deskAreaHandlers, unitCardHandlers } from "@/ui/desk-area-handlers";
-import { SequencerWindowContent } from "@/ui/seuqencer-window-content";
+import { SequencerWindowContent } from "@/ui/sequencer-window-content";
 import { cz } from "@/utils/cz";
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
@@ -128,9 +128,10 @@ const BoardUnitWindow = ({
   evacuated: boolean;
 }) => {
   const windowCoordVm = useWindowCoordViewModel(unitItem);
+  const catalogItem = catalog[unitItem.catalogKey];
   return (
     <BoardWindow
-      title={unitItem.unitId}
+      title={catalogItem.name}
       windowCoordVm={windowCoordVm}
       displayed={isCurrent}
       evacuated={evacuated}
@@ -189,7 +190,7 @@ const SequencerWindow = ({
   const windowCoordVm = useSequencerWindowViewModel();
   return (
     <BoardWindow
-      title="sequencer"
+      title="piano roll"
       windowCoordVm={windowCoordVm}
       displayed={visible}
       evacuated={evacuated}
