@@ -10,11 +10,8 @@ import {
   useSequencerWindowViewModel,
   useWindowCoordViewModel,
 } from "@/store/view-models";
-import {
-  deskAreaHandlers,
-  unitCardHandlers,
-  unitWindowHandlers,
-} from "@/ui/desk-area-handlers";
+import { BoardWindow } from "@/ui/board-window";
+import { deskAreaHandlers, unitCardHandlers } from "@/ui/desk-area-handlers";
 import catalog from "../unit-inventories.json";
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
@@ -74,35 +71,17 @@ const BoardUnitWindow = ({
 }) => {
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   return (
-    <div
-      className="absolute"
-      style={{
-        left: windowCoordVm.position.x,
-        top: evacuated ? 0 : windowCoordVm.position.y,
-        display: isCurrent ? "block" : "none",
-      }}
+    <BoardWindow
+      title={unitItem.unitId}
+      windowCoordVm={windowCoordVm}
+      displayed={isCurrent}
+      evacuated={evacuated}
     >
-      <div style={{ width: 600 }}>
-        <div
-          className="bg-gray-500 flex-c py-1 cursor-pointer"
-          onPointerDown={(e) =>
-            unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
-          }
-        >
-          {unitItem.unitId}
-        </div>
-        <div
-          className="bg-white/50 text-black"
-          style={{ height: 400, display: evacuated ? "none" : "block" }}
-        >
-          <UnitFrameScaled
-            unitId={unitItem.unitId}
-            unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
-            // destSpec={unitItem.destSpec}
-          />
-        </div>
-      </div>
-    </div>
+      <UnitFrameScaled
+        unitId={unitItem.unitId}
+        unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
+      />
+    </BoardWindow>
   );
 };
 
@@ -150,31 +129,14 @@ const SequencerWindow = ({
 }) => {
   const windowCoordVm = useSequencerWindowViewModel();
   return (
-    <div
-      className="absolute"
-      style={{
-        left: windowCoordVm.position.x,
-        top: evacuated ? 0 : windowCoordVm.position.y,
-        display: visible ? "block" : "none",
-      }}
+    <BoardWindow
+      title="sequencer"
+      windowCoordVm={windowCoordVm}
+      displayed={visible}
+      evacuated={evacuated}
     >
-      <div style={{ width: 600 }}>
-        <div
-          className="bg-gray-500 flex-c py-1 cursor-pointer"
-          onPointerDown={(e) =>
-            unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
-          }
-        >
-          sequencer
-        </div>
-        <div
-          className="bg-white/50 text-black"
-          style={{ height: 400, display: evacuated ? "none" : "block" }}
-        >
-          aaa
-        </div>
-      </div>
-    </div>
+      <div>aaa</div>
+    </BoardWindow>
   );
 };
 
