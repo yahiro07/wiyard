@@ -1,5 +1,6 @@
+import { useMemo } from "react";
 import { appConfig } from "@/definitions/app-config";
-import { StageUnitItem } from "@/definitions/unit-entries";
+import { EdgeUnitItem, StageUnitItem } from "@/definitions/unit-entries";
 import { actionsInternal } from "@/store/actions";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
@@ -9,9 +10,9 @@ export type WindowCoordViewModel = {
   setPosition: (position: Point) => void;
 };
 
-export const useWindowCoordViewModel = (
+export function useWindowCoordViewModel(
   unitItem: StageUnitItem,
-): WindowCoordViewModel => {
+): WindowCoordViewModel {
   const { sharedWindowPosition } = store.useSnapshot();
   if (appConfig.shareWindowCoordForUnits) {
     return {
@@ -30,9 +31,9 @@ export const useWindowCoordViewModel = (
       },
     };
   }
-};
+}
 
-export const useSequencerWindowViewModel = (): WindowCoordViewModel => {
+export function useSequencerWindowViewModel(): WindowCoordViewModel {
   const { sequencerWindowPosition } = store.useSnapshot();
   return {
     position: sequencerWindowPosition,
@@ -40,4 +41,17 @@ export const useSequencerWindowViewModel = (): WindowCoordViewModel => {
       store.setSequencerWindowPosition(position);
     },
   };
-};
+}
+
+export function useNoteOutputPortIndex(noteChannelId: string) {
+  const { unitItems } = store.useSnapshot();
+  return useMemo(() => {
+    const noteInputPortItems = unitItems.filter(
+      (item) =>
+        item.type === "edge" && item.internalUnitKey === "noteInputPort",
+    ) as EdgeUnitItem[];
+    return noteInputPortItems.findIndex(
+      (item) => item.noteChannelId === noteChannelId,
+    );
+  }, [unitItems, noteChannelId]);
+}

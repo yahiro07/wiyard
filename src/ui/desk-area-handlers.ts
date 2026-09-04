@@ -29,6 +29,7 @@ export const unitCardHandlers = {
           unitItem.internalUnitKey === "noteInputPort"
         ) {
           actions.setSequencerWindowVisible(true);
+          actions.setCurrentNoteChannelId(unitItem.noteChannelId);
         }
       },
     });

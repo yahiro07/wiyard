@@ -33,4 +33,7 @@ export const actions = {
   toggleSequencerWindowVisible() {
     store.toggleSequencerWindowVisible();
   },
+  setCurrentNoteChannelId(noteChannelId: string) {
+    store.setCurrentNoteChannelId(noteChannelId);
+  },
 };

@@ -1,14 +1,22 @@
+import { appConfig } from "@/definitions/app-config";
 import { UnitItem } from "@/definitions/unit-entries";
 import { Point } from "@/utils/drag-session";
 
 const ox = 100;
 const oy = 40;
 export const defaultWindowPosition: Point = { x: -1, y: -1 };
-export const initialUnitItems: UnitItem[] = [
+
+const initialUnitItems: UnitItem[] = [
+  {
+    type: "offStage",
+    unitId: "sequencer1",
+    noteChannelId: "nc1",
+    catalogKey: "fluoritePianoRoll",
+  },
   {
     type: "edge",
-    unitId: "noteInputPort0",
-    noteChannel: 0,
+    unitId: "noteInputPort1",
+    noteChannelId: "nc1",
     internalUnitKey: "noteInputPort",
     cardPosition: { x: ox + 50, y: oy },
     windowPosition: defaultWindowPosition,
@@ -16,7 +24,7 @@ export const initialUnitItems: UnitItem[] = [
   {
     type: "edge",
     unitId: "speakerPort",
-    noteChannel: -1,
+    noteChannelId: "",
     internalUnitKey: "speakerPort",
     cardPosition: { x: ox + 900, y: oy },
     windowPosition: defaultWindowPosition,
@@ -48,3 +56,27 @@ initialUnitItems.forEach((item) => {
     item.windowPosition = item.cardPosition;
   }
 });
+
+if (appConfig.isDevelopment) {
+  initialUnitItems.push(
+    {
+      type: "offStage",
+      unitId: "sequencer2",
+      noteChannelId: "nc2",
+      catalogKey: "fluoritePianoRoll",
+    },
+    {
+      type: "edge",
+      unitId: "noteInputPort2",
+      noteChannelId: "nc2",
+      internalUnitKey: "noteInputPort",
+      cardPosition: { x: ox + 50, y: oy + 250 },
+      windowPosition: defaultWindowPosition,
+    },
+  );
+}
+
+export const defaultScene = {
+  unitItems: initialUnitItems,
+  initialNoteChannelId: "nc1",
+};

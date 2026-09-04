@@ -6,6 +6,8 @@ import { createSpeakerPortUnit } from "@/features/internal-units/speaker-port";
 import { Point } from "@/utils/drag-session";
 import catalog from "../unit-inventories.json";
 
+export { catalog };
+
 export type CatalogKey = keyof typeof catalog;
 
 type InternalUnitSpec = {
@@ -39,7 +41,7 @@ export type BoardUnitItem = {
 export type EdgeUnitItem = {
   type: "edge";
   unitId: string;
-  noteChannel: number;
+  noteChannelId: string;
   internalUnitKey: InternalUnitKey;
   cardPosition: Point;
   windowPosition: Point;
@@ -52,7 +54,7 @@ export type StageUnitItem = BoardUnitItem | EdgeUnitItem;
 export type OffStageUnitItem = {
   type: "offStage";
   unitId: string;
-  noteChannel: number;
+  noteChannelId: string;
   catalogKey: CatalogKey;
 };
 

@@ -1,6 +1,8 @@
+import { IconType } from "react-icons";
 import { Connection, ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import {
   BoardUnitItem,
+  catalog,
   EdgeUnitItem,
   internalUnitSpecs,
   UnitItem,
@@ -8,13 +10,14 @@ import {
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import {
+  useNoteOutputPortIndex,
   useSequencerWindowViewModel,
   useWindowCoordViewModel,
 } from "@/store/view-models";
 import { BoardWindow } from "@/ui/board-window";
 import { deskAreaHandlers, unitCardHandlers } from "@/ui/desk-area-handlers";
+import { SequencerWindowContent } from "@/ui/seuqencer-window-content";
 import { cz } from "@/utils/cz";
-import catalog from "../unit-inventories.json";
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const catalogItem = catalog[unitItem.catalogKey];
@@ -37,9 +40,17 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   );
 };
 
-const EdgeUnitCard = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
-  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
-  const isNoteInputPort = unitItem.internalUnitKey === "noteInputPort";
+const EdgeUnitCardView = ({
+  unitItem,
+  highlighted,
+  iconComponent: IconComponent,
+  label,
+}: {
+  unitItem: EdgeUnitItem;
+  highlighted: boolean;
+  iconComponent: IconType;
+  label?: string;
+}) => {
   return (
     <div
       className="absolute"
@@ -47,14 +58,51 @@ const EdgeUnitCard = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
     >
       <div
         className={cz(
-          "w-100px h-100px bg-white/50 flex-c",
-          isNoteInputPort && "cursor-pointer",
+          "w-100px h-100px bg-white/50 flex-c cursor-pointer relative",
+          "border-l border-l-6 border-l-transparent",
+          highlighted && "!border-l-#8ae",
         )}
         onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
       >
-        <internalUnitSpec.iconComponent size={55} />
+        <IconComponent size={55} className="mb-3 " />
+        {label && (
+          <div className="absolute-full flex-va justify-end text-sm font-bold pb-1">
+            {label}
+          </div>
+        )}
       </div>
     </div>
+  );
+};
+
+const EdgeUnitCard_NoteInputPort = ({
+  unitItem,
+}: {
+  unitItem: EdgeUnitItem;
+}) => {
+  const { currentNoteChannelId } = store.useSnapshot();
+  const isCurrent = unitItem.noteChannelId === currentNoteChannelId;
+  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  const index = useNoteOutputPortIndex(unitItem.noteChannelId);
+  return (
+    <EdgeUnitCardView
+      unitItem={unitItem}
+      highlighted={isCurrent}
+      iconComponent={internalUnitSpec.iconComponent}
+      label={`input ${index + 1}`}
+    />
+  );
+};
+
+const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
+  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  return (
+    <EdgeUnitCardView
+      unitItem={unitItem}
+      highlighted={false}
+      iconComponent={internalUnitSpec.iconComponent}
+      label="output"
+    />
   );
 };
 
@@ -62,7 +110,11 @@ const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
   if (unitItem.type === "board") {
     return <BoardUnitCard unitItem={unitItem} />;
   } else if (unitItem.type === "edge") {
-    return <EdgeUnitCard unitItem={unitItem} />;
+    if (unitItem.internalUnitKey === "noteInputPort") {
+      return <EdgeUnitCard_NoteInputPort unitItem={unitItem} />;
+    } else {
+      return <EdgeUnitCard_SpeakerPort unitItem={unitItem} />;
+    }
   }
 };
 
@@ -143,7 +195,7 @@ const SequencerWindow = ({
       evacuated={evacuated}
       close={() => actions.setSequencerWindowVisible(false)}
     >
-      <div>aaa</div>
+      <SequencerWindowContent />
     </BoardWindow>
   );
 };
@@ -182,12 +234,12 @@ export const DeskArea = () => {
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       <EvacuationBars />
-      <div>
+      <>
         {unitItems.map((item) => (
           <UnitCardRoot key={item.unitId} unitItem={item} />
         ))}
-      </div>
-      <div>
+      </>
+      <>
         {unitItems.map((item) => {
           return (
             <UnitWindowRoot
@@ -198,7 +250,7 @@ export const DeskArea = () => {
             />
           );
         })}
-      </div>
+      </>
       <SequencerWindow
         visible={sequencerWindowVisible}
         evacuated={windowsEvacuated}
