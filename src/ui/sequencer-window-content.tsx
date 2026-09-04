@@ -1,16 +1,12 @@
 import { UnitFrameScaled } from "wafer-host/react";
 import { catalog, OffStageUnitItem } from "@/definitions/unit-entries";
-import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import { useNoteChannelListColumnPresenter } from "@/store/view-models";
 import { cz } from "@/utils/cz";
 
-const NoteChannelListColumn = ({
-  noteChannelIds,
-  currentNoteChannelId,
-}: {
-  noteChannelIds: string[];
-  currentNoteChannelId: string;
-}) => {
+const NoteChannelListColumn = () => {
+  const { noteChannelIds, currentNoteChannelId, selectNoteChannel } =
+    useNoteChannelListColumnPresenter();
   return (
     <div className="w-50px bg-gray-600/50 flex-v gap-2 py-2">
       {noteChannelIds.map((id, index) => (
@@ -22,7 +18,7 @@ const NoteChannelListColumn = ({
             "font-bold text-sm",
             id === currentNoteChannelId && "!bg-#8ae/70",
           )}
-          onClick={() => actions.setCurrentNoteChannelId(id)}
+          onClick={() => selectNoteChannel(id)}
         >
           {index + 1}
         </button>
@@ -54,27 +50,29 @@ const SequencerUnitItemView = ({
   );
 };
 
-export const SequencerWindowContent = () => {
+const SequencerSection = () => {
   const { unitItems, currentNoteChannelId } = store.useSnapshot();
   const offStageUnitItems = unitItems.filter(
     (item) => item.type === "offStage",
   );
-  const noteChannelIds = offStageUnitItems.map((item) => item.noteChannelId);
+  return (
+    <div className="flex-grow relative">
+      {offStageUnitItems.map((item) => (
+        <SequencerUnitItemView
+          key={item.unitId}
+          unitItem={item}
+          displayed={item.noteChannelId === currentNoteChannelId}
+        />
+      ))}
+    </div>
+  );
+};
+
+export const SequencerWindowContent = () => {
   return (
     <div className="w-full h-full flex-h">
-      <NoteChannelListColumn
-        noteChannelIds={noteChannelIds}
-        currentNoteChannelId={currentNoteChannelId}
-      />
-      <div className="flex-grow relative">
-        {offStageUnitItems.map((item) => (
-          <SequencerUnitItemView
-            key={item.unitId}
-            unitItem={item}
-            displayed={item.noteChannelId === currentNoteChannelId}
-          />
-        ))}
-      </div>
+      <NoteChannelListColumn />
+      <SequencerSection />
     </div>
   );
 };
