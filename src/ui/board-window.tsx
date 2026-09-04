@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Icons } from "@/common/icons";
 import { WindowCoordViewModel } from "@/store/view-models";
 import { unitWindowHandlers } from "@/ui/desk-area-handlers";
 
@@ -8,12 +9,14 @@ export const BoardWindow = ({
   displayed,
   children,
   evacuated,
+  close,
 }: {
   title: string;
   windowCoordVm: WindowCoordViewModel;
   displayed: boolean;
   children: ReactNode;
   evacuated: boolean;
+  close: () => void;
 }) => {
   return (
     <div
@@ -28,12 +31,24 @@ export const BoardWindow = ({
     >
       <div style={{ width: 600 }}>
         <div
-          className="bg-gray-500 flex-c py-1 cursor-pointer"
+          className="bg-gray-500 flex-c h-34px cursor-pointer relative justify-end px-2"
           onPointerDown={(e) =>
             unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
           }
         >
-          {title}
+          <button
+            type="button"
+            className="cursor-pointer"
+            onPointerDown={(e) => {
+              close?.();
+              e.stopPropagation();
+            }}
+          >
+            <Icons.Close />
+          </button>
+          <div className="absolute-full flex-c pointer-events-none">
+            {title}
+          </div>
         </div>
         <div
           className="bg-white/50 text-black"

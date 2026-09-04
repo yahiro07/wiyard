@@ -82,6 +82,7 @@ const BoardUnitWindow = ({
       windowCoordVm={windowCoordVm}
       displayed={isCurrent}
       evacuated={evacuated}
+      close={() => actions.setCurrentEffectUnitId(null)}
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}
@@ -140,6 +141,7 @@ const SequencerWindow = ({
       windowCoordVm={windowCoordVm}
       displayed={visible}
       evacuated={evacuated}
+      close={() => actions.setSequencerWindowVisible(false)}
     >
       <div>aaa</div>
     </BoardWindow>

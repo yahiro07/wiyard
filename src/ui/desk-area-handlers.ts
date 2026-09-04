@@ -1,7 +1,6 @@
 import { appConfig } from "@/definitions/app-config";
 import { StageUnitItem } from "@/definitions/unit-entries";
 import { actions } from "@/store/actions";
-import { store } from "@/store/store";
 import { WindowCoordViewModel } from "@/store/view-models";
 import { startDragSession } from "@/utils/drag-session";
 
@@ -23,17 +22,13 @@ export const unitCardHandlers = {
       },
       onTap() {
         if (unitItem.type === "board") {
-          if (store.state.currentEffectUnitId === unitItem.unitId) {
-            actions.setCurrentEffectUnitId(null);
-          } else {
-            actions.setCurrentEffectUnitId(unitItem.unitId);
-            actions.setWindowsEvacuated(false);
-          }
+          actions.setCurrentEffectUnitId(unitItem.unitId);
+          actions.setWindowsEvacuated(false);
         } else if (
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"
         ) {
-          actions.toggleSequencerWindowVisible();
+          actions.setSequencerWindowVisible(true);
         }
       },
     });
@@ -57,7 +52,7 @@ export const unitWindowHandlers = {
         windowCoordVm.setPosition(newPos);
       },
       onTap() {
-        actions.toggleWindowsEvacuated();
+        actions.setWindowsEvacuated(false);
       },
     });
   },
