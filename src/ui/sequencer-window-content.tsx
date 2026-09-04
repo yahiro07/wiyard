@@ -37,10 +37,7 @@ const SequencerUnitItemView = ({
   return (
     <div
       key={unitItem.unitId}
-      className={cz(
-        "absolute-full",
-        !displayed && "opacity-0 pointer-events-none",
-      )}
+      className={cz("absolute-full", !displayed && "invisible")}
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}

@@ -10,6 +10,7 @@ import {
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import {
+  useNoteInputConnectionViewModels,
   useNoteOutputPortIndex,
   useSequencerWindowViewModel,
   useWindowCoordViewModel,
@@ -140,6 +141,7 @@ const BoardUnitWindow = ({
       <UnitFrameScaled
         unitId={unitItem.unitId}
         unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
+        destSpec={unitItem._destUnitId}
       />
     </BoardWindow>
   );
@@ -151,6 +153,7 @@ const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
     <ReactUnitFrame
       unitId={unitItem.unitId}
       unitTemplateFn={internalUnitSpec.factory}
+      destSpec={unitItem._destUnitId}
     />
   );
 };
@@ -229,6 +232,7 @@ export const DeskArea = () => {
     windowsEvacuated,
     sequencerWindowVisible,
   } = store.useSnapshot();
+  const noteInputConnectionViewModels = useNoteInputConnectionViewModels();
   return (
     <div
       className="grow relative bg-gray-400"
@@ -256,7 +260,16 @@ export const DeskArea = () => {
         visible={sequencerWindowVisible}
         evacuated={windowsEvacuated}
       />
-      <Connection source="speakerPort" destination="$output" />
+      <>
+        {noteInputConnectionViewModels.map((vm) => (
+          <Connection
+            key={`${vm.source}-${vm.destination}`}
+            source={vm.source}
+            destination={vm.destination}
+          />
+        ))}
+      </>
+      {/* <Connection source="speakerPort" destination="$output" /> */}
     </div>
   );
 };

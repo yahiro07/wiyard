@@ -20,6 +20,7 @@ const initialUnitItems: UnitItem[] = [
     internalUnitKey: "noteInputPort",
     cardPosition: { x: ox + 50, y: oy },
     windowPosition: defaultWindowPosition,
+    _destUnitId: "synth1",
   },
   {
     type: "edge",
@@ -28,6 +29,7 @@ const initialUnitItems: UnitItem[] = [
     internalUnitKey: "speakerPort",
     cardPosition: { x: ox + 900, y: oy },
     windowPosition: defaultWindowPosition,
+    _destUnitId: "$output",
   },
   {
     type: "board",
@@ -35,6 +37,7 @@ const initialUnitItems: UnitItem[] = [
     catalogKey: "js808",
     cardPosition: { x: ox + 200, y: oy },
     windowPosition: defaultWindowPosition,
+    _destUnitId: "speakerPort",
   },
   {
     type: "board",
@@ -42,6 +45,7 @@ const initialUnitItems: UnitItem[] = [
     catalogKey: "webaudioTinysynthMini",
     cardPosition: { x: ox + 500, y: oy + 350 },
     windowPosition: defaultWindowPosition,
+    _destUnitId: "effect1",
   },
   {
     type: "board",
@@ -49,6 +53,7 @@ const initialUnitItems: UnitItem[] = [
     catalogKey: "sunsetDelay",
     cardPosition: { x: ox + 700, y: oy },
     windowPosition: defaultWindowPosition,
+    _destUnitId: "speakerPort",
   },
 ];
 initialUnitItems.forEach((item) => {
