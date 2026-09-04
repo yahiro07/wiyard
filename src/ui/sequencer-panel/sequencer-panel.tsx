@@ -1,7 +1,9 @@
 import { UnitFrameScaled } from "wafer-host/react";
 import { catalog, OffStageUnitItem } from "@/definitions/unit-entries";
-import { store } from "@/store/store";
-import { useNoteChannelListColumnPresenter } from "@/store/view-models";
+import {
+  useNoteChannelListColumnPresenter,
+  useSequencerSectionPresenter,
+} from "@/ui/sequencer-panel/sequencer-panel-models";
 import { cz } from "@/utils/cz";
 
 const NoteChannelListColumn = () => {
@@ -48,10 +50,8 @@ const SequencerUnitItemView = ({
 };
 
 const SequencerSection = () => {
-  const { unitItems, currentNoteChannelId } = store.useSnapshot();
-  const offStageUnitItems = unitItems.filter(
-    (item) => item.type === "offStage",
-  );
+  const { offStageUnitItems, currentNoteChannelId } =
+    useSequencerSectionPresenter();
   return (
     <div className="flex-grow relative">
       {offStageUnitItems.map((item) => (
@@ -65,7 +65,7 @@ const SequencerSection = () => {
   );
 };
 
-export const SequencerWindowContent = () => {
+export const SequencerPanel = () => {
   return (
     <div className="w-full h-full flex-h">
       <NoteChannelListColumn />

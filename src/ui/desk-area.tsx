@@ -17,7 +17,7 @@ import {
 } from "@/store/view-models";
 import { BoardWindow } from "@/ui/board-window";
 import { deskAreaHandlers, unitCardHandlers } from "@/ui/desk-area-handlers";
-import { SequencerWindowContent } from "@/ui/sequencer-window-content";
+import { SequencerPanel } from "@/ui/sequencer-panel/sequencer-panel";
 import { cz } from "@/utils/cz";
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
@@ -199,7 +199,7 @@ const SequencerWindow = ({
       evacuated={evacuated}
       close={() => actions.setSequencerWindowVisible(false)}
     >
-      <SequencerWindowContent />
+      <SequencerPanel />
     </BoardWindow>
   );
 };

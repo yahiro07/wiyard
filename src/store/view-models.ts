@@ -1,11 +1,7 @@
 import { useMemo } from "react";
 import { appConfig } from "@/definitions/app-config";
 import { Size } from "@/definitions/common-types";
-import {
-  EdgeUnitItem,
-  OffStageUnitItem,
-  StageUnitItem,
-} from "@/definitions/unit-entries";
+import { EdgeUnitItem, StageUnitItem } from "@/definitions/unit-entries";
 import { actionsInternal } from "@/store/actions";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
@@ -64,27 +60,6 @@ export function useNoteOutputPortIndex(noteChannelId: string) {
       (item) => item.noteChannelId === noteChannelId,
     );
   }, [unitItems, noteChannelId]);
-}
-
-export type NoteChannelListColumnPresenter = {
-  noteChannelIds: string[];
-  currentNoteChannelId: string;
-  selectNoteChannel: (noteChannelId: string) => void;
-};
-export function useNoteChannelListColumnPresenter(): NoteChannelListColumnPresenter {
-  const { unitItems, currentNoteChannelId } = store.useSnapshot();
-  return useMemo(() => {
-    const noteChannelIds = (
-      unitItems.filter((item) => item.type === "offStage") as OffStageUnitItem[]
-    ).map((item) => item.noteChannelId);
-    return {
-      noteChannelIds,
-      currentNoteChannelId,
-      selectNoteChannel(noteChannelId) {
-        store.setCurrentNoteChannelId(noteChannelId);
-      },
-    };
-  }, [unitItems, currentNoteChannelId]);
 }
 
 export type NoteInputConnectionViewModel = {
