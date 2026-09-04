@@ -5,6 +5,7 @@ import {
   internalUnitSpecs,
   UnitItem,
 } from "@/definitions/unit-entries";
+import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import {
   useSequencerWindowViewModel,
@@ -12,6 +13,7 @@ import {
 } from "@/store/view-models";
 import { BoardWindow } from "@/ui/board-window";
 import { deskAreaHandlers, unitCardHandlers } from "@/ui/desk-area-handlers";
+import { cz } from "@/utils/cz";
 import catalog from "../unit-inventories.json";
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
@@ -37,13 +39,17 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
 
 const EdgeUnitCard = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  const isNoteInputPort = unitItem.internalUnitKey === "noteInputPort";
   return (
     <div
       className="absolute"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
       <div
-        className="w-100px h-100px bg-white/50 flex-c"
+        className={cz(
+          "w-100px h-100px bg-white/50 flex-c",
+          isNoteInputPort && "cursor-pointer",
+        )}
         onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
       >
         <internalUnitSpec.iconComponent size={55} />
@@ -140,6 +146,27 @@ const SequencerWindow = ({
   );
 };
 
+const EvacuationBars = () => {
+  const baseClass =
+    "absolute left-0 w-full flex-c min-h-40px cursor-pointer bg-gray-300/50";
+  return (
+    <>
+      {true && (
+        <div
+          className={cz(baseClass, "top-0")}
+          onClick={actions.toggleWindowsEvacuated}
+        />
+      )}
+      {false && (
+        <div
+          className={cz(baseClass, "bottom-0")}
+          onClick={actions.toggleWindowsEvacuated}
+        />
+      )}
+    </>
+  );
+};
+
 export const DeskArea = () => {
   const {
     unitItems,
@@ -152,6 +179,7 @@ export const DeskArea = () => {
       className="grow relative bg-gray-400"
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
+      <EvacuationBars />
       <div>
         {unitItems.map((item) => (
           <UnitCardRoot key={item.unitId} unitItem={item} />

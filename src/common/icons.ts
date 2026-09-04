@@ -1,3 +1,4 @@
+import { CgDisplayFullwidth } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
@@ -6,4 +7,5 @@ import {
 export const Icons = {
   ArrowRightFromBracket: FaArrowRightFromBracket,
   ArrowRightToBracket: FaArrowRightToBracket,
+  DisplayFullWidth: CgDisplayFullwidth,
 };
