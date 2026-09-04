@@ -1,7 +1,6 @@
-import { useMemo } from "react";
 import { appConfig } from "@/definitions/app-config";
 import { Size } from "@/definitions/common-types";
-import { EdgeUnitItem, StageUnitItem } from "@/definitions/unit-entries";
+import { StageUnitItem } from "@/definitions/unit-entries";
 import { actionsInternal } from "@/store/actions";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
@@ -47,17 +46,4 @@ export function useSequencerWindowViewModel(): WindowCoordViewModel {
     },
     size: { width: 760, height: 400 },
   };
-}
-
-export function useNoteOutputPortIndex(noteChannelId: string) {
-  const { unitItems } = store.useSnapshot();
-  return useMemo(() => {
-    const noteInputPortItems = unitItems.filter(
-      (item) =>
-        item.type === "edge" && item.internalUnitKey === "noteInputPort",
-    ) as EdgeUnitItem[];
-    return noteInputPortItems.findIndex(
-      (item) => item.noteChannelId === noteChannelId,
-    );
-  }, [unitItems, noteChannelId]);
 }

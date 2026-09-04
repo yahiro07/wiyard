@@ -3,12 +3,14 @@ import {
   BoardUnitItem,
   catalog,
   EdgeUnitItem,
-  internalUnitSpecs,
   UnitItem,
 } from "@/definitions/unit-entries";
 import { store } from "@/store/store";
-import { useNoteOutputPortIndex } from "@/store/view-models";
 import { unitCardHandlers } from "@/ui/desk-area-handlers";
+import {
+  useEdgeUnitCardViewModel_NoteInputPort,
+  useEdgeUnitCardViewModel_SpeakerPort,
+} from "@/ui/unit-cards-models";
 import { cz } from "@/utils/cz";
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
@@ -37,11 +39,13 @@ const EdgeUnitCardView = ({
   highlighted,
   iconComponent: IconComponent,
   label,
+  handlePointerDown,
 }: {
   unitItem: EdgeUnitItem;
   highlighted: boolean;
   iconComponent: IconType;
-  label?: string;
+  label: string;
+  handlePointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
 }) => {
   return (
     <div
@@ -54,7 +58,7 @@ const EdgeUnitCardView = ({
           "border-l border-l-6 border-l-transparent",
           highlighted && "!border-l-#8ae",
         )}
-        onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
+        onPointerDown={handlePointerDown}
       >
         <IconComponent size={55} className="mb-3 " />
         {label && (
@@ -72,30 +76,13 @@ const EdgeUnitCard_NoteInputPort = ({
 }: {
   unitItem: EdgeUnitItem;
 }) => {
-  const { currentNoteChannelId } = store.useSnapshot();
-  const isCurrent = unitItem.noteChannelId === currentNoteChannelId;
-  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
-  const index = useNoteOutputPortIndex(unitItem.noteChannelId);
-  return (
-    <EdgeUnitCardView
-      unitItem={unitItem}
-      highlighted={isCurrent}
-      iconComponent={internalUnitSpec.iconComponent}
-      label={`input ${index + 1}`}
-    />
-  );
+  const vm = useEdgeUnitCardViewModel_NoteInputPort(unitItem);
+  return <EdgeUnitCardView {...vm} />;
 };
 
 const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
-  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
-  return (
-    <EdgeUnitCardView
-      unitItem={unitItem}
-      highlighted={false}
-      iconComponent={internalUnitSpec.iconComponent}
-      label="output"
-    />
-  );
+  const vm = useEdgeUnitCardViewModel_SpeakerPort(unitItem);
+  return <EdgeUnitCardView {...vm} />;
 };
 
 const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
