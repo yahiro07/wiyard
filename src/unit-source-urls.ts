@@ -4,7 +4,15 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    return [];
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r25`;
+    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r21`;
+
+    return [
+      `${waferUnitsBase}/fluorite-piano-roll/`,
+      `${waferCustomUnitsBase}/js808/`,
+      `${waferCustomUnitsBase}/webaudio-tinysynth-mini/`,
+      `${waferUnitsBase}/sunset-delay/`,
+    ];
   } else {
     const waferUnitsLocalDistDir = toAbsolutePath("../../wafer-units/dist");
     const waferCustomUnitsLocalDir = toAbsolutePath("../../wafer-custom-units");
