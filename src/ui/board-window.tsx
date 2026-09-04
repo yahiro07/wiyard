@@ -18,6 +18,7 @@ export const BoardWindow = ({
   evacuated: boolean;
   close: () => void;
 }) => {
+  const { width, height } = windowCoordVm.size;
   return (
     <div
       className="absolute"
@@ -30,7 +31,7 @@ export const BoardWindow = ({
         display: displayed ? "block" : "none",
       }}
     >
-      <div style={{ width: 600 }}>
+      <div style={{ width }}>
         <div
           className="bg-gray-500 flex-c h-34px cursor-pointer relative justify-end px-2"
           onPointerDown={(e) =>
@@ -53,7 +54,7 @@ export const BoardWindow = ({
         </div>
         <div
           className="bg-white/50 text-black"
-          style={{ height: 400, display: evacuated ? "none" : "block" }}
+          style={{ height, display: evacuated ? "none" : "block" }}
         >
           {children}
         </div>
