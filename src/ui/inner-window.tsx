@@ -3,7 +3,7 @@ import { Icons } from "@/common/icons";
 import { WindowCoordViewModel } from "@/store/view-models";
 import { unitWindowHandlers } from "@/ui/desk-area-handlers";
 
-export const BoardWindow = ({
+export const InnerWindow = ({
   title,
   windowCoordVm,
   displayed,
