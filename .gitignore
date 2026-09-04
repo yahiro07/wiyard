@@ -1,4 +1,8 @@
 .local/
 node_modules/
-*.code-workspace
+.wafer-cache/
+dist/
 src/unit-inventories.json
+.env
+
+*.code-workspace
