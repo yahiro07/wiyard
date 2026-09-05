@@ -1,3 +1,4 @@
+import { UnitStuff } from "@/definitions/unit-stuff";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
 
@@ -35,5 +36,14 @@ export const actions = {
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
+  },
+  setUnitStuff(unitId: string, stuff: UnitStuff | null) {
+    store.produceUnitStuffs((draft) => {
+      if (stuff) {
+        draft[unitId] = stuff;
+      } else {
+        delete draft[unitId];
+      }
+    });
   },
 };

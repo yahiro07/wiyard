@@ -10,7 +10,7 @@ export const DeskArea = () => {
   const { windowsEvacuated, sequencerWindowVisible } = store.useSnapshot();
   return (
     <div
-      className="grow relative bg-gray-400"
+      className="grow relative bg-gray-500"
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       <TaskBar />

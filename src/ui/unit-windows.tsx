@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { HsUnitInstance } from "wafer-host/core";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import {
   BoardUnitItem,
@@ -8,8 +10,27 @@ import {
 } from "@/definitions/unit-entries";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import { buildUnitStuffLoaded } from "@/store/unit-stuff-builder";
 import { useWindowCoordViewModel } from "@/store/view-models";
 import { InnerWindow } from "@/ui/inner-window";
+
+function useUnitStuffReporter(unitId: string) {
+  const reportLoadStart = () => {
+    actions.setUnitStuff(unitId, { status: "loading" });
+    return () => {
+      actions.setUnitStuff(unitId, null);
+    };
+  };
+  const reportLoaded = (unitInstance: HsUnitInstance) => {
+    const unitStuffLoaded = buildUnitStuffLoaded(unitInstance);
+    actions.setUnitStuff(unitId, unitStuffLoaded);
+  };
+  const reportFailure = () => {
+    actions.setUnitStuff(unitId, { status: "error" });
+  };
+
+  return { reportLoadStart, reportLoaded, reportFailure };
+}
 
 const BoardUnitWindow = ({
   unitItem,
@@ -22,6 +43,9 @@ const BoardUnitWindow = ({
 }) => {
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
+  const reporter = useUnitStuffReporter(unitItem.unitId);
+  useEffect(reporter.reportLoadStart, []);
+
   return (
     <InnerWindow
       title={catalogItem.name}
@@ -34,6 +58,8 @@ const BoardUnitWindow = ({
         unitId={unitItem.unitId}
         unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
         destSpec={unitItem._destUnitId}
+        onUnitInstanceLoaded={reporter.reportLoaded}
+        onLoadFailed={reporter.reportFailure}
       />
     </InnerWindow>
   );

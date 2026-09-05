@@ -5,6 +5,7 @@ import {
   EdgeUnitItem,
   UnitItem,
 } from "@/definitions/unit-entries";
+import { UnitStuff } from "@/definitions/unit-stuff";
 import { store } from "@/store/store";
 import { unitCardHandlers } from "@/ui/desk-area-handlers";
 import {
@@ -13,22 +14,39 @@ import {
 } from "@/ui/unit-cards-models";
 import { cz } from "@/utils/cz";
 
-const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+const BoardUnitCard = ({
+  unitItem,
+  unitStuff,
+}: {
+  unitItem: BoardUnitItem;
+  unitStuff?: UnitStuff;
+}) => {
   const catalogItem = catalog[unitItem.catalogKey];
+  const inputPorts = unitStuff?.inputPorts;
+  const outputPort = unitStuff?.outputPort;
   return (
     <div
       className="absolute"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
-      <div
-        className="h-100px bg-white cursor-pointer"
-        onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
-      >
-        <img
-          src={catalogItem.thumbnailUrl}
-          className="w-full h-full object-contain"
-          alt={catalogItem.name}
-        />
+      <div className="flex-v gap-0.5">
+        <div className="flex-ha">
+          {inputPorts && <div>INS {inputPorts.length}</div>}
+          <div
+            className="h-100px bg-white cursor-pointer"
+            onPointerDown={(e) =>
+              unitCardHandlers.handlePointerDown(e, unitItem)
+            }
+          >
+            <img
+              src={catalogItem.thumbnailUrl}
+              className="w-full h-full object-contain"
+              alt={catalogItem.name}
+            />
+          </div>
+          {outputPort && <div>OUTS {outputPort.length}</div>}
+        </div>
+        <div className="flex-c text-sm">{catalogItem.name}</div>
       </div>
     </div>
   );
@@ -60,7 +78,7 @@ const EdgeUnitCardView = ({
         )}
         onPointerDown={handlePointerDown}
       >
-        <IconComponent size={55} className="mb-3 " />
+        <IconComponent size={55} className="mb-3" />
         {label && (
           <div className="absolute-full flex-va justify-end text-sm font-bold pb-1">
             {label}
@@ -85,9 +103,15 @@ const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
   return <EdgeUnitCardView {...vm} />;
 };
 
-const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
+const UnitCardRoot = ({
+  unitItem,
+  unitStuff,
+}: {
+  unitItem: UnitItem;
+  unitStuff?: UnitStuff;
+}) => {
   if (unitItem.type === "board") {
-    return <BoardUnitCard unitItem={unitItem} />;
+    return <BoardUnitCard unitItem={unitItem} unitStuff={unitStuff} />;
   } else if (unitItem.type === "edge") {
     if (unitItem.internalUnitKey === "noteInputPort") {
       return <EdgeUnitCard_NoteInputPort unitItem={unitItem} />;
@@ -98,11 +122,15 @@ const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
 };
 
 export const UnitCardsRoot = () => {
-  const { unitItems } = store.useSnapshot();
+  const { unitItems, unitStuffs } = store.useSnapshot();
   return (
     <>
       {unitItems.map((item) => (
-        <UnitCardRoot key={item.unitId} unitItem={item} />
+        <UnitCardRoot
+          key={item.unitId}
+          unitItem={item}
+          unitStuff={unitStuffs[item.unitId]}
+        />
       ))}
     </>
   );
