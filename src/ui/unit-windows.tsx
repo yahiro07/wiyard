@@ -8,9 +8,9 @@ import {
   internalUnitSpecs,
   UnitItem,
 } from "@/definitions/unit-entries";
+import { buildUnitStuffLoaded } from "@/presenter/unit-stuff-builder";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { buildUnitStuffLoaded } from "@/store/unit-stuff-builder";
 import { useWindowCoordViewModel } from "@/store/view-models";
 import { InnerWindow } from "@/ui/inner-window";
 

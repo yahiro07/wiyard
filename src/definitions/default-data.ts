@@ -3,7 +3,7 @@ import { UnitItem } from "@/definitions/unit-entries";
 import { Point } from "@/utils/drag-session";
 
 const ox = 100;
-const oy = 40;
+const oy = 200;
 export const defaultWindowPosition: Point = { x: -1, y: -1 };
 
 const initialUnitItems: UnitItem[] = [
@@ -27,7 +27,7 @@ const initialUnitItems: UnitItem[] = [
     unitId: "speakerPort",
     noteChannelId: "",
     internalUnitKey: "speakerPort",
-    cardPosition: { x: ox + 900, y: oy },
+    cardPosition: { x: ox + 1100, y: oy },
     windowPosition: defaultWindowPosition,
     _destUnitId: "$output",
   },
@@ -35,7 +35,7 @@ const initialUnitItems: UnitItem[] = [
     type: "board",
     unitId: "drum1",
     catalogKey: "js808",
-    cardPosition: { x: ox + 200, y: oy },
+    cardPosition: { x: ox + 400, y: oy },
     windowPosition: defaultWindowPosition,
     _destUnitId: "speakerPort",
   },

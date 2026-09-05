@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { IconType } from "react-icons";
 import {
   BoardUnitItem,
@@ -6,6 +7,7 @@ import {
   UnitItem,
 } from "@/definitions/unit-entries";
 import { UnitStuff } from "@/definitions/unit-stuff";
+import { createUnitCardPortPositionManager } from "@/presenter/unit-card-port-position-manager";
 import { store } from "@/store/store";
 import { unitCardHandlers } from "@/ui/desk-area-handlers";
 import {
@@ -22,17 +24,25 @@ const BoardUnitCard = ({
   unitItem: BoardUnitItem;
   unitStuff?: UnitStuff;
 }) => {
+  const [portPositionManager] = useState(createUnitCardPortPositionManager);
   const catalogItem = catalog[unitItem.catalogKey];
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
+
   return (
     <div
-      className="absolute"
+      ref={portPositionManager.setupResizeObserver}
+      className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
       <div className="flex-v gap-0.5">
         <div className="flex-ha">
-          {inputPortSpecs && <UnitPortsColumn portSpecs={inputPortSpecs} />}
+          {inputPortSpecs && (
+            <UnitPortsColumn
+              portSpecs={inputPortSpecs}
+              portPositionManager={portPositionManager}
+            />
+          )}
           <div
             className="h-100px bg-white cursor-pointer"
             onPointerDown={(e) =>
@@ -45,7 +55,12 @@ const BoardUnitCard = ({
               alt={catalogItem.name}
             />
           </div>
-          {outputPortSpecs && <UnitPortsColumn portSpecs={outputPortSpecs} />}
+          {outputPortSpecs && (
+            <UnitPortsColumn
+              portSpecs={outputPortSpecs}
+              portPositionManager={portPositionManager}
+            />
+          )}
         </div>
         <div className="flex-c text-sm">{catalogItem.name}</div>
       </div>
@@ -68,7 +83,7 @@ const EdgeUnitCardView = ({
 }) => {
   return (
     <div
-      className="absolute"
+      className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
       <div
