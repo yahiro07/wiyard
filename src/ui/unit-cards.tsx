@@ -21,7 +21,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
       <div
-        className="w-200px h-100px bg-white cursor-pointer"
+        className="h-100px bg-white cursor-pointer"
         onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
       >
         <img
