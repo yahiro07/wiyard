@@ -1,10 +1,10 @@
+import { deskAreaHandlers } from "@/presenter/desk-area-handlers";
+import { TaskBar } from "@/realms/desk/task-bar";
+import { SequencerWindow } from "@/realms/sequencer/sequencer-window";
+import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
+import { UnitConnectionsRoot } from "@/realms/unit-connection/unit-connections";
+import { UnitWindowsRoot } from "@/realms/unit-window/unit-windows";
 import { store } from "@/store/store";
-import { deskAreaHandlers } from "@/ui/desk-area-handlers";
-import { SequencerWindow } from "@/ui/sequencer-window";
-import { TaskBar } from "@/ui/task-bar";
-import { UnitCardsRoot } from "@/ui/unit-cards";
-import { UnitConnectionsRoot } from "@/ui/unit-connections";
-import { UnitWindowsRoot } from "@/ui/unit-windows";
 
 export const DeskArea = () => {
   const { windowsEvacuated, sequencerWindowVisible } = store.useSnapshot();

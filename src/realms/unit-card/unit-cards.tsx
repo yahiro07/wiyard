@@ -6,13 +6,13 @@ import {
   EdgeUnitItem,
   internalUnitSpecs,
   UnitItem,
-} from "@/definitions/unit-entries";
-import { UnitStuff } from "@/definitions/unit-stuff";
-import { createUnitCardPortPositionManager } from "@/presenter/unit-card-port-position-manager";
+} from "@/domain/unit-entries";
+import { UnitStuff } from "@/domain/unit-stuff";
+import { unitCardHandlers } from "@/presenter/desk-area-handlers";
+import { createUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
+import { useEdgeUnitCardStates_NoteInputPort } from "@/realms/unit-card/unit-cards-models";
+import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
 import { store } from "@/store/store";
-import { unitCardHandlers } from "@/ui/desk-area-handlers";
-import { useEdgeUnitCardStates_NoteInputPort } from "@/ui/unit-cards-models";
-import { UnitPortsColumn } from "@/ui/unit-ports";
 import { cz } from "@/utils/cz";
 
 const BoardUnitCard = ({

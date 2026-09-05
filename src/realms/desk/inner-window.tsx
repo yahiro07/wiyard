@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Icons } from "@/common/icons";
-import { WindowCoordViewModel } from "@/presenter/view-models";
-import { unitWindowHandlers } from "@/ui/desk-area-handlers";
+import { unitWindowHandlers } from "@/presenter/desk-area-handlers";
+import { WindowCoordViewModel } from "@/presenter/window-view-models";
 
 export const InnerWindow = ({
   title,

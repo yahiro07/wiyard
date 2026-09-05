@@ -1,5 +1,5 @@
 import { Connection } from "wafer-host/react";
-import { useNoteInputConnectionViewModels } from "@/ui/unit-connections-models";
+import { useNoteInputConnectionViewModels } from "@/realms/unit-connection/unit-connections-models";
 
 export const UnitConnectionsRoot = () => {
   const noteInputConnectionViewModels = useNoteInputConnectionViewModels();

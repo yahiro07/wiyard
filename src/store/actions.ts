@@ -1,4 +1,4 @@
-import { UnitStuff } from "@/definitions/unit-stuff";
+import { UnitStuff } from "@/domain/unit-stuff";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
 

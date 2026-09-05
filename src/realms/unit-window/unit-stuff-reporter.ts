@@ -1,5 +1,5 @@
 import { HsUnitInstance } from "wafer-host/core";
-import { buildUnitStuffLoaded } from "@/presenter/unit-stuff-builder";
+import { buildUnitStuffLoaded } from "@/domain/unit-stuff-builder";
 import { actions } from "@/store/actions";
 
 export function useUnitStuffReporter(unitId: string) {

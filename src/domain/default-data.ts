@@ -1,5 +1,5 @@
-import { appConfig } from "@/definitions/app-config";
-import { UnitItem } from "@/definitions/unit-entries";
+import { appConfig } from "@/domain/app-config";
+import { UnitItem } from "@/domain/unit-entries";
 import { Point } from "@/utils/drag-session";
 
 const ox = 100;

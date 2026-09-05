@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { EdgeUnitItem } from "@/definitions/unit-entries";
+import { EdgeUnitItem } from "@/domain/unit-entries";
 import { store } from "@/store/store";
 
 function useNoteOutputPortIndex(noteChannelId: string) {

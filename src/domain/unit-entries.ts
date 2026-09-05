@@ -1,8 +1,8 @@
 import { IconType } from "react-icons";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { Icons } from "@/common/icons";
-import { createNoteInputPortUnit } from "@/features/internal-units/note-input-port";
-import { createSpeakerPortUnit } from "@/features/internal-units/speaker-port";
+import { createNoteInputPortUnit } from "@/units/note-input-port";
+import { createSpeakerPortUnit } from "@/units/speaker-port";
 import { Point } from "@/utils/drag-session";
 import catalog from "../unit-inventories.json";
 

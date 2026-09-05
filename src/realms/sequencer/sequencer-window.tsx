@@ -1,7 +1,7 @@
-import { useSequencerWindowViewModel } from "@/presenter/view-models";
+import { useSequencerWindowViewModel } from "@/presenter/window-view-models";
+import { InnerWindow } from "@/realms/desk/inner-window";
+import { SequencerPanel } from "@/realms/sequencer/sequencer-panel";
 import { actions } from "@/store/actions";
-import { InnerWindow } from "@/ui/inner-window";
-import { SequencerPanel } from "@/ui/sequencer-panel/sequencer-panel";
 
 export const SequencerWindow = ({
   visible,

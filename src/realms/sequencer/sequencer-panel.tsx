@@ -1,9 +1,9 @@
 import { UnitFrameScaled } from "wafer-host/react";
-import { catalog, OffStageUnitItem } from "@/definitions/unit-entries";
+import { catalog, OffStageUnitItem } from "@/domain/unit-entries";
 import {
   useNoteChannelListColumnPresenter,
   useSequencerSectionPresenter,
-} from "@/ui/sequencer-panel/sequencer-panel-models";
+} from "@/realms/sequencer/sequencer-panel-models";
 import { cz } from "@/utils/cz";
 
 const NoteChannelListColumn = () => {

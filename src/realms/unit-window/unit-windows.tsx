@@ -6,12 +6,12 @@ import {
   EdgeUnitItem,
   internalUnitSpecs,
   UnitItem,
-} from "@/definitions/unit-entries";
-import { useWindowCoordViewModel } from "@/presenter/view-models";
+} from "@/domain/unit-entries";
+import { useWindowCoordViewModel } from "@/presenter/window-view-models";
+import { InnerWindow } from "@/realms/desk/inner-window";
+import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { InnerWindow } from "@/ui/inner-window";
-import { useUnitStuffReporter } from "@/ui/unit-stuff-reporter";
 
 const BoardUnitWindow = ({
   unitItem,

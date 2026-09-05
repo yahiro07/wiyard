@@ -1,5 +1,5 @@
-import { UnitPortSpec } from "@/definitions/unit-stuff";
-import { UnitCardPortPositionManager } from "@/presenter/unit-card-port-position-manager";
+import { UnitPortSpec } from "@/domain/unit-stuff";
+import { UnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
 
 const PortView = ({
   portSpec,

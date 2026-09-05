@@ -1,6 +1,6 @@
 import { HostAppProvider } from "wafer-host/react";
-import { hostSystem } from "@/store/host-system-instance";
-import { DeskArea } from "@/ui/desk-area";
+import { hostSystem } from "@/domain/host-system-instance";
+import { DeskArea } from "@/realms/desk/desk-area";
 
 export const App = () => {
   return (

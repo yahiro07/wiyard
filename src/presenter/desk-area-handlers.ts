@@ -1,6 +1,6 @@
-import { appConfig } from "@/definitions/app-config";
-import { StageUnitItem } from "@/definitions/unit-entries";
-import { WindowCoordViewModel } from "@/presenter/view-models";
+import { appConfig } from "@/domain/app-config";
+import { StageUnitItem } from "@/domain/unit-entries";
+import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
 import { startDragSession } from "@/utils/drag-session";
 
