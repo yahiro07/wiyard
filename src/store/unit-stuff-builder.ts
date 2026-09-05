@@ -27,7 +27,8 @@ export function buildUnitStuffLoaded(unitInstance: HsUnitInstance): UnitStuff {
       const bIndex = subtypeOrder.indexOf(b.subtype);
       return aIndex - bIndex;
     });
-  const inputPorts = portsIncluded.filter((p) => p.direction === "input");
-  const outputPort = portsIncluded.filter((p) => p.direction === "output");
-  return { status: "loaded", inputPorts, outputPort };
+  const inputPortSpecs = portsIncluded.filter((p) => p.direction === "input");
+  const outputPortSpecs = portsIncluded.filter((p) => p.direction === "output");
+
+  return { status: "loaded", inputPortSpecs, outputPortSpecs };
 }

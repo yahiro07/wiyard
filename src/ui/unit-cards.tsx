@@ -12,6 +12,7 @@ import {
   useEdgeUnitCardViewModel_NoteInputPort,
   useEdgeUnitCardViewModel_SpeakerPort,
 } from "@/ui/unit-cards-models";
+import { UnitPortsColumn } from "@/ui/unit-ports";
 import { cz } from "@/utils/cz";
 
 const BoardUnitCard = ({
@@ -22,8 +23,8 @@ const BoardUnitCard = ({
   unitStuff?: UnitStuff;
 }) => {
   const catalogItem = catalog[unitItem.catalogKey];
-  const inputPorts = unitStuff?.inputPorts;
-  const outputPort = unitStuff?.outputPort;
+  const inputPortSpecs = unitStuff?.inputPortSpecs;
+  const outputPortSpecs = unitStuff?.outputPortSpecs;
   return (
     <div
       className="absolute"
@@ -31,7 +32,7 @@ const BoardUnitCard = ({
     >
       <div className="flex-v gap-0.5">
         <div className="flex-ha">
-          {inputPorts && <div>INS {inputPorts.length}</div>}
+          {inputPortSpecs && <UnitPortsColumn portSpecs={inputPortSpecs} />}
           <div
             className="h-100px bg-white cursor-pointer"
             onPointerDown={(e) =>
@@ -44,7 +45,7 @@ const BoardUnitCard = ({
               alt={catalogItem.name}
             />
           </div>
-          {outputPort && <div>OUTS {outputPort.length}</div>}
+          {outputPortSpecs && <UnitPortsColumn portSpecs={outputPortSpecs} />}
         </div>
         <div className="flex-c text-sm">{catalogItem.name}</div>
       </div>

@@ -1,6 +1,6 @@
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 
-export type UnitPort = {
+export type UnitPortSpec = {
   direction: HsPortDirection;
   subtype: HsPortSubtype;
   portKey: string;
@@ -10,6 +10,6 @@ export type UnitPort = {
 
 export type UnitStuff = {
   status: "loading" | "loaded" | "error";
-  inputPorts?: UnitPort[];
-  outputPort?: UnitPort[];
+  inputPortSpecs?: UnitPortSpec[];
+  outputPortSpecs?: UnitPortSpec[];
 };
