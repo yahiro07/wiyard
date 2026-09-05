@@ -1,7 +1,7 @@
 import { appConfig } from "@/definitions/app-config";
 import { StageUnitItem } from "@/definitions/unit-entries";
+import { WindowCoordViewModel } from "@/presenter/view-models";
 import { actions } from "@/store/actions";
-import { WindowCoordViewModel } from "@/store/view-models";
 import { startDragSession } from "@/utils/drag-session";
 
 export const unitCardHandlers = {

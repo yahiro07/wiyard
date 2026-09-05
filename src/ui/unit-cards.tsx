@@ -4,16 +4,14 @@ import {
   BoardUnitItem,
   catalog,
   EdgeUnitItem,
+  internalUnitSpecs,
   UnitItem,
 } from "@/definitions/unit-entries";
 import { UnitStuff } from "@/definitions/unit-stuff";
 import { createUnitCardPortPositionManager } from "@/presenter/unit-card-port-position-manager";
 import { store } from "@/store/store";
 import { unitCardHandlers } from "@/ui/desk-area-handlers";
-import {
-  useEdgeUnitCardViewModel_NoteInputPort,
-  useEdgeUnitCardViewModel_SpeakerPort,
-} from "@/ui/unit-cards-models";
+import { useEdgeUnitCardStates_NoteInputPort } from "@/ui/unit-cards-models";
 import { UnitPortsColumn } from "@/ui/unit-ports";
 import { cz } from "@/utils/cz";
 
@@ -110,13 +108,30 @@ const EdgeUnitCard_NoteInputPort = ({
 }: {
   unitItem: EdgeUnitItem;
 }) => {
-  const vm = useEdgeUnitCardViewModel_NoteInputPort(unitItem);
-  return <EdgeUnitCardView {...vm} />;
+  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  const { index, isCurrent } = useEdgeUnitCardStates_NoteInputPort(unitItem);
+  return (
+    <EdgeUnitCardView
+      unitItem={unitItem}
+      highlighted={isCurrent}
+      label={`input ${index + 1}`}
+      iconComponent={internalUnitSpec.iconComponent}
+      handlePointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
+    />
+  );
 };
 
 const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
-  const vm = useEdgeUnitCardViewModel_SpeakerPort(unitItem);
-  return <EdgeUnitCardView {...vm} />;
+  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  return (
+    <EdgeUnitCardView
+      unitItem={unitItem}
+      highlighted={false}
+      iconComponent={internalUnitSpec.iconComponent}
+      label="output"
+      handlePointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
+    />
+  );
 };
 
 const UnitCardRoot = ({

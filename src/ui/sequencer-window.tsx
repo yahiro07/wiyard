@@ -1,5 +1,5 @@
+import { useSequencerWindowViewModel } from "@/presenter/view-models";
 import { actions } from "@/store/actions";
-import { useSequencerWindowViewModel } from "@/store/view-models";
 import { InnerWindow } from "@/ui/inner-window";
 import { SequencerPanel } from "@/ui/sequencer-panel/sequencer-panel";
 

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { HsUnitInstance } from "wafer-host/core";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import {
   BoardUnitItem,
@@ -8,29 +7,11 @@ import {
   internalUnitSpecs,
   UnitItem,
 } from "@/definitions/unit-entries";
-import { buildUnitStuffLoaded } from "@/presenter/unit-stuff-builder";
+import { useWindowCoordViewModel } from "@/presenter/view-models";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { useWindowCoordViewModel } from "@/store/view-models";
 import { InnerWindow } from "@/ui/inner-window";
-
-function useUnitStuffReporter(unitId: string) {
-  const reportLoadStart = () => {
-    actions.setUnitStuff(unitId, { status: "loading" });
-    return () => {
-      actions.setUnitStuff(unitId, null);
-    };
-  };
-  const reportLoaded = (unitInstance: HsUnitInstance) => {
-    const unitStuffLoaded = buildUnitStuffLoaded(unitInstance);
-    actions.setUnitStuff(unitId, unitStuffLoaded);
-  };
-  const reportFailure = () => {
-    actions.setUnitStuff(unitId, { status: "error" });
-  };
-
-  return { reportLoadStart, reportLoaded, reportFailure };
-}
+import { useUnitStuffReporter } from "@/ui/unit-stuff-reporter";
 
 const BoardUnitWindow = ({
   unitItem,
