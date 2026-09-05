@@ -52,5 +52,8 @@ export function useEdgeUnitCardViewModel_SpeakerPort(
     highlighted: false,
     iconComponent: internalUnitSpec.iconComponent,
     label: "output",
+    handlePointerDown(e) {
+      unitCardHandlers.handlePointerDown(e, unitItem);
+    },
   };
 }
