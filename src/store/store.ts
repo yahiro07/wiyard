@@ -1,6 +1,6 @@
 import { createStore, Store } from "snap-store";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
-import { UnitItem } from "@/domain/unit-entries";
+import { UnitItem } from "@/domain/types";
 import { UnitStuff } from "@/domain/unit-stuff";
 import { Point } from "@/utils/drag-session";
 

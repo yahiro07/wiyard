@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { IconType } from "react-icons";
-import {
-  BoardUnitItem,
-  catalog,
-  EdgeUnitItem,
-  internalUnitSpecs,
-  UnitItem,
-} from "@/domain/unit-entries";
+import { BoardUnitItem, EdgeUnitItem, UnitItem } from "@/domain/types";
+import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
 import { UnitStuff } from "@/domain/unit-stuff";
 import { unitCardHandlers } from "@/presenter/desk-area-handlers";
 import { createUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";

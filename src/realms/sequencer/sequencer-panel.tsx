@@ -1,5 +1,6 @@
 import { UnitFrameScaled } from "wafer-host/react";
-import { catalog, OffStageUnitItem } from "@/domain/unit-entries";
+import { OffStageUnitItem } from "@/domain/types";
+import { catalog } from "@/domain/unit-entries";
 import {
   useNoteChannelListColumnPresenter,
   useSequencerSectionPresenter,

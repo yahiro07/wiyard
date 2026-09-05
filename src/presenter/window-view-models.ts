@@ -1,6 +1,6 @@
 import { appConfig } from "@/domain/app-config";
 import { Size } from "@/domain/common-types";
-import { StageUnitItem } from "@/domain/unit-entries";
+import { StageUnitItem } from "@/domain/types";
 import { actionsInternal } from "@/store/actions";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";

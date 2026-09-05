@@ -1,12 +1,7 @@
 import { useEffect } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
-import {
-  BoardUnitItem,
-  catalog,
-  EdgeUnitItem,
-  internalUnitSpecs,
-  UnitItem,
-} from "@/domain/unit-entries";
+import { BoardUnitItem, EdgeUnitItem, UnitItem } from "@/domain/types";
+import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
 import { useWindowCoordViewModel } from "@/presenter/window-view-models";
 import { InnerWindow } from "@/realms/desk/inner-window";
 import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
