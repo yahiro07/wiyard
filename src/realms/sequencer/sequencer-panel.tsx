@@ -10,7 +10,7 @@ const NoteChannelListColumn = () => {
   const { noteChannelIds, currentNoteChannelId, selectNoteChannel } =
     useNoteChannelListColumnPresenter();
   return (
-    <div className="w-50px bg-gray-600/50 flex-v gap-2 py-2">
+    <div className="w-50px bg-gray-600/60 flex-v gap-2 py-2">
       {noteChannelIds.map((id, index) => (
         <button
           key={id}
