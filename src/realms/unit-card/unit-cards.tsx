@@ -21,9 +21,7 @@ const BoardUnitCard = ({
   unitItem: BoardUnitItem;
   unitStuff?: UnitStuff;
 }) => {
-  const portPositionManager = useUnitCardPortPositionManager(
-    unitItem.cardPosition,
-  );
+  const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
@@ -82,9 +80,7 @@ const EdgeUnitCardView = ({
   label: string;
   handlePointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
 }) => {
-  const portPositionManager = useUnitCardPortPositionManager(
-    unitItem.cardPosition,
-  );
+  const portPositionManager = useUnitCardPortPositionManager(unitItem);
   return (
     <div
       ref={portPositionManager.setBaseElement}

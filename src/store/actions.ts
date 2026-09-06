@@ -43,9 +43,16 @@ export const actions = {
       setOrDeleteValue(draft, unitId, stuff);
     });
   },
-  setPortStuff(portKey: string, stuff: PortStuff | null) {
+  patchPortStuffs(attrs: Record<string, PortStuff>) {
+    store.patchPortStuffs(attrs);
+  },
+  removePortStuffsForUnit(unitId: string) {
     store.producePortStuffs((draft) => {
-      setOrDeleteValue(draft, portKey, stuff);
+      for (const key in draft) {
+        if (key.split(".")[0] === unitId) {
+          delete draft[key];
+        }
+      }
     });
   },
 };

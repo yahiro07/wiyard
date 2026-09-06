@@ -1,7 +1,8 @@
 import { useLayoutEffect, useState } from "react";
-import { PortStuff, UnitPortSpec } from "@/domain/types";
+import { PortStuff, StageUnitItem, UnitPortSpec } from "@/domain/types";
 import { actions } from "@/store/actions";
-import { Point } from "@/utils/drag-session";
+import { store } from "@/store/store";
+import { mapObjectValues } from "@/utils/helpers";
 
 export type UnitCardPortPositionManager = {
   setBaseElement(baseEl: HTMLDivElement): () => void;
@@ -14,44 +15,62 @@ type PortEntry = {
   element: HTMLElement;
 };
 
-export function createUnitCardPortPositionManager(): UnitCardPortPositionManager {
+export function createUnitCardPortPositionManager(
+  unitId: string,
+): UnitCardPortPositionManager {
   const portEntries: Record<string, PortEntry> = {};
+  let baseEl: HTMLDivElement | undefined;
 
   const internal = {
     updateLayout() {
-      for (const portKey in portEntries) {
-        const portEntry = portEntries[portKey];
+      const unitItem = store.state.unitItems.find((it) => it.unitId === unitId);
+      if (!(unitItem?.type === "board" || unitItem?.type === "edge")) return;
+      const cardPos = unitItem.cardPosition;
+
+      if (!baseEl) return;
+      const baseRect = baseEl.getBoundingClientRect();
+      const baseCenter = {
+        x: baseRect.left + baseRect.width / 2,
+        y: baseRect.top + baseRect.height / 2,
+      };
+
+      const attrs = mapObjectValues(portEntries, (portEntry) => {
         const rect = portEntry.element.getBoundingClientRect();
-        const unitId = portKey.split(".")[0];
-        const position = {
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
+        const relativePosition = {
+          x: rect.left + rect.width / 2 - baseCenter.x,
+          y: rect.top + rect.height / 2 - baseCenter.y,
         };
+        const position = {
+          x: cardPos.x + relativePosition.x,
+          y: cardPos.y + relativePosition.y,
+        };
+
         const { direction, subtype } = portEntry.portSpec;
         const portStuff: PortStuff = {
-          portKey,
+          portKey: portEntry.portSpec.portKey,
           direction,
           subtype,
-          unitId,
+          unitId: unitItem.unitId,
           position,
         };
-        actions.setPortStuff(portKey, portStuff);
-      }
+        return portStuff;
+      });
+      actions.patchPortStuffs(attrs);
+    },
+    setupObserver(baseEl: HTMLDivElement) {
+      const observer = new ResizeObserver(internal.updateLayout);
+      observer.observe(baseEl);
+      return () => {
+        observer.disconnect();
+        actions.removePortStuffsForUnit(unitId);
+      };
     },
   };
 
   return {
-    setBaseElement(baseEl) {
-      const observer = new ResizeObserver((entries) => {
-        const entry = entries[0];
-        if (entry) {
-          internal.updateLayout();
-        }
-      });
-      observer.observe(baseEl);
-      return () => {
-        observer.disconnect();
-      };
+    setBaseElement(_baseEl) {
+      baseEl = _baseEl;
+      return internal.setupObserver(baseEl);
     },
     updateLayout() {
       internal.updateLayout();
@@ -62,19 +81,20 @@ export function createUnitCardPortPositionManager(): UnitCardPortPositionManager
       portEntries[portKey] = { portSpec, element: element };
       return () => {
         delete portEntries[portKey];
-        actions.setPortStuff(portKey, null);
       };
     },
   };
 }
 
 export function useUnitCardPortPositionManager(
-  cardPosition: Point,
+  unitItem: StageUnitItem,
 ): UnitCardPortPositionManager {
-  const [portPositionManager] = useState(createUnitCardPortPositionManager);
+  const [portPositionManager] = useState(() =>
+    createUnitCardPortPositionManager(unitItem.unitId),
+  );
   // biome-ignore lint/correctness/useExhaustiveDependencies: implicit dependency
   useLayoutEffect(() => {
     portPositionManager.updateLayout();
-  }, [cardPosition, portPositionManager]);
+  }, [unitItem.cardPosition, portPositionManager]);
   return portPositionManager;
 }
