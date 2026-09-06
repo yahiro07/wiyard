@@ -21,7 +21,7 @@ type StoreState = {
 // biome-ignore lint/suspicious/noAssignInExpressions: preserve store instance for hmr
 export const store = ((window as any).store ??= createStore<StoreState>({
   unitItems: defaultScene.unitItems,
-  wireConnectionKeys: [],
+  wireConnectionKeys: defaultScene.wireConnectionKeys,
   sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowVisible: false,
