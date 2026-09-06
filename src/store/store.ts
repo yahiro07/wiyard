@@ -16,6 +16,7 @@ type StoreState = {
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
   windowsEvacuated: boolean;
+  hmrRevision: number;
 };
 
 // biome-ignore lint/suspicious/noAssignInExpressions: preserve store instance for hmr
@@ -31,8 +32,15 @@ export const store = ((window as any).store ??= createStore<StoreState>({
   unitStuffs: {},
   portStuffs: {},
   windowsEvacuated: false,
+  hmrRevision: 0,
 })) as Store<StoreState>;
 
 if (0) {
   store.setSequencerWindowVisible(true);
+}
+
+if (import.meta.hot) {
+  import.meta.hot.on("vite:afterUpdate", () => {
+    store.setHmrRevision((prev) => prev + 1);
+  });
 }
