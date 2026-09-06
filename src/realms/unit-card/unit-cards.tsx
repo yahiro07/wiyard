@@ -4,6 +4,7 @@ import {
   BoardUnitItem,
   EdgeUnitItem,
   UnitItem,
+  UnitPortSpec,
   UnitStuff,
 } from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
@@ -65,35 +66,55 @@ const BoardUnitCard = ({
 
 const EdgeUnitCardView = ({
   unitItem,
+  inputPortSpecs,
+  outputPortSpecs,
   highlighted,
   iconComponent: IconComponent,
   label,
   handlePointerDown,
 }: {
   unitItem: EdgeUnitItem;
+  inputPortSpecs?: UnitPortSpec[];
+  outputPortSpecs?: UnitPortSpec[];
   highlighted: boolean;
   iconComponent: IconType;
   label: string;
   handlePointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
 }) => {
+  const [portPositionManager] = useState(createUnitCardPortPositionManager);
   return (
     <div
+      ref={portPositionManager.setupResizeObserver}
       className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
-      <div
-        className={cz(
-          "w-100px h-100px bg-white/50 flex-c cursor-pointer relative",
-          "border-l border-l-6 border-l-transparent",
-          highlighted && "!border-l-#8ae",
+      <div className="flex-ha">
+        {inputPortSpecs && (
+          <UnitPortsColumn
+            portSpecs={inputPortSpecs}
+            portPositionManager={portPositionManager}
+          />
         )}
-        onPointerDown={handlePointerDown}
-      >
-        <IconComponent size={55} className="mb-3" />
-        {label && (
-          <div className="absolute-full flex-va justify-end text-sm font-bold pb-1">
-            {label}
-          </div>
+        <div
+          className={cz(
+            "w-100px h-100px bg-white/50 flex-c cursor-pointer relative",
+            "border-l border-l-6 border-l-transparent",
+            highlighted && "!border-l-#8ae",
+          )}
+          onPointerDown={handlePointerDown}
+        >
+          <IconComponent size={55} className="mb-3" />
+          {label && (
+            <div className="absolute-full flex-va justify-end text-sm font-bold pb-1">
+              {label}
+            </div>
+          )}
+        </div>
+        {outputPortSpecs && (
+          <UnitPortsColumn
+            portSpecs={outputPortSpecs}
+            portPositionManager={portPositionManager}
+          />
         )}
       </div>
     </div>
@@ -102,14 +123,17 @@ const EdgeUnitCardView = ({
 
 const EdgeUnitCard_NoteInputPort = ({
   unitItem,
+  unitStuff,
 }: {
   unitItem: EdgeUnitItem;
+  unitStuff?: UnitStuff;
 }) => {
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
   const { index, isCurrent } = useEdgeUnitCardStates_NoteInputPort(unitItem);
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
+      outputPortSpecs={unitStuff?.outputPortSpecs}
       highlighted={isCurrent}
       label={`input ${index + 1}`}
       iconComponent={internalUnitSpec.iconComponent}
@@ -118,11 +142,18 @@ const EdgeUnitCard_NoteInputPort = ({
   );
 };
 
-const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
+const EdgeUnitCard_SpeakerPort = ({
+  unitItem,
+  unitStuff,
+}: {
+  unitItem: EdgeUnitItem;
+  unitStuff?: UnitStuff;
+}) => {
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
+      inputPortSpecs={unitStuff?.inputPortSpecs}
       highlighted={false}
       iconComponent={internalUnitSpec.iconComponent}
       label="output"
@@ -142,9 +173,13 @@ const UnitCardRoot = ({
     return <BoardUnitCard unitItem={unitItem} unitStuff={unitStuff} />;
   } else if (unitItem.type === "edge") {
     if (unitItem.internalUnitKey === "noteInputPort") {
-      return <EdgeUnitCard_NoteInputPort unitItem={unitItem} />;
+      return (
+        <EdgeUnitCard_NoteInputPort unitItem={unitItem} unitStuff={unitStuff} />
+      );
     } else {
-      return <EdgeUnitCard_SpeakerPort unitItem={unitItem} />;
+      return (
+        <EdgeUnitCard_SpeakerPort unitItem={unitItem} unitStuff={unitStuff} />
+      );
     }
   }
 };

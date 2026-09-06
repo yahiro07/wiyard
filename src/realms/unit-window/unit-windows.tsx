@@ -43,11 +43,15 @@ const BoardUnitWindow = ({
 
 const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  const reporter = useUnitStuffReporter(unitItem.unitId);
+  useEffect(reporter.reportLoadStart, []);
+
   return (
     <ReactUnitFrame
       unitId={unitItem.unitId}
       unitTemplateFn={internalUnitSpec.factory}
       destSpec={unitItem._destUnitId}
+      onUnitInstanceLoaded={reporter.reportLoaded}
     />
   );
 };
