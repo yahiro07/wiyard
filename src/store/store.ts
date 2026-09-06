@@ -1,7 +1,9 @@
 import { createStore, Store } from "snap-store";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
+import { hostSystem } from "@/domain/host-system-instance";
 import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
 import { Point } from "@/utils/drag-session";
+import { iife } from "@/utils/helpers";
 
 type StoreState = {
   //will be persisted
@@ -56,8 +58,14 @@ if (import.meta.hot) {
   function applyStateEvacuationWorkaround() {
     const backupState = structuredClone(store.state);
     store.assign(blankStoreState);
+    const unitStates = hostSystem.getAllUnitStates();
     setTimeout(() => {
-      store.assign(backupState);
+      void iife(async () => {
+        console.log("restore unit states");
+        store.assign(backupState);
+        await hostSystem.waitUnitsLoaded();
+        hostSystem.setAllUnitStates(unitStates);
+      });
     }, 100);
   }
   const hmr = import.meta.hot;

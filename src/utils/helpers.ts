@@ -1,3 +1,7 @@
+export function iife<T>(fn: () => T): T {
+  return fn();
+}
+
 export function setOrDeleteValue<T extends object, K extends keyof T>(
   obj: T,
   key: K,
