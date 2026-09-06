@@ -1,6 +1,8 @@
 import { createStore, Store } from "snap-store";
+import { UpdatePayload } from "vite";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
-import { UnitItem, UnitStuff } from "@/domain/types";
+import { hostSystem } from "@/domain/host-system-instance";
+import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
 import { Point } from "@/utils/drag-session";
 
 type StoreState = {
@@ -14,14 +16,13 @@ type StoreState = {
   currentNoteChannelId: string;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
-  portRelativePositions: Record<string, Point>;
+  portStuffs: Record<string, PortStuff>;
   windowsEvacuated: boolean;
 };
 
-// biome-ignore lint/suspicious/noAssignInExpressions: preserve store instance for hmr
-export const store = ((window as any).store ??= createStore<StoreState>({
+const defaultStoreState: StoreState = {
   unitItems: defaultScene.unitItems,
-  wireConnectionKeys: [],
+  wireConnectionKeys: defaultScene.wireConnectionKeys,
   sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowVisible: false,
@@ -29,10 +30,57 @@ export const store = ((window as any).store ??= createStore<StoreState>({
   currentNoteChannelId: defaultScene.initialNoteChannelId,
   //
   unitStuffs: {},
-  portRelativePositions: {},
+  portStuffs: {},
   windowsEvacuated: false,
-})) as Store<StoreState>;
+};
+
+export const store = ((window as any).store ??=
+  createStore<StoreState>(defaultStoreState)) as Store<StoreState>;
 
 if (0) {
   store.setSequencerWindowVisible(true);
+}
+
+if (import.meta.hot) {
+  const blankingStoreState: StoreState = {
+    unitItems: [],
+    wireConnectionKeys: [],
+    sharedWindowPosition: defaultWindowPosition,
+    sequencerWindowPosition: defaultWindowPosition,
+    sequencerWindowVisible: false,
+    currentEffectUnitId: null,
+    currentNoteChannelId: "",
+    unitStuffs: {},
+    portStuffs: {},
+    windowsEvacuated: false,
+  };
+
+  function applyStateEvacuationWorkaround() {
+    const unitStates = hostSystem.getAllUnitStates();
+    const backupState = { ...store.state };
+    store.assign(blankingStoreState);
+    setTimeout(() => {
+      void (async () => {
+        console.log("restore unit states");
+        store.assign({ ...backupState, unitStuffs: {}, portStuffs: {} });
+        await hostSystem.waitUnitsLoaded();
+        hostSystem.setAllUnitStates(unitStates);
+      })();
+    }, 100);
+  }
+  const hmr = import.meta.hot;
+  if (hmr.data.initialized) {
+    applyStateEvacuationWorkaround();
+  }
+  hmr.data.initialized = true;
+
+  function loagHmrTargets(payload: UpdatePayload) {
+    console.log(
+      `HMR occurred for:\n${payload.updates.map((it) => it.path).join("\n")}`,
+    );
+  }
+  hmr.on("vite:afterUpdate", loagHmrTargets);
+  hmr.dispose(() => {
+    hmr.off("vite:afterUpdate", loagHmrTargets);
+  });
 }

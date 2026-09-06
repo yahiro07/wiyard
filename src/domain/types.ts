@@ -9,7 +9,6 @@ export type BoardUnitItem = {
   catalogKey: CatalogKey;
   cardPosition: Point;
   windowPosition: Point;
-  _destUnitId?: string;
 };
 
 //note input port and speaker output port, used for input/output of the board area
@@ -20,7 +19,6 @@ export type EdgeUnitItem = {
   internalUnitKey: InternalUnitKey;
   cardPosition: Point;
   windowPosition: Point;
-  _destUnitId?: string;
 };
 
 //units placed on board area
@@ -50,8 +48,6 @@ export type UnitStuff = {
   outputPortSpecs?: UnitPortSpec[];
 };
 
-//derived item types, not hold in store
-
 export type PortStuff = {
   portKey: string; //${unitId}.${portId}
   direction: HsPortDirection;
@@ -59,6 +55,8 @@ export type PortStuff = {
   unitId: string;
   position: Point;
 };
+
+//derived item types, not hold in store
 
 export type WireStuff = {
   connectionKey: string; //${sourcePortKey}-${destinationPortKey}

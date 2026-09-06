@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { IconType } from "react-icons";
 import {
   BoardUnitItem,
@@ -9,7 +8,7 @@ import {
 } from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
 import { unitCardHandlers } from "@/presenter/desk-area-handlers";
-import { createUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
+import { useUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
 import { useEdgeUnitCardStates_NoteInputPort } from "@/realms/unit-card/unit-cards-models";
 import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
 import { store } from "@/store/store";
@@ -22,14 +21,14 @@ const BoardUnitCard = ({
   unitItem: BoardUnitItem;
   unitStuff?: UnitStuff;
 }) => {
-  const [portPositionManager] = useState(createUnitCardPortPositionManager);
+  const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
 
   return (
     <div
-      ref={portPositionManager.setupResizeObserver}
+      ref={portPositionManager.setBaseElement}
       className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
@@ -81,10 +80,10 @@ const EdgeUnitCardView = ({
   label: string;
   handlePointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
 }) => {
-  const [portPositionManager] = useState(createUnitCardPortPositionManager);
+  const portPositionManager = useUnitCardPortPositionManager(unitItem);
   return (
     <div
-      ref={portPositionManager.setupResizeObserver}
+      ref={portPositionManager.setBaseElement}
       className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
@@ -133,6 +132,7 @@ const EdgeUnitCard_NoteInputPort = ({
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
+      inputPortSpecs={[]}
       outputPortSpecs={unitStuff?.outputPortSpecs}
       highlighted={isCurrent}
       label={`input ${index + 1}`}
@@ -154,6 +154,7 @@ const EdgeUnitCard_SpeakerPort = ({
     <EdgeUnitCardView
       unitItem={unitItem}
       inputPortSpecs={unitStuff?.inputPortSpecs}
+      outputPortSpecs={[]}
       highlighted={false}
       iconComponent={internalUnitSpec.iconComponent}
       label="output"

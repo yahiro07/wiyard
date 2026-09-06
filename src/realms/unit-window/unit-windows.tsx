@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { BoardUnitItem, EdgeUnitItem, UnitItem } from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
@@ -20,7 +20,7 @@ const BoardUnitWindow = ({
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
-  useEffect(reporter.reportLoadStart, []);
+  useLayoutEffect(reporter.reportLoadStart, []);
 
   return (
     <InnerWindow
@@ -33,7 +33,6 @@ const BoardUnitWindow = ({
       <UnitFrameScaled
         unitId={unitItem.unitId}
         unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
-        destSpec={unitItem._destUnitId}
         onUnitInstanceLoaded={reporter.reportLoaded}
         onLoadFailed={reporter.reportFailure}
       />
@@ -44,13 +43,12 @@ const BoardUnitWindow = ({
 const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
-  useEffect(reporter.reportLoadStart, []);
+  useLayoutEffect(reporter.reportLoadStart, []);
 
   return (
     <ReactUnitFrame
       unitId={unitItem.unitId}
       unitTemplateFn={internalUnitSpec.factory}
-      destSpec={unitItem._destUnitId}
       onUnitInstanceLoaded={reporter.reportLoaded}
     />
   );

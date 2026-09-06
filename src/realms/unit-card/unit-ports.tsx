@@ -11,9 +11,9 @@ const PortView = ({
 }) => {
   const refCallback = useCallback(
     (el: HTMLDivElement) => {
-      return portPositionManager.setPortElement(portSpec.portKey, el);
+      return portPositionManager.registerPort(portSpec, el);
     },
-    [portSpec.portKey, portPositionManager],
+    [portSpec, portPositionManager],
   );
   return (
     <div ref={refCallback} className="flex-ha">

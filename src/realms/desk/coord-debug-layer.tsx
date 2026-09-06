@@ -1,9 +1,7 @@
-import { readers } from "@/store/readers";
 import { store } from "@/store/store";
 
 export const CoordDebugLayer = () => {
-  const { unitItems } = store.useSnapshot();
-  const portStuffs = readers.usePortStuffs();
+  const { unitItems, portStuffs } = store.useSnapshot();
   return (
     <div className="pointer-events-none">
       <>
@@ -22,7 +20,7 @@ export const CoordDebugLayer = () => {
         })}
       </>
       <>
-        {portStuffs.map((item) => {
+        {Object.values(portStuffs).map((item) => {
           const pos = item.position;
           return (
             <div

@@ -1,8 +1,10 @@
 import { Connection } from "wafer-host/react";
 import { useNoteInputConnectionViewModels } from "@/realms/unit-connection/unit-connections-models";
+import { store } from "@/store/store";
 
 export const UnitConnectionsRoot = () => {
   const noteInputConnectionViewModels = useNoteInputConnectionViewModels();
+  const { wireConnectionKeys } = store.useSnapshot();
   return (
     <>
       {noteInputConnectionViewModels.map((vm) => (
@@ -12,7 +14,16 @@ export const UnitConnectionsRoot = () => {
           destination={vm.destination}
         />
       ))}
-      {/* <Connection source="speakerPort" destination="$output" />  */}
+      {wireConnectionKeys.map((connectionKey) => {
+        const [sourcePortKey, destinationPortKey] = connectionKey.split("-");
+        return (
+          <Connection
+            key={connectionKey}
+            source={sourcePortKey}
+            destination={destinationPortKey}
+          />
+        );
+      })}
     </>
   );
 };
