@@ -1,4 +1,4 @@
-import { UnitStuff } from "@/domain/types";
+import { PortStuff, UnitStuff } from "@/domain/types";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
 import { setOrDeleteValue } from "@/utils/helpers";
@@ -43,9 +43,9 @@ export const actions = {
       setOrDeleteValue(draft, unitId, stuff);
     });
   },
-  setPortRelativePosition(portKey: string, position: Point | null) {
-    store.producePortRelativePositions((draft) => {
-      setOrDeleteValue(draft, portKey, position);
+  setPortStuff(portKey: string, stuff: PortStuff | null) {
+    store.producePortStuffs((draft) => {
+      setOrDeleteValue(draft, portKey, stuff);
     });
   },
 };

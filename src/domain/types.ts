@@ -50,8 +50,6 @@ export type UnitStuff = {
   outputPortSpecs?: UnitPortSpec[];
 };
 
-//derived item types, not hold in store
-
 export type PortStuff = {
   portKey: string; //${unitId}.${portId}
   direction: HsPortDirection;
@@ -59,6 +57,8 @@ export type PortStuff = {
   unitId: string;
   position: Point;
 };
+
+//derived item types, not hold in store
 
 export type WireStuff = {
   connectionKey: string; //${sourcePortKey}-${destinationPortKey}

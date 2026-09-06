@@ -1,6 +1,6 @@
 import { createStore, Store } from "snap-store";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
-import { UnitItem, UnitStuff } from "@/domain/types";
+import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
 import { Point } from "@/utils/drag-session";
 
 type StoreState = {
@@ -14,7 +14,7 @@ type StoreState = {
   currentNoteChannelId: string;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
-  portRelativePositions: Record<string, Point>;
+  portStuffs: Record<string, PortStuff>;
   windowsEvacuated: boolean;
 };
 
@@ -29,7 +29,7 @@ export const store = ((window as any).store ??= createStore<StoreState>({
   currentNoteChannelId: defaultScene.initialNoteChannelId,
   //
   unitStuffs: {},
-  portRelativePositions: {},
+  portStuffs: {},
   windowsEvacuated: false,
 })) as Store<StoreState>;
 
