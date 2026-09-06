@@ -1,9 +1,9 @@
 import { createStore, Store } from "snap-store";
+import { UpdatePayload } from "vite";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
 import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
 import { Point } from "@/utils/drag-session";
-import { iife } from "@/utils/helpers";
 
 type StoreState = {
   //will be persisted
@@ -34,19 +34,6 @@ const defaultStoreState: StoreState = {
   windowsEvacuated: false,
 };
 
-const blankStoreState: StoreState = {
-  unitItems: [],
-  wireConnectionKeys: [],
-  sharedWindowPosition: defaultWindowPosition,
-  sequencerWindowPosition: defaultWindowPosition,
-  sequencerWindowVisible: false,
-  currentEffectUnitId: null,
-  currentNoteChannelId: "",
-  unitStuffs: {},
-  portStuffs: {},
-  windowsEvacuated: false,
-};
-
 export const store = ((window as any).store ??=
   createStore<StoreState>(defaultStoreState)) as Store<StoreState>;
 
@@ -55,17 +42,30 @@ if (0) {
 }
 
 if (import.meta.hot) {
+  const blankingStoreState: StoreState = {
+    unitItems: [],
+    wireConnectionKeys: [],
+    sharedWindowPosition: defaultWindowPosition,
+    sequencerWindowPosition: defaultWindowPosition,
+    sequencerWindowVisible: false,
+    currentEffectUnitId: null,
+    currentNoteChannelId: "",
+    unitStuffs: {},
+    portStuffs: {},
+    windowsEvacuated: false,
+  };
+
   function applyStateEvacuationWorkaround() {
-    const backupState = structuredClone(store.state);
-    store.assign(blankStoreState);
     const unitStates = hostSystem.getAllUnitStates();
+    const backupState = { ...store.state };
+    store.assign(blankingStoreState);
     setTimeout(() => {
-      void iife(async () => {
+      void (async () => {
         console.log("restore unit states");
-        store.assign(backupState);
+        store.assign({ ...backupState, unitStuffs: {}, portStuffs: {} });
         await hostSystem.waitUnitsLoaded();
         hostSystem.setAllUnitStates(unitStates);
-      });
+      })();
     }, 100);
   }
   const hmr = import.meta.hot;
@@ -74,9 +74,13 @@ if (import.meta.hot) {
   }
   hmr.data.initialized = true;
 
-  hmr.on("vite:afterUpdate", (payload) => {
+  function loagHmrTargets(payload: UpdatePayload) {
     console.log(
       `HMR occurred for:\n${payload.updates.map((it) => it.path).join("\n")}`,
     );
+  }
+  hmr.on("vite:afterUpdate", loagHmrTargets);
+  hmr.dispose(() => {
+    hmr.off("vite:afterUpdate", loagHmrTargets);
   });
 }

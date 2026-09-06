@@ -1,5 +1,6 @@
-export function iife<T>(fn: () => T): T {
-  return fn();
+export function checkArrayItemEquals<T>(a: T[], b: T[]) {
+  if (a.length !== b.length) return false;
+  return a.every((item, index) => item === b[index]);
 }
 
 export function setOrDeleteValue<T extends object, K extends keyof T>(
@@ -14,9 +15,14 @@ export function setOrDeleteValue<T extends object, K extends keyof T>(
   }
 }
 
-export function checkArrayItemEquals<T>(a: T[], b: T[]) {
-  if (a.length !== b.length) return false;
-  return a.every((item, index) => item === b[index]);
+export function pickObjectMembers<T extends {}, K extends keyof T>(
+  obj: T,
+  keys: K[] | Record<K, 1 | true>,
+): Pick<T, K> {
+  const fieldNames = Array.isArray(keys) ? keys : (Object.keys(keys) as K[]);
+  return Object.fromEntries(
+    fieldNames.map((fieldName) => [fieldName, obj[fieldName]]),
+  ) as Pick<T, K>;
 }
 
 export function mapObjectValues<T, R>(
