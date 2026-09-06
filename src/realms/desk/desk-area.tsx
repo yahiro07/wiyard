@@ -1,4 +1,5 @@
 import { deskAreaHandlers } from "@/presenter/desk-area-handlers";
+import { CoordDebugLayer } from "@/realms/desk/coord-debug-layer";
 import { TaskBar } from "@/realms/desk/task-bar";
 import { SequencerWindow } from "@/realms/sequencer/sequencer-window";
 import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
@@ -21,6 +22,7 @@ export const DeskArea = () => {
         evacuated={windowsEvacuated}
       />
       <UnitConnectionsRoot />
+      <CoordDebugLayer />
     </div>
   );
 };

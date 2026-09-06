@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { IconType } from "react-icons";
-import { BoardUnitItem, EdgeUnitItem, UnitItem } from "@/domain/types";
+import {
+  BoardUnitItem,
+  EdgeUnitItem,
+  UnitItem,
+  UnitStuff,
+} from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
-import { UnitStuff } from "@/domain/unit-stuff";
 import { unitCardHandlers } from "@/presenter/desk-area-handlers";
 import { createUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
 import { useEdgeUnitCardStates_NoteInputPort } from "@/realms/unit-card/unit-cards-models";
@@ -28,33 +32,31 @@ const BoardUnitCard = ({
       className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: unitItem.cardPosition.x, top: unitItem.cardPosition.y }}
     >
-      <div className="flex-v gap-0.5">
-        <div className="flex-ha">
-          {inputPortSpecs && (
-            <UnitPortsColumn
-              portSpecs={inputPortSpecs}
-              portPositionManager={portPositionManager}
-            />
-          )}
-          <div
-            className="h-100px bg-white cursor-pointer"
-            onPointerDown={(e) =>
-              unitCardHandlers.handlePointerDown(e, unitItem)
-            }
-          >
-            <img
-              src={catalogItem.thumbnailUrl}
-              className="w-full h-full object-contain"
-              alt={catalogItem.name}
-            />
-          </div>
-          {outputPortSpecs && (
-            <UnitPortsColumn
-              portSpecs={outputPortSpecs}
-              portPositionManager={portPositionManager}
-            />
-          )}
+      <div className="flex-ha">
+        {inputPortSpecs && (
+          <UnitPortsColumn
+            portSpecs={inputPortSpecs}
+            portPositionManager={portPositionManager}
+          />
+        )}
+        <div
+          className="h-100px bg-white cursor-pointer"
+          onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
+        >
+          <img
+            src={catalogItem.thumbnailUrl}
+            className="w-full h-full object-contain"
+            alt={catalogItem.name}
+          />
         </div>
+        {outputPortSpecs && (
+          <UnitPortsColumn
+            portSpecs={outputPortSpecs}
+            portPositionManager={portPositionManager}
+          />
+        )}
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 -mb-22px">
         <div className="flex-c text-sm">{catalogItem.name}</div>
       </div>
     </div>

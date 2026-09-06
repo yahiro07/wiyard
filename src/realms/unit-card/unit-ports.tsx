@@ -1,4 +1,5 @@
-import { UnitPortSpec } from "@/domain/unit-stuff";
+import { useCallback } from "react";
+import { UnitPortSpec } from "@/domain/types";
 import { UnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
 
 const PortView = ({
@@ -8,12 +9,15 @@ const PortView = ({
   portSpec: UnitPortSpec;
   portPositionManager: UnitCardPortPositionManager;
 }) => {
+  const refCallback = useCallback(
+    (el: HTMLDivElement) => {
+      return portPositionManager.setPortElement(portSpec.portKey, el);
+    },
+    [portSpec.portKey, portPositionManager],
+  );
   return (
-    <div
-      ref={(el) => portPositionManager.setPortElement(portSpec.portKey, el)}
-      className="flex-ha"
-    >
-      <div>{portSpec.direction === "input" ? "I" : "O"} </div>
+    <div ref={refCallback} className="flex-ha">
+      <div>{portSpec.direction === "input" ? "O" : "O"} </div>
     </div>
   );
 };
@@ -26,7 +30,7 @@ export const UnitPortsColumn = ({
   portPositionManager: UnitCardPortPositionManager;
 }) => {
   return (
-    <div className="flex-v gap-0.5">
+    <div className="flex-va gap-0.5 min-w-20px">
       {portSpecs.map((portSpec) => (
         <PortView
           key={portSpec.id}

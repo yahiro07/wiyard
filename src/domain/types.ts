@@ -1,3 +1,4 @@
+import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
 import { Point } from "@/utils/drag-session";
 
@@ -34,3 +35,35 @@ export type OffStageUnitItem = {
 };
 
 export type UnitItem = BoardUnitItem | EdgeUnitItem | OffStageUnitItem;
+
+export type UnitPortSpec = {
+  direction: HsPortDirection;
+  subtype: HsPortSubtype;
+  portKey: string;
+  id: string;
+  label?: string;
+};
+
+export type UnitStuff = {
+  status: "loading" | "loaded" | "error";
+  inputPortSpecs?: UnitPortSpec[];
+  outputPortSpecs?: UnitPortSpec[];
+};
+
+//derived item types, not hold in store
+
+export type PortStuff = {
+  portKey: string; //${unitId}.${portId}
+  direction: HsPortDirection;
+  subtype: HsPortSubtype;
+  unitId: string;
+  position: Point;
+};
+
+export type WireStuff = {
+  connectionKey: string; //${sourcePortKey}-${destinationPortKey}
+  sourcePortKey: string;
+  destinationPortKey: string;
+  sourceUnitId: string;
+  destinationUnitId: string;
+};
