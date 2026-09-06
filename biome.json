@@ -16,7 +16,8 @@
         "noConstantCondition": "off"
       },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noAssignInExpressions": "off"
       },
       "complexity": {
         "noUselessFragments": "off"

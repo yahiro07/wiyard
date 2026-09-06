@@ -8,11 +8,9 @@ import { UnitWindowsRoot } from "@/realms/unit-window/unit-windows";
 import { store } from "@/store/store";
 
 export const DeskArea = () => {
-  const { windowsEvacuated, sequencerWindowVisible, hmrRevision } =
-    store.useSnapshot();
+  const { windowsEvacuated, sequencerWindowVisible } = store.useSnapshot();
   return (
     <div
-      key={hmrRevision}
       className="grow relative bg-gray-500/80"
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >

@@ -16,11 +16,9 @@ type StoreState = {
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
   windowsEvacuated: boolean;
-  hmrRevision: number;
 };
 
-// biome-ignore lint/suspicious/noAssignInExpressions: preserve store instance for hmr
-export const store = ((window as any).store ??= createStore<StoreState>({
+const defaultStoreState: StoreState = {
   unitItems: defaultScene.unitItems,
   wireConnectionKeys: defaultScene.wireConnectionKeys,
   sharedWindowPosition: defaultWindowPosition,
@@ -32,15 +30,45 @@ export const store = ((window as any).store ??= createStore<StoreState>({
   unitStuffs: {},
   portStuffs: {},
   windowsEvacuated: false,
-  hmrRevision: 0,
-})) as Store<StoreState>;
+};
+
+const blankStoreState: StoreState = {
+  unitItems: [],
+  wireConnectionKeys: [],
+  sharedWindowPosition: defaultWindowPosition,
+  sequencerWindowPosition: defaultWindowPosition,
+  sequencerWindowVisible: false,
+  currentEffectUnitId: null,
+  currentNoteChannelId: "",
+  unitStuffs: {},
+  portStuffs: {},
+  windowsEvacuated: false,
+};
+
+export const store = ((window as any).store ??=
+  createStore<StoreState>(defaultStoreState)) as Store<StoreState>;
 
 if (0) {
   store.setSequencerWindowVisible(true);
 }
 
 if (import.meta.hot) {
-  import.meta.hot.on("vite:afterUpdate", () => {
-    store.setHmrRevision((prev) => prev + 1);
+  function applyStateEvacuationWorkaround() {
+    const backupState = structuredClone(store.state);
+    store.assign(blankStoreState);
+    setTimeout(() => {
+      store.assign(backupState);
+    }, 100);
+  }
+  const hmr = import.meta.hot;
+  if (hmr.data.initialized) {
+    applyStateEvacuationWorkaround();
+  }
+  hmr.data.initialized = true;
+
+  hmr.on("vite:afterUpdate", (payload) => {
+    console.log(
+      `HMR occurred for:\n${payload.updates.map((it) => it.path).join("\n")}`,
+    );
   });
 }
