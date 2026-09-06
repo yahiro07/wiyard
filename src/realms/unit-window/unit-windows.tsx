@@ -33,7 +33,6 @@ const BoardUnitWindow = ({
       <UnitFrameScaled
         unitId={unitItem.unitId}
         unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
-        destSpec={unitItem._destUnitId}
         onUnitInstanceLoaded={reporter.reportLoaded}
         onLoadFailed={reporter.reportFailure}
       />
@@ -50,7 +49,6 @@ const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
     <ReactUnitFrame
       unitId={unitItem.unitId}
       unitTemplateFn={internalUnitSpec.factory}
-      destSpec={unitItem._destUnitId}
       onUnitInstanceLoaded={reporter.reportLoaded}
     />
   );
