@@ -62,22 +62,18 @@ const internalHandlers = {
   },
 };
 
-export const handlePortPointerDown = (
-  e0: React.PointerEvent<HTMLDivElement>,
-  portKey: string,
-) => {
-  actions.setDraggingPortKey(portKey);
-
+function createDragHandlerCore(portKey: string) {
   const { portStuffs } = store.state;
   const targetPorts = Object.values(portStuffs).filter(
     (ps) => ps.portKey === portKey || isPortConnectable(portKey, ps.portKey),
   );
   const selfPort = portStuffs[portKey];
 
-  startDragSession(e0.nativeEvent, {
-    onMove(e) {
-      const delta = vectorOp.subtract(e.position, e.originalPosition);
-      const pos = vectorOp.add(selfPort.position, delta);
+  return {
+    onStart() {
+      actions.setDraggingPortKey(portKey);
+    },
+    onMove(pos: Point) {
       const nearestPort = helpers.findNearestPort(targetPorts, pos);
       if (uiConfigs.showWireConnectionPreviewFloatingWireEnd) {
         if (nearestPort && nearestPort !== selfPort) {
@@ -96,7 +92,7 @@ export const handlePortPointerDown = (
         }
       }
     },
-    onUpOrCancel() {
+    onEnd() {
       const { draggingPortKey, previewDestPortKey } = store.state;
       if (draggingPortKey && previewDestPortKey) {
         actions.toggleWire(draggingPortKey, previewDestPortKey);
@@ -108,5 +104,62 @@ export const handlePortPointerDown = (
     onTap() {
       internalHandlers.handlePortTap(portKey);
     },
-  });
+  };
+}
+
+export const handlePortPointerDown = (
+  e0: React.PointerEvent<HTMLDivElement>,
+  portKey: string,
+) => {
+  const { portStuffs } = store.state;
+  const selfPort = portStuffs[portKey];
+  const core = createDragHandlerCore(portKey);
+  const tapDurationTh = 200;
+  const tapDistanceTh = 10;
+
+  let timerId: NodeJS.Timeout | undefined;
+  let started = false;
+
+  const internal = {
+    triggerStart() {
+      if (!started) {
+        core.onStart();
+        started = true;
+      }
+    },
+    cancelTimer() {
+      if (timerId) {
+        clearTimeout(timerId);
+        timerId = undefined;
+      }
+    },
+  };
+  timerId = setTimeout(internal.triggerStart, tapDurationTh);
+
+  startDragSession(
+    e0.nativeEvent,
+    {
+      onMove(e) {
+        const delta = vectorOp.subtract(e.position, e.originalPosition);
+        const pos = vectorOp.add(selfPort.position, delta);
+        const distance = vectorOp.distance(pos, selfPort.position);
+        if (!started && distance > tapDistanceTh) {
+          internal.triggerStart();
+          internal.cancelTimer();
+        }
+        if (started) {
+          core.onMove(pos);
+        }
+      },
+      onUpOrCancel() {
+        core.onEnd();
+        internal.cancelTimer();
+      },
+      onTap() {
+        core.onTap();
+        internal.cancelTimer();
+      },
+    },
+    { tapDurationTh, tapDistanceTh },
+  );
 };
