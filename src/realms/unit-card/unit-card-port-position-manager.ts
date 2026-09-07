@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { PortStuff, StageUnitItem, UnitPortSpec } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import { domRectOp, vectorOp } from "@/utils/geometry-helper";
 import { mapObjectValues } from "@/utils/helpers";
 
 export type UnitCardPortPositionManager = {
@@ -29,21 +30,13 @@ export function createUnitCardPortPositionManager(
 
       if (!baseEl) return;
       const baseRect = baseEl.getBoundingClientRect();
-      const baseCenter = {
-        x: baseRect.left + baseRect.width / 2,
-        y: baseRect.top + baseRect.height / 2,
-      };
+      const baseCenter = domRectOp.getCenter(baseRect);
 
       const attrs = mapObjectValues(portEntries, (portEntry) => {
         const rect = portEntry.element.getBoundingClientRect();
-        const relativePosition = {
-          x: rect.left + rect.width / 2 - baseCenter.x,
-          y: rect.top + rect.height / 2 - baseCenter.y,
-        };
-        const position = {
-          x: cardPos.x + relativePosition.x,
-          y: cardPos.y + relativePosition.y,
-        };
+        const portPosition = domRectOp.getCenter(rect);
+        const relativePosition = vectorOp.subtract(portPosition, baseCenter);
+        const position = vectorOp.add(cardPos, relativePosition);
 
         const { direction, subtype } = portEntry.portSpec;
         const portStuff: PortStuff = {

@@ -23,10 +23,7 @@ export function useNoteChannelListColumnPresenter(): NoteChannelListColumnPresen
   }, [unitItems, currentNoteChannelId]);
 }
 
-export function useSequencerSectionPresenter() {
-  const { unitItems, currentNoteChannelId } = store.useSnapshot();
-  const offStageUnitItems = unitItems.filter(
-    (item) => item.type === "offStage",
-  );
-  return { offStageUnitItems, currentNoteChannelId };
+export function useOffStageUnitItems() {
+  const { unitItems } = store.useSnapshot();
+  return unitItems.filter((item) => item.type === "offStage");
 }

@@ -1,6 +1,6 @@
 import { appConfig } from "@/domain/app-config";
+import { Point } from "@/domain/common-types";
 import { UnitItem } from "@/domain/types";
-import { Point } from "@/utils/drag-session";
 
 export const defaultWindowPosition: Point = { x: -1, y: -1 };
 

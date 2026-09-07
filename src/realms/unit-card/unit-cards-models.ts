@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { EdgeUnitItem } from "@/domain/types";
 import { store } from "@/store/store";
 
-function useNoteOutputPortIndex(noteChannelId: string) {
+export function useNoteInputPortIndex(noteChannelId: string) {
   const { unitItems } = store.useSnapshot();
   return useMemo(() => {
     const noteInputPortItems = unitItems.filter(
@@ -15,9 +15,7 @@ function useNoteOutputPortIndex(noteChannelId: string) {
   }, [unitItems, noteChannelId]);
 }
 
-export function useEdgeUnitCardStates_NoteInputPort(unitItem: EdgeUnitItem) {
-  const { currentNoteChannelId } = store.useSnapshot();
-  const index = useNoteOutputPortIndex(unitItem.noteChannelId);
-  const isCurrent = unitItem.noteChannelId === currentNoteChannelId;
-  return { index, isCurrent };
+export function useUnitStuff(unitId: string) {
+  const { unitStuffs } = store.useSnapshot();
+  return unitStuffs[unitId];
 }
