@@ -1,10 +1,10 @@
-export type Point = { x: number; y: number };
+type Point = { x: number; y: number };
 
-export type DragHandlerEvent = {
+type DragHandlerEvent = {
   position: Point;
   originalPosition: Point;
 };
-export function startDragSession(
+export function startDragSessionV0(
   e0: PointerEvent,
   callbacks: {
     onDown?(e: DragHandlerEvent): void;

@@ -1,9 +1,10 @@
 import { uiConfigs } from "@/common/theme";
+import { Point } from "@/domain/common-types";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { Point, startDragSession } from "@/utils/drag-session";
+import { startDragSessionV0 } from "@/utils/drag-session-v0";
 import { vectorOp } from "@/utils/geometry-helper";
 
 const helpers = {
@@ -116,7 +117,7 @@ function startDragSessionEx(
   let trackDistance = 0;
 
   //TODO: redesign drag session interface, feed raw events to callbacks would be preferable
-  startDragSession(
+  startDragSessionV0(
     e0.nativeEvent,
     {
       onMove(e) {

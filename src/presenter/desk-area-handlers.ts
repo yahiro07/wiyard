@@ -2,7 +2,7 @@ import { appConfig } from "@/domain/app-config";
 import { StageUnitItem } from "@/domain/types";
 import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
-import { startDragSession } from "@/utils/drag-session";
+import { startDragSessionV0 } from "@/utils/drag-session-v0";
 import { vectorOp } from "@/utils/geometry-helper";
 
 export const unitCardHandlers = {
@@ -11,7 +11,7 @@ export const unitCardHandlers = {
     unitItem: StageUnitItem,
   ) {
     const unitOriginalPos = unitItem.cardPosition;
-    startDragSession(e0.nativeEvent, {
+    startDragSessionV0(e0.nativeEvent, {
       onMove(e) {
         const delta = vectorOp.subtract(e.position, e.originalPosition);
         const newPos = vectorOp.add(unitOriginalPos, delta);
@@ -39,7 +39,7 @@ export const unitWindowHandlers = {
     windowCoordVm: WindowCoordViewModel,
   ) {
     const unitOriginalPos = windowCoordVm.position;
-    startDragSession(e0.nativeEvent, {
+    startDragSessionV0(e0.nativeEvent, {
       onMove(e) {
         const delta = vectorOp.subtract(e.position, e.originalPosition);
         const newPos = vectorOp.add(unitOriginalPos, delta);
@@ -55,7 +55,7 @@ export const unitWindowHandlers = {
 export const deskAreaHandlers = {
   handlePointerDown(e0: React.PointerEvent<HTMLDivElement>) {
     if (e0.currentTarget === e0.target) {
-      startDragSession(e0.nativeEvent, {
+      startDragSessionV0(e0.nativeEvent, {
         onTap() {
           if (appConfig.evacuateWindowsOnTapDesk) {
             actions.toggleWindowsEvacuated();
