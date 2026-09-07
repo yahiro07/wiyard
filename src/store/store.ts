@@ -68,7 +68,7 @@ if (import.meta.hot) {
         await hostSystem.waitUnitsLoaded();
         hostSystem.setAllUnitStates(unitStates);
       })();
-    }, 100);
+    }, 200);
   }
   const hmr = import.meta.hot;
   if (hmr.data.initialized) {
