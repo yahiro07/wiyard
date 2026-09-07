@@ -21,3 +21,8 @@ export function useEdgeUnitCardStates_NoteInputPort(unitItem: EdgeUnitItem) {
   const isCurrent = unitItem.noteChannelId === currentNoteChannelId;
   return { index, isCurrent };
 }
+
+export function useUnitStuff(unitId: string) {
+  const { unitStuffs } = store.useSnapshot();
+  return unitStuffs[unitId];
+}

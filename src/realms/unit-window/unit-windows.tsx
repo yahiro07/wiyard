@@ -8,15 +8,9 @@ import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 
-const BoardUnitWindow = ({
-  unitItem,
-  isCurrent,
-  evacuated,
-}: {
-  unitItem: BoardUnitItem;
-  isCurrent: boolean;
-  evacuated: boolean;
-}) => {
+const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+  const { currentEffectUnitId, windowsEvacuated } = store.useSnapshot();
+  const isCurrent = unitItem.unitId === currentEffectUnitId;
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
@@ -27,7 +21,7 @@ const BoardUnitWindow = ({
       title={catalogItem.name}
       windowCoordVm={windowCoordVm}
       displayed={isCurrent}
-      evacuated={evacuated}
+      evacuated={windowsEvacuated}
       close={() => actions.setCurrentEffectUnitId(null)}
     >
       <UnitFrameScaled
@@ -54,24 +48,9 @@ const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
   );
 };
 
-const UnitWindowRoot = ({
-  unitItem,
-  currentEffectUnitId,
-  windowsEvacuated,
-}: {
-  unitItem: UnitItem;
-  currentEffectUnitId: string | null;
-  windowsEvacuated: boolean;
-}) => {
+const UnitWindowRoot = ({ unitItem }: { unitItem: UnitItem }) => {
   if (unitItem.type === "board") {
-    return (
-      <BoardUnitWindow
-        key={unitItem.unitId}
-        unitItem={unitItem}
-        isCurrent={unitItem.unitId === currentEffectUnitId}
-        evacuated={windowsEvacuated}
-      />
-    );
+    return <BoardUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
   } else if (unitItem.type === "edge") {
     return <EdgeUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
   } else {
@@ -80,19 +59,11 @@ const UnitWindowRoot = ({
 };
 
 export const UnitWindowsRoot = () => {
-  const { unitItems, currentEffectUnitId, windowsEvacuated } =
-    store.useSnapshot();
+  const { unitItems } = store.useSnapshot();
   return (
     <>
       {unitItems.map((item) => {
-        return (
-          <UnitWindowRoot
-            key={item.unitId}
-            unitItem={item}
-            currentEffectUnitId={currentEffectUnitId}
-            windowsEvacuated={windowsEvacuated}
-          />
-        );
+        return <UnitWindowRoot key={item.unitId} unitItem={item} />;
       })}
     </>
   );

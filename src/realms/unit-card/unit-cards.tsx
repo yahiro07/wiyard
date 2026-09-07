@@ -4,23 +4,20 @@ import {
   EdgeUnitItem,
   UnitItem,
   UnitPortSpec,
-  UnitStuff,
 } from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
 import { unitCardHandlers } from "@/presenter/desk-area-handlers";
 import { useUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
-import { useEdgeUnitCardStates_NoteInputPort } from "@/realms/unit-card/unit-cards-models";
+import {
+  useEdgeUnitCardStates_NoteInputPort,
+  useUnitStuff,
+} from "@/realms/unit-card/unit-cards-models";
 import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 
-const BoardUnitCard = ({
-  unitItem,
-  unitStuff,
-}: {
-  unitItem: BoardUnitItem;
-  unitStuff?: UnitStuff;
-}) => {
+const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+  const unitStuff = useUnitStuff(unitItem.unitId);
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const inputPortSpecs = unitStuff?.inputPortSpecs;
@@ -122,11 +119,10 @@ const EdgeUnitCardView = ({
 
 const EdgeUnitCard_NoteInputPort = ({
   unitItem,
-  unitStuff,
 }: {
   unitItem: EdgeUnitItem;
-  unitStuff?: UnitStuff;
 }) => {
+  const unitStuff = useUnitStuff(unitItem.unitId);
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
   const { index, isCurrent } = useEdgeUnitCardStates_NoteInputPort(unitItem);
   return (
@@ -142,13 +138,8 @@ const EdgeUnitCard_NoteInputPort = ({
   );
 };
 
-const EdgeUnitCard_SpeakerPort = ({
-  unitItem,
-  unitStuff,
-}: {
-  unitItem: EdgeUnitItem;
-  unitStuff?: UnitStuff;
-}) => {
+const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
+  const unitStuff = useUnitStuff(unitItem.unitId);
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
   return (
     <EdgeUnitCardView
@@ -163,38 +154,24 @@ const EdgeUnitCard_SpeakerPort = ({
   );
 };
 
-const UnitCardRoot = ({
-  unitItem,
-  unitStuff,
-}: {
-  unitItem: UnitItem;
-  unitStuff?: UnitStuff;
-}) => {
+const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
   if (unitItem.type === "board") {
-    return <BoardUnitCard unitItem={unitItem} unitStuff={unitStuff} />;
+    return <BoardUnitCard unitItem={unitItem} />;
   } else if (unitItem.type === "edge") {
     if (unitItem.internalUnitKey === "noteInputPort") {
-      return (
-        <EdgeUnitCard_NoteInputPort unitItem={unitItem} unitStuff={unitStuff} />
-      );
+      return <EdgeUnitCard_NoteInputPort unitItem={unitItem} />;
     } else {
-      return (
-        <EdgeUnitCard_SpeakerPort unitItem={unitItem} unitStuff={unitStuff} />
-      );
+      return <EdgeUnitCard_SpeakerPort unitItem={unitItem} />;
     }
   }
 };
 
 export const UnitCardsRoot = () => {
-  const { unitItems, unitStuffs } = store.useSnapshot();
+  const { unitItems } = store.useSnapshot();
   return (
     <>
       {unitItems.map((item) => (
-        <UnitCardRoot
-          key={item.unitId}
-          unitItem={item}
-          unitStuff={unitStuffs[item.unitId]}
-        />
+        <UnitCardRoot key={item.unitId} unitItem={item} />
       ))}
     </>
   );
