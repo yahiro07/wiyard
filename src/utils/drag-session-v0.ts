@@ -4,7 +4,7 @@ type DragHandlerEvent = {
   position: Point;
   originalPosition: Point;
 };
-export function startDragSessionV0(
+function _startDragSessionV0_deprecated(
   e0: PointerEvent,
   callbacks: {
     onDown?(e: DragHandlerEvent): void;
