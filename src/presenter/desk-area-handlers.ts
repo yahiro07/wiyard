@@ -2,6 +2,7 @@ import { appConfig } from "@/domain/app-config";
 import { StageUnitItem } from "@/domain/types";
 import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
+import { store } from "@/store/store";
 import { startDragSessionEx } from "@/utils/drag-session";
 import { vectorOp } from "@/utils/geometry-helper";
 
@@ -29,9 +30,14 @@ export const unitCardHandlers = {
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"
         ) {
-          actions.setSequencerWindowVisible(true);
-          actions.setCurrentNoteChannelId(unitItem.noteChannelId);
-          actions.setWindowsEvacuated(false);
+          const isCurrent =
+            store.state.currentNoteChannelId === unitItem.noteChannelId;
+          if (isCurrent) {
+            actions.setSequencerWindowVisible(true);
+            actions.setWindowsEvacuated(false);
+          } else {
+            actions.setCurrentNoteChannelId(unitItem.noteChannelId);
+          }
         }
       },
     });
