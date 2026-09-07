@@ -42,7 +42,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
         >
           <img
             src={catalogItem.thumbnailUrl}
-            className="w-full h-full object-contain"
+            className="h-full object-contain"
             alt={catalogItem.name}
           />
         </div>
