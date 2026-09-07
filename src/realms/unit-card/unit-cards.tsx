@@ -9,7 +9,7 @@ import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
 import { unitCardHandlers } from "@/presenter/desk-area-handlers";
 import { useUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
 import {
-  useEdgeUnitCardStates_NoteInputPort,
+  useNoteInputPortIndex,
   useUnitStuff,
 } from "@/realms/unit-card/unit-cards-models";
 import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
@@ -123,15 +123,17 @@ const EdgeUnitCard_NoteInputPort = ({
   unitItem: EdgeUnitItem;
 }) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
+  const { currentNoteChannelId } = store.useSnapshot();
+  const notePortIndex = useNoteInputPortIndex(unitItem.noteChannelId);
+  const isCurrent = unitItem.noteChannelId === currentNoteChannelId;
   const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
-  const { index, isCurrent } = useEdgeUnitCardStates_NoteInputPort(unitItem);
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
       inputPortSpecs={[]}
       outputPortSpecs={unitStuff?.outputPortSpecs}
       highlighted={isCurrent}
-      label={`input ${index + 1}`}
+      label={`input ${notePortIndex + 1}`}
       iconComponent={internalUnitSpec.iconComponent}
       handlePointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
     />
