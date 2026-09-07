@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { wireColors } from "@/common/theme";
 import { PortStuff } from "@/domain/types";
 import { store } from "@/store/store";
+import { cz } from "@/utils/cz";
 import { Point } from "@/utils/drag-session";
 
 function createCurveLinePath(p0: Point, p1: Point) {
@@ -36,14 +37,21 @@ const Wire = ({
 };
 
 export const WiringLayer = () => {
-  const { wireConnectionKeys, portStuffs } = store.useSnapshot();
+  const { wireConnectionKeys, portStuffs, draggingPortKey } =
+    store.useSnapshot();
+  const isDragging = draggingPortKey !== null;
   const [winW, winH] = useMemo(
     () => [window.innerWidth, window.innerHeight],
     [],
   );
   const viewBox = `0 0 ${winW} ${winH}`;
   return (
-    <div className="absolute-full overflow-hidden pointer-events-none">
+    <div
+      className={cz(
+        "absolute-full overflow-hidden pointer-events-none",
+        isDragging && "opacity-20",
+      )}
+    >
       <svg viewBox={viewBox} style={{ width: winW, height: winH }}>
         {wireConnectionKeys.map((wireConnectionKey) => (
           <Wire

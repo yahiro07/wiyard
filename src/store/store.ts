@@ -6,7 +6,7 @@ import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
 import { Point } from "@/utils/drag-session";
 
 type StoreState = {
-  //will be persisted
+  //will be persisted in project
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   sharedWindowPosition: Point;
@@ -14,10 +14,11 @@ type StoreState = {
   currentEffectUnitId: string | null;
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
+  windowsEvacuated: boolean;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
-  windowsEvacuated: boolean;
+  draggingPortKey: string | null;
 };
 
 const defaultStoreState: StoreState = {
@@ -28,10 +29,11 @@ const defaultStoreState: StoreState = {
   sequencerWindowVisible: false,
   currentEffectUnitId: null,
   currentNoteChannelId: defaultScene.initialNoteChannelId,
+  windowsEvacuated: false,
   //
   unitStuffs: {},
   portStuffs: {},
-  windowsEvacuated: false,
+  draggingPortKey: null,
 };
 
 export const store = ((window as any).store ??=
@@ -53,6 +55,7 @@ if (import.meta.hot) {
     unitStuffs: {},
     portStuffs: {},
     windowsEvacuated: false,
+    draggingPortKey: null,
   };
 
   function applyStateEvacuationWorkaround() {

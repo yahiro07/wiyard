@@ -55,4 +55,7 @@ export const actions = {
       }
     });
   },
+  setDraggingPortKey(portKey: string | null) {
+    store.setDraggingPortKey(portKey);
+  },
 };
