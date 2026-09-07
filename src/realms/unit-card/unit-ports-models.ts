@@ -71,7 +71,8 @@ function startDragSessionEx(
     onTap(): void;
   },
   options?: {
-    startPosition?: Point;
+    //if provided, pos will be relative to this element, otherwise pos will be relative to body
+    coordinateBaseElement?: HTMLElement;
     tapDurationTh?: number;
     tapDistanceTh?: number;
   },
@@ -82,7 +83,18 @@ function startDragSessionEx(
   let timerId: NodeJS.Timeout | undefined;
   let started = false;
 
+  const baseRect =
+    options?.coordinateBaseElement?.getBoundingClientRect() ??
+    document.body.getBoundingClientRect();
+
   const internal = {
+    getPos(e: PointerEvent): Point {
+      if (baseRect) {
+        return { x: e.clientX - baseRect.left, y: e.clientY - baseRect.top };
+      } else {
+        return { x: e.pageX, y: e.pageY };
+      }
+    },
     triggerStart() {
       if (!started) {
         handlers.onStart();
@@ -98,16 +110,19 @@ function startDragSessionEx(
   };
   timerId = setTimeout(internal.triggerStart, tapDurationTh);
 
-  const startPosition = options?.startPosition ?? { x: 0, y: 0 };
+  const startPosition = internal.getPos(e0.nativeEvent);
+  let latestPosition = startPosition;
+
   let trackDistance = 0;
 
+  //TODO: redesign drag session interface, feed raw events to callbacks would be preferable
   startDragSession(
     e0.nativeEvent,
     {
       onMove(e) {
         const delta = vectorOp.subtract(e.position, e.originalPosition);
         const pos = vectorOp.add(startPosition, delta);
-        trackDistance += vectorOp.distance(pos, startPosition);
+        trackDistance += vectorOp.distance(pos, latestPosition);
         if (!started && trackDistance > tapDistanceTh) {
           internal.triggerStart();
           internal.cancelTimer();
@@ -115,6 +130,7 @@ function startDragSessionEx(
         if (started) {
           handlers.onMove(pos);
         }
+        latestPosition = pos;
       },
       onUpOrCancel() {
         if (started) {
@@ -123,13 +139,13 @@ function startDragSessionEx(
         internal.cancelTimer();
       },
       onTap() {
-        if (started) {
+        if (!started) {
           handlers.onTap();
         }
         internal.cancelTimer();
       },
     },
-    { tapDurationTh, tapDistanceTh },
+    { tapDurationTh, tapDistanceTh, coordinate: "page" },
   );
 }
 
@@ -137,12 +153,14 @@ export const handlePortPointerDown = (
   e0: React.PointerEvent<HTMLDivElement>,
   portKey: string,
 ) => {
+  const coordinateBaseElement = document.getElementById(
+    "domDeskArea",
+  ) as HTMLElement;
   const { portStuffs } = store.state;
   const selfPort = portStuffs[portKey];
   const targetPorts = Object.values(portStuffs).filter(
     (ps) => ps.portKey === portKey || isPortConnectable(portKey, ps.portKey),
   );
-  const startPosition = selfPort.position;
 
   startDragSessionEx(
     e0,
@@ -182,6 +200,6 @@ export const handlePortPointerDown = (
         internalHandlers.handlePortTap(portKey);
       },
     },
-    { startPosition },
+    { coordinateBaseElement },
   );
 };

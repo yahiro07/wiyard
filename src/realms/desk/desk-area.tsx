@@ -11,6 +11,7 @@ import { WiringLayer } from "@/realms/wiring/wiring-layer";
 export const DeskArea = () => {
   return (
     <div
+      id="domDeskArea"
       className="grow relative"
       style={{ background: uiColors.destAreaBg }}
       onPointerDown={deskAreaHandlers.handlePointerDown}
