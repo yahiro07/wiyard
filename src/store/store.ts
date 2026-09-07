@@ -19,6 +19,7 @@ type StoreState = {
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
   draggingPortKey: string | null;
+  previewDestPortKey: string | null;
 };
 
 const defaultStoreState: StoreState = {
@@ -34,6 +35,7 @@ const defaultStoreState: StoreState = {
   unitStuffs: {},
   portStuffs: {},
   draggingPortKey: null,
+  previewDestPortKey: null,
 };
 
 export const store = ((window as any).store ??=
@@ -56,6 +58,7 @@ if (import.meta.hot) {
     portStuffs: {},
     windowsEvacuated: false,
     draggingPortKey: null,
+    previewDestPortKey: null,
   };
 
   function applyStateEvacuationWorkaround() {

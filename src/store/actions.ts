@@ -58,4 +58,7 @@ export const actions = {
   setDraggingPortKey(portKey: string | null) {
     store.setDraggingPortKey(portKey);
   },
+  setPreviewDestPortKey(portKey: string | null) {
+    store.setPreviewDestPortKey(portKey);
+  },
 };
