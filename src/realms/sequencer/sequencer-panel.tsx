@@ -1,16 +1,17 @@
 import { UnitFrameScaled } from "wafer-host/react";
-import { catalog, OffStageUnitItem } from "@/definitions/unit-entries";
+import { OffStageUnitItem } from "@/domain/types";
+import { catalog } from "@/domain/unit-entries";
 import {
   useNoteChannelListColumnPresenter,
   useSequencerSectionPresenter,
-} from "@/ui/sequencer-panel/sequencer-panel-models";
+} from "@/realms/sequencer/sequencer-panel-models";
 import { cz } from "@/utils/cz";
 
 const NoteChannelListColumn = () => {
   const { noteChannelIds, currentNoteChannelId, selectNoteChannel } =
     useNoteChannelListColumnPresenter();
   return (
-    <div className="w-50px bg-gray-600/50 flex-v gap-2 py-2">
+    <div className="w-50px bg-gray-600/60 flex-v gap-2 py-2">
       {noteChannelIds.map((id, index) => (
         <button
           key={id}

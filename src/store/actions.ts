@@ -1,5 +1,7 @@
+import { PortStuff, UnitStuff } from "@/domain/types";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
+import { setOrDeleteValue } from "@/utils/helpers";
 
 export const actionsInternal = {
   patchUnitAttrs(
@@ -35,5 +37,22 @@ export const actions = {
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
+  },
+  setUnitStuff(unitId: string, stuff: UnitStuff | null) {
+    store.produceUnitStuffs((draft) => {
+      setOrDeleteValue(draft, unitId, stuff);
+    });
+  },
+  patchPortStuffs(attrs: Record<string, PortStuff>) {
+    store.patchPortStuffs(attrs);
+  },
+  removePortStuffsForUnit(unitId: string) {
+    store.producePortStuffs((draft) => {
+      for (const key in draft) {
+        if (key.split(".")[0] === unitId) {
+          delete draft[key];
+        }
+      }
+    });
   },
 };

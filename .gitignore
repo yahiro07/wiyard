@@ -6,3 +6,4 @@ src/unit-inventories.json
 .env
 
 *.code-workspace
+Makefile

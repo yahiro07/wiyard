@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Icons } from "@/common/icons";
-import { WindowCoordViewModel } from "@/store/view-models";
-import { unitWindowHandlers } from "@/ui/desk-area-handlers";
+import { unitWindowHandlers } from "@/presenter/desk-area-handlers";
+import { WindowCoordViewModel } from "@/presenter/window-view-models";
 
 export const InnerWindow = ({
   title,
@@ -53,7 +53,7 @@ export const InnerWindow = ({
           </div>
         </div>
         <div
-          className="bg-white/50 text-black"
+          className="bg-white text-black"
           style={{ height, display: evacuated ? "none" : "block" }}
         >
           {children}

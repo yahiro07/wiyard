@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { OffStageUnitItem } from "@/definitions/unit-entries";
+import { OffStageUnitItem } from "@/domain/types";
 import { store } from "@/store/store";
 
 export type NoteChannelListColumnPresenter = {
