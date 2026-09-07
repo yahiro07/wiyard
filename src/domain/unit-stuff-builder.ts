@@ -3,15 +3,24 @@ import {
   HsPortInfoPrimaryInner,
   HsUnitInstance,
 } from "wafer-host/core";
+import { appConfig } from "@/domain/app-config";
 import { UnitStuff } from "@/domain/types";
 
 const subtypeOrder = ["audio", "note", "automation"];
+
+const supportedSubtypes = appConfig.supportAutomationPorts
+  ? ["audio", "note", "automation"]
+  : ["audio", "note"];
 
 export function buildUnitStuffLoaded(unitInstance: HsUnitInstance): UnitStuff {
   const { unitId, portInfos } = unitInstance;
 
   const portsIncluded = portInfos
-    .filter((p) => p.type !== "primary")
+    .filter(
+      (p) =>
+        (p.type === "primaryInner" || p.type === "additional") &&
+        supportedSubtypes.includes(p.subtype),
+    )
     .map((_p) => {
       const p = _p as HsPortInfoAdditional | HsPortInfoPrimaryInner;
       return {
