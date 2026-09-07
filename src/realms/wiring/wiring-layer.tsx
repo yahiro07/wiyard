@@ -62,24 +62,40 @@ const Wire = ({
 };
 
 const WiresRoot = () => {
-  const { wireConnectionKeys, draggingPortKey } = store.useSnapshot();
+  const { wireConnectionKeys, draggingPortKey, previewDestPortKey } =
+    store.useSnapshot();
   const isDragging = draggingPortKey !== null;
+
+  const previewRemovingConnectionKey = (() => {
+    if (draggingPortKey && previewDestPortKey) {
+      const isForwardDirection =
+        getPortDirectionFromPortKey(draggingPortKey) === "output";
+      return isForwardDirection
+        ? `${draggingPortKey}-${previewDestPortKey}`
+        : `${previewDestPortKey}-${draggingPortKey}`;
+    }
+  })();
+
   return (
     <g>
-      {wireConnectionKeys.map((wireConnectionKey) => (
-        <Wire
-          key={wireConnectionKey}
-          wireConnectionKey={wireConnectionKey}
-          weaken={isDragging}
-        />
-      ))}
+      {wireConnectionKeys.map((wireConnectionKey) => {
+        if (wireConnectionKey === previewRemovingConnectionKey) return null;
+        return (
+          <Wire
+            key={wireConnectionKey}
+            wireConnectionKey={wireConnectionKey}
+            weaken={isDragging}
+          />
+        );
+      })}
     </g>
   );
 };
 
 const DragPreviewWire = () => {
   //port to port preview wire
-  const { draggingPortKey, previewDestPortKey } = store.useSnapshot();
+  const { draggingPortKey, previewDestPortKey, wireConnectionKeys } =
+    store.useSnapshot();
   if (
     !(
       draggingPortKey &&
@@ -94,6 +110,11 @@ const DragPreviewWire = () => {
   const connectionKey = isForwardDirection
     ? `${draggingPortKey}-${previewDestPortKey}`
     : `${previewDestPortKey}-${draggingPortKey}`;
+
+  if (wireConnectionKeys.includes(connectionKey)) {
+    //existing wire, show nothing for removing preview
+    return;
+  }
   return <Wire wireConnectionKey={connectionKey} />;
 };
 

@@ -38,8 +38,11 @@ export const handlePortPointerDown = (
       const nearestPort = findNearestPort(targetPortStuffs, pos);
       if (uiConfigs.showWireConnectionPreviewFloatingWireEnd) {
         if (nearestPort && nearestPort !== selfPort) {
-          actions.setPreviewDestPosition(nearestPort.position);
+          // actions.setPreviewDestPosition(nearestPort.position);
+          actions.setPreviewDestPortKey(nearestPort.portKey);
+          actions.setPreviewDestPosition(null);
         } else if (nearestPort === selfPort) {
+          actions.setPreviewDestPortKey(null);
           actions.setPreviewDestPosition(pos);
         }
       } else {
