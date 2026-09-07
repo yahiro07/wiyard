@@ -74,4 +74,7 @@ export const actions = {
       AddOrRemoveArrayItem(prev, connectionKey),
     );
   },
+  setUnitPickerVisible(visible: boolean) {
+    store.setUnitPickerVisible(visible);
+  },
 };

@@ -1,13 +1,16 @@
 import { IconType } from "react-icons";
 import { ReactUnitTemplateFn } from "wafer-host/react";
+import { UnitInventorySpec } from "wafer-host/vite-plugin";
 import { Icons } from "@/common/icons";
 import { createNoteInputPortUnit } from "@/units/note-input-port";
 import { createSpeakerPortUnit } from "@/units/speaker-port";
-import catalog from "../unit-inventories.json";
+import unitInventories from "../unit-inventories.json";
+
+export type CatalogKey = keyof typeof unitInventories;
+
+const catalog = unitInventories as Record<CatalogKey, UnitInventorySpec>;
 
 export { catalog };
-
-export type CatalogKey = keyof typeof catalog;
 
 type InternalUnitSpec = {
   factory: ReactUnitTemplateFn;
@@ -26,3 +29,12 @@ export const internalUnitSpecs = {
 } satisfies Record<string, InternalUnitSpec>;
 
 export type InternalUnitKey = keyof typeof internalUnitSpecs;
+
+// export type UnitTypeEx = UnitType | "system";
+
+// export type ShowcaseEntry = {
+//   name: string;
+//   catalogKey: CatalogKey;
+//   unitType: UnitTypeEx;
+//   thumbnailUrl?: string;
+// };

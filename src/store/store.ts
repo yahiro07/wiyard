@@ -21,6 +21,7 @@ type StoreState = {
   draggingPortKey: string | null;
   previewDestPortKey: string | null;
   previewDestPosition: Point | null;
+  unitPickerVisible: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -38,6 +39,7 @@ const blankStoreState: StoreState = {
   draggingPortKey: null,
   previewDestPortKey: null,
   previewDestPosition: null,
+  unitPickerVisible: false,
 };
 
 const defaultStoreState: StoreState = {
@@ -49,12 +51,15 @@ const defaultStoreState: StoreState = {
   currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
 
+if (1) {
+  // store.setSequencerWindowVisible(true);
+  Object.assign(defaultStoreState, {
+    unitPickerVisible: true,
+  });
+}
+
 export const store = ((window as any).store ??=
   createStore<StoreState>(defaultStoreState)) as Store<StoreState>;
-
-if (0) {
-  store.setSequencerWindowVisible(true);
-}
 
 if (import.meta.hot) {
   function applyStateEvacuationWorkaround() {
