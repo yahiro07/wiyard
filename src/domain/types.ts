@@ -1,6 +1,6 @@
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
+import { Point } from "@/domain/common-types";
 import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
-import { Point } from "@/utils/drag-session";
 
 //instrument and effects, placed on board area
 export type BoardUnitItem = {

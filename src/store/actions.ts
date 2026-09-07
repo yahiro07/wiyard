@@ -1,7 +1,8 @@
+import { Point } from "@/domain/common-types";
+import { getForwardDirectionWireConnectionKey } from "@/domain/port-helpers";
 import { PortStuff, UnitStuff } from "@/domain/types";
 import { store } from "@/store/store";
-import { Point } from "@/utils/drag-session";
-import { setOrDeleteValue } from "@/utils/helpers";
+import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
 export const actionsInternal = {
   patchUnitAttrs(
@@ -54,5 +55,23 @@ export const actions = {
         }
       }
     });
+  },
+  setDraggingPortKey(portKey: string | null) {
+    store.setDraggingPortKey(portKey);
+  },
+  setPreviewDestPortKey(portKey: string | null) {
+    store.setPreviewDestPortKey(portKey);
+  },
+  setPreviewDestPosition(position: Point | null) {
+    store.setPreviewDestPosition(position);
+  },
+  toggleWire(sourcePortKey: string, destPortKey: string) {
+    const connectionKey = getForwardDirectionWireConnectionKey(
+      sourcePortKey,
+      destPortKey,
+    );
+    store.setWireConnectionKeys((prev) =>
+      AddOrRemoveArrayItem(prev, connectionKey),
+    );
   },
 };

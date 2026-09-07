@@ -1,11 +1,17 @@
 import { useMemo } from "react";
-import { wireColors } from "@/common/theme";
-import { PortStuff } from "@/domain/types";
+import { HsPortSubtype } from "wafer-host/core";
+import { uiConstants, wireColors } from "@/common/theme";
+import { Point } from "@/domain/common-types";
+import {
+  getForwardDirectionWireConnectionKey,
+  getPortDirectionFromPortKey,
+} from "@/domain/port-helpers";
 import { store } from "@/store/store";
-import { Point } from "@/utils/drag-session";
+import { cz } from "@/utils/cz";
 
 function createCurveLinePath(p0: Point, p1: Point) {
-  const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
+  // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
+  const handleLength = Math.abs(p1.x - p0.x) / 2;
   const cp0 = { x: p0.x + handleLength, y: p0.y };
   const cp1 = { x: p1.x - handleLength, y: p1.y };
   return [
@@ -16,13 +22,38 @@ function createCurveLinePath(p0: Point, p1: Point) {
   ].join(" ");
 }
 
+const WireView = ({
+  signalType,
+  p0,
+  p1,
+  weaken,
+}: {
+  signalType: HsPortSubtype;
+  p0: Point;
+  p1: Point;
+  weaken?: boolean;
+}) => {
+  const color = wireColors[signalType];
+  const path = createCurveLinePath(p0, p1);
+  return (
+    <path
+      d={path}
+      stroke={color}
+      strokeWidth="3"
+      fill="none"
+      opacity={weaken ? uiConstants.dimmedWireOpacity : 1}
+    />
+  );
+};
+
 const Wire = ({
   wireConnectionKey,
-  portStuffs,
+  weaken,
 }: {
   wireConnectionKey: string;
-  portStuffs: Record<string, PortStuff>;
+  weaken?: boolean;
 }) => {
+  const { portStuffs } = store.useSnapshot();
   const [sourcePortKey, destinationPortKey] = wireConnectionKey.split("-");
   const sourcePort = portStuffs[sourcePortKey];
   const destPort = portStuffs[destinationPortKey];
@@ -30,28 +61,90 @@ const Wire = ({
   const signalType = sourcePort.subtype;
   const p0 = sourcePort.position;
   const p1 = destPort.position;
-  const color = wireColors[signalType];
-  const path = createCurveLinePath(p0, p1);
-  return <path d={path} stroke={color} strokeWidth="3" fill="none" />;
+  return <WireView signalType={signalType} p0={p0} p1={p1} weaken={weaken} />;
+};
+
+const WiresRoot = () => {
+  const { wireConnectionKeys, draggingPortKey, previewDestPortKey } =
+    store.useSnapshot();
+  const isDragging = draggingPortKey !== null;
+
+  const previewRemovingConnectionKey = (() => {
+    if (draggingPortKey && previewDestPortKey) {
+      return getForwardDirectionWireConnectionKey(
+        draggingPortKey,
+        previewDestPortKey,
+      );
+    }
+  })();
+
+  return (
+    <g>
+      {wireConnectionKeys.map((wireConnectionKey) => {
+        if (wireConnectionKey === previewRemovingConnectionKey) return null;
+        return (
+          <Wire
+            key={wireConnectionKey}
+            wireConnectionKey={wireConnectionKey}
+            weaken={isDragging}
+          />
+        );
+      })}
+    </g>
+  );
+};
+
+const DragPreviewWire = () => {
+  //port to port preview wire
+  const { draggingPortKey, previewDestPortKey, wireConnectionKeys } =
+    store.useSnapshot();
+  if (
+    !(
+      draggingPortKey &&
+      previewDestPortKey &&
+      draggingPortKey !== previewDestPortKey
+    )
+  ) {
+    return;
+  }
+  const connectionKey = getForwardDirectionWireConnectionKey(
+    draggingPortKey,
+    previewDestPortKey,
+  );
+
+  if (wireConnectionKeys.includes(connectionKey)) {
+    //existing wire, show nothing for removing preview
+    return;
+  }
+  return <Wire wireConnectionKey={connectionKey} />;
+};
+
+const DragPreviewWire2 = () => {
+  //port to arbitrary position preview wire
+  const { draggingPortKey, previewDestPosition, portStuffs } =
+    store.useSnapshot();
+  if (!(draggingPortKey && previewDestPosition)) return;
+  const srcPort = portStuffs[draggingPortKey];
+  const isForwardDirection =
+    getPortDirectionFromPortKey(draggingPortKey) === "output";
+  const [p0, p1] = isForwardDirection
+    ? [srcPort.position, previewDestPosition]
+    : [previewDestPosition, srcPort.position];
+  return <WireView signalType={srcPort.subtype} p0={p0} p1={p1} />;
 };
 
 export const WiringLayer = () => {
-  const { wireConnectionKeys, portStuffs } = store.useSnapshot();
   const [winW, winH] = useMemo(
     () => [window.innerWidth, window.innerHeight],
     [],
   );
   const viewBox = `0 0 ${winW} ${winH}`;
   return (
-    <div className="absolute-full overflow-hidden pointer-events-none">
+    <div className={cz("absolute-full overflow-hidden pointer-events-none")}>
       <svg viewBox={viewBox} style={{ width: winW, height: winH }}>
-        {wireConnectionKeys.map((wireConnectionKey) => (
-          <Wire
-            key={wireConnectionKey}
-            wireConnectionKey={wireConnectionKey}
-            portStuffs={portStuffs}
-          />
-        ))}
+        <WiresRoot />
+        <DragPreviewWire />
+        <DragPreviewWire2 />
       </svg>
     </div>
   );

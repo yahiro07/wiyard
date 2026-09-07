@@ -3,8 +3,9 @@ import { OffStageUnitItem } from "@/domain/types";
 import { catalog } from "@/domain/unit-entries";
 import {
   useNoteChannelListColumnPresenter,
-  useSequencerSectionPresenter,
+  useOffStageUnitItems,
 } from "@/realms/sequencer/sequencer-panel-models";
+import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 
 const NoteChannelListColumn = () => {
@@ -32,11 +33,11 @@ const NoteChannelListColumn = () => {
 
 const SequencerUnitItemView = ({
   unitItem,
-  displayed,
 }: {
   unitItem: OffStageUnitItem;
-  displayed: boolean;
 }) => {
+  const { currentNoteChannelId } = store.useSnapshot();
+  const displayed = unitItem.noteChannelId === currentNoteChannelId;
   return (
     <div
       key={unitItem.unitId}
@@ -51,16 +52,11 @@ const SequencerUnitItemView = ({
 };
 
 const SequencerSection = () => {
-  const { offStageUnitItems, currentNoteChannelId } =
-    useSequencerSectionPresenter();
+  const offStageUnitItems = useOffStageUnitItems();
   return (
     <div className="flex-grow relative">
       {offStageUnitItems.map((item) => (
-        <SequencerUnitItemView
-          key={item.unitId}
-          unitItem={item}
-          displayed={item.noteChannelId === currentNoteChannelId}
-        />
+        <SequencerUnitItemView key={item.unitId} unitItem={item} />
       ))}
     </div>
   );

@@ -1,12 +1,12 @@
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
+import { Point } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
 import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
-import { Point } from "@/utils/drag-session";
 
 type StoreState = {
-  //will be persisted
+  //will be persisted in project
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   sharedWindowPosition: Point;
@@ -14,24 +14,39 @@ type StoreState = {
   currentEffectUnitId: string | null;
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
+  windowsEvacuated: boolean;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
-  windowsEvacuated: boolean;
+  draggingPortKey: string | null;
+  previewDestPortKey: string | null;
+  previewDestPosition: Point | null;
 };
 
-const defaultStoreState: StoreState = {
-  unitItems: defaultScene.unitItems,
-  wireConnectionKeys: defaultScene.wireConnectionKeys,
+const blankStoreState: StoreState = {
+  unitItems: [],
+  wireConnectionKeys: [],
   sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowVisible: false,
   currentEffectUnitId: null,
-  currentNoteChannelId: defaultScene.initialNoteChannelId,
+  currentNoteChannelId: "",
   //
   unitStuffs: {},
   portStuffs: {},
   windowsEvacuated: false,
+  draggingPortKey: null,
+  previewDestPortKey: null,
+  previewDestPosition: null,
+};
+
+const defaultStoreState: StoreState = {
+  ...blankStoreState,
+  unitItems: defaultScene.unitItems,
+  wireConnectionKeys: defaultScene.wireConnectionKeys,
+  sharedWindowPosition: defaultWindowPosition,
+  sequencerWindowPosition: defaultWindowPosition,
+  currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
 
 export const store = ((window as any).store ??=
@@ -42,23 +57,10 @@ if (0) {
 }
 
 if (import.meta.hot) {
-  const blankingStoreState: StoreState = {
-    unitItems: [],
-    wireConnectionKeys: [],
-    sharedWindowPosition: defaultWindowPosition,
-    sequencerWindowPosition: defaultWindowPosition,
-    sequencerWindowVisible: false,
-    currentEffectUnitId: null,
-    currentNoteChannelId: "",
-    unitStuffs: {},
-    portStuffs: {},
-    windowsEvacuated: false,
-  };
-
   function applyStateEvacuationWorkaround() {
     const unitStates = hostSystem.getAllUnitStates();
     const backupState = { ...store.state };
-    store.assign(blankingStoreState);
+    store.assign(blankStoreState);
     setTimeout(() => {
       void (async () => {
         console.log("restore unit states");
@@ -66,7 +68,7 @@ if (import.meta.hot) {
         await hostSystem.waitUnitsLoaded();
         hostSystem.setAllUnitStates(unitStates);
       })();
-    }, 100);
+    }, 200);
   }
   const hmr = import.meta.hot;
   if (hmr.data.initialized) {
