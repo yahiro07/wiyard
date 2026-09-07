@@ -20,22 +20,33 @@ type StoreState = {
   portStuffs: Record<string, PortStuff>;
   draggingPortKey: string | null;
   previewDestPortKey: string | null;
+  previewDestPosition: Point | null;
 };
 
-const defaultStoreState: StoreState = {
-  unitItems: defaultScene.unitItems,
-  wireConnectionKeys: defaultScene.wireConnectionKeys,
+const blankStoreState: StoreState = {
+  unitItems: [],
+  wireConnectionKeys: [],
   sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowVisible: false,
   currentEffectUnitId: null,
-  currentNoteChannelId: defaultScene.initialNoteChannelId,
-  windowsEvacuated: false,
+  currentNoteChannelId: "",
   //
   unitStuffs: {},
   portStuffs: {},
+  windowsEvacuated: false,
   draggingPortKey: null,
   previewDestPortKey: null,
+  previewDestPosition: null,
+};
+
+const defaultStoreState: StoreState = {
+  ...blankStoreState,
+  unitItems: defaultScene.unitItems,
+  wireConnectionKeys: defaultScene.wireConnectionKeys,
+  sharedWindowPosition: defaultWindowPosition,
+  sequencerWindowPosition: defaultWindowPosition,
+  currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
 
 export const store = ((window as any).store ??=
@@ -46,25 +57,10 @@ if (0) {
 }
 
 if (import.meta.hot) {
-  const blankingStoreState: StoreState = {
-    unitItems: [],
-    wireConnectionKeys: [],
-    sharedWindowPosition: defaultWindowPosition,
-    sequencerWindowPosition: defaultWindowPosition,
-    sequencerWindowVisible: false,
-    currentEffectUnitId: null,
-    currentNoteChannelId: "",
-    unitStuffs: {},
-    portStuffs: {},
-    windowsEvacuated: false,
-    draggingPortKey: null,
-    previewDestPortKey: null,
-  };
-
   function applyStateEvacuationWorkaround() {
     const unitStates = hostSystem.getAllUnitStates();
     const backupState = { ...store.state };
-    store.assign(blankingStoreState);
+    store.assign(blankStoreState);
     setTimeout(() => {
       void (async () => {
         console.log("restore unit states");
