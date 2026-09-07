@@ -13,8 +13,13 @@ export const unitCardHandlers = {
     const unitOriginalPos = unitItem.cardPosition;
     startDragSessionEx(e0, {
       onMove(_, delta) {
-        const newPos = vectorOp.add(unitOriginalPos, delta);
-        actions.setUnitCardPosition(unitItem.unitId, newPos);
+        const newPos = vectorOp.snapped(
+          vectorOp.add(unitOriginalPos, delta),
+          10,
+        );
+        if (!vectorOp.equals(unitOriginalPos, newPos)) {
+          actions.setUnitCardPosition(unitItem.unitId, newPos);
+        }
       },
       onTap() {
         if (unitItem.type === "board") {
