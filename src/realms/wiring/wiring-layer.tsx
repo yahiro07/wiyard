@@ -2,6 +2,19 @@ import { useMemo } from "react";
 import { wireColors } from "@/domain/constants";
 import { PortStuff } from "@/domain/types";
 import { store } from "@/store/store";
+import { Point } from "@/utils/drag-session";
+
+function createCurveLinePath(p0: Point, p1: Point) {
+  const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
+  const cp0 = { x: p0.x + handleLength, y: p0.y };
+  const cp1 = { x: p1.x - handleLength, y: p1.y };
+  return [
+    `M ${p0.x} ${p0.y}`,
+    `C ${cp0.x} ${cp0.y}`,
+    `${cp1.x} ${cp1.y}`,
+    `${p1.x} ${p1.y}`,
+  ].join(" ");
+}
 
 const Wire = ({
   wireConnectionKey,
@@ -18,16 +31,8 @@ const Wire = ({
   const p0 = sourcePort.position;
   const p1 = destPort.position;
   const color = wireColors[signalType];
-  return (
-    <line
-      x1={p0.x}
-      y1={p0.y}
-      x2={p1.x}
-      y2={p1.y}
-      stroke={color}
-      strokeWidth="4"
-    />
-  );
+  const path = createCurveLinePath(p0, p1);
+  return <path d={path} stroke={color} strokeWidth="4" fill="none" />;
 };
 
 export const WiringLayer = () => {
