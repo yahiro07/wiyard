@@ -1,0 +1,43 @@
+import { ControlButtons } from "@/realms/desk/control-buttons";
+import { DeskArea } from "@/realms/desk/desk-area";
+
+const TopBar = () => {
+  return (
+    <div className="h-50px bg-gray-600 flex-c text-lg px-2 relative">
+      <div className="absolute-full pointer-events-none">
+        under development...
+      </div>
+    </div>
+  );
+};
+const BottomBar = () => {
+  return <div className="h-25px bg-gray-600 flex-c text-lg px-2"></div>;
+};
+
+const InnerBottomBar = () => {
+  return (
+    <div className="absolute-bottom-center">
+      <div className="w-400px h-50px bg-gray-600/50 flex-c text-lg px-2">
+        <ControlButtons />
+      </div>
+    </div>
+  );
+};
+
+export const PageRoot = () => {
+  return (
+    <div className="h-dvh flex-v text-white">
+      <TopBar />
+      <div className="grow flex-h">
+        <DeskArea
+          additionalContents={
+            <>
+              <InnerBottomBar />
+            </>
+          }
+        />
+      </div>
+      <BottomBar />
+    </div>
+  );
+};
