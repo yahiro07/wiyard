@@ -68,11 +68,11 @@ if (import.meta.hot) {
         await hostSystem.waitUnitsLoaded();
         hostSystem.setAllUnitStates(unitStates);
       })();
-    }, 200);
+    }, 100);
   }
   const hmr = import.meta.hot;
   if (hmr.data.initialized) {
-    applyStateEvacuationWorkaround();
+    // applyStateEvacuationWorkaround();
   }
   hmr.data.initialized = true;
 
@@ -80,6 +80,7 @@ if (import.meta.hot) {
     console.log(
       `HMR occurred for:\n${payload.updates.map((it) => it.path).join("\n")}`,
     );
+    applyStateEvacuationWorkaround();
   }
   hmr.on("vite:afterUpdate", loagHmrTargets);
   hmr.dispose(() => {
