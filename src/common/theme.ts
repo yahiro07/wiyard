@@ -1,3 +1,10 @@
+export const uiConfigs = {
+  showWireConnectionPreviewFloatingWireEnd: false,
+};
+if (1) {
+  uiConfigs.showWireConnectionPreviewFloatingWireEnd = true;
+}
+
 export const uiColors = {
   destAreaBg: "#6a7282",
   // destAreaBg: "#4a5565",

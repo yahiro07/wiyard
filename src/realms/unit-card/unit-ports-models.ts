@@ -1,3 +1,4 @@
+import { uiConfigs } from "@/common/theme";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
 import { actions } from "@/store/actions";
@@ -35,16 +36,17 @@ export const handlePortPointerDown = (
       const delta = vectorOp.subtract(e.position, e.originalPosition);
       const pos = vectorOp.add(selfPort.position, delta);
       const nearestPort = findNearestPort(targetPortStuffs, pos);
-      if (1) {
-        if (nearestPort) {
-          const pos = nearestPort !== selfPort ? nearestPort.position : null;
+      if (uiConfigs.showWireConnectionPreviewFloatingWireEnd) {
+        if (nearestPort && nearestPort !== selfPort) {
+          actions.setPreviewDestPosition(nearestPort.position);
+        } else if (nearestPort === selfPort) {
           actions.setPreviewDestPosition(pos);
         }
       } else {
         if (nearestPort && nearestPort !== selfPort) {
           actions.setPreviewDestPortKey(nearestPort.portKey);
-        } else if (nearestPort === selfPort) {
-          actions.setPreviewDestPosition(pos);
+        } else {
+          actions.setPreviewDestPortKey(null);
         }
       }
     },
