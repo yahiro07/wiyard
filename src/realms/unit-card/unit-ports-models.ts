@@ -3,12 +3,13 @@ import { PortStuff } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { Point, startDragSession } from "@/utils/drag-session";
+import { vectorOp } from "@/utils/geometry-helper";
 
 export function findNearestPort(portStuffsArray: PortStuff[], pos: Point) {
   let nearestPort: PortStuff | null = null;
   let nearestDist = Infinity;
   for (const port of portStuffsArray) {
-    const dist = Math.hypot(port.position.x - pos.x, port.position.y - pos.y);
+    const dist = vectorOp.distance(port.position, pos);
     if (dist < nearestDist) {
       nearestPort = port;
       nearestDist = dist;
@@ -31,14 +32,8 @@ export const handlePortPointerDown = (
 
   startDragSession(e0.nativeEvent, {
     onMove(e) {
-      const delta = {
-        x: e.position.x - e.originalPosition.x,
-        y: e.position.y - e.originalPosition.y,
-      };
-      const pos = {
-        x: selfPort.position.x + delta.x,
-        y: selfPort.position.y + delta.y,
-      };
+      const delta = vectorOp.subtract(e.position, e.originalPosition);
+      const pos = vectorOp.add(selfPort.position, delta);
       const nearestPort = findNearestPort(targetPortStuffs, pos);
       if (1) {
         if (nearestPort) {

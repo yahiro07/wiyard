@@ -3,6 +3,7 @@ import { StageUnitItem } from "@/domain/types";
 import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
 import { startDragSession } from "@/utils/drag-session";
+import { vectorOp } from "@/utils/geometry-helper";
 
 export const unitCardHandlers = {
   handlePointerDown(
@@ -12,12 +13,8 @@ export const unitCardHandlers = {
     const unitOriginalPos = unitItem.cardPosition;
     startDragSession(e0.nativeEvent, {
       onMove(e) {
-        const deltaX = e.position.x - e.originalPosition.x;
-        const deltaY = e.position.y - e.originalPosition.y;
-        const newPos = {
-          x: unitOriginalPos.x + deltaX,
-          y: unitOriginalPos.y + deltaY,
-        };
+        const delta = vectorOp.subtract(e.position, e.originalPosition);
+        const newPos = vectorOp.add(unitOriginalPos, delta);
         actions.setUnitCardPosition(unitItem.unitId, newPos);
       },
       onTap() {
@@ -44,12 +41,8 @@ export const unitWindowHandlers = {
     const unitOriginalPos = windowCoordVm.position;
     startDragSession(e0.nativeEvent, {
       onMove(e) {
-        const deltaX = e.position.x - e.originalPosition.x;
-        const deltaY = e.position.y - e.originalPosition.y;
-        const newPos = {
-          x: unitOriginalPos.x + deltaX,
-          y: unitOriginalPos.y + deltaY,
-        };
+        const delta = vectorOp.subtract(e.position, e.originalPosition);
+        const newPos = vectorOp.add(unitOriginalPos, delta);
         windowCoordVm.setPosition(newPos);
       },
       onTap() {
