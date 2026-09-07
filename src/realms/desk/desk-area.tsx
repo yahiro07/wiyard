@@ -5,6 +5,7 @@ import { SequencerWindow } from "@/realms/sequencer/sequencer-window";
 import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
 import { UnitConnectionsRoot } from "@/realms/unit-connection/unit-connections";
 import { UnitWindowsRoot } from "@/realms/unit-window/unit-windows";
+import { WiringLayer } from "@/realms/wiring/wiring-layer";
 import { store } from "@/store/store";
 
 export const DeskArea = () => {
@@ -15,6 +16,7 @@ export const DeskArea = () => {
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       <TaskBar />
+      <WiringLayer />
       <UnitCardsRoot />
       <UnitWindowsRoot />
       <SequencerWindow
@@ -22,7 +24,7 @@ export const DeskArea = () => {
         evacuated={windowsEvacuated}
       />
       <UnitConnectionsRoot />
-      <CoordDebugLayer />
+      {false && <CoordDebugLayer />}
     </div>
   );
 };
