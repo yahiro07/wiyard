@@ -6,18 +6,61 @@ import { store } from "@/store/store";
 import { Point, startDragSession } from "@/utils/drag-session";
 import { vectorOp } from "@/utils/geometry-helper";
 
-export function findNearestPort(portStuffsArray: PortStuff[], pos: Point) {
-  let nearestPort: PortStuff | null = null;
-  let nearestDist = Infinity;
-  for (const port of portStuffsArray) {
-    const dist = vectorOp.distance(port.position, pos);
-    if (dist < nearestDist) {
-      nearestPort = port;
-      nearestDist = dist;
+const helpers = {
+  findNearestPort(portStuffsArray: PortStuff[], pos: Point) {
+    let nearestPort: PortStuff | null = null;
+    let nearestDist = Infinity;
+    for (const port of portStuffsArray) {
+      const dist = vectorOp.distance(port.position, pos);
+      if (dist < nearestDist) {
+        nearestPort = port;
+        nearestDist = dist;
+      }
     }
-  }
-  return nearestPort;
-}
+    return nearestPort;
+  },
+  getConnectedWires(portKey: string) {
+    const { wireConnectionKeys } = store.state;
+    return wireConnectionKeys.filter((key) => key.includes(portKey));
+  },
+  getAltSidePortKey(connectionKey: string, portKey: string) {
+    const portKeys = connectionKey.split("-");
+    return portKeys.find((key) => key !== portKey);
+  },
+};
+
+const internalHandlers = {
+  handlePortTap(portKey: string) {
+    const connectedWires = helpers.getConnectedWires(portKey);
+    if (connectedWires.length === 0) {
+      const { portStuffs } = store.state;
+      const selfPort = portStuffs[portKey];
+      const targetPorts = Object.values(portStuffs).filter(
+        (ps) =>
+          (isPortConnectable(portKey, ps.portKey) &&
+            selfPort.direction === "output" &&
+            ps.position.x > selfPort.position.x) ||
+          (selfPort.direction === "input" &&
+            ps.position.x < selfPort.position.x),
+      );
+      const nearestPort = helpers.findNearestPort(
+        targetPorts,
+        selfPort.position,
+      );
+      if (nearestPort) {
+        actions.toggleWire(portKey, nearestPort.portKey);
+      }
+    } else if (connectedWires.length === 1) {
+      const targetPortKey = helpers.getAltSidePortKey(
+        connectedWires[0],
+        portKey,
+      );
+      if (targetPortKey) {
+        actions.toggleWire(portKey, targetPortKey);
+      }
+    }
+  },
+};
 
 export const handlePortPointerDown = (
   e0: React.PointerEvent<HTMLDivElement>,
@@ -26,7 +69,7 @@ export const handlePortPointerDown = (
   actions.setDraggingPortKey(portKey);
 
   const { portStuffs } = store.state;
-  const targetPortStuffs = Object.values(portStuffs).filter(
+  const targetPorts = Object.values(portStuffs).filter(
     (ps) => ps.portKey === portKey || isPortConnectable(portKey, ps.portKey),
   );
   const selfPort = portStuffs[portKey];
@@ -35,7 +78,7 @@ export const handlePortPointerDown = (
     onMove(e) {
       const delta = vectorOp.subtract(e.position, e.originalPosition);
       const pos = vectorOp.add(selfPort.position, delta);
-      const nearestPort = findNearestPort(targetPortStuffs, pos);
+      const nearestPort = helpers.findNearestPort(targetPorts, pos);
       if (uiConfigs.showWireConnectionPreviewFloatingWireEnd) {
         if (nearestPort && nearestPort !== selfPort) {
           // actions.setPreviewDestPosition(nearestPort.position);
@@ -53,7 +96,7 @@ export const handlePortPointerDown = (
         }
       }
     },
-    onUpOrCancel(e) {
+    onUpOrCancel() {
       const { draggingPortKey, previewDestPortKey } = store.state;
       if (draggingPortKey && previewDestPortKey) {
         actions.toggleWire(draggingPortKey, previewDestPortKey);
@@ -61,6 +104,9 @@ export const handlePortPointerDown = (
       actions.setDraggingPortKey(null);
       actions.setPreviewDestPortKey(null);
       actions.setPreviewDestPosition(null);
+    },
+    onTap() {
+      internalHandlers.handlePortTap(portKey);
     },
   });
 };
