@@ -13,7 +13,8 @@
         "noNonNullAssertion": "off"
       },
       "correctness": {
-        "noConstantCondition": "off"
+        "noConstantCondition": "off",
+        "noChildrenProp": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
