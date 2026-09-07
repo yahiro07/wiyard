@@ -70,6 +70,14 @@ if (import.meta.hot) {
       })();
     }, 100);
   }
+  let timerId: NodeJS.Timeout | null;
+  function wrapApplyStateEvacuationWorkaround() {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(applyStateEvacuationWorkaround, 100);
+  }
+
   const hmr = import.meta.hot;
   if (hmr.data.initialized) {
     // applyStateEvacuationWorkaround();
@@ -80,7 +88,7 @@ if (import.meta.hot) {
     console.log(
       `HMR occurred for:\n${payload.updates.map((it) => it.path).join("\n")}`,
     );
-    applyStateEvacuationWorkaround();
+    wrapApplyStateEvacuationWorkaround();
   }
   hmr.on("vite:afterUpdate", loagHmrTargets);
   hmr.dispose(() => {
