@@ -15,6 +15,15 @@ export function setOrDeleteValue<T extends object, K extends keyof T>(
   }
 }
 
+export function AddOrRemoveArrayItem<T>(array: T[], value: T): T[] {
+  const index = array.indexOf(value);
+  if (index === -1) {
+    return [...array, value];
+  } else {
+    return array.filter((item) => item !== value);
+  }
+}
+
 export function pickObjectMembers<T extends {}, K extends keyof T>(
   obj: T,
   keys: K[] | Record<K, 1 | true>,

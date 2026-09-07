@@ -23,3 +23,13 @@ export function getPortDirectionFromPortKey(portKey: string): HsPortDirection {
     ? "output"
     : "input";
 }
+
+export function getForwardDirectionWireConnectionKey(
+  portKeyA: string,
+  portKeyB: string,
+) {
+  const directionA = getPortDirectionFromPortKey(portKeyA);
+  return directionA === "output"
+    ? `${portKeyA}-${portKeyB}`
+    : `${portKeyB}-${portKeyA}`;
+}

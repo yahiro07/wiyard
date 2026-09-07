@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import { HsPortSubtype } from "wafer-host/core";
 import { uiConstants, wireColors } from "@/common/theme";
-import { getPortDirectionFromPortKey } from "@/domain/port-helpers";
+import {
+  getForwardDirectionWireConnectionKey,
+  getPortDirectionFromPortKey,
+} from "@/domain/port-helpers";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 import { Point } from "@/utils/drag-session";
@@ -68,11 +71,10 @@ const WiresRoot = () => {
 
   const previewRemovingConnectionKey = (() => {
     if (draggingPortKey && previewDestPortKey) {
-      const isForwardDirection =
-        getPortDirectionFromPortKey(draggingPortKey) === "output";
-      return isForwardDirection
-        ? `${draggingPortKey}-${previewDestPortKey}`
-        : `${previewDestPortKey}-${draggingPortKey}`;
+      return getForwardDirectionWireConnectionKey(
+        draggingPortKey,
+        previewDestPortKey,
+      );
     }
   })();
 
@@ -105,11 +107,10 @@ const DragPreviewWire = () => {
   ) {
     return;
   }
-  const isForwardDirection =
-    getPortDirectionFromPortKey(draggingPortKey) === "output";
-  const connectionKey = isForwardDirection
-    ? `${draggingPortKey}-${previewDestPortKey}`
-    : `${previewDestPortKey}-${draggingPortKey}`;
+  const connectionKey = getForwardDirectionWireConnectionKey(
+    draggingPortKey,
+    previewDestPortKey,
+  );
 
   if (wireConnectionKeys.includes(connectionKey)) {
     //existing wire, show nothing for removing preview

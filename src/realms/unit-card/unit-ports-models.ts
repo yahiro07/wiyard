@@ -54,6 +54,10 @@ export const handlePortPointerDown = (
       }
     },
     onUpOrCancel(e) {
+      const { draggingPortKey, previewDestPortKey } = store.state;
+      if (draggingPortKey && previewDestPortKey) {
+        actions.toggleWire(draggingPortKey, previewDestPortKey);
+      }
       actions.setDraggingPortKey(null);
       actions.setPreviewDestPortKey(null);
       actions.setPreviewDestPosition(null);
