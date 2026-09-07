@@ -1,9 +1,9 @@
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
+import { Point } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
 import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
-import { Point } from "@/utils/drag-session";
 
 type StoreState = {
   //will be persisted in project

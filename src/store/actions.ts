@@ -1,7 +1,7 @@
+import { Point } from "@/domain/common-types";
 import { getForwardDirectionWireConnectionKey } from "@/domain/port-helpers";
 import { PortStuff, UnitStuff } from "@/domain/types";
 import { store } from "@/store/store";
-import { Point } from "@/utils/drag-session";
 import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
 export const actionsInternal = {

@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import { HsPortSubtype } from "wafer-host/core";
 import { uiConstants, wireColors } from "@/common/theme";
+import { Point } from "@/domain/common-types";
 import {
   getForwardDirectionWireConnectionKey,
   getPortDirectionFromPortKey,
 } from "@/domain/port-helpers";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
-import { Point } from "@/utils/drag-session";
 
 function createCurveLinePath(p0: Point, p1: Point) {
   // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);

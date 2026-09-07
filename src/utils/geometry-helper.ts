@@ -1,4 +1,4 @@
-import { Point } from "@/utils/drag-session";
+import { Point } from "@/domain/common-types";
 
 export const vectorOp = {
   add(v0: Point, v1: Point) {
