@@ -2,8 +2,9 @@ export function isPortConnectable(
   sourcePortKey: string,
   destinationPortKey: string,
 ) {
-  const sourcePortId = sourcePortKey.split(".")[1];
-  const destPortId = destinationPortKey.split(".")[1];
+  const [sourceUnitId, sourcePortId] = sourcePortKey.split(".");
+  const [destUnitId, destPortId] = destinationPortKey.split(".");
+  if (sourceUnitId === destUnitId) return false;
   return (
     (sourcePortId === "audioOutput" && destPortId === "audioInput") ||
     (sourcePortId === "noteOutput" && destPortId === "noteInput") ||
