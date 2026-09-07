@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { wireColors } from "@/common/theme";
+import { isPortConnectable } from "@/domain/port-helpers";
 import { UnitPortSpec } from "@/domain/types";
 import { UnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
 import { handlePortPointerDown } from "@/realms/unit-card/unit-ports-models";
@@ -23,12 +24,19 @@ const PortView = ({
     [portSpec, portPositionManager],
   );
   const color = wireColors[portSpec.subtype];
+
+  const isDraggingSelf = draggingPortKey === portSpec.portKey;
+  const isConnectableTarget =
+    draggingPortKey && isPortConnectable(draggingPortKey, portSpec.portKey);
+
+  const active =
+    !isDragging || (isDragging && (isDraggingSelf || isConnectableTarget));
   return (
     <div
       ref={refCallback}
       className={cz(
         "w-20px h-20px flex-c cursor-pointer",
-        isDragging && "opacity-20",
+        !active && "opacity-20",
       )}
       onPointerDown={(e) => handlePortPointerDown(e, portSpec.portKey)}
     >
