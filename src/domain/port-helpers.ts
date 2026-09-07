@@ -1,3 +1,5 @@
+import { HsPortDirection } from "wafer-host/core";
+
 export function isPortConnectable(
   sourcePortKey: string,
   destinationPortKey: string,
@@ -13,4 +15,11 @@ export function isPortConnectable(
     (sourcePortId === "noteInput" && destPortId === "noteOutput") ||
     (sourcePortId === "automationInput" && destPortId === "automationOutput")
   );
+}
+
+export function getPortDirectionFromPortKey(portKey: string): HsPortDirection {
+  const [_, portId] = portKey.split(".");
+  return ["audioOutput", "noteOutput", "automationOutput"].includes(portId)
+    ? "output"
+    : "input";
 }

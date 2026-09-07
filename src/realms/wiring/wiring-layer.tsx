@@ -1,12 +1,14 @@
 import { useMemo } from "react";
 import { HsPortSubtype } from "wafer-host/core";
 import { uiConstants, wireColors } from "@/common/theme";
+import { getPortDirectionFromPortKey } from "@/domain/port-helpers";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 import { Point } from "@/utils/drag-session";
 
 function createCurveLinePath(p0: Point, p1: Point) {
-  const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
+  // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
+  const handleLength = Math.abs(p1.x - p0.x) / 2;
   const cp0 = { x: p0.x + handleLength, y: p0.y };
   const cp1 = { x: p1.x - handleLength, y: p1.y };
   return [
@@ -87,7 +89,11 @@ const DragPreviewWire = () => {
   ) {
     return;
   }
-  const connectionKey = `${draggingPortKey}-${previewDestPortKey}`;
+  const isForwardDirection =
+    getPortDirectionFromPortKey(draggingPortKey) === "output";
+  const connectionKey = isForwardDirection
+    ? `${draggingPortKey}-${previewDestPortKey}`
+    : `${previewDestPortKey}-${draggingPortKey}`;
   return <Wire wireConnectionKey={connectionKey} />;
 };
 
@@ -97,13 +103,12 @@ const DragPreviewWire2 = () => {
     store.useSnapshot();
   if (!(draggingPortKey && previewDestPosition)) return;
   const srcPort = portStuffs[draggingPortKey];
-  return (
-    <WireView
-      signalType={srcPort.subtype}
-      p0={srcPort.position}
-      p1={previewDestPosition}
-    />
-  );
+  const isForwardDirection =
+    getPortDirectionFromPortKey(draggingPortKey) === "output";
+  const [p0, p1] = isForwardDirection
+    ? [srcPort.position, previewDestPosition]
+    : [previewDestPosition, srcPort.position];
+  return <WireView signalType={srcPort.subtype} p0={p0} p1={p1} />;
 };
 
 export const WiringLayer = () => {
