@@ -1,6 +1,8 @@
 import { useCallback } from "react";
+import { wireColors } from "@/common/theme";
 import { UnitPortSpec } from "@/domain/types";
 import { UnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
+import { cz } from "@/utils/cz";
 
 const PortView = ({
   portSpec,
@@ -15,9 +17,16 @@ const PortView = ({
     },
     [portSpec, portPositionManager],
   );
+  const color = wireColors[portSpec.subtype];
   return (
-    <div ref={refCallback} className="flex-ha">
-      <div>{portSpec.direction === "input" ? "O" : "O"} </div>
+    <div ref={refCallback} className="w-20px h-20px flex-c cursor-pointer">
+      <div
+        className={cz(
+          "w-11px aspect-square rounded-full",
+          "border border-black/50 border-0.3px",
+        )}
+        style={{ background: color }}
+      />
     </div>
   );
 };

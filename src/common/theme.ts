@@ -6,5 +6,5 @@ export const uiColors = {
 export const wireColors = {
   audio: "#fc0",
   note: "#0b9",
-  automation: "magenta",
+  automation: "#f5b",
 };

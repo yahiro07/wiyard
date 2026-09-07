@@ -32,7 +32,7 @@ const Wire = ({
   const p1 = destPort.position;
   const color = wireColors[signalType];
   const path = createCurveLinePath(p0, p1);
-  return <path d={path} stroke={color} strokeWidth="4" fill="none" />;
+  return <path d={path} stroke={color} strokeWidth="3" fill="none" />;
 };
 
 export const WiringLayer = () => {
