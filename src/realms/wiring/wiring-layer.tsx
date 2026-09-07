@@ -76,6 +76,7 @@ const WiresRoot = () => {
 };
 
 const DragPreviewWire = () => {
+  //port to port preview wire
   const { draggingPortKey, previewDestPortKey } = store.useSnapshot();
   if (
     !(
@@ -90,6 +91,21 @@ const DragPreviewWire = () => {
   return <Wire wireConnectionKey={connectionKey} />;
 };
 
+const DragPreviewWire2 = () => {
+  //port to arbitrary position preview wire
+  const { draggingPortKey, previewDestPosition, portStuffs } =
+    store.useSnapshot();
+  if (!(draggingPortKey && previewDestPosition)) return;
+  const srcPort = portStuffs[draggingPortKey];
+  return (
+    <WireView
+      signalType={srcPort.subtype}
+      p0={srcPort.position}
+      p1={previewDestPosition}
+    />
+  );
+};
+
 export const WiringLayer = () => {
   const [winW, winH] = useMemo(
     () => [window.innerWidth, window.innerHeight],
@@ -101,6 +117,7 @@ export const WiringLayer = () => {
       <svg viewBox={viewBox} style={{ width: winW, height: winH }}>
         <WiresRoot />
         <DragPreviewWire />
+        <DragPreviewWire2 />
       </svg>
     </div>
   );

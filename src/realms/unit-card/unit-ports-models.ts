@@ -27,29 +27,36 @@ export const handlePortPointerDown = (
   const targetPortStuffs = Object.values(portStuffs).filter(
     (ps) => ps.portKey === portKey || isPortConnectable(portKey, ps.portKey),
   );
-
-  // const selfPortStuff = portStuffs[portKey];
-  // const originalPosition = selfPortStuff.position;
+  const selfPort = portStuffs[portKey];
 
   startDragSession(e0.nativeEvent, {
     onMove(e) {
-      const pos = { x: e.position.x, y: e.position.y };
-      // const delta = {
-      //   x: e.position.x - originalPosition.x,
-      //   y: e.position.y - originalPosition.y,
-      // };
-      // const pos = {
-      //   x: originalPosition.x + delta.x,
-      //   y: originalPosition.y + delta.y,
-      // };
+      const delta = {
+        x: e.position.x - e.originalPosition.x,
+        y: e.position.y - e.originalPosition.y,
+      };
+      const pos = {
+        x: selfPort.position.x + delta.x,
+        y: selfPort.position.y + delta.y,
+      };
       const nearestPort = findNearestPort(targetPortStuffs, pos);
-      if (nearestPort) {
-        actions.setPreviewDestPortKey(nearestPort.portKey);
+      if (1) {
+        if (nearestPort) {
+          const pos = nearestPort !== selfPort ? nearestPort.position : null;
+          actions.setPreviewDestPosition(pos);
+        }
+      } else {
+        if (nearestPort && nearestPort !== selfPort) {
+          actions.setPreviewDestPortKey(nearestPort.portKey);
+        } else if (nearestPort === selfPort) {
+          actions.setPreviewDestPosition(pos);
+        }
       }
     },
     onUpOrCancel(e) {
       actions.setDraggingPortKey(null);
       actions.setPreviewDestPortKey(null);
+      actions.setPreviewDestPosition(null);
     },
   });
 };

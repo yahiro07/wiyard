@@ -61,4 +61,7 @@ export const actions = {
   setPreviewDestPortKey(portKey: string | null) {
     store.setPreviewDestPortKey(portKey);
   },
+  setPreviewDestPosition(position: Point | null) {
+    store.setPreviewDestPosition(position);
+  },
 };
