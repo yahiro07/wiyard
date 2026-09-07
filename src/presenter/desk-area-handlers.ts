@@ -2,7 +2,7 @@ import { appConfig } from "@/domain/app-config";
 import { StageUnitItem } from "@/domain/types";
 import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
-import { startDragSessionV0 } from "@/utils/drag-session-v0";
+import { startDragSessionEx } from "@/utils/drag-session";
 import { vectorOp } from "@/utils/geometry-helper";
 
 export const unitCardHandlers = {
@@ -11,9 +11,8 @@ export const unitCardHandlers = {
     unitItem: StageUnitItem,
   ) {
     const unitOriginalPos = unitItem.cardPosition;
-    startDragSessionV0(e0.nativeEvent, {
-      onMove(e) {
-        const delta = vectorOp.subtract(e.position, e.originalPosition);
+    startDragSessionEx(e0, {
+      onMove(_, delta) {
         const newPos = vectorOp.add(unitOriginalPos, delta);
         actions.setUnitCardPosition(unitItem.unitId, newPos);
       },
@@ -27,6 +26,7 @@ export const unitCardHandlers = {
         ) {
           actions.setSequencerWindowVisible(true);
           actions.setCurrentNoteChannelId(unitItem.noteChannelId);
+          actions.setWindowsEvacuated(false);
         }
       },
     });
@@ -39,9 +39,8 @@ export const unitWindowHandlers = {
     windowCoordVm: WindowCoordViewModel,
   ) {
     const unitOriginalPos = windowCoordVm.position;
-    startDragSessionV0(e0.nativeEvent, {
-      onMove(e) {
-        const delta = vectorOp.subtract(e.position, e.originalPosition);
+    startDragSessionEx(e0, {
+      onMove(_, delta) {
         const newPos = vectorOp.add(unitOriginalPos, delta);
         windowCoordVm.setPosition(newPos);
       },
@@ -55,7 +54,7 @@ export const unitWindowHandlers = {
 export const deskAreaHandlers = {
   handlePointerDown(e0: React.PointerEvent<HTMLDivElement>) {
     if (e0.currentTarget === e0.target) {
-      startDragSessionV0(e0.nativeEvent, {
+      startDragSessionEx(e0, {
         onTap() {
           if (appConfig.evacuateWindowsOnTapDesk) {
             actions.toggleWindowsEvacuated();

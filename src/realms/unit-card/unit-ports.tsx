@@ -3,7 +3,7 @@ import { uiConstants, wireColors } from "@/common/theme";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { UnitPortSpec } from "@/domain/types";
 import { UnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
-import { handlePortPointerDown } from "@/realms/unit-card/unit-ports-models";
+import { handlePortPointerDown } from "@/realms/unit-card/unit-ports-handlers";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 
