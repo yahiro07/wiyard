@@ -8,3 +8,7 @@ export const wireColors = {
   note: "#0b9",
   automation: "#f5b",
 };
+
+export const uiConstants = {
+  dimmedWireOpacity: 0.15,
+};

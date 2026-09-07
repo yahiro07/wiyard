@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { wireColors } from "@/common/theme";
+import { uiConstants, wireColors } from "@/common/theme";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { UnitPortSpec } from "@/domain/types";
 import { UnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
@@ -34,10 +34,8 @@ const PortView = ({
   return (
     <div
       ref={refCallback}
-      className={cz(
-        "w-20px h-20px flex-c cursor-pointer",
-        !active && "opacity-20",
-      )}
+      className="w-20px h-20px flex-c cursor-pointer"
+      style={{ opacity: active ? 1 : uiConstants.dimmedWireOpacity }}
       onPointerDown={(e) => handlePortPointerDown(e, portSpec.portKey)}
     >
       <div

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { HsPortSubtype } from "wafer-host/core";
-import { wireColors } from "@/common/theme";
+import { uiConstants, wireColors } from "@/common/theme";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 import { Point } from "@/utils/drag-session";
@@ -36,7 +36,7 @@ const WireView = ({
       stroke={color}
       strokeWidth="3"
       fill="none"
-      opacity={weaken ? 0.2 : 1}
+      opacity={weaken ? uiConstants.dimmedWireOpacity : 1}
     />
   );
 };
