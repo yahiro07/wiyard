@@ -33,7 +33,7 @@ export const InnerWindow = ({
     >
       <div style={{ width }}>
         <div
-          className="bg-gray-500 flex-c h-34px cursor-pointer relative justify-end px-2"
+          className="bg-gray-600/70 flex-c h-34px cursor-pointer relative justify-end px-2"
           onPointerDown={(e) =>
             unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
           }
