@@ -1,3 +1,4 @@
+import { uiColors } from "@/common/theme";
 import { deskAreaHandlers } from "@/presenter/desk-area-handlers";
 import { CoordDebugLayer } from "@/realms/desk/coord-debug-layer";
 import { TaskBar } from "@/realms/desk/task-bar";
@@ -12,7 +13,8 @@ export const DeskArea = () => {
   const { windowsEvacuated, sequencerWindowVisible } = store.useSnapshot();
   return (
     <div
-      className="grow relative bg-gray-500/80"
+      className="grow relative"
+      style={{ background: uiColors.destAreaBg }}
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       <TaskBar />

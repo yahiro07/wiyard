@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { wireColors } from "@/domain/constants";
+import { wireColors } from "@/common/theme";
 import { PortStuff } from "@/domain/types";
 import { store } from "@/store/store";
 import { Point } from "@/utils/drag-session";
