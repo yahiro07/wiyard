@@ -1,10 +1,19 @@
 import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
 import { ControlButtons } from "@/realms/desk/control-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
+import { actions } from "@/store/actions";
 
 const TopBar = () => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.currentTarget === e.target) {
+      actions.toggleWindowsEvacuated();
+    }
+  };
   return (
-    <div className="h-50px bg-gray-600 elative flex-ha px-2 justify-end">
+    <div
+      className="h-50px bg-gray-600 elative flex-ha px-2 justify-end"
+      onClick={handleClick}
+    >
       <MidiInButtonContainer />
       <div className="absolute-full pointer-events-none text-lg">
         under development...
