@@ -1,6 +1,17 @@
 import { Point } from "@/domain/common-types";
-import { getForwardDirectionWireConnectionKey } from "@/domain/port-helpers";
-import { PortStuff, UnitStuff } from "@/domain/types";
+import { defaultWindowPosition } from "@/domain/default-data";
+import {
+  filterUnitRelatedWires,
+  getForwardDirectionWireConnectionKey,
+} from "@/domain/port-helpers";
+import {
+  BoardUnitItem,
+  PortStuff,
+  UnitAddingItem,
+  UnitStuff,
+} from "@/domain/types";
+import { CatalogKey } from "@/domain/unit-entries";
+import { getNextUnitId } from "@/domain/unit-id-helper";
 import { store } from "@/store/store";
 import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
@@ -73,5 +84,42 @@ export const actions = {
     store.setWireConnectionKeys((prev) =>
       AddOrRemoveArrayItem(prev, connectionKey),
     );
+  },
+  setUnitPickerVisible(visible: boolean) {
+    store.setUnitPickerVisible(visible);
+  },
+  setUnitAddingItem(item: UnitAddingItem | null) {
+    store.setUnitAddingItem(item);
+  },
+  addUnit(catalogKey: CatalogKey, position: Point) {
+    const unitId = getNextUnitId(store.state.unitItems, catalogKey);
+    const newUnit: BoardUnitItem = {
+      type: "board",
+      unitId,
+      catalogKey,
+      cardPosition: position,
+      windowPosition: defaultWindowPosition,
+    };
+    store.setUnitItems((prev) => [...prev, newUnit]);
+  },
+  setMenuTargetUnit(unitId: string | null) {
+    store.setMenuTargetUnitId(unitId);
+  },
+  toggleMenuTargetUnit(unitId: string) {
+    store.setMenuTargetUnitId((prev) => (prev === unitId ? null : unitId));
+  },
+  removeUnit(unitId: string) {
+    const wireConnectionKeys = filterUnitRelatedWires(
+      store.state.wireConnectionKeys,
+      unitId,
+    );
+    store.setWireConnectionKeys((prev) =>
+      prev.filter((key) => !wireConnectionKeys.includes(key)),
+    );
+    store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
+    if (store.state.currentEffectUnitId === unitId) {
+      store.setCurrentEffectUnitId(null);
+    }
+    store.setMenuTargetUnitId(null);
   },
 };

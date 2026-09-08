@@ -56,6 +56,11 @@ export type PortStuff = {
   position: Point;
 };
 
+export type UnitAddingItem = {
+  catalogKey: CatalogKey;
+  position: Point;
+};
+
 //derived item types, not hold in store
 
 export type WireStuff = {

@@ -42,3 +42,8 @@ export function mapObjectValues<T, R>(
     Object.entries(obj).map(([key, value]) => [key, fn(value, key)]),
   );
 }
+
+export function safeParseInt(text: string, defaultValue: number) {
+  const res = parseInt(text, 10);
+  return Number.isFinite(res) ? res : defaultValue;
+}

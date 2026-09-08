@@ -34,7 +34,10 @@ export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   const hasWindow = currentEffectUnitId || sequencerWindowVisible;
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
-      <ControlButton text="+" />
+      <ControlButton
+        text="+"
+        onClick={() => actions.setUnitPickerVisible(true)}
+      />
       <ControlButton
         onClick={actions.toggleWindowsEvacuated}
         disabled={!hasWindow}
