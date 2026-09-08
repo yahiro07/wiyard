@@ -33,3 +33,15 @@ export function getForwardDirectionWireConnectionKey(
     ? `${portKeyA}-${portKeyB}`
     : `${portKeyB}-${portKeyA}`;
 }
+
+export function filterUnitRelatedWires(
+  wireConnectionKeys: string[],
+  unitId: string,
+) {
+  return wireConnectionKeys.filter((key) => {
+    const [sourcePortKey, destinationPortKey] = key.split("-");
+    const [sourceUnitId] = sourcePortKey.split(".");
+    const [destinationUnitId] = destinationPortKey.split(".");
+    return sourceUnitId === unitId || destinationUnitId === unitId;
+  });
+}

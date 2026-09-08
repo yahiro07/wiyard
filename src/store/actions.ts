@@ -1,6 +1,9 @@
 import { Point } from "@/domain/common-types";
 import { defaultWindowPosition } from "@/domain/default-data";
-import { getForwardDirectionWireConnectionKey } from "@/domain/port-helpers";
+import {
+  filterUnitRelatedWires,
+  getForwardDirectionWireConnectionKey,
+} from "@/domain/port-helpers";
 import {
   BoardUnitItem,
   PortStuff,
@@ -106,7 +109,13 @@ export const actions = {
     store.setMenuTargetUnitId((prev) => (prev === unitId ? null : unitId));
   },
   removeUnit(unitId: string) {
+    const wireConnectionKeys = filterUnitRelatedWires(
+      store.state.wireConnectionKeys,
+      unitId,
+    );
+    store.setWireConnectionKeys((prev) =>
+      prev.filter((key) => !wireConnectionKeys.includes(key)),
+    );
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
-    //todo: also remove wires
   },
 };

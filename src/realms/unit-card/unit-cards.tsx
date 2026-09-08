@@ -22,7 +22,7 @@ const UnitCardOperationOverlay = ({ unitItem }: { unitItem: UnitItem }) => {
   return (
     <div className="absolute-full bg-black/30 flex-c">
       <button
-        className="m-4"
+        className="m-4 cursor-pointer"
         type="button"
         onPointerDown={(e) => {
           actions.removeUnit(unitItem.unitId);
