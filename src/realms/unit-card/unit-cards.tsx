@@ -29,7 +29,7 @@ const UnitCardOperationOverlay = ({ unitItem }: { unitItem: UnitItem }) => {
     >
       <div className="flex justify-end">
         <button
-          className="m-2 cursor-pointer"
+          className="mx-1 my-1.5 cursor-pointer"
           type="button"
           onPointerDown={(e) => {
             actions.removeUnit(unitItem.unitId);
