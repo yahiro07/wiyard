@@ -55,7 +55,7 @@ const defaultStoreState: StoreState = {
   currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
 
-if (1) {
+if (0) {
   // store.setSequencerWindowVisible(true);
   Object.assign(defaultStoreState, {
     unitPickerVisible: true,
