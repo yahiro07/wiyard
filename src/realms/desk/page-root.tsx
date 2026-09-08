@@ -1,10 +1,12 @@
+import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
 import { ControlButtons } from "@/realms/desk/control-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
 
 const TopBar = () => {
   return (
-    <div className="h-50px bg-gray-600 flex-c text-lg px-2 relative">
-      <div className="absolute-full pointer-events-none">
+    <div className="h-50px bg-gray-600 elative flex-ha px-2 justify-end">
+      <MidiInButtonContainer />
+      <div className="absolute-full pointer-events-none text-lg">
         under development...
       </div>
     </div>

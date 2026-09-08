@@ -15,6 +15,7 @@ type StoreState = {
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
+  midiInEnabled: boolean;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
@@ -34,6 +35,7 @@ const blankStoreState: StoreState = {
   sequencerWindowVisible: false,
   currentEffectUnitId: null,
   currentNoteChannelId: "",
+  midiInEnabled: false,
   //
   unitStuffs: {},
   portStuffs: {},

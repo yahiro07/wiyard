@@ -122,4 +122,7 @@ export const actions = {
     }
     store.setMenuTargetUnitId(null);
   },
+  toggleMidiInEnabled() {
+    store.toggleMidiInEnabled();
+  },
 };
