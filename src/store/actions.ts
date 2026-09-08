@@ -117,5 +117,9 @@ export const actions = {
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
+    if (store.state.currentEffectUnitId === unitId) {
+      store.setCurrentEffectUnitId(null);
+    }
+    store.setMenuTargetUnitId(null);
   },
 };
