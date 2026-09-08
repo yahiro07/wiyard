@@ -1,16 +1,13 @@
 import { HostAppProvider } from "wafer-host/react";
 import { hostSystem } from "@/domain/host-system-instance";
-import { DeskArea } from "@/realms/desk/desk-area";
+import { useMidiInputHandling } from "@/periphery/midi-input-handling";
+import { PageRoot } from "@/realms/desk/page-root";
 
 export const App = () => {
+  useMidiInputHandling();
   return (
     <HostAppProvider hostSystem={hostSystem}>
-      <div className="h-dvh flex-v text-white">
-        <div className="h-50px bg-gray-600 flex-ha text-lg px-2">
-          under development...
-        </div>
-        <DeskArea />
-      </div>
+      <PageRoot />
     </HostAppProvider>
   );
 };

@@ -3,7 +3,7 @@ import { UpdatePayload } from "vite";
 import { Point } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
-import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
+import { PortStuff, UnitAddingItem, UnitItem, UnitStuff } from "@/domain/types";
 
 type StoreState = {
   //will be persisted in project
@@ -15,12 +15,16 @@ type StoreState = {
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
+  midiInEnabled: boolean;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
   draggingPortKey: string | null;
   previewDestPortKey: string | null;
   previewDestPosition: Point | null;
+  unitPickerVisible: boolean;
+  unitAddingItem: UnitAddingItem | null;
+  menuTargetUnitId: string | null;
 };
 
 const blankStoreState: StoreState = {
@@ -31,6 +35,7 @@ const blankStoreState: StoreState = {
   sequencerWindowVisible: false,
   currentEffectUnitId: null,
   currentNoteChannelId: "",
+  midiInEnabled: false,
   //
   unitStuffs: {},
   portStuffs: {},
@@ -38,6 +43,9 @@ const blankStoreState: StoreState = {
   draggingPortKey: null,
   previewDestPortKey: null,
   previewDestPosition: null,
+  unitPickerVisible: false,
+  unitAddingItem: null,
+  menuTargetUnitId: null,
 };
 
 const defaultStoreState: StoreState = {
@@ -49,12 +57,15 @@ const defaultStoreState: StoreState = {
   currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
 
+if (0) {
+  // store.setSequencerWindowVisible(true);
+  Object.assign(defaultStoreState, {
+    unitPickerVisible: true,
+  });
+}
+
 export const store = ((window as any).store ??=
   createStore<StoreState>(defaultStoreState)) as Store<StoreState>;
-
-if (0) {
-  store.setSequencerWindowVisible(true);
-}
 
 if (import.meta.hot) {
   function applyStateEvacuationWorkaround() {
@@ -68,11 +79,19 @@ if (import.meta.hot) {
         await hostSystem.waitUnitsLoaded();
         hostSystem.setAllUnitStates(unitStates);
       })();
-    }, 200);
+    }, 100);
   }
+  let timerId: NodeJS.Timeout | null;
+  function wrapApplyStateEvacuationWorkaround() {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(applyStateEvacuationWorkaround, 100);
+  }
+
   const hmr = import.meta.hot;
   if (hmr.data.initialized) {
-    applyStateEvacuationWorkaround();
+    // applyStateEvacuationWorkaround();
   }
   hmr.data.initialized = true;
 
@@ -80,6 +99,7 @@ if (import.meta.hot) {
     console.log(
       `HMR occurred for:\n${payload.updates.map((it) => it.path).join("\n")}`,
     );
+    wrapApplyStateEvacuationWorkaround();
   }
   hmr.on("vite:afterUpdate", loagHmrTargets);
   hmr.dispose(() => {

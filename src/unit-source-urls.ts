@@ -9,9 +9,32 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
 
     return [
       `${waferUnitsBase}/fluorite-piano-roll/`,
+      //
       `${waferCustomUnitsBase}/js808/`,
       `${waferCustomUnitsBase}/webaudio-tinysynth-mini/`,
       `${waferUnitsBase}/sunset-delay/`,
+      `${waferUnitsBase}/graphite-drum-machine/`,
+      `${waferCustomUnitsBase}/super-oscillator/`,
+      `${waferCustomUnitsBase}/midi-synth/`,
+      `${waferCustomUnitsBase}/webaudio-synth-v2/`,
+      `${waferUnitsBase}/bs03/`,
+      `${waferUnitsBase}/techno-beat-machine/`,
+      `${waferCustomUnitsBase}/shiny-drum-machine/`,
+      `${waferUnitsBase}/sirius/`,
+      `${waferUnitsBase}/luna/`,
+      `${waferUnitsBase}/altair-xm/`,
+
+      `${waferCustomUnitsBase}/webaudio-spectrum/`,
+      `${waferCustomUnitsBase}/web-audio-mixer/`,
+      `${waferCustomUnitsBase}/vue-audio-mixer/`,
+
+      `${waferUnitsBase}/sunset-chorus-mini/`,
+      `${waferUnitsBase}/lofi2/`,
+      `${waferCustomUnitsBase}/darkwave/`,
+
+      `${waferCustomUnitsBase}/react-synth/`,
+      `${waferCustomUnitsBase}/poly-synth/`,
+      `${waferCustomUnitsBase}/model-1/`,
     ];
   } else {
     const waferUnitsLocalDistDir = toAbsolutePath("../../wafer-units/dist");
@@ -25,7 +48,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferCustomUnitsLocalDir}/js/shiny-drum-machine/`,
 
       `file://${waferUnitsLocalDistDir}/fluorite-piano-roll/`,
-      `file://${waferUnitsLocalDistDir}/partex/`,
 
       `file://${waferCustomUnitsLocalDir}/js/web-audio-mixer/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/vue-audio-mixer/`,
@@ -36,19 +58,9 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/lofi2/`,
       `file://${waferCustomUnitsLocalDir}/js/darkwave/`,
 
-      `file://${waferCustomUnitsLocalDir}/js/additive/`,
-      `file://${waferCustomUnitsLocalDir}/js/bl-synth-modular/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/cadence/`,
-
       `file://${waferCustomUnitsLocalDir}/ts/dist/react-synth/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/poly-synth/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/model-1/`,
-
-      `file://${waferCustomUnitsLocalDir}/js/wasyn-1/`,
-      `file://${waferUnitsLocalDistDir}/drum-loop-player/`,
-
-      `file://${waferUnitsLocalDistDir}/step-automator/`,
-      `file://${waferUnitsLocalDistDir}/multi-lfo/`,
     ];
   }
 }

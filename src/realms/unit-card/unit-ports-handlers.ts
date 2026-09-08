@@ -2,6 +2,7 @@ import { uiConfigs } from "@/common/theme";
 import { Point } from "@/domain/common-types";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
+import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { createDragSessionEx } from "@/utils/drag-session";
@@ -67,9 +68,7 @@ export const handlePortPointerDown = (
   e0: React.PointerEvent<HTMLDivElement>,
   portKey: string,
 ) => {
-  const coordinateBaseElement = document.getElementById(
-    "domDeskArea",
-  ) as HTMLElement;
+  const coordinateBaseElement = getDeskAreaElement();
   const { portStuffs } = store.state;
   const selfPort = portStuffs[portKey];
   const targetPorts = Object.values(portStuffs).filter(
@@ -98,17 +97,19 @@ export const handlePortPointerDown = (
         }
       }
     },
-    onEnd() {
+    onUp() {
       const { draggingPortKey, previewDestPortKey } = store.state;
       if (draggingPortKey && previewDestPortKey) {
         actions.toggleWire(draggingPortKey, previewDestPortKey);
       }
-      actions.setDraggingPortKey(null);
-      actions.setPreviewDestPortKey(null);
-      actions.setPreviewDestPosition(null);
     },
     onTap() {
       internalHandlers.handlePortTap(portKey);
+    },
+    onEnd() {
+      actions.setDraggingPortKey(null);
+      actions.setPreviewDestPortKey(null);
+      actions.setPreviewDestPosition(null);
     },
   });
 };

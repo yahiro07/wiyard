@@ -2,8 +2,13 @@ import { appConfig } from "@/domain/app-config";
 import { StageUnitItem } from "@/domain/types";
 import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
+import { store } from "@/store/store";
 import { startDragSessionEx } from "@/utils/drag-session";
 import { vectorOp } from "@/utils/geometry-helper";
+
+export function getDeskAreaElement() {
+  return document.getElementById("domDeskArea") as HTMLElement;
+}
 
 export const unitCardHandlers = {
   handlePointerDown(
@@ -11,10 +16,33 @@ export const unitCardHandlers = {
     unitItem: StageUnitItem,
   ) {
     const unitOriginalPos = unitItem.cardPosition;
+    let prevPos = unitOriginalPos;
+
+    let timerId: NodeJS.Timeout | undefined = setTimeout(() => {
+      if (prevPos === unitOriginalPos) {
+        actions.setMenuTargetUnit(unitItem.unitId);
+      }
+    }, 250);
+
+    const cancelTimer = () => {
+      if (timerId) {
+        clearTimeout(timerId);
+        timerId = undefined;
+      }
+    };
+
     startDragSessionEx(e0, {
       onMove(_, delta) {
-        const newPos = vectorOp.add(unitOriginalPos, delta);
-        actions.setUnitCardPosition(unitItem.unitId, newPos);
+        const newPos = vectorOp.snapped(
+          vectorOp.add(unitOriginalPos, delta),
+          10,
+        );
+        if (!vectorOp.equals(prevPos, newPos)) {
+          actions.setUnitCardPosition(unitItem.unitId, newPos);
+          prevPos = newPos;
+          cancelTimer();
+          actions.setMenuTargetUnit(null);
+        }
       },
       onTap() {
         if (unitItem.type === "board") {
@@ -24,10 +52,18 @@ export const unitCardHandlers = {
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"
         ) {
-          actions.setSequencerWindowVisible(true);
-          actions.setCurrentNoteChannelId(unitItem.noteChannelId);
-          actions.setWindowsEvacuated(false);
+          const isCurrent =
+            store.state.currentNoteChannelId === unitItem.noteChannelId;
+          if (isCurrent) {
+            actions.setSequencerWindowVisible(true);
+            actions.setWindowsEvacuated(false);
+          } else {
+            actions.setCurrentNoteChannelId(unitItem.noteChannelId);
+          }
         }
+      },
+      onEnd() {
+        cancelTimer();
       },
     });
   },
@@ -62,5 +98,6 @@ export const deskAreaHandlers = {
         },
       });
     }
+    actions.setMenuTargetUnit(null);
   },
 };

@@ -26,7 +26,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}
-        unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
+        unitUrl={catalogItem.loaderPageUrl}
         onUnitInstanceLoaded={reporter.reportLoaded}
         onLoadFailed={reporter.reportFailure}
       />

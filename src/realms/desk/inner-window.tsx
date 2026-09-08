@@ -24,7 +24,7 @@ export const InnerWindow = ({
       className="absolute"
       style={{
         left: windowCoordVm.position.x,
-        top: evacuated ? "40px" : windowCoordVm.position.y,
+        top: evacuated ? "0" : windowCoordVm.position.y,
         // top: evacuated ? undefined : windowCoordVm.position.y,
         // bottom: evacuated ? "40px" : undefined,
         //windows are always exist in dom, so as to keep units working

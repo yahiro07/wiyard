@@ -1,4 +1,5 @@
 import { IconType } from "react-icons";
+import { Icons } from "@/common/icons";
 import {
   BoardUnitItem,
   EdgeUnitItem,
@@ -13,10 +14,38 @@ import {
   useUnitStuff,
 } from "@/realms/unit-card/unit-cards-models";
 import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
+import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 
+const UnitCardOperationOverlay = ({ unitItem }: { unitItem: UnitItem }) => {
+  return (
+    <div
+      className="absolute-full bg-black/30"
+      onPointerDown={(e) => {
+        actions.setMenuTargetUnit(null);
+        e.stopPropagation();
+      }}
+    >
+      <div className="flex justify-end">
+        <button
+          className="mx-1 my-1.5 cursor-pointer"
+          type="button"
+          onPointerDown={(e) => {
+            actions.removeUnit(unitItem.unitId);
+            e.stopPropagation();
+          }}
+        >
+          <Icons.Trash size={24} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+  const { menuTargetUnitId } = store.useSnapshot();
+  const isMenuTarget = menuTargetUnitId === unitItem.unitId;
   const unitStuff = useUnitStuff(unitItem.unitId);
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
@@ -37,14 +66,15 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
         <div
-          className="h-100px bg-white cursor-pointer"
+          className="h-100px bg-white cursor-pointer relative"
           onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
         >
           <img
             src={catalogItem.thumbnailUrl}
-            className="w-full h-full object-contain"
+            className="h-full object-contain"
             alt={catalogItem.name}
           />
+          {isMenuTarget && <UnitCardOperationOverlay unitItem={unitItem} />}
         </div>
         {outputPortSpecs && (
           <UnitPortsColumn
