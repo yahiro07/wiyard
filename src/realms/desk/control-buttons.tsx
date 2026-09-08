@@ -1,4 +1,5 @@
 import { Icons } from "@/common/icons";
+import { NumberSlider } from "@/components/number-slider";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
@@ -51,11 +52,43 @@ export const PlaybackButton = () => {
   );
 };
 
+export const BpmInput = () => {
+  const { bpm } = store.useSnapshot();
+  return (
+    <NumberSlider
+      label="BPM"
+      value={bpm}
+      min={60}
+      max={180}
+      step={1}
+      onChange={store.setBpm}
+      width={80}
+    />
+  );
+};
+
+export const MasterVolumeInput = () => {
+  const { masterVolume } = store.useSnapshot();
+  return (
+    <NumberSlider
+      label="master"
+      value={masterVolume}
+      onChange={store.setMasterVolume}
+      max={1}
+      step={0.01}
+      fracDigits={2}
+      width={80}
+    />
+  );
+};
+
 export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
       <PlaybackButton />
       <PickerLaunchButton />
+      <BpmInput />
+      <MasterVolumeInput />
       {/* <WindowEvacuationButton /> */}
     </div>
   );

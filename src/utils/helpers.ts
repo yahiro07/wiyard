@@ -1,3 +1,9 @@
+export function clampValue(value: number, lo: number, hi: number) {
+  if (value < lo) return lo;
+  if (value > hi) return hi;
+  return value;
+}
+
 export function checkArrayItemEquals<T>(a: T[], b: T[]) {
   if (a.length !== b.length) return false;
   return a.every((item, index) => item === b[index]);

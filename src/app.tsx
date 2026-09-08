@@ -5,10 +5,15 @@ import { PageRoot } from "@/realms/desk/page-root";
 import { store } from "@/store/store";
 
 export const App = () => {
-  const { playing } = store.useSnapshot();
+  const { playing, bpm, masterVolume } = store.useSnapshot();
   useMidiInputHandling();
   return (
-    <HostAppProvider hostSystem={hostSystem} playing={playing}>
+    <HostAppProvider
+      hostSystem={hostSystem}
+      playing={playing}
+      bpm={bpm}
+      masterGain={masterVolume}
+    >
       <PageRoot />
     </HostAppProvider>
   );

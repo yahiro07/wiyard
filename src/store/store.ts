@@ -16,6 +16,8 @@ type StoreState = {
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
   midiInEnabled: boolean;
+  bpm: number;
+  masterVolume: number;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
@@ -26,7 +28,6 @@ type StoreState = {
   unitAddingItem: UnitAddingItem | null;
   menuTargetUnitId: string | null;
   playing: boolean;
-  bpm: number;
 };
 
 const blankStoreState: StoreState = {
@@ -38,6 +39,8 @@ const blankStoreState: StoreState = {
   currentEffectUnitId: null,
   currentNoteChannelId: "",
   midiInEnabled: false,
+  bpm: 120,
+  masterVolume: 0.5,
   //
   unitStuffs: {},
   portStuffs: {},
@@ -49,7 +52,6 @@ const blankStoreState: StoreState = {
   unitAddingItem: null,
   menuTargetUnitId: null,
   playing: false,
-  bpm: 120,
 };
 
 const defaultStoreState: StoreState = {
