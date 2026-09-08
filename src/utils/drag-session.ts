@@ -71,8 +71,10 @@ export function startDragSession(
 type DragSessionCallbacksEx = {
   onStart?(): void;
   onMove?(pos: Point, relativeMoveAmountFromStart: Vector): void;
-  onEnd?(cause: "end" | "cancel"): void;
+  onUp?(pos: Point): void;
   onTap?(): void;
+  onCancel?(): void;
+  onEnd?(pos: Point): void; //called after either up/tap/cancel
 };
 
 type DragSessionEx = {
@@ -161,18 +163,20 @@ export function createDragSessionEx(
           }
           latestPosition = pos;
         },
-        onUpOrCancel(_, cause) {
+        onUpOrCancel(e, cause) {
+          const pos = getPos(e);
           if (cause === "up") {
             if (started) {
-              callbacks.onEnd?.("end");
+              callbacks.onUp?.(pos);
             } else {
               callbacks.onTap?.();
             }
           } else {
             if (started) {
-              callbacks.onEnd?.("cancel");
+              callbacks.onCancel?.();
             }
           }
+          callbacks.onEnd?.(pos);
           cancelTimer();
         },
       });

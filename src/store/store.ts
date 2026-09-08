@@ -23,6 +23,7 @@ type StoreState = {
   previewDestPosition: Point | null;
   unitPickerVisible: boolean;
   unitAddingItem: UnitAddingItem | null;
+  menuTargetUnitId: string | null;
 };
 
 const blankStoreState: StoreState = {
@@ -42,6 +43,7 @@ const blankStoreState: StoreState = {
   previewDestPosition: null,
   unitPickerVisible: false,
   unitAddingItem: null,
+  menuTargetUnitId: null,
 };
 
 const defaultStoreState: StoreState = {

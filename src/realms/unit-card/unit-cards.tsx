@@ -1,4 +1,5 @@
 import { IconType } from "react-icons";
+import { Icons } from "@/common/icons";
 import {
   BoardUnitItem,
   EdgeUnitItem,
@@ -13,10 +14,30 @@ import {
   useUnitStuff,
 } from "@/realms/unit-card/unit-cards-models";
 import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
+import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 
+const UnitCardOperationOverlay = ({ unitItem }: { unitItem: UnitItem }) => {
+  return (
+    <div className="absolute-full bg-black/30 flex-c">
+      <button
+        className="m-4"
+        type="button"
+        onPointerDown={(e) => {
+          actions.removeUnit(unitItem.unitId);
+          e.stopPropagation();
+        }}
+      >
+        <Icons.Trash size={40} />
+      </button>
+    </div>
+  );
+};
+
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+  const { menuTargetUnitId } = store.useSnapshot();
+  const isMenuTarget = menuTargetUnitId === unitItem.unitId;
   const unitStuff = useUnitStuff(unitItem.unitId);
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
@@ -37,7 +58,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
         <div
-          className="h-100px bg-white cursor-pointer"
+          className="h-100px bg-white cursor-pointer relative"
           onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
         >
           <img
@@ -45,6 +66,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
             className="h-full object-contain"
             alt={catalogItem.name}
           />
+          {isMenuTarget && <UnitCardOperationOverlay unitItem={unitItem} />}
         </div>
         {outputPortSpecs && (
           <UnitPortsColumn
@@ -53,7 +75,13 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 -mb-22px">
+      <div
+        className="absolute bottom-0 left-0 right-0 -mb-22px"
+        onPointerDown={(e) => {
+          actions.toggleMenuTargetUnit(unitItem.unitId);
+          e.stopPropagation();
+        }}
+      >
         <div className="flex-c text-sm">{catalogItem.name}</div>
       </div>
     </div>

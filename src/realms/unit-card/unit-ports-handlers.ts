@@ -97,17 +97,19 @@ export const handlePortPointerDown = (
         }
       }
     },
-    onEnd() {
+    onUp() {
       const { draggingPortKey, previewDestPortKey } = store.state;
       if (draggingPortKey && previewDestPortKey) {
         actions.toggleWire(draggingPortKey, previewDestPortKey);
       }
-      actions.setDraggingPortKey(null);
-      actions.setPreviewDestPortKey(null);
-      actions.setPreviewDestPosition(null);
     },
     onTap() {
       internalHandlers.handlePortTap(portKey);
+    },
+    onEnd() {
+      actions.setDraggingPortKey(null);
+      actions.setPreviewDestPortKey(null);
+      actions.setPreviewDestPosition(null);
     },
   });
 };

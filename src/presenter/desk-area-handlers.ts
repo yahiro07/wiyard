@@ -79,5 +79,6 @@ export const deskAreaHandlers = {
         },
       });
     }
+    actions.setMenuTargetUnit(null);
   },
 };

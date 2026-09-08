@@ -99,4 +99,14 @@ export const actions = {
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
   },
+  setMenuTargetUnit(unitId: string | null) {
+    store.setMenuTargetUnitId(unitId);
+  },
+  toggleMenuTargetUnit(unitId: string) {
+    store.setMenuTargetUnitId((prev) => (prev === unitId ? null : unitId));
+  },
+  removeUnit(unitId: string) {
+    store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
+    //todo: also remove wires
+  },
 };

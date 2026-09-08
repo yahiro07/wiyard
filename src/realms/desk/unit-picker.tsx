@@ -19,11 +19,10 @@ const pickerItemHandlers = {
       onMove(pos) {
         actions.setUnitAddingItem({ catalogKey, position: pos });
       },
-      onEnd(cause) {
-        const latestPos = store.state.unitAddingItem?.position;
-        if (cause === "end" && latestPos) {
-          actions.addUnit(catalogKey, latestPos);
-        }
+      onUp(pos) {
+        actions.addUnit(catalogKey, pos);
+      },
+      onEnd() {
         actions.setUnitAddingItem(null);
       },
     });
