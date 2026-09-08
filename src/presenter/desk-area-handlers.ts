@@ -16,14 +16,16 @@ export const unitCardHandlers = {
     unitItem: StageUnitItem,
   ) {
     const unitOriginalPos = unitItem.cardPosition;
+    let prevPos = unitOriginalPos;
     startDragSessionEx(e0, {
       onMove(_, delta) {
         const newPos = vectorOp.snapped(
           vectorOp.add(unitOriginalPos, delta),
           10,
         );
-        if (!vectorOp.equals(unitOriginalPos, newPos)) {
+        if (!vectorOp.equals(prevPos, newPos)) {
           actions.setUnitCardPosition(unitItem.unitId, newPos);
+          prevPos = newPos;
         }
       },
       onTap() {
