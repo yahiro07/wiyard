@@ -1,5 +1,8 @@
 import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
-import { ControlButtons } from "@/realms/desk/control-buttons";
+import {
+  ControlButtons,
+  PickerLaunchButton,
+} from "@/realms/desk/control-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
 import { actions } from "@/store/actions";
 
@@ -11,9 +14,11 @@ const TopBar = () => {
   };
   return (
     <div
-      className="h-50px bg-gray-600 elative flex-ha px-2 justify-end"
+      className="h-50px bg-gray-600 elative flex-ha px-2 justify-between"
       onClick={handleClick}
     >
+      <div />
+      <PickerLaunchButton />
       <MidiInButtonContainer />
       <div className="absolute-full pointer-events-none text-lg">
         under development...
@@ -41,14 +46,14 @@ export const PageRoot = () => {
       <TopBar />
       <div className="grow flex-h">
         <DeskArea
-          additionalContents={
-            <>
-              <InnerBottomBar />
-            </>
-          }
+        // additionalContents={
+        //   <>
+        //     <InnerBottomBar />
+        //   </>
+        // }
         />
       </div>
-      <BottomBar />
+      {/* <BottomBar /> */}
     </div>
   );
 };

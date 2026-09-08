@@ -29,20 +29,27 @@ const ControlButton = ({
   );
 };
 
-export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
+export const PickerLaunchButton = () => {
+  return <ControlButton text="+" onClick={actions.toggleUnitPickerVisible} />;
+};
+
+export const WindowEvacuationButton = () => {
   const { currentEffectUnitId, sequencerWindowVisible } = store.useSnapshot();
   const hasWindow = currentEffectUnitId || sequencerWindowVisible;
   return (
+    <ControlButton
+      onClick={actions.toggleWindowsEvacuated}
+      disabled={!hasWindow}
+      children={<Icons.DisplayFullWidth />}
+    />
+  );
+};
+
+export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
+  return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
-      <ControlButton
-        text="+"
-        onClick={() => actions.setUnitPickerVisible(true)}
-      />
-      <ControlButton
-        onClick={actions.toggleWindowsEvacuated}
-        disabled={!hasWindow}
-        children={<Icons.DisplayFullWidth />}
-      />
+      <PickerLaunchButton />
+      <WindowEvacuationButton />
     </div>
   );
 };

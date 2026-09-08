@@ -88,6 +88,9 @@ export const actions = {
   setUnitPickerVisible(visible: boolean) {
     store.setUnitPickerVisible(visible);
   },
+  toggleUnitPickerVisible() {
+    store.toggleUnitPickerVisible();
+  },
   setUnitAddingItem(item: UnitAddingItem | null) {
     store.setUnitAddingItem(item);
   },
