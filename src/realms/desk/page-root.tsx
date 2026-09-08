@@ -4,6 +4,7 @@ import {
   PickerLaunchButton,
 } from "@/realms/desk/control-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
+import { UnitPickerRoot } from "@/realms/desk/unit-picker";
 import { actions } from "@/store/actions";
 
 const TopBar = () => {
@@ -54,6 +55,7 @@ export const PageRoot = () => {
         />
       </div>
       {/* <BottomBar /> */}
+      <UnitPickerRoot />
     </div>
   );
 };

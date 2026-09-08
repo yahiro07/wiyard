@@ -1,7 +1,6 @@
 import { uiColors } from "@/common/theme";
 import { deskAreaHandlers } from "@/presenter/desk-area-handlers";
 import { CoordDebugLayer } from "@/realms/desk/coord-debug-layer";
-import { UnitPickerRoot } from "@/realms/desk/unit-picker";
 import { SequencerWindow } from "@/realms/sequencer/sequencer-window";
 import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
 import { UnitConnectionsRoot } from "@/realms/unit-connection/unit-connections";
@@ -27,7 +26,6 @@ export const DeskArea = ({
       <UnitConnectionsRoot />
       {false && <CoordDebugLayer />}
       {additionalContents}
-      <UnitPickerRoot />
     </div>
   );
 };

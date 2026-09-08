@@ -16,6 +16,7 @@ const pickerItemHandlers = {
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {
         actions.setUnitPickerVisible(false);
+        actions.setWindowsEvacuated(true);
       },
       onMove(pos) {
         actions.setUnitAddingItem({ catalogKey, position: pos });
