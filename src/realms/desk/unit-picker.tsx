@@ -37,8 +37,8 @@ const UnitPicker = () => {
 
   return (
     <div className="absolute-full flex-c bg-black/50">
-      <div className="flex-vc">
-        <div className="h-40px">{selectedItem?.name}</div>
+      <div className="flex-vc gap-6">
+        <div className="h-20px">{selectedItem?.name}</div>
         <div className="flex-c gap-4 flex-wrap px-6">
           {showcaseEntries.map((item) => {
             return (
