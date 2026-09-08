@@ -36,7 +36,7 @@ const UnitCardOperationOverlay = ({ unitItem }: { unitItem: UnitItem }) => {
             e.stopPropagation();
           }}
         >
-          <Icons.Trash size={30} />
+          <Icons.Trash size={24} />
         </button>
       </div>
     </div>
