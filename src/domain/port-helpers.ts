@@ -1,27 +1,21 @@
 import { HsPortDirection } from "wafer-host/core";
+import { store } from "@/store/store";
 
-export function isPortConnectable(
-  sourcePortKey: string,
-  destinationPortKey: string,
-) {
-  const [sourceUnitId, sourcePortId] = sourcePortKey.split(".");
-  const [destUnitId, destPortId] = destinationPortKey.split(".");
-  if (sourceUnitId === destUnitId) return false;
+export function isPortConnectable(sourcePortKey: string, destPortKey: string) {
+  const psSource = store.state.portStuffs[sourcePortKey];
+  const psDest = store.state.portStuffs[destPortKey];
+  if (!(psSource && psDest)) return false;
+  if (psSource.unitId === psDest.unitId) return false;
   return (
-    (sourcePortId === "audioOutput" && destPortId === "audioInput") ||
-    (sourcePortId === "noteOutput" && destPortId === "noteInput") ||
-    (sourcePortId === "automationOutput" && destPortId === "automationInput") ||
-    (sourcePortId === "audioInput" && destPortId === "audioOutput") ||
-    (sourcePortId === "noteInput" && destPortId === "noteOutput") ||
-    (sourcePortId === "automationInput" && destPortId === "automationOutput")
+    psSource.direction !== psDest.direction &&
+    psSource.subtype === psDest.subtype
   );
 }
 
 export function getPortDirectionFromPortKey(portKey: string): HsPortDirection {
-  const [_, portId] = portKey.split(".");
-  return ["audioOutput", "noteOutput", "automationOutput"].includes(portId)
-    ? "output"
-    : "input";
+  const ps = store.state.portStuffs[portKey];
+  if (!ps) return "input";
+  return ps.direction;
 }
 
 export function getForwardDirectionWireConnectionKey(
