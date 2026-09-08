@@ -83,16 +83,18 @@ const UnitAddingItemView = ({ item }: { item: UnitAddingItem }) => {
   );
 };
 
+export const UnitPicker_AddingItem = () => {
+  const { unitAddingItem } = store.useSnapshot();
+  if (!unitAddingItem) return;
+  return <UnitAddingItemView item={unitAddingItem} />;
+};
+
 export const UnitPickerRoot = () => {
-  const { unitPickerVisible, unitAddingItem } = store.useSnapshot();
+  const { unitPickerVisible } = store.useSnapshot();
+  if (!unitPickerVisible) return;
   return (
-    <>
-      {unitPickerVisible && (
-        <div onPointerDown={() => actions.setUnitPickerVisible(false)}>
-          <UnitPicker />
-        </div>
-      )}
-      {unitAddingItem && <UnitAddingItemView item={unitAddingItem} />}
-    </>
+    <div onPointerDown={() => actions.setUnitPickerVisible(false)}>
+      <UnitPicker />
+    </div>
   );
 };
