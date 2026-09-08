@@ -25,6 +25,8 @@ type StoreState = {
   unitPickerVisible: boolean;
   unitAddingItem: UnitAddingItem | null;
   menuTargetUnitId: string | null;
+  playing: boolean;
+  bpm: number;
 };
 
 const blankStoreState: StoreState = {
@@ -46,6 +48,8 @@ const blankStoreState: StoreState = {
   unitPickerVisible: false,
   unitAddingItem: null,
   menuTargetUnitId: null,
+  playing: false,
+  bpm: 120,
 };
 
 const defaultStoreState: StoreState = {

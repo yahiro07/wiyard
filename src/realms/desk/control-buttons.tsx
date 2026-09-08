@@ -45,11 +45,18 @@ export const WindowEvacuationButton = () => {
   );
 };
 
+export const PlaybackButton = () => {
+  return (
+    <ControlButton onClick={actions.togglePlayback} children={<Icons.Play />} />
+  );
+};
+
 export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
+      <PlaybackButton />
       <PickerLaunchButton />
-      <WindowEvacuationButton />
+      {/* <WindowEvacuationButton /> */}
     </div>
   );
 };

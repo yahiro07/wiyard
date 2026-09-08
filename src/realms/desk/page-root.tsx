@@ -1,8 +1,5 @@
 import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
-import {
-  ControlButtons,
-  PickerLaunchButton,
-} from "@/realms/desk/control-buttons";
+import { ControlButtons } from "@/realms/desk/control-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
 import { UnitPickerRoot } from "@/realms/desk/unit-picker";
 import { actions } from "@/store/actions";
@@ -19,7 +16,8 @@ const TopBar = () => {
       onClick={handleClick}
     >
       <div />
-      <PickerLaunchButton />
+      {/* <PickerLaunchButton /> */}
+      <ControlButtons />
       <MidiInButtonContainer />
       <div className="absolute-full pointer-events-none text-lg">
         under development...

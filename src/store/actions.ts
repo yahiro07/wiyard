@@ -128,4 +128,7 @@ export const actions = {
   toggleMidiInEnabled() {
     store.toggleMidiInEnabled();
   },
+  togglePlayback() {
+    store.togglePlaying();
+  },
 };

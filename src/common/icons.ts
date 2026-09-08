@@ -3,6 +3,7 @@ import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
 } from "react-icons/fa6";
+import { IoPlaySharp } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
 import { PiPianoKeysFill, PiTrash } from "react-icons/pi";
 
@@ -13,4 +14,5 @@ export const Icons = {
   Close: MdClose,
   Trash: PiTrash,
   Piano: PiPianoKeysFill,
+  Play: IoPlaySharp,
 };
