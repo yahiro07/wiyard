@@ -1,7 +1,34 @@
 import { useState } from "react";
+import { UnitAddingItem } from "@/domain/types";
 import { CatalogKey, catalog } from "@/domain/unit-entries";
+import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import { createDragSessionEx } from "@/utils/drag-session";
+
+const pickerItemHandlers = {
+  handlePointerDown(
+    e: React.PointerEvent<HTMLDivElement>,
+    catalogKey: CatalogKey,
+  ) {
+    const coordinateBaseElement = getDeskAreaElement();
+    createDragSessionEx(e, { coordinateBaseElement }).run({
+      onStart() {
+        actions.setUnitPickerVisible(false);
+      },
+      onMove(pos) {
+        actions.setUnitAddingItem({ catalogKey, position: pos });
+      },
+      onEnd(cause) {
+        const latestPos = store.state.unitAddingItem?.position;
+        if (cause === "end" && latestPos) {
+          actions.addUnit(catalogKey, latestPos);
+        }
+        actions.setUnitAddingItem(null);
+      },
+    });
+  },
+};
 
 const UnitPicker = () => {
   const catalogItems = Object.values(catalog);
@@ -20,8 +47,9 @@ const UnitPicker = () => {
                 key={item.catalogKey}
                 className="cursor-pointer"
                 onPointerDown={(e) => {
-                  // actions.setUnitPickerVisible(false);
-                  setSelectedCatalogKey(item.catalogKey as CatalogKey);
+                  const catalogKey = item.catalogKey as CatalogKey;
+                  setSelectedCatalogKey(catalogKey);
+                  pickerItemHandlers.handlePointerDown(e, catalogKey);
                   e.stopPropagation();
                 }}
               >
@@ -35,12 +63,32 @@ const UnitPicker = () => {
   );
 };
 
-export const UnitPickerRoot = () => {
-  const { unitPickerVisible } = store.useSnapshot();
-  if (!unitPickerVisible) return null;
+const UnitAddingItemView = ({ item }: { item: UnitAddingItem }) => {
+  const catalogItem = catalog[item.catalogKey];
   return (
-    <div onPointerDown={() => actions.setUnitPickerVisible(false)}>
-      <UnitPicker />
+    <div
+      className="absolute -translate-x-1/2 -translate-y-1/2"
+      style={{ left: item.position.x, top: item.position.y }}
+    >
+      <img
+        className="h-100px"
+        src={catalogItem.thumbnailUrl}
+        alt={catalogItem.name}
+      />
     </div>
+  );
+};
+
+export const UnitPickerRoot = () => {
+  const { unitPickerVisible, unitAddingItem } = store.useSnapshot();
+  return (
+    <>
+      {unitPickerVisible && (
+        <div onPointerDown={() => actions.setUnitPickerVisible(false)}>
+          <UnitPicker />
+        </div>
+      )}
+      {unitAddingItem && <UnitAddingItemView item={unitAddingItem} />}
+    </>
   );
 };

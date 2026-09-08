@@ -6,6 +6,10 @@ import { store } from "@/store/store";
 import { startDragSessionEx } from "@/utils/drag-session";
 import { vectorOp } from "@/utils/geometry-helper";
 
+export function getDeskAreaElement() {
+  return document.getElementById("domDeskArea") as HTMLElement;
+}
+
 export const unitCardHandlers = {
   handlePointerDown(
     e0: React.PointerEvent<HTMLDivElement>,

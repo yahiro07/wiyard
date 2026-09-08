@@ -29,12 +29,3 @@ export const internalUnitSpecs = {
 } satisfies Record<string, InternalUnitSpec>;
 
 export type InternalUnitKey = keyof typeof internalUnitSpecs;
-
-// export type UnitTypeEx = UnitType | "system";
-
-// export type ShowcaseEntry = {
-//   name: string;
-//   catalogKey: CatalogKey;
-//   unitType: UnitTypeEx;
-//   thumbnailUrl?: string;
-// };

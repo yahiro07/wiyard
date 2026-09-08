@@ -3,7 +3,7 @@ import { UpdatePayload } from "vite";
 import { Point } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
-import { PortStuff, UnitItem, UnitStuff } from "@/domain/types";
+import { PortStuff, UnitAddingItem, UnitItem, UnitStuff } from "@/domain/types";
 
 type StoreState = {
   //will be persisted in project
@@ -22,6 +22,7 @@ type StoreState = {
   previewDestPortKey: string | null;
   previewDestPosition: Point | null;
   unitPickerVisible: boolean;
+  unitAddingItem: UnitAddingItem | null;
 };
 
 const blankStoreState: StoreState = {
@@ -40,6 +41,7 @@ const blankStoreState: StoreState = {
   previewDestPortKey: null,
   previewDestPosition: null,
   unitPickerVisible: false,
+  unitAddingItem: null,
 };
 
 const defaultStoreState: StoreState = {
