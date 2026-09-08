@@ -8,7 +8,10 @@ import unitInventories from "../unit-inventories.json";
 
 export type CatalogKey = keyof typeof unitInventories;
 
-const catalog = unitInventories as Record<CatalogKey, UnitInventorySpec>;
+const catalog = unitInventories as Record<
+  CatalogKey,
+  UnitInventorySpec & { catalogKey: CatalogKey }
+>;
 
 export { catalog };
 

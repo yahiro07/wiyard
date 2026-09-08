@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { showcaseEntries } from "@/domain/showcase-entries";
 import { UnitAddingItem } from "@/domain/types";
 import { CatalogKey, catalog } from "@/domain/unit-entries";
 import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
@@ -30,7 +31,6 @@ const pickerItemHandlers = {
 };
 
 const UnitPicker = () => {
-  const catalogItems = Object.values(catalog);
   const [selectedCatalogKey, setSelectedCatalogKey] =
     useState<CatalogKey | null>(null);
   const selectedItem = selectedCatalogKey && catalog[selectedCatalogKey];
@@ -39,8 +39,8 @@ const UnitPicker = () => {
     <div className="absolute-full flex-c bg-black/50">
       <div className="flex-vc">
         <div className="h-40px">{selectedItem?.name}</div>
-        <div className="flex-h gap-2">
-          {catalogItems.map((item) => {
+        <div className="flex-c gap-4 flex-wrap px-6">
+          {showcaseEntries.map((item) => {
             return (
               <div
                 key={item.catalogKey}
@@ -52,7 +52,11 @@ const UnitPicker = () => {
                   e.stopPropagation();
                 }}
               >
-                <img src={item.thumbnailUrl} alt={item.name} />
+                <img
+                  className="h-80px"
+                  src={item.thumbnailUrl}
+                  alt={item.name}
+                />
               </div>
             );
           })}
