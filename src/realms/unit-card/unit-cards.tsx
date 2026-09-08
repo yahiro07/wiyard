@@ -20,17 +20,25 @@ import { cz } from "@/utils/cz";
 
 const UnitCardOperationOverlay = ({ unitItem }: { unitItem: UnitItem }) => {
   return (
-    <div className="absolute-full bg-black/30 flex-c">
-      <button
-        className="m-4 cursor-pointer"
-        type="button"
-        onPointerDown={(e) => {
-          actions.removeUnit(unitItem.unitId);
-          e.stopPropagation();
-        }}
-      >
-        <Icons.Trash size={40} />
-      </button>
+    <div
+      className="absolute-full bg-black/30"
+      onPointerDown={(e) => {
+        actions.setMenuTargetUnit(null);
+        e.stopPropagation();
+      }}
+    >
+      <div className="flex justify-end">
+        <button
+          className="m-2 cursor-pointer"
+          type="button"
+          onPointerDown={(e) => {
+            actions.removeUnit(unitItem.unitId);
+            e.stopPropagation();
+          }}
+        >
+          <Icons.Trash size={30} />
+        </button>
+      </div>
     </div>
   );
 };
@@ -75,13 +83,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
       </div>
-      <div
-        className="absolute bottom-0 left-0 right-0 -mb-22px"
-        onPointerDown={(e) => {
-          actions.toggleMenuTargetUnit(unitItem.unitId);
-          e.stopPropagation();
-        }}
-      >
+      <div className="absolute bottom-0 left-0 right-0 -mb-22px">
         <div className="flex-c text-sm">{catalogItem.name}</div>
       </div>
     </div>

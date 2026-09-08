@@ -17,6 +17,20 @@ export const unitCardHandlers = {
   ) {
     const unitOriginalPos = unitItem.cardPosition;
     let prevPos = unitOriginalPos;
+
+    let timerId: NodeJS.Timeout | undefined = setTimeout(() => {
+      if (prevPos === unitOriginalPos) {
+        actions.setMenuTargetUnit(unitItem.unitId);
+      }
+    }, 250);
+
+    const cancelTimer = () => {
+      if (timerId) {
+        clearTimeout(timerId);
+        timerId = undefined;
+      }
+    };
+
     startDragSessionEx(e0, {
       onMove(_, delta) {
         const newPos = vectorOp.snapped(
@@ -26,6 +40,8 @@ export const unitCardHandlers = {
         if (!vectorOp.equals(prevPos, newPos)) {
           actions.setUnitCardPosition(unitItem.unitId, newPos);
           prevPos = newPos;
+          cancelTimer();
+          actions.setMenuTargetUnit(null);
         }
       },
       onTap() {
@@ -45,6 +61,9 @@ export const unitCardHandlers = {
             actions.setCurrentNoteChannelId(unitItem.noteChannelId);
           }
         }
+      },
+      onEnd() {
+        cancelTimer();
       },
     });
   },
