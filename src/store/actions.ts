@@ -13,6 +13,7 @@ import {
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
+import { persistence } from "@/store/persistence";
 import { store } from "@/store/store";
 import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
@@ -149,5 +150,8 @@ export const actions = {
   },
   togglePlayback() {
     store.togglePlaying();
+  },
+  savePersistentState() {
+    persistence.save();
   },
 };
