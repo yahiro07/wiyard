@@ -50,7 +50,7 @@ function createDefaultScene() {
       windowStatus: "none",
     },
   ];
-  const offstageUnitItems: OffStageUnitItem[] = [
+  const offStageUnitItems: OffStageUnitItem[] = [
     {
       unitId: "sequencer1",
       noteChannelId: "nc1",
@@ -72,7 +72,7 @@ function createDefaultScene() {
   ];
 
   if (appConfig.isDevelopment) {
-    offstageUnitItems.push({
+    offStageUnitItems.push({
       unitId: "sequencer2",
       noteChannelId: "nc2",
       catalogKey: "fluoritePianoRoll",
@@ -88,7 +88,7 @@ function createDefaultScene() {
   }
 
   return {
-    offstageUnitItems,
+    offStageUnitItems,
     unitItems,
     initialNoteChannelId: "nc1",
     wireConnectionKeys,

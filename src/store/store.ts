@@ -66,7 +66,7 @@ const blankStoreState: StoreState = {
 const defaultStoreState: StoreState = {
   ...blankStoreState,
   unitItems: defaultScene.unitItems,
-  offStageUnitItems: defaultScene.offstageUnitItems,
+  offStageUnitItems: defaultScene.offStageUnitItems,
   wireConnectionKeys: defaultScene.wireConnectionKeys,
   sequencerWindowPosition: defaultWindowPosition,
   currentNoteChannelId: defaultScene.initialNoteChannelId,
