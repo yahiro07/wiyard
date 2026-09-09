@@ -1,4 +1,4 @@
-import { Point } from "@/domain/common-types";
+import { Point, Size } from "@/domain/common-types";
 import { defaultWindowPosition } from "@/domain/default-data";
 import {
   filterUnitRelatedWires,
@@ -9,6 +9,7 @@ import {
   PortStuff,
   UnitAddingItem,
   UnitStuff,
+  WindowStatus,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
@@ -18,7 +19,12 @@ import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 export const actionsInternal = {
   patchUnitAttrs(
     unitId: string,
-    attrs: Partial<{ cardPosition: Point; windowPosition: Point }>,
+    attrs: Partial<{
+      cardPosition: Point;
+      windowPosition: Point;
+      windowStatus: WindowStatus;
+      windowSize: Size;
+    }>,
   ) {
     store.setUnitItems((prev) =>
       prev.map((item) =>
@@ -32,8 +38,20 @@ export const actions = {
   setUnitCardPosition(unitId: string, newPos: Point) {
     actionsInternal.patchUnitAttrs(unitId, { cardPosition: newPos });
   },
-  setCurrentEffectUnitId(unitId: string | null) {
-    store.setCurrentEffectUnitId(unitId);
+  setCurrentWindowUnitId(unitId: string | null) {
+    store.setCurrentWindowUnitId(unitId);
+  },
+  setUnitWindowStatus(unitId: string, status: WindowStatus) {
+    actionsInternal.patchUnitAttrs(unitId, { windowStatus: status });
+  },
+  toggleWindowMinimized(unitId: string) {
+    const unitItem = store.state.unitItems.find(
+      (item) => item.unitId === unitId && item.type === "board",
+    ) as BoardUnitItem | undefined;
+    if (!unitItem) return;
+    const currentStatus = unitItem.windowStatus;
+    const nextStatus = currentStatus === "visible" ? "minimized" : "visible";
+    actionsInternal.patchUnitAttrs(unitId, { windowStatus: nextStatus });
   },
   toggleWindowsEvacuated() {
     store.toggleWindowsEvacuated();
@@ -102,6 +120,7 @@ export const actions = {
       catalogKey,
       cardPosition: position,
       windowPosition: defaultWindowPosition,
+      windowStatus: "none",
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
   },
@@ -120,8 +139,8 @@ export const actions = {
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
-    if (store.state.currentEffectUnitId === unitId) {
-      store.setCurrentEffectUnitId(null);
+    if (store.state.currentWindowUnitId === unitId) {
+      store.setCurrentWindowUnitId(null);
     }
     store.setMenuTargetUnitId(null);
   },

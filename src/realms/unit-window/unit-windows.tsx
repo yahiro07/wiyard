@@ -7,26 +7,49 @@ import { InnerWindow } from "@/realms/desk/inner-window";
 import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import { useInstance } from "@/utils/hooks";
+
+function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
+  return {
+    onIframeMounted(iframe: HTMLIFrameElement) {
+      const win = iframe.contentWindow;
+      if (win) {
+        const onPointerDown = () => {
+          actions.setCurrentWindowUnitId(unitItem.unitId);
+        };
+        win.addEventListener("pointerdown", onPointerDown, { capture: true });
+        return () =>
+          win.removeEventListener("pointerdown", onPointerDown, {
+            capture: true,
+          });
+      }
+    },
+  };
+}
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const { currentEffectUnitId, windowsEvacuated } = store.useSnapshot();
-  const isCurrent = unitItem.unitId === currentEffectUnitId;
+  const { windowsEvacuated, currentWindowUnitId } = store.useSnapshot();
+  const isCurrent = unitItem.unitId === currentWindowUnitId;
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
+  const vm = useInstance(() => createBoardUnitWindowViewModel(unitItem));
 
   return (
     <InnerWindow
       title={catalogItem.name}
       windowCoordVm={windowCoordVm}
-      displayed={isCurrent}
       evacuated={windowsEvacuated}
-      close={() => actions.setCurrentEffectUnitId(null)}
+      close={() => actions.setUnitWindowStatus(unitItem.unitId, "none")}
+      toggleMinimized={() => actions.toggleWindowMinimized(unitItem.unitId)}
+      isCurrent={isCurrent}
+      windowStatus={unitItem.windowStatus}
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}
         unitUrl={catalogItem.loaderPageUrl}
+        onIframeMounted={vm.onIframeMounted}
         onUnitInstanceLoaded={reporter.reportLoaded}
         onLoadFailed={reporter.reportFailure}
       />

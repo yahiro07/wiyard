@@ -1,6 +1,8 @@
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
-import { Point } from "@/domain/common-types";
+import { Point, Size } from "@/domain/common-types";
 import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
+
+export type WindowStatus = "visible" | "minimized" | "none";
 
 //instrument and effects, placed on board area
 export type BoardUnitItem = {
@@ -9,6 +11,8 @@ export type BoardUnitItem = {
   catalogKey: CatalogKey;
   cardPosition: Point;
   windowPosition: Point;
+  windowStatus: WindowStatus;
+  windowSize?: Size;
 };
 
 //note input port and speaker output port, used for input/output of the board area
@@ -18,7 +22,8 @@ export type EdgeUnitItem = {
   noteChannelId: string;
   internalUnitKey: InternalUnitKey;
   cardPosition: Point;
-  windowPosition: Point;
+  windowPosition: Point; //not used
+  windowSize?: Size; //not used
 };
 
 //units placed on board area
@@ -46,6 +51,7 @@ export type UnitStuff = {
   status: "loading" | "loaded" | "error";
   inputPortSpecs?: UnitPortSpec[];
   outputPortSpecs?: UnitPortSpec[];
+  viewSize?: Size;
 };
 
 export type PortStuff = {
@@ -59,14 +65,4 @@ export type PortStuff = {
 export type UnitAddingItem = {
   catalogKey: CatalogKey;
   position: Point;
-};
-
-//derived item types, not hold in store
-
-export type WireStuff = {
-  connectionKey: string; //${sourcePortKey}-${destinationPortKey}
-  sourcePortKey: string;
-  destinationPortKey: string;
-  sourceUnitId: string;
-  destinationUnitId: string;
 };

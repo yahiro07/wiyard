@@ -9,9 +9,8 @@ type StoreState = {
   //will be persisted in project
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
-  sharedWindowPosition: Point;
   sequencerWindowPosition: Point;
-  currentEffectUnitId: string | null;
+  currentWindowUnitId: string | null;
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
@@ -33,10 +32,9 @@ type StoreState = {
 const blankStoreState: StoreState = {
   unitItems: [],
   wireConnectionKeys: [],
-  sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowVisible: false,
-  currentEffectUnitId: null,
+  currentWindowUnitId: null,
   currentNoteChannelId: "",
   midiInEnabled: false,
   bpm: 120,
@@ -58,7 +56,6 @@ const defaultStoreState: StoreState = {
   ...blankStoreState,
   unitItems: defaultScene.unitItems,
   wireConnectionKeys: defaultScene.wireConnectionKeys,
-  sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
