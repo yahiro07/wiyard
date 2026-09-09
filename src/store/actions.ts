@@ -1,3 +1,4 @@
+import { WindowSpec, WindowStatus } from "@lib/window-system";
 import { Point } from "@/domain/common-types";
 import {
   filterUnitRelatedWires,
@@ -9,8 +10,6 @@ import {
   PortStuff,
   UnitAddingItem,
   UnitStuff,
-  WindowSpec,
-  WindowStatus,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";

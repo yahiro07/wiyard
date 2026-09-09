@@ -1,4 +1,4 @@
-import { createWindowSystem } from "@lib/window-system";
+import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
 import { Point } from "@/domain/common-types";
@@ -11,7 +11,6 @@ import {
   UnitItem,
   UnitStuff,
   WindowId,
-  WindowSpec,
 } from "@/domain/types";
 import { pickObjectMembers } from "@/utils/helpers";
 
