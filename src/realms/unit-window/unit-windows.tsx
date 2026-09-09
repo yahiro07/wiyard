@@ -10,7 +10,7 @@ import { store } from "@/store/store";
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const { currentEffectUnitId, windowsEvacuated } = store.useSnapshot();
-  const isCurrent = unitItem.unitId === currentEffectUnitId;
+  // const isCurrent = unitItem.unitId === currentEffectUnitId;
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
@@ -20,7 +20,8 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
     <InnerWindow
       title={catalogItem.name}
       windowCoordVm={windowCoordVm}
-      displayed={isCurrent}
+      // displayed={isCurrent}
+      displayed
       evacuated={windowsEvacuated}
       close={() => actions.setCurrentEffectUnitId(null)}
     >

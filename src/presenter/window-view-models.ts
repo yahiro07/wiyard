@@ -1,4 +1,3 @@
-import { appConfig } from "@/domain/app-config";
 import { Point, Size } from "@/domain/common-types";
 import { StageUnitItem } from "@/domain/types";
 import { actionsInternal } from "@/store/actions";
@@ -13,27 +12,16 @@ export type WindowCoordViewModel = {
 export function useWindowCoordViewModel(
   unitItem: StageUnitItem,
 ): WindowCoordViewModel {
-  const { sharedWindowPosition } = store.useSnapshot();
-  const windowSize: Size = { width: 600, height: 400 };
-  if (appConfig.shareWindowCoordForUnits) {
-    return {
-      position: sharedWindowPosition,
-      setPosition: (position: Point) => {
-        store.setSharedWindowPosition(position);
-      },
-      size: windowSize,
-    };
-  } else {
-    return {
-      position: unitItem.windowPosition,
-      setPosition: (position: Point) => {
-        actionsInternal.patchUnitAttrs(unitItem.unitId, {
-          windowPosition: position,
-        });
-      },
-      size: windowSize,
-    };
-  }
+  const windowSize: Size = { width: 300, height: 200 };
+  return {
+    position: unitItem.windowPosition,
+    setPosition: (position: Point) => {
+      actionsInternal.patchUnitAttrs(unitItem.unitId, {
+        windowPosition: position,
+      });
+    },
+    size: windowSize,
+  };
 }
 
 export function useSequencerWindowViewModel(): WindowCoordViewModel {
@@ -43,6 +31,6 @@ export function useSequencerWindowViewModel(): WindowCoordViewModel {
     setPosition: (position: Point) => {
       store.setSequencerWindowPosition(position);
     },
-    size: { width: 760, height: 400 },
+    size: { width: 380 + 190, height: 300 },
   };
 }

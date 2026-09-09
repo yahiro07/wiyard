@@ -9,7 +9,6 @@ type StoreState = {
   //will be persisted in project
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
-  sharedWindowPosition: Point;
   sequencerWindowPosition: Point;
   currentEffectUnitId: string | null;
   sequencerWindowVisible: boolean;
@@ -33,7 +32,6 @@ type StoreState = {
 const blankStoreState: StoreState = {
   unitItems: [],
   wireConnectionKeys: [],
-  sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowVisible: false,
   currentEffectUnitId: null,
@@ -58,7 +56,6 @@ const defaultStoreState: StoreState = {
   ...blankStoreState,
   unitItems: defaultScene.unitItems,
   wireConnectionKeys: defaultScene.wireConnectionKeys,
-  sharedWindowPosition: defaultWindowPosition,
   sequencerWindowPosition: defaultWindowPosition,
   currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
