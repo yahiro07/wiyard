@@ -65,7 +65,10 @@ export const InnerWindow = ({
         </div>
         <div
           className="bg-white text-black"
-          style={{ height, display: evacuated ? "none" : "block" }}
+          style={{
+            height,
+            display: evacuated ? "none" : "block",
+          }}
         >
           {children}
         </div>

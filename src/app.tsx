@@ -4,9 +4,13 @@ import { useMidiInputHandling } from "@/periphery/midi-input-handling";
 import { PageRoot } from "@/realms/desk/page-root";
 import { store } from "@/store/store";
 
+const EffectsHookBox = () => {
+  useMidiInputHandling();
+  return null;
+};
+
 export const App = () => {
   const { playing, bpm, masterVolume } = store.useSnapshot();
-  useMidiInputHandling();
   return (
     <HostAppProvider
       hostSystem={hostSystem}
@@ -15,6 +19,7 @@ export const App = () => {
       masterGain={masterVolume}
     >
       <PageRoot />
+      <EffectsHookBox />
     </HostAppProvider>
   );
 };

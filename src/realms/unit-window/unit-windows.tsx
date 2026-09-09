@@ -7,6 +7,25 @@ import { InnerWindow } from "@/realms/desk/inner-window";
 import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import { useInstance } from "@/utils/hooks";
+
+function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
+  return {
+    onIframeMounted(iframe: HTMLIFrameElement) {
+      const win = iframe.contentWindow;
+      if (win) {
+        const onPointerDown = () => {
+          actions.setCurrentWindowUnitId(unitItem.unitId);
+        };
+        win.addEventListener("pointerdown", onPointerDown, { capture: true });
+        return () =>
+          win.removeEventListener("pointerdown", onPointerDown, {
+            capture: true,
+          });
+      }
+    },
+  };
+}
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const { windowsEvacuated, currentWindowUnitId } = store.useSnapshot();
@@ -15,6 +34,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
+  const vm = useInstance(() => createBoardUnitWindowViewModel(unitItem));
 
   return (
     <InnerWindow
@@ -28,6 +48,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
       <UnitFrameScaled
         unitId={unitItem.unitId}
         unitUrl={catalogItem.loaderPageUrl}
+        onIframeMounted={vm.onIframeMounted}
         onUnitInstanceLoaded={reporter.reportLoaded}
         onLoadFailed={reporter.reportFailure}
       />

@@ -85,8 +85,10 @@ export const unitWindowHandlers = {
       },
       onTap() {
         actions.setWindowsEvacuated(false);
+        actions.setCurrentWindowUnitId(windowCoordVm.windowUnitId);
       },
     });
+    e0.stopPropagation();
   },
 };
 
