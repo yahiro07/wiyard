@@ -9,10 +9,14 @@ export type WindowCoordViewModel = {
   size: Size;
 };
 
+const fallbackSize = { width: 300, height: 200 };
+
 export function useWindowCoordViewModel(
   unitItem: StageUnitItem,
 ): WindowCoordViewModel {
-  const windowSize: Size = { width: 300, height: 200 };
+  const { unitStuffs } = store.useSnapshot();
+  const size = unitStuffs[unitItem.unitId]?.viewSize ?? fallbackSize;
+
   return {
     position: unitItem.windowPosition,
     setPosition: (position: Point) => {
@@ -20,7 +24,7 @@ export function useWindowCoordViewModel(
         windowPosition: position,
       });
     },
-    size: windowSize,
+    size,
   };
 }
 

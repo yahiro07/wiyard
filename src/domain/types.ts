@@ -1,5 +1,5 @@
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
-import { Point } from "@/domain/common-types";
+import { Point, Size } from "@/domain/common-types";
 import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
 
 //instrument and effects, placed on board area
@@ -46,6 +46,7 @@ export type UnitStuff = {
   status: "loading" | "loaded" | "error";
   inputPortSpecs?: UnitPortSpec[];
   outputPortSpecs?: UnitPortSpec[];
+  viewSize?: Size;
 };
 
 export type PortStuff = {
