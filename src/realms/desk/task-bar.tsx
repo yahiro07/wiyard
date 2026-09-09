@@ -1,4 +1,4 @@
-import { actions } from "@/store/actions";
+import { windowSystem } from "@/store/store";
 import { cz } from "@/utils/cz";
 
 export const TaskBar = () => {
@@ -9,13 +9,13 @@ export const TaskBar = () => {
       {true && (
         <div
           className={cz(baseClass, "top-0")}
-          onClick={actions.toggleWindowsEvacuated}
+          onClick={windowSystem.toggleEvacuate}
         />
       )}
       {false && (
         <div
           className={cz(baseClass, "bottom-0")}
-          onClick={actions.toggleWindowsEvacuated}
+          onClick={windowSystem.toggleEvacuate}
         />
       )}
     </>

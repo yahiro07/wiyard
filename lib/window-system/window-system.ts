@@ -1,9 +1,34 @@
-import { windowSystemInternalHelper } from "./internal-helper";
-import { createWindow } from "./window";
+import { actions, actionsInternal, storeSlice } from "./store";
+import { WindowSystem, WindowSystemStoreSlice } from "./types";
 
-export function createWindowSystem() {
-  const _helper = windowSystemInternalHelper;
+export function createWindowSystem(args: {
+  storeSlice: WindowSystemStoreSlice;
+}): WindowSystem {
+  Object.assign(storeSlice, args.storeSlice);
   return {
-    createWindow: createWindow,
+    add(id, spec) {
+      actionsInternal.patchWindowSpec(id, spec);
+    },
+    setStatus(id, status) {
+      actionsInternal.patchWindowSpec(id, { status });
+    },
+    setCurrentWindow(id) {
+      actions.setCurrentWindowId(id);
+    },
+    remove(id) {
+      if (id === storeSlice.get().currentWindowId) {
+        actions.setCurrentWindowId(null);
+      }
+      actions.removeWindow(id);
+    },
+    setEvacuate(evacuated) {
+      actions.setWindowsEvacuated(evacuated);
+    },
+    toggleEvacuate() {
+      actions.toggleWindowsEvacuated();
+    },
+    has(id) {
+      return !!storeSlice.get().windowSpecs[id];
+    },
   };
 }

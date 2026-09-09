@@ -1,7 +1,6 @@
-import { Point, Size } from "@/domain/common-types";
-import { WindowId, WindowSpec } from "@/domain/types";
-import { actions } from "@/store/actions";
-import { store } from "@/store/store";
+import { actionsInternal, storeSlice } from "./store";
+import { WindowSpec } from "./types";
+import { Point, Size } from "./utils/common-types";
 
 export type WindowCoordViewModel = {
   windowId: string;
@@ -15,20 +14,20 @@ const fallbackPosition = { x: 0, y: 0 };
 const fallbackSize = { width: 300, height: 200 };
 
 export function useWindowCoordViewModel(
-  windowId: WindowId,
+  windowId: string,
 ): WindowCoordViewModel {
-  const { windowSpecs } = store.useSnapshot();
+  const { windowSpecs } = storeSlice.useSnapshot();
   const windowSpec = windowSpecs[windowId] as WindowSpec | undefined;
 
   return {
     windowId,
     position: windowSpec?.position ?? fallbackPosition,
     setPosition: (position: Point) => {
-      actions.patchWindowSpec(windowId, { position });
+      actionsInternal.patchWindowSpec(windowId, { position });
     },
     size: windowSpec?.size ?? fallbackSize,
     setSize: (size: Size) => {
-      actions.patchWindowSpec(windowId, { size });
+      actionsInternal.patchWindowSpec(windowId, { size });
     },
   };
 }

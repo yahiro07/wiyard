@@ -1,12 +1,10 @@
+import { WindowFrame } from "@lib/window-system";
 import { useLayoutEffect } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { BoardUnitItem, EdgeUnitItem, UnitItem } from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
-import { useWindowCoordViewModel } from "@/presenter/window-view-models";
-import { InnerWindow } from "@/realms/desk/inner-window";
 import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
-import { actions } from "@/store/actions";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 import { useInstance } from "@/utils/hooks";
 
 function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
@@ -15,7 +13,7 @@ function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
       const win = iframe.contentWindow;
       if (win) {
         const onPointerDown = () => {
-          actions.setCurrentWindowId(unitItem.unitId);
+          windowSystem.setCurrentWindow(unitItem.unitId);
         };
         win.addEventListener("pointerdown", onPointerDown, { capture: true });
         return () =>
@@ -28,29 +26,13 @@ function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
 }
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const {
-    windowsEvacuated,
-    currentWindowId: currentWindowUnitId,
-    windowSpecs,
-  } = store.useSnapshot();
-  const isCurrent = unitItem.unitId === currentWindowUnitId;
-  const windowCoordVm = useWindowCoordViewModel(unitItem.unitId);
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
   const vm = useInstance(() => createBoardUnitWindowViewModel(unitItem));
-  const windowSpec = windowSpecs[unitItem.unitId];
 
   return (
-    <InnerWindow
-      title={catalogItem.name}
-      windowCoordVm={windowCoordVm}
-      evacuated={windowsEvacuated}
-      close={() => actions.setWindowStatus(unitItem.unitId, "none")}
-      toggleMinimized={() => actions.toggleWindowMinimized(unitItem.unitId)}
-      isCurrent={isCurrent}
-      windowStatus={windowSpec?.status ?? "none"}
-    >
+    <WindowFrame id={unitItem.unitId} title={catalogItem.name}>
       <UnitFrameScaled
         unitId={unitItem.unitId}
         unitUrl={catalogItem.loaderPageUrl}
@@ -58,7 +40,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
         onUnitInstanceLoaded={reporter.reportLoaded}
         onLoadFailed={reporter.reportFailure}
       />
-    </InnerWindow>
+    </WindowFrame>
   );
 };
 

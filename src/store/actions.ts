@@ -9,14 +9,13 @@ import {
   PortStuff,
   UnitAddingItem,
   UnitStuff,
-  WindowId,
   WindowSpec,
   WindowStatus,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
 import { persistence } from "@/store/persistence";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
 export const actionsInternal = {
@@ -33,12 +32,9 @@ export const actions = {
   setUnitCardPosition(unitId: string, newPos: Point) {
     actionsInternal.patchUnitAttrs(unitId, { cardPosition: newPos });
   },
-  setCurrentWindowId(windowId: string | null) {
-    store.setCurrentWindowId(windowId);
-  },
   setWindowStatus(windowId: string, status: WindowStatus) {
-    const windowSpec = store.state.windowSpecs[windowId];
-    if (!windowSpec) {
+    const exists = windowSystem.has(windowId);
+    if (!exists) {
       const size =
         windowId === kSequencerWindowId
           ? { width: 380 + 190, height: 300 }
@@ -51,26 +47,9 @@ export const actions = {
         size,
         status,
       };
-      store.patchWindowSpecs({ [windowId]: newWindowSpec });
-    } else {
-      store.patchWindowSpecs({ [windowId]: { ...windowSpec, status } });
+      windowSystem.add(windowId, newWindowSpec);
     }
-  },
-  toggleWindowMinimized(windowId: string) {
-    const windowSpec = store.state.windowSpecs[windowId];
-    if (!windowSpec) return;
-    store.patchWindowSpecs({
-      [windowId]: {
-        ...windowSpec,
-        status: windowSpec.status === "visible" ? "minimized" : "visible",
-      },
-    });
-  },
-  toggleWindowsEvacuated() {
-    store.toggleWindowsEvacuated();
-  },
-  setWindowsEvacuated(evacuated: boolean) {
-    store.setWindowsEvacuated(evacuated);
+    windowSystem.setStatus(windowId, status);
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
@@ -144,14 +123,8 @@ export const actions = {
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
-    if (store.state.currentWindowId === unitId) {
-      store.setCurrentWindowId(null);
-    }
     store.setMenuTargetUnitId(null);
-
-    store.produceWindowSpecs((draft) => {
-      setOrDeleteValue(draft, unitId, null);
-    });
+    windowSystem.remove(unitId);
   },
   toggleMidiInEnabled() {
     store.toggleMidiInEnabled();
@@ -161,13 +134,5 @@ export const actions = {
   },
   savePersistentState() {
     persistence.save();
-  },
-  patchWindowSpec(windowId: WindowId, attrs: Partial<WindowSpec>) {
-    const windowSpec = store.state.windowSpecs[windowId];
-    if (!windowSpec) return;
-    store.setWindowSpecs((prev) => ({
-      ...prev,
-      [windowId]: { ...prev[windowId], ...attrs },
-    }));
   },
 };
