@@ -46,7 +46,7 @@ export const unitCardHandlers = {
       onTap() {
         if (unitItem.type === "board") {
           actions.setWindowsEvacuated(false);
-          actions.setUnitWindowVisible(unitItem.unitId, true);
+          actions.setUnitWindowStatus(unitItem.unitId, "visible");
           actions.setCurrentWindowUnitId(unitItem.unitId);
         } else if (
           unitItem.type === "edge" &&

@@ -2,6 +2,8 @@ import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 import { Point, Size } from "@/domain/common-types";
 import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
 
+export type WindowStatus = "visible" | "minimized" | "none";
+
 //instrument and effects, placed on board area
 export type BoardUnitItem = {
   type: "board";
@@ -9,7 +11,7 @@ export type BoardUnitItem = {
   catalogKey: CatalogKey;
   cardPosition: Point;
   windowPosition: Point;
-  windowVisible: boolean;
+  windowStatus: WindowStatus;
 };
 
 //note input port and speaker output port, used for input/output of the board area

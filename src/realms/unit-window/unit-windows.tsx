@@ -40,10 +40,11 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
     <InnerWindow
       title={catalogItem.name}
       windowCoordVm={windowCoordVm}
-      displayed={unitItem.windowVisible}
       evacuated={windowsEvacuated}
-      close={() => actions.setUnitWindowVisible(unitItem.unitId, false)}
+      close={() => actions.setUnitWindowStatus(unitItem.unitId, "none")}
+      toggleMinimized={() => actions.toggleWindowMinimized(unitItem.unitId)}
       isCurrent={isCurrent}
+      windowStatus={unitItem.windowStatus}
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}

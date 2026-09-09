@@ -2,6 +2,7 @@ import { CgDisplayFullwidth } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
+  FaWindowMinimize,
 } from "react-icons/fa6";
 import { IoPlaySharp } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
@@ -15,4 +16,5 @@ export const Icons = {
   Trash: PiTrash,
   Piano: PiPianoKeysFill,
   Play: IoPlaySharp,
+  Minimize: FaWindowMinimize,
 };

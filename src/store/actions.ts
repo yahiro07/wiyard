@@ -9,6 +9,7 @@ import {
   PortStuff,
   UnitAddingItem,
   UnitStuff,
+  WindowStatus,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
@@ -21,7 +22,7 @@ export const actionsInternal = {
     attrs: Partial<{
       cardPosition: Point;
       windowPosition: Point;
-      windowVisible: boolean;
+      windowStatus: WindowStatus;
     }>,
   ) {
     store.setUnitItems((prev) =>
@@ -39,8 +40,17 @@ export const actions = {
   setCurrentWindowUnitId(unitId: string | null) {
     store.setCurrentWindowUnitId(unitId);
   },
-  setUnitWindowVisible(unitId: string, visible: boolean) {
-    actionsInternal.patchUnitAttrs(unitId, { windowVisible: visible });
+  setUnitWindowStatus(unitId: string, status: WindowStatus) {
+    actionsInternal.patchUnitAttrs(unitId, { windowStatus: status });
+  },
+  toggleWindowMinimized(unitId: string) {
+    const unitItem = store.state.unitItems.find(
+      (item) => item.unitId === unitId && item.type === "board",
+    ) as BoardUnitItem | undefined;
+    if (!unitItem) return;
+    const currentStatus = unitItem.windowStatus;
+    const nextStatus = currentStatus === "visible" ? "minimized" : "visible";
+    actionsInternal.patchUnitAttrs(unitId, { windowStatus: nextStatus });
   },
   toggleWindowsEvacuated() {
     store.toggleWindowsEvacuated();
@@ -109,7 +119,7 @@ export const actions = {
       catalogKey,
       cardPosition: position,
       windowPosition: defaultWindowPosition,
-      windowVisible: false,
+      windowStatus: "none",
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
   },
