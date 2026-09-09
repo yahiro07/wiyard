@@ -1,3 +1,6 @@
+import { createPianoRollUnit } from "@lib/piano-roll";
+import { ReactUnitFrame } from "wafer-host/react";
+import { appConfig } from "@/domain/app-config";
 import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
 import { ControlButtons } from "@/realms/desk/control-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
@@ -25,35 +28,34 @@ const TopBar = () => {
     </div>
   );
 };
-const BottomBar = () => {
-  return <div className="h-25px bg-gray-600 flex-c text-lg px-2"></div>;
+
+const PageRootMain = () => {
+  return (
+    <div className="h-dvh flex-v text-white">
+      <TopBar />
+      <div className="grow flex-h">
+        <DeskArea />
+      </div>
+      <UnitPickerRoot />
+    </div>
+  );
 };
 
-const InnerBottomBar = () => {
+const PageRootPianoRollDev = () => {
   return (
-    <div className="absolute-bottom-center">
-      <div className="w-400px h-50px bg-gray-600/50 flex-c text-lg px-2">
-        <ControlButtons />
-      </div>
+    <div className="h-dvh flex-c">
+      <ReactUnitFrame
+        unitId="pianoRollDev"
+        unitTemplateFn={createPianoRollUnit}
+      />
     </div>
   );
 };
 
 export const PageRoot = () => {
-  return (
-    <div className="h-dvh flex-v text-white">
-      <TopBar />
-      <div className="grow flex-h">
-        <DeskArea
-        // additionalContents={
-        //   <>
-        //     <InnerBottomBar />
-        //   </>
-        // }
-        />
-      </div>
-      {/* <BottomBar /> */}
-      <UnitPickerRoot />
-    </div>
-  );
+  if (appConfig.isDevelopment && location.search.includes("unit-dev")) {
+    return <PageRootPianoRollDev />;
+  } else {
+    return <PageRootMain />;
+  }
 };
