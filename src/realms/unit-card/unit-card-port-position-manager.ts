@@ -25,7 +25,7 @@ export function createUnitCardPortPositionManager(
   const internal = {
     updateLayout() {
       const unitItem = store.state.unitItems.find((it) => it.unitId === unitId);
-      if (!(unitItem?.type === "board" || unitItem?.type === "edge")) return;
+      if (!unitItem) return;
       const cardPos = unitItem.cardPosition;
 
       if (!baseEl) return;

@@ -31,13 +31,12 @@ export type StageUnitItem = BoardUnitItem | EdgeUnitItem;
 
 //sequencer units, internally managed and not displayed on the board
 export type OffStageUnitItem = {
-  type: "offStage";
   unitId: string;
   noteChannelId: string;
   catalogKey: CatalogKey;
 };
 
-export type UnitItem = BoardUnitItem | EdgeUnitItem | OffStageUnitItem;
+export type UnitItem = BoardUnitItem | EdgeUnitItem;
 
 export type UnitPortSpec = {
   direction: HsPortDirection;

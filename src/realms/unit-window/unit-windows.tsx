@@ -76,8 +76,6 @@ const UnitWindowRoot = ({ unitItem }: { unitItem: UnitItem }) => {
     return <BoardUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
   } else if (unitItem.type === "edge") {
     return <EdgeUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
-  } else {
-    return null;
   }
 };
 

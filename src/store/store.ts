@@ -4,6 +4,7 @@ import { Point, Size } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
+  OffStageUnitItem,
   PortStuff,
   UnitAddingItem,
   UnitItem,
@@ -14,6 +15,7 @@ import {
 type StoreState = {
   //will be persisted in project
   unitItems: UnitItem[];
+  offStageUnitItems: OffStageUnitItem[];
   wireConnectionKeys: string[];
   sequencerWindowPosition: Point;
   sequencerWindowSize: Size;
@@ -38,6 +40,7 @@ type StoreState = {
 
 const blankStoreState: StoreState = {
   unitItems: [],
+  offStageUnitItems: [],
   wireConnectionKeys: [],
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowSize: { width: 380 + 190, height: 300 },
@@ -63,6 +66,7 @@ const blankStoreState: StoreState = {
 const defaultStoreState: StoreState = {
   ...blankStoreState,
   unitItems: defaultScene.unitItems,
+  offStageUnitItems: defaultScene.offstageUnitItems,
   wireConnectionKeys: defaultScene.wireConnectionKeys,
   sequencerWindowPosition: defaultWindowPosition,
   currentNoteChannelId: defaultScene.initialNoteChannelId,

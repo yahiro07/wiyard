@@ -7,17 +7,16 @@ type NoteInputConnectionViewModel = {
 };
 
 export function useNoteInputConnectionViewModels(): NoteInputConnectionViewModel[] {
-  const { unitItems } = store.useSnapshot();
+  const { unitItems, offStageUnitItems } = store.useSnapshot();
   return useMemo(() => {
-    return unitItems
-      .filter((item) => item.type === "offStage")
+    return offStageUnitItems
       .map((item) => {
         const noteChannelId = item.noteChannelId;
         const destUnitItem = unitItems.find(
-          (item) =>
-            item.type === "edge" &&
-            item.internalUnitKey === "noteInputPort" &&
-            item.noteChannelId === noteChannelId,
+          (it) =>
+            it.type === "edge" &&
+            it.internalUnitKey === "noteInputPort" &&
+            it.noteChannelId === noteChannelId,
         );
         if (!destUnitItem) return undefined;
         const source = `${item.unitId}.noteOutput`;
@@ -25,5 +24,5 @@ export function useNoteInputConnectionViewModels(): NoteInputConnectionViewModel
         return { source, destination };
       })
       .filter(Boolean) as NoteInputConnectionViewModel[];
-  }, [unitItems]);
+  }, [offStageUnitItems, unitItems]);
 }

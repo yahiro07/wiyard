@@ -6,17 +6,14 @@ export const CoordDebugLayer = () => {
     <div className="pointer-events-none">
       <>
         {unitItems.map((item) => {
-          if (item.type === "board" || item.type === "edge") {
-            const pos = item.cardPosition;
-            return (
-              <div
-                key={item.unitId}
-                style={{ left: pos.x, top: pos.y }}
-                className="absolute w-20px h-20px bd-#f08 -translate-x-1/2 -translate-y-1/2"
-              />
-            );
-          }
-          return null;
+          const pos = item.cardPosition;
+          return (
+            <div
+              key={item.unitId}
+              style={{ left: pos.x, top: pos.y }}
+              className="absolute w-20px h-20px bd-#f08 -translate-x-1/2 -translate-y-1/2"
+            />
+          );
         })}
       </>
       <>

@@ -1,6 +1,6 @@
 import { appConfig } from "@/domain/app-config";
 import { Point } from "@/domain/common-types";
-import { UnitItem } from "@/domain/types";
+import { OffStageUnitItem, UnitItem } from "@/domain/types";
 
 export const defaultWindowPosition: Point = { x: -1, y: -1 };
 
@@ -8,13 +8,7 @@ function createDefaultScene() {
   const ox = 100;
   const oy = 200;
 
-  const initialUnitItems: UnitItem[] = [
-    {
-      type: "offStage",
-      unitId: "sequencer1",
-      noteChannelId: "nc1",
-      catalogKey: "fluoritePianoRoll",
-    },
+  const unitItems: UnitItem[] = [
     {
       type: "edge",
       unitId: "noteInputPort1",
@@ -56,7 +50,15 @@ function createDefaultScene() {
       windowStatus: "none",
     },
   ];
-  initialUnitItems.forEach((item) => {
+  const offstageUnitItems: OffStageUnitItem[] = [
+    {
+      unitId: "sequencer1",
+      noteChannelId: "nc1",
+      catalogKey: "fluoritePianoRoll",
+    },
+  ];
+
+  unitItems.forEach((item) => {
     if (item.type === "board") {
       item.windowPosition = item.cardPosition;
     }
@@ -70,26 +72,24 @@ function createDefaultScene() {
   ];
 
   if (appConfig.isDevelopment) {
-    initialUnitItems.push(
-      {
-        type: "offStage",
-        unitId: "sequencer2",
-        noteChannelId: "nc2",
-        catalogKey: "fluoritePianoRoll",
-      },
-      {
-        type: "edge",
-        unitId: "noteInputPort2",
-        noteChannelId: "nc2",
-        internalUnitKey: "noteInputPort",
-        cardPosition: { x: ox + 50, y: oy + 350 },
-        windowPosition: defaultWindowPosition,
-      },
-    );
+    offstageUnitItems.push({
+      unitId: "sequencer2",
+      noteChannelId: "nc2",
+      catalogKey: "fluoritePianoRoll",
+    });
+    unitItems.push({
+      type: "edge",
+      unitId: "noteInputPort2",
+      noteChannelId: "nc2",
+      internalUnitKey: "noteInputPort",
+      cardPosition: { x: ox + 50, y: oy + 350 },
+      windowPosition: defaultWindowPosition,
+    });
   }
 
   return {
-    unitItems: initialUnitItems,
+    offstageUnitItems,
+    unitItems,
     initialNoteChannelId: "nc1",
     wireConnectionKeys,
   };

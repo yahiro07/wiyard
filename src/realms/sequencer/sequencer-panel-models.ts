@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { OffStageUnitItem } from "@/domain/types";
 import { store } from "@/store/store";
 
 export type NoteChannelListColumnPresenter = {
@@ -7,12 +6,11 @@ export type NoteChannelListColumnPresenter = {
   currentNoteChannelId: string;
   selectNoteChannel: (noteChannelId: string) => void;
 };
+
 export function useNoteChannelListColumnPresenter(): NoteChannelListColumnPresenter {
-  const { unitItems, currentNoteChannelId } = store.useSnapshot();
+  const { offStageUnitItems, currentNoteChannelId } = store.useSnapshot();
   return useMemo(() => {
-    const noteChannelIds = (
-      unitItems.filter((item) => item.type === "offStage") as OffStageUnitItem[]
-    ).map((item) => item.noteChannelId);
+    const noteChannelIds = offStageUnitItems.map((item) => item.noteChannelId);
     return {
       noteChannelIds,
       currentNoteChannelId,
@@ -20,10 +18,5 @@ export function useNoteChannelListColumnPresenter(): NoteChannelListColumnPresen
         store.setCurrentNoteChannelId(noteChannelId);
       },
     };
-  }, [unitItems, currentNoteChannelId]);
-}
-
-export function useOffStageUnitItems() {
-  const { unitItems } = store.useSnapshot();
-  return unitItems.filter((item) => item.type === "offStage");
+  }, [offStageUnitItems, currentNoteChannelId]);
 }

@@ -1,12 +1,13 @@
 import { HsUnitStateData } from "wafer-host/core";
 import { Size } from "@/domain/common-types";
 import { hostSystem } from "@/domain/host-system-instance";
-import { UnitItem, WindowStatus } from "@/domain/types";
+import { OffStageUnitItem, UnitItem, WindowStatus } from "@/domain/types";
 import { store } from "@/store/store";
 import { pickObjectMembers } from "@/utils/helpers";
 
 type PersistenceData = {
   unitItems: UnitItem[];
+  offStageUnitItems: OffStageUnitItem[];
   wireConnectionKeys: string[];
   sequencerWindowPosition: Point;
   sequencerWindowSize: Size;
@@ -26,6 +27,7 @@ export const persistence = {
     const data: PersistenceData = {
       ...pickObjectMembers(store.state, {
         unitItems: 1,
+        offStageUnitItems: 1,
         wireConnectionKeys: 1,
         sequencerWindowPosition: 1,
         sequencerWindowSize: 1,

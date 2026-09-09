@@ -1,10 +1,7 @@
 import { UnitFrameScaled } from "wafer-host/react";
 import { OffStageUnitItem } from "@/domain/types";
 import { catalog } from "@/domain/unit-entries";
-import {
-  useNoteChannelListColumnPresenter,
-  useOffStageUnitItems,
-} from "@/realms/sequencer/sequencer-panel-models";
+import { useNoteChannelListColumnPresenter } from "@/realms/sequencer/sequencer-panel-models";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 
@@ -52,7 +49,7 @@ const SequencerUnitItemView = ({
 };
 
 const SequencerSection = () => {
-  const offStageUnitItems = useOffStageUnitItems();
+  const { offStageUnitItems } = store.useSnapshot();
   return (
     <div className="flex-grow relative">
       {offStageUnitItems.map((item) => (
