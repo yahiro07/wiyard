@@ -9,6 +9,7 @@ export type BoardUnitItem = {
   catalogKey: CatalogKey;
   cardPosition: Point;
   windowPosition: Point;
+  windowVisible: boolean;
 };
 
 //note input port and speaker output port, used for input/output of the board area

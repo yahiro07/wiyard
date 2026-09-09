@@ -46,8 +46,9 @@ export const unitCardHandlers = {
       },
       onTap() {
         if (unitItem.type === "board") {
-          actions.setCurrentEffectUnitId(unitItem.unitId);
           actions.setWindowsEvacuated(false);
+          actions.setUnitWindowVisible(unitItem.unitId, true);
+          actions.setCurrentEffectUnitId(unitItem.unitId);
         } else if (
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"

@@ -18,7 +18,11 @@ import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 export const actionsInternal = {
   patchUnitAttrs(
     unitId: string,
-    attrs: Partial<{ cardPosition: Point; windowPosition: Point }>,
+    attrs: Partial<{
+      cardPosition: Point;
+      windowPosition: Point;
+      windowVisible: boolean;
+    }>,
   ) {
     store.setUnitItems((prev) =>
       prev.map((item) =>
@@ -34,6 +38,9 @@ export const actions = {
   },
   setCurrentEffectUnitId(unitId: string | null) {
     store.setCurrentEffectUnitId(unitId);
+  },
+  setUnitWindowVisible(unitId: string, visible: boolean) {
+    actionsInternal.patchUnitAttrs(unitId, { windowVisible: visible });
   },
   toggleWindowsEvacuated() {
     store.toggleWindowsEvacuated();
@@ -102,6 +109,7 @@ export const actions = {
       catalogKey,
       cardPosition: position,
       windowPosition: defaultWindowPosition,
+      windowVisible: false,
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
   },

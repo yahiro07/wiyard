@@ -9,7 +9,7 @@ import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const { currentEffectUnitId, windowsEvacuated } = store.useSnapshot();
+  const { windowsEvacuated } = store.useSnapshot();
   // const isCurrent = unitItem.unitId === currentEffectUnitId;
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
@@ -20,10 +20,9 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
     <InnerWindow
       title={catalogItem.name}
       windowCoordVm={windowCoordVm}
-      // displayed={isCurrent}
-      displayed
+      displayed={unitItem.windowVisible}
       evacuated={windowsEvacuated}
-      close={() => actions.setCurrentEffectUnitId(null)}
+      close={() => actions.setUnitWindowVisible(unitItem.unitId, false)}
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}
