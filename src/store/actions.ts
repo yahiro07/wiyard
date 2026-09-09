@@ -60,11 +60,13 @@ export const actions = {
   setWindowsEvacuated(evacuated: boolean) {
     store.setWindowsEvacuated(evacuated);
   },
-  setSequencerWindowVisible(visible: boolean) {
-    store.setSequencerWindowVisible(visible);
+  setSequencerWindowStatus(status: WindowStatus) {
+    store.setSequencerWindowStatus(status);
   },
   toggleSequencerWindowVisible() {
-    store.toggleSequencerWindowVisible();
+    store.setSequencerWindowStatus((prev) =>
+      prev === "visible" ? "none" : "visible",
+    );
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
@@ -156,5 +158,10 @@ export const actions = {
   },
   setSequencerWindowSize(size: Size) {
     store.setSequencerWindowSize(size);
+  },
+  toggleSequencerWindowMinimized() {
+    store.setSequencerWindowStatus((prev) =>
+      prev === "minimized" ? "visible" : "minimized",
+    );
   },
 };

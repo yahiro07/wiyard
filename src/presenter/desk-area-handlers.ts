@@ -55,7 +55,7 @@ export const unitCardHandlers = {
           const isCurrent =
             store.state.currentNoteChannelId === unitItem.noteChannelId;
           if (isCurrent) {
-            actions.setSequencerWindowVisible(true);
+            actions.setSequencerWindowStatus("visible");
             actions.setWindowsEvacuated(false);
           } else {
             actions.setCurrentNoteChannelId(unitItem.noteChannelId);

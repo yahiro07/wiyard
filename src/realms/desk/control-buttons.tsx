@@ -35,11 +35,11 @@ export const PickerLaunchButton = () => {
 };
 
 export const WindowEvacuationButton = () => {
-  const { unitItems, sequencerWindowVisible } = store.useSnapshot();
+  const { unitItems, sequencerWindowStatus } = store.useSnapshot();
   const hasWindow =
     unitItems.some(
       (item) => item.type === "board" && item.windowStatus === "visible",
-    ) || sequencerWindowVisible;
+    ) || sequencerWindowStatus === "visible";
   return (
     <ControlButton
       onClick={actions.toggleWindowsEvacuated}

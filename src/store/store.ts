@@ -3,7 +3,13 @@ import { UpdatePayload } from "vite";
 import { Point, Size } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
-import { PortStuff, UnitAddingItem, UnitItem, UnitStuff } from "@/domain/types";
+import {
+  PortStuff,
+  UnitAddingItem,
+  UnitItem,
+  UnitStuff,
+  WindowStatus,
+} from "@/domain/types";
 
 type StoreState = {
   //will be persisted in project
@@ -12,7 +18,7 @@ type StoreState = {
   sequencerWindowPosition: Point;
   sequencerWindowSize: Size;
   currentWindowUnitId: string | null;
-  sequencerWindowVisible: boolean;
+  sequencerWindowStatus: WindowStatus;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
   midiInEnabled: boolean;
@@ -35,7 +41,7 @@ const blankStoreState: StoreState = {
   wireConnectionKeys: [],
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowSize: { width: 380 + 190, height: 300 },
-  sequencerWindowVisible: false,
+  sequencerWindowStatus: "none",
   currentWindowUnitId: null,
   currentNoteChannelId: "",
   midiInEnabled: false,

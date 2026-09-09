@@ -1,7 +1,7 @@
 import { HsUnitStateData } from "wafer-host/core";
 import { Size } from "@/domain/common-types";
 import { hostSystem } from "@/domain/host-system-instance";
-import { UnitItem } from "@/domain/types";
+import { UnitItem, WindowStatus } from "@/domain/types";
 import { store } from "@/store/store";
 import { pickObjectMembers } from "@/utils/helpers";
 
@@ -11,7 +11,7 @@ type PersistenceData = {
   sequencerWindowPosition: Point;
   sequencerWindowSize: Size;
   currentWindowUnitId: string | null;
-  sequencerWindowVisible: boolean;
+  sequencerWindowStatus: WindowStatus;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
   midiInEnabled: boolean;
@@ -30,7 +30,7 @@ export const persistence = {
         sequencerWindowPosition: 1,
         sequencerWindowSize: 1,
         currentWindowUnitId: 1,
-        sequencerWindowVisible: 1,
+        sequencerWindowStatus: 1,
         currentNoteChannelId: 1,
         windowsEvacuated: 1,
         midiInEnabled: 1,
