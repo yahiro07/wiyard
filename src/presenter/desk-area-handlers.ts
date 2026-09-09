@@ -10,7 +10,7 @@ export function getDeskAreaElement() {
   return document.getElementById("domDeskArea") as HTMLElement;
 }
 
-type IPointerEvent = React.PointerEvent<HTMLDivElement>;
+type IPointerEvent = React.PointerEvent<HTMLElement>;
 
 export const unitCardHandlers = {
   handlePointerDown(e0: IPointerEvent, unitItem: StageUnitItem) {
@@ -86,6 +86,23 @@ export const unitWindowHandlers = {
       onTap() {
         actions.setWindowsEvacuated(false);
         actions.setCurrentWindowUnitId(windowCoordVm.windowUnitId);
+      },
+    });
+    e0.stopPropagation();
+  },
+  handleResizingAnchorPointerDown(
+    e0: IPointerEvent,
+    windowCoordVm: WindowCoordViewModel,
+  ) {
+    const originalSize = windowCoordVm.size;
+    startDragSessionEx(e0, {
+      onMove(_, delta) {
+        const scale = 1 - delta.y / 100;
+        const newSize = {
+          width: Math.round(originalSize.width * scale),
+          height: Math.round(originalSize.height * scale),
+        };
+        windowCoordVm.setSize(newSize);
       },
     });
     e0.stopPropagation();

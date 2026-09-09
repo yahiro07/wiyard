@@ -69,6 +69,20 @@ export const InnerWindow = ({
                 type="button"
                 className="cursor-pointer"
                 onPointerDown={(e) => {
+                  unitWindowHandlers.handleResizingAnchorPointerDown(
+                    e,
+                    windowCoordVm,
+                  );
+                  e.stopPropagation();
+                }}
+              >
+                sz
+              </button>
+
+              <button
+                type="button"
+                className="cursor-pointer"
+                onPointerDown={(e) => {
                   toggleMinimized?.();
                   e.stopPropagation();
                 }}

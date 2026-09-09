@@ -19,6 +19,9 @@ export const vectorOp = {
       y: Math.round(v.y / gridPitch) * gridPitch,
     };
   },
+  scale(v: Point, m: number) {
+    return { x: v.x * m, y: v.y * m };
+  },
 };
 
 export const domRectOp = {
