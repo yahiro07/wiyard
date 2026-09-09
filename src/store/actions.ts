@@ -13,6 +13,7 @@ import {
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
+import { persistence } from "@/store/persistence";
 import { store } from "@/store/store";
 import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
@@ -59,11 +60,13 @@ export const actions = {
   setWindowsEvacuated(evacuated: boolean) {
     store.setWindowsEvacuated(evacuated);
   },
-  setSequencerWindowVisible(visible: boolean) {
-    store.setSequencerWindowVisible(visible);
+  setSequencerWindowStatus(status: WindowStatus) {
+    store.setSequencerWindowStatus(status);
   },
   toggleSequencerWindowVisible() {
-    store.toggleSequencerWindowVisible();
+    store.setSequencerWindowStatus((prev) =>
+      prev === "visible" ? "none" : "visible",
+    );
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
@@ -149,5 +152,16 @@ export const actions = {
   },
   togglePlayback() {
     store.togglePlaying();
+  },
+  savePersistentState() {
+    persistence.save();
+  },
+  setSequencerWindowSize(size: Size) {
+    store.setSequencerWindowSize(size);
+  },
+  toggleSequencerWindowMinimized() {
+    store.setSequencerWindowStatus((prev) =>
+      prev === "minimized" ? "visible" : "minimized",
+    );
   },
 };

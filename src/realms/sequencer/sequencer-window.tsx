@@ -5,15 +5,18 @@ import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 
 export const SequencerWindow = () => {
-  const { windowsEvacuated, sequencerWindowVisible } = store.useSnapshot();
+  const { windowsEvacuated, sequencerWindowStatus, currentWindowUnitId } =
+    store.useSnapshot();
   const windowCoordVm = useSequencerWindowViewModel();
   return (
     <InnerWindow
       title="piano roll"
       windowCoordVm={windowCoordVm}
-      displayed={sequencerWindowVisible}
+      windowStatus={sequencerWindowStatus}
       evacuated={windowsEvacuated}
-      close={() => actions.setSequencerWindowVisible(false)}
+      close={() => actions.setSequencerWindowStatus("none")}
+      isCurrent={currentWindowUnitId === "sequencerWindow"}
+      toggleMinimized={() => actions.toggleSequencerWindowMinimized()}
     >
       <SequencerPanel />
     </InnerWindow>

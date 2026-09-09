@@ -1,17 +1,24 @@
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
-import { Point } from "@/domain/common-types";
+import { Point, Size } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
-import { PortStuff, UnitAddingItem, UnitItem, UnitStuff } from "@/domain/types";
+import {
+  PortStuff,
+  UnitAddingItem,
+  UnitItem,
+  UnitStuff,
+  WindowStatus,
+} from "@/domain/types";
 
 type StoreState = {
   //will be persisted in project
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   sequencerWindowPosition: Point;
+  sequencerWindowSize: Size;
   currentWindowUnitId: string | null;
-  sequencerWindowVisible: boolean;
+  sequencerWindowStatus: WindowStatus;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
   midiInEnabled: boolean;
@@ -33,7 +40,8 @@ const blankStoreState: StoreState = {
   unitItems: [],
   wireConnectionKeys: [],
   sequencerWindowPosition: defaultWindowPosition,
-  sequencerWindowVisible: false,
+  sequencerWindowSize: { width: 380 + 190, height: 300 },
+  sequencerWindowStatus: "none",
   currentWindowUnitId: null,
   currentNoteChannelId: "",
   midiInEnabled: false,

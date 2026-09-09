@@ -35,10 +35,11 @@ export const PickerLaunchButton = () => {
 };
 
 export const WindowEvacuationButton = () => {
-  const { unitItems, sequencerWindowVisible } = store.useSnapshot();
+  const { unitItems, sequencerWindowStatus } = store.useSnapshot();
   const hasWindow =
-    unitItems.some((item) => item.type === "board" && item.windowVisible) ||
-    sequencerWindowVisible;
+    unitItems.some(
+      (item) => item.type === "board" && item.windowStatus === "visible",
+    ) || sequencerWindowStatus === "visible";
   return (
     <ControlButton
       onClick={actions.toggleWindowsEvacuated}
@@ -82,6 +83,10 @@ export const MasterVolumeInput = () => {
   );
 };
 
+export const PersistenceSaveButton = () => {
+  return <ControlButton text="save" onClick={actions.savePersistentState} />;
+};
+
 export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
@@ -89,6 +94,7 @@ export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
       <BpmInput />
       <MasterVolumeInput />
       <PickerLaunchButton />
+      <PersistenceSaveButton />
       {/* <WindowEvacuationButton /> */}
     </div>
   );
