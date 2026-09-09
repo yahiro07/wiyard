@@ -1,22 +1,24 @@
-import { useSequencerWindowViewModel } from "@/presenter/window-view-models";
+import { kSequencerWindowId } from "@/domain/types";
+import { useWindowCoordViewModel } from "@/presenter/window-view-models";
 import { InnerWindow } from "@/realms/desk/inner-window";
 import { SequencerPanel } from "@/realms/sequencer/sequencer-panel";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 
 export const SequencerWindow = () => {
-  const { windowsEvacuated, sequencerWindowStatus, currentWindowUnitId } =
+  const { windowsEvacuated, currentWindowId, windowSpecs } =
     store.useSnapshot();
-  const windowCoordVm = useSequencerWindowViewModel();
+  const windowCoordVm = useWindowCoordViewModel(kSequencerWindowId);
+  const windowSpec = windowSpecs[kSequencerWindowId];
   return (
     <InnerWindow
       title="piano roll"
       windowCoordVm={windowCoordVm}
-      windowStatus={sequencerWindowStatus}
+      windowStatus={windowSpec?.status ?? "none"}
       evacuated={windowsEvacuated}
-      close={() => actions.setSequencerWindowStatus("none")}
-      isCurrent={currentWindowUnitId === "sequencerWindow"}
-      toggleMinimized={() => actions.toggleSequencerWindowMinimized()}
+      close={() => actions.setWindowStatus(kSequencerWindowId, "none")}
+      isCurrent={currentWindowId === kSequencerWindowId}
+      toggleMinimized={() => actions.toggleWindowMinimized(kSequencerWindowId)}
     >
       <SequencerPanel />
     </InnerWindow>

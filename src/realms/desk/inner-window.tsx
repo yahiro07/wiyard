@@ -52,10 +52,7 @@ export const InnerWindow = ({
         <div
           style={{ width }}
           onPointerDown={(e) =>
-            unitWindowHandlers.handleBasePointerDown(
-              e,
-              windowCoordVm.windowUnitId,
-            )
+            unitWindowHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
           }
         >
           <div

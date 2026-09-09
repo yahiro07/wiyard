@@ -1,24 +1,25 @@
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
-import { Point, Size } from "@/domain/common-types";
-import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
+import { Point } from "@/domain/common-types";
+import { defaultScene } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
+  OffStageUnitItem,
   PortStuff,
   UnitAddingItem,
   UnitItem,
   UnitStuff,
-  WindowStatus,
+  WindowId,
+  WindowSpec,
 } from "@/domain/types";
 
 type StoreState = {
   //will be persisted in project
   unitItems: UnitItem[];
+  offStageUnitItems: OffStageUnitItem[];
+  windowSpecs: Record<WindowId, WindowSpec>;
   wireConnectionKeys: string[];
-  sequencerWindowPosition: Point;
-  sequencerWindowSize: Size;
-  currentWindowUnitId: string | null;
-  sequencerWindowStatus: WindowStatus;
+  currentWindowId: string | null;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
   midiInEnabled: boolean;
@@ -38,11 +39,10 @@ type StoreState = {
 
 const blankStoreState: StoreState = {
   unitItems: [],
+  offStageUnitItems: [],
   wireConnectionKeys: [],
-  sequencerWindowPosition: defaultWindowPosition,
-  sequencerWindowSize: { width: 380 + 190, height: 300 },
-  sequencerWindowStatus: "none",
-  currentWindowUnitId: null,
+  windowSpecs: {},
+  currentWindowId: null,
   currentNoteChannelId: "",
   midiInEnabled: false,
   bpm: 120,
@@ -63,8 +63,8 @@ const blankStoreState: StoreState = {
 const defaultStoreState: StoreState = {
   ...blankStoreState,
   unitItems: defaultScene.unitItems,
+  offStageUnitItems: defaultScene.offStageUnitItems,
   wireConnectionKeys: defaultScene.wireConnectionKeys,
-  sequencerWindowPosition: defaultWindowPosition,
   currentNoteChannelId: defaultScene.initialNoteChannelId,
 };
 

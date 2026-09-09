@@ -2,17 +2,12 @@ import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 import { Point, Size } from "@/domain/common-types";
 import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
 
-export type WindowStatus = "visible" | "minimized" | "none";
-
 //instrument and effects, placed on board area
 export type BoardUnitItem = {
   type: "board";
   unitId: string;
   catalogKey: CatalogKey;
   cardPosition: Point;
-  windowPosition: Point;
-  windowStatus: WindowStatus;
-  windowSize?: Size;
 };
 
 //note input port and speaker output port, used for input/output of the board area
@@ -22,8 +17,6 @@ export type EdgeUnitItem = {
   noteChannelId: string;
   internalUnitKey: InternalUnitKey;
   cardPosition: Point;
-  windowPosition: Point; //not used
-  windowSize?: Size; //not used
 };
 
 //units placed on board area
@@ -31,13 +24,23 @@ export type StageUnitItem = BoardUnitItem | EdgeUnitItem;
 
 //sequencer units, internally managed and not displayed on the board
 export type OffStageUnitItem = {
-  type: "offStage";
   unitId: string;
   noteChannelId: string;
   catalogKey: CatalogKey;
 };
 
-export type UnitItem = BoardUnitItem | EdgeUnitItem | OffStageUnitItem;
+export type UnitItem = BoardUnitItem | EdgeUnitItem;
+
+export type WindowId = string; //unitId | "sequencerWindow"
+export const kSequencerWindowId = "sequencerWindow";
+
+export type WindowStatus = "visible" | "minimized" | "none";
+
+export type WindowSpec = {
+  position: Point;
+  status: WindowStatus;
+  size: Size;
+};
 
 export type UnitPortSpec = {
   direction: HsPortDirection;

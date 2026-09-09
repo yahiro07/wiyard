@@ -4,7 +4,7 @@ import "./page.css";
 import { persistence } from "@/store/persistence";
 import { mountAppRoot } from "@/utils/mount-app-root";
 
-if (1) {
+if (0) {
   persistence.load();
 }
 mountAppRoot(<App />);

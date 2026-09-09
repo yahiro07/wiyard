@@ -15,7 +15,7 @@ function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
       const win = iframe.contentWindow;
       if (win) {
         const onPointerDown = () => {
-          actions.setCurrentWindowUnitId(unitItem.unitId);
+          actions.setCurrentWindowId(unitItem.unitId);
         };
         win.addEventListener("pointerdown", onPointerDown, { capture: true });
         return () =>
@@ -28,23 +28,28 @@ function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
 }
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const { windowsEvacuated, currentWindowUnitId } = store.useSnapshot();
+  const {
+    windowsEvacuated,
+    currentWindowId: currentWindowUnitId,
+    windowSpecs,
+  } = store.useSnapshot();
   const isCurrent = unitItem.unitId === currentWindowUnitId;
-  const windowCoordVm = useWindowCoordViewModel(unitItem);
+  const windowCoordVm = useWindowCoordViewModel(unitItem.unitId);
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
   const vm = useInstance(() => createBoardUnitWindowViewModel(unitItem));
+  const windowSpec = windowSpecs[unitItem.unitId];
 
   return (
     <InnerWindow
       title={catalogItem.name}
       windowCoordVm={windowCoordVm}
       evacuated={windowsEvacuated}
-      close={() => actions.setUnitWindowStatus(unitItem.unitId, "none")}
+      close={() => actions.setWindowStatus(unitItem.unitId, "none")}
       toggleMinimized={() => actions.toggleWindowMinimized(unitItem.unitId)}
       isCurrent={isCurrent}
-      windowStatus={unitItem.windowStatus}
+      windowStatus={windowSpec?.status ?? "none"}
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}
@@ -76,8 +81,6 @@ const UnitWindowRoot = ({ unitItem }: { unitItem: UnitItem }) => {
     return <BoardUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
   } else if (unitItem.type === "edge") {
     return <EdgeUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
-  } else {
-    return null;
   }
 };
 

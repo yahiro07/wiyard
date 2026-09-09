@@ -1,5 +1,5 @@
 import { appConfig } from "@/domain/app-config";
-import { StageUnitItem } from "@/domain/types";
+import { kSequencerWindowId, StageUnitItem } from "@/domain/types";
 import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
@@ -46,8 +46,8 @@ export const unitCardHandlers = {
       onTap() {
         if (unitItem.type === "board") {
           actions.setWindowsEvacuated(false);
-          actions.setUnitWindowStatus(unitItem.unitId, "visible");
-          actions.setCurrentWindowUnitId(unitItem.unitId);
+          actions.setWindowStatus(unitItem.unitId, "visible");
+          actions.setCurrentWindowId(unitItem.unitId);
         } else if (
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"
@@ -55,10 +55,11 @@ export const unitCardHandlers = {
           const isCurrent =
             store.state.currentNoteChannelId === unitItem.noteChannelId;
           if (isCurrent) {
-            actions.setSequencerWindowStatus("visible");
+            actions.setWindowStatus(kSequencerWindowId, "visible");
             actions.setWindowsEvacuated(false);
           } else {
             actions.setCurrentNoteChannelId(unitItem.noteChannelId);
+            actions.setCurrentWindowId(unitItem.unitId);
           }
         }
       },
@@ -70,8 +71,8 @@ export const unitCardHandlers = {
 };
 
 export const unitWindowHandlers = {
-  handleBasePointerDown(e0: IPointerEvent, windowUnitId: string) {
-    actions.setCurrentWindowUnitId(windowUnitId);
+  handleBasePointerDown(e0: IPointerEvent, windowId: string) {
+    actions.setCurrentWindowId(windowId);
   },
   handleTitleBarPointerDown(
     e0: IPointerEvent,
@@ -85,7 +86,7 @@ export const unitWindowHandlers = {
       },
       onTap() {
         actions.setWindowsEvacuated(false);
-        actions.setCurrentWindowUnitId(windowCoordVm.windowUnitId);
+        actions.setCurrentWindowId(windowCoordVm.windowId);
       },
     });
     e0.stopPropagation();

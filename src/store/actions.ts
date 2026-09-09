@@ -1,14 +1,16 @@
-import { Point, Size } from "@/domain/common-types";
-import { defaultWindowPosition } from "@/domain/default-data";
+import { Point } from "@/domain/common-types";
 import {
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
 } from "@/domain/port-helpers";
 import {
   BoardUnitItem,
+  kSequencerWindowId,
   PortStuff,
   UnitAddingItem,
   UnitStuff,
+  WindowId,
+  WindowSpec,
   WindowStatus,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
@@ -18,15 +20,7 @@ import { store } from "@/store/store";
 import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
 export const actionsInternal = {
-  patchUnitAttrs(
-    unitId: string,
-    attrs: Partial<{
-      cardPosition: Point;
-      windowPosition: Point;
-      windowStatus: WindowStatus;
-      windowSize: Size;
-    }>,
-  ) {
+  patchUnitAttrs(unitId: string, attrs: Partial<{ cardPosition: Point }>) {
     store.setUnitItems((prev) =>
       prev.map((item) =>
         item.unitId === unitId ? { ...item, ...attrs } : item,
@@ -39,34 +33,44 @@ export const actions = {
   setUnitCardPosition(unitId: string, newPos: Point) {
     actionsInternal.patchUnitAttrs(unitId, { cardPosition: newPos });
   },
-  setCurrentWindowUnitId(unitId: string | null) {
-    store.setCurrentWindowUnitId(unitId);
+  setCurrentWindowId(windowId: string | null) {
+    store.setCurrentWindowId(windowId);
   },
-  setUnitWindowStatus(unitId: string, status: WindowStatus) {
-    actionsInternal.patchUnitAttrs(unitId, { windowStatus: status });
+  setWindowStatus(windowId: string, status: WindowStatus) {
+    const windowSpec = store.state.windowSpecs[windowId];
+    if (!windowSpec) {
+      const size =
+        windowId === kSequencerWindowId
+          ? { width: 380 + 190, height: 300 }
+          : (store.state.unitStuffs[windowId]?.viewSize ?? {
+              width: 300,
+              height: 200,
+            });
+      const newWindowSpec: WindowSpec = {
+        position: { x: 0, y: 0 },
+        size,
+        status,
+      };
+      store.patchWindowSpecs({ [windowId]: newWindowSpec });
+    } else {
+      store.patchWindowSpecs({ [windowId]: { ...windowSpec, status } });
+    }
   },
-  toggleWindowMinimized(unitId: string) {
-    const unitItem = store.state.unitItems.find(
-      (item) => item.unitId === unitId && item.type === "board",
-    ) as BoardUnitItem | undefined;
-    if (!unitItem) return;
-    const currentStatus = unitItem.windowStatus;
-    const nextStatus = currentStatus === "visible" ? "minimized" : "visible";
-    actionsInternal.patchUnitAttrs(unitId, { windowStatus: nextStatus });
+  toggleWindowMinimized(windowId: string) {
+    const windowSpec = store.state.windowSpecs[windowId];
+    if (!windowSpec) return;
+    store.patchWindowSpecs({
+      [windowId]: {
+        ...windowSpec,
+        status: windowSpec.status === "visible" ? "minimized" : "visible",
+      },
+    });
   },
   toggleWindowsEvacuated() {
     store.toggleWindowsEvacuated();
   },
   setWindowsEvacuated(evacuated: boolean) {
     store.setWindowsEvacuated(evacuated);
-  },
-  setSequencerWindowStatus(status: WindowStatus) {
-    store.setSequencerWindowStatus(status);
-  },
-  toggleSequencerWindowVisible() {
-    store.setSequencerWindowStatus((prev) =>
-      prev === "visible" ? "none" : "visible",
-    );
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
@@ -122,8 +126,6 @@ export const actions = {
       unitId,
       catalogKey,
       cardPosition: position,
-      windowPosition: defaultWindowPosition,
-      windowStatus: "none",
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
   },
@@ -142,10 +144,14 @@ export const actions = {
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
-    if (store.state.currentWindowUnitId === unitId) {
-      store.setCurrentWindowUnitId(null);
+    if (store.state.currentWindowId === unitId) {
+      store.setCurrentWindowId(null);
     }
     store.setMenuTargetUnitId(null);
+
+    store.produceWindowSpecs((draft) => {
+      setOrDeleteValue(draft, unitId, null);
+    });
   },
   toggleMidiInEnabled() {
     store.toggleMidiInEnabled();
@@ -156,12 +162,12 @@ export const actions = {
   savePersistentState() {
     persistence.save();
   },
-  setSequencerWindowSize(size: Size) {
-    store.setSequencerWindowSize(size);
-  },
-  toggleSequencerWindowMinimized() {
-    store.setSequencerWindowStatus((prev) =>
-      prev === "minimized" ? "visible" : "minimized",
-    );
+  patchWindowSpec(windowId: WindowId, attrs: Partial<WindowSpec>) {
+    const windowSpec = store.state.windowSpecs[windowId];
+    if (!windowSpec) return;
+    store.setWindowSpecs((prev) => ({
+      ...prev,
+      [windowId]: { ...prev[windowId], ...attrs },
+    }));
   },
 };
