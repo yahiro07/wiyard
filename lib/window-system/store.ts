@@ -3,6 +3,14 @@ import { WindowSpec, WindowStatus, WindowSystemStoreSlice } from "./types";
 export const storeSlice: WindowSystemStoreSlice = {} as any;
 
 export const actionsInternal = {
+  addWindowSpec(id: string, spec: WindowSpec) {
+    storeSlice.assign({
+      windowSpecs: {
+        ...storeSlice.get().windowSpecs,
+        [id]: spec,
+      },
+    });
+  },
   patchWindowSpec(
     id: string,
     specifier:

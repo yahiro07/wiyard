@@ -35,13 +35,16 @@ export const actions = {
   setWindowStatus(windowId: string, status: WindowStatus) {
     const exists = windowSystem.has(windowId);
     if (!exists) {
-      const size =
-        windowId === kSequencerWindowId
-          ? { width: 380 + 190, height: 300 }
-          : (store.state.unitStuffs[windowId]?.viewSize ?? {
-              width: 300,
-              height: 200,
-            });
+      let size = { width: 300, height: 200 };
+      if (windowId === kSequencerWindowId) {
+        size = { width: 570, height: 300 };
+      } else {
+        const viewSize = store.state.unitStuffs[windowId]?.viewSize;
+        if (viewSize) {
+          size.width = viewSize.width;
+          size.height = viewSize.height;
+        }
+      }
       const newWindowSpec: WindowSpec = {
         position: { x: 0, y: 0 },
         size,

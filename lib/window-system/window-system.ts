@@ -7,7 +7,7 @@ export function createWindowSystem(args: {
   Object.assign(storeSlice, args.storeSlice);
   return {
     add(id, spec) {
-      actionsInternal.patchWindowSpec(id, spec);
+      actionsInternal.addWindowSpec(id, spec);
     },
     setStatus(id, status) {
       actionsInternal.patchWindowSpec(id, { status });
