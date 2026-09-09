@@ -62,7 +62,6 @@ export const BpmInput = () => {
       max={180}
       step={1}
       onChange={store.setBpm}
-      width={80}
     />
   );
 };
@@ -77,7 +76,6 @@ export const MasterVolumeInput = () => {
       max={1}
       step={0.01}
       fracDigits={2}
-      width={80}
     />
   );
 };
@@ -86,9 +84,9 @@ export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
       <PlaybackButton />
-      <PickerLaunchButton />
       <BpmInput />
       <MasterVolumeInput />
+      <PickerLaunchButton />
       {/* <WindowEvacuationButton /> */}
     </div>
   );
