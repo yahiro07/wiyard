@@ -1,18 +1,20 @@
 import { HsUnitStateData } from "wafer-host/core";
-import { Size } from "@/domain/common-types";
 import { hostSystem } from "@/domain/host-system-instance";
-import { OffStageUnitItem, UnitItem, WindowStatus } from "@/domain/types";
+import {
+  OffStageUnitItem,
+  UnitItem,
+  WindowId,
+  WindowSpec,
+} from "@/domain/types";
 import { store } from "@/store/store";
 import { pickObjectMembers } from "@/utils/helpers";
 
 type PersistenceData = {
   unitItems: UnitItem[];
   offStageUnitItems: OffStageUnitItem[];
+  windowSpecs: Record<WindowId, WindowSpec>;
   wireConnectionKeys: string[];
-  sequencerWindowPosition: Point;
-  sequencerWindowSize: Size;
-  currentWindowUnitId: string | null;
-  sequencerWindowStatus: WindowStatus;
+  currentWindowId: string | null;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
   midiInEnabled: boolean;
@@ -28,11 +30,9 @@ export const persistence = {
       ...pickObjectMembers(store.state, {
         unitItems: 1,
         offStageUnitItems: 1,
+        windowSpecs: 1,
         wireConnectionKeys: 1,
-        sequencerWindowPosition: 1,
-        sequencerWindowSize: 1,
-        currentWindowUnitId: 1,
-        sequencerWindowStatus: 1,
+        currentWindowId: 1,
         currentNoteChannelId: 1,
         windowsEvacuated: 1,
         midiInEnabled: 1,

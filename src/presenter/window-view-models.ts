@@ -1,62 +1,34 @@
-import { useEffect } from "react";
 import { Point, Size } from "@/domain/common-types";
-import { StageUnitItem } from "@/domain/types";
-import { actions, actionsInternal } from "@/store/actions";
+import { WindowId, WindowSpec } from "@/domain/types";
+import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 
 export type WindowCoordViewModel = {
-  windowUnitId: string;
+  windowId: string;
   position: Point;
   setPosition: (position: Point) => void;
   size: Size;
   setSize: (size: Size) => void;
 };
 
+const fallbackPosition = { x: 0, y: 0 };
 const fallbackSize = { width: 300, height: 200 };
 
 export function useWindowCoordViewModel(
-  unitItem: StageUnitItem,
+  windowId: WindowId,
 ): WindowCoordViewModel {
-  const { unitStuffs } = store.useSnapshot();
-  const defaultSize = unitStuffs[unitItem.unitId]?.viewSize;
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: manual management
-  useEffect(() => {
-    if (defaultSize && !unitItem.windowSize) {
-      actionsInternal.patchUnitAttrs(unitItem.unitId, {
-        windowSize: defaultSize,
-      });
-    }
-  }, [defaultSize]);
+  const { windowSpecs } = store.useSnapshot();
+  const windowSpec = windowSpecs[windowId] as WindowSpec | undefined;
 
   return {
-    windowUnitId: unitItem.unitId,
-    position: unitItem.windowPosition,
+    windowId,
+    position: windowSpec?.position ?? fallbackPosition,
     setPosition: (position: Point) => {
-      actionsInternal.patchUnitAttrs(unitItem.unitId, {
-        windowPosition: position,
-      });
+      actions.patchWindowSpec(windowId, { position });
     },
-    size: unitItem.windowSize ?? fallbackSize,
+    size: windowSpec?.size ?? fallbackSize,
     setSize: (size: Size) => {
-      actionsInternal.patchUnitAttrs(unitItem.unitId, {
-        windowSize: size,
-      });
-    },
-  };
-}
-
-export function useSequencerWindowViewModel(): WindowCoordViewModel {
-  const { sequencerWindowPosition, sequencerWindowSize } = store.useSnapshot();
-  return {
-    windowUnitId: "sequencerWindow",
-    position: sequencerWindowPosition,
-    setPosition: (position: Point) => {
-      store.setSequencerWindowPosition(position);
-    },
-    size: sequencerWindowSize,
-    setSize: (size: Size) => {
-      actions.setSequencerWindowSize(size);
+      actions.patchWindowSpec(windowId, { size });
     },
   };
 }
