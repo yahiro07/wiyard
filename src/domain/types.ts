@@ -1,6 +1,10 @@
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 import { Point, Size } from "@/domain/common-types";
-import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
+import {
+  CatalogKey,
+  InternalUnitKey,
+  UnitClassKey,
+} from "@/domain/unit-entries";
 
 //instrument and effects, placed on board area
 export type BoardUnitItem = {
@@ -26,7 +30,7 @@ export type StageUnitItem = BoardUnitItem | EdgeUnitItem;
 export type OffStageUnitItem = {
   unitId: string;
   noteChannelId: string;
-  catalogKey: CatalogKey;
+  unitClassKey: UnitClassKey;
 };
 
 export type UnitItem = BoardUnitItem | EdgeUnitItem;

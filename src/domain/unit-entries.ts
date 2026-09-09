@@ -1,3 +1,4 @@
+import { createPianoRollUnit } from "@lib/piano-roll";
 import { IconType } from "react-icons";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { UnitInventorySpec } from "wafer-host/vite-plugin";
@@ -20,7 +21,9 @@ type InternalUnitSpec = {
   iconComponent: IconType;
 };
 
-export const internalUnitSpecs = {
+export type InternalUnitKey = "speakerPort" | "noteInputPort" | "pianoRoll";
+
+export const internalUnitSpecs: Record<InternalUnitKey, InternalUnitSpec> = {
   speakerPort: {
     factory: createSpeakerPortUnit,
     iconComponent: Icons.ArrowRightToBracket,
@@ -29,6 +32,10 @@ export const internalUnitSpecs = {
     factory: createNoteInputPortUnit,
     iconComponent: Icons.ArrowRightFromBracket,
   },
-} satisfies Record<string, InternalUnitSpec>;
+  pianoRoll: {
+    factory: createPianoRollUnit,
+    iconComponent: Icons.Piano,
+  },
+};
 
-export type InternalUnitKey = keyof typeof internalUnitSpecs;
+export type UnitClassKey = CatalogKey | InternalUnitKey;

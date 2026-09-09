@@ -1,6 +1,12 @@
-import { UnitFrameScaled } from "wafer-host/react";
+import { ReactNode } from "react";
+import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { OffStageUnitItem } from "@/domain/types";
-import { catalog } from "@/domain/unit-entries";
+import {
+  CatalogKey,
+  catalog,
+  InternalUnitKey,
+  internalUnitSpecs,
+} from "@/domain/unit-entries";
 import { useNoteChannelListColumnPresenter } from "@/realms/sequencer/sequencer-panel-models";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
@@ -35,15 +41,31 @@ const SequencerUnitItemView = ({
 }) => {
   const { currentNoteChannelId } = store.useSnapshot();
   const displayed = unitItem.noteChannelId === currentNoteChannelId;
+  const internalUnitSpec =
+    internalUnitSpecs[unitItem.unitClassKey as InternalUnitKey];
+  const catalogItem = catalog[unitItem.unitClassKey as CatalogKey];
+  let content: ReactNode;
+  if (internalUnitSpec) {
+    content = (
+      <ReactUnitFrame
+        unitId={unitItem.unitId}
+        unitTemplateFn={internalUnitSpec.factory}
+      />
+    );
+  } else if (catalogItem) {
+    content = (
+      <UnitFrameScaled
+        unitId={unitItem.unitId}
+        unitUrl={catalogItem.loaderPageUrl}
+      />
+    );
+  }
   return (
     <div
       key={unitItem.unitId}
       className={cz("absolute-full", !displayed && "invisible")}
     >
-      <UnitFrameScaled
-        unitId={unitItem.unitId}
-        unitUrl={catalog[unitItem.catalogKey].loaderPageUrl}
-      />
+      {content}
     </div>
   );
 };
