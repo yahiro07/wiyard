@@ -154,4 +154,7 @@ export const actions = {
   savePersistentState() {
     persistence.save();
   },
+  setSequencerWindowSize(size: Size) {
+    store.setSequencerWindowSize(size);
+  },
 };

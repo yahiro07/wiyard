@@ -1,6 +1,6 @@
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
-import { Point } from "@/domain/common-types";
+import { Point, Size } from "@/domain/common-types";
 import { defaultScene, defaultWindowPosition } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
 import { PortStuff, UnitAddingItem, UnitItem, UnitStuff } from "@/domain/types";
@@ -10,6 +10,7 @@ type StoreState = {
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   sequencerWindowPosition: Point;
+  sequencerWindowSize: Size;
   currentWindowUnitId: string | null;
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
@@ -33,6 +34,7 @@ const blankStoreState: StoreState = {
   unitItems: [],
   wireConnectionKeys: [],
   sequencerWindowPosition: defaultWindowPosition,
+  sequencerWindowSize: { width: 380 + 190, height: 300 },
   sequencerWindowVisible: false,
   currentWindowUnitId: null,
   currentNoteChannelId: "",

@@ -1,4 +1,5 @@
 import { HsUnitStateData } from "wafer-host/core";
+import { Size } from "@/domain/common-types";
 import { hostSystem } from "@/domain/host-system-instance";
 import { UnitItem } from "@/domain/types";
 import { store } from "@/store/store";
@@ -8,6 +9,7 @@ type PersistenceData = {
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   sequencerWindowPosition: Point;
+  sequencerWindowSize: Size;
   currentWindowUnitId: string | null;
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
@@ -26,6 +28,7 @@ export const persistence = {
         unitItems: 1,
         wireConnectionKeys: 1,
         sequencerWindowPosition: 1,
+        sequencerWindowSize: 1,
         currentWindowUnitId: 1,
         sequencerWindowVisible: 1,
         currentNoteChannelId: 1,

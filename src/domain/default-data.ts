@@ -37,6 +37,7 @@ function createDefaultScene() {
       catalogKey: "js808",
       cardPosition: { x: ox + 400, y: oy },
       windowPosition: defaultWindowPosition,
+      windowStatus: "none",
     },
     {
       type: "board",
@@ -44,6 +45,7 @@ function createDefaultScene() {
       catalogKey: "webaudioTinysynthMini",
       cardPosition: { x: ox + 400, y: oy + 200 },
       windowPosition: defaultWindowPosition,
+      windowStatus: "none",
     },
     {
       type: "board",
@@ -51,6 +53,7 @@ function createDefaultScene() {
       catalogKey: "sunsetDelay",
       cardPosition: { x: ox + 700, y: oy + 200 },
       windowPosition: defaultWindowPosition,
+      windowStatus: "none",
     },
   ];
   initialUnitItems.forEach((item) => {
