@@ -41,6 +41,7 @@ export const persistence = {
     };
     localStorage.setItem("wireboard-states", JSON.stringify(data));
     console.log("saved");
+    // console.log(JSON.stringify(data, null, 2));
   },
   load() {
     const text = localStorage.getItem("wireboard-states");
