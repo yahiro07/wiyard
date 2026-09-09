@@ -1,8 +1,7 @@
 import { appConfig } from "@/domain/app-config";
 import { kSequencerWindowId, StageUnitItem } from "@/domain/types";
-import { WindowCoordViewModel } from "@/presenter/window-view-models";
 import { actions } from "@/store/actions";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 import { startDragSessionEx } from "@/utils/drag-session";
 import { vectorOp } from "@/utils/geometry-helper";
 
@@ -45,9 +44,9 @@ export const unitCardHandlers = {
       },
       onTap() {
         if (unitItem.type === "board") {
-          actions.setWindowsEvacuated(false);
+          windowSystem.setEvacuate(false);
           actions.setWindowStatus(unitItem.unitId, "visible");
-          actions.setCurrentWindowId(unitItem.unitId);
+          windowSystem.setCurrentWindow(unitItem.unitId);
         } else if (
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"
@@ -56,10 +55,10 @@ export const unitCardHandlers = {
             store.state.currentNoteChannelId === unitItem.noteChannelId;
           if (isCurrent) {
             actions.setWindowStatus(kSequencerWindowId, "visible");
-            actions.setWindowsEvacuated(false);
+            windowSystem.setEvacuate(false);
           } else {
             actions.setCurrentNoteChannelId(unitItem.noteChannelId);
-            actions.setCurrentWindowId(unitItem.unitId);
+            windowSystem.setCurrentWindow(unitItem.unitId);
           }
         }
       },
@@ -70,53 +69,13 @@ export const unitCardHandlers = {
   },
 };
 
-export const unitWindowHandlers = {
-  handleBasePointerDown(e0: IPointerEvent, windowId: string) {
-    actions.setCurrentWindowId(windowId);
-  },
-  handleTitleBarPointerDown(
-    e0: IPointerEvent,
-    windowCoordVm: WindowCoordViewModel,
-  ) {
-    const unitOriginalPos = windowCoordVm.position;
-    startDragSessionEx(e0, {
-      onMove(_, delta) {
-        const newPos = vectorOp.add(unitOriginalPos, delta);
-        windowCoordVm.setPosition(newPos);
-      },
-      onTap() {
-        actions.setWindowsEvacuated(false);
-        actions.setCurrentWindowId(windowCoordVm.windowId);
-      },
-    });
-    e0.stopPropagation();
-  },
-  handleResizingAnchorPointerDown(
-    e0: IPointerEvent,
-    windowCoordVm: WindowCoordViewModel,
-  ) {
-    const originalSize = windowCoordVm.size;
-    startDragSessionEx(e0, {
-      onMove(_, delta) {
-        const scale = 1 - delta.y / 100;
-        const newSize = {
-          width: Math.round(originalSize.width * scale),
-          height: Math.round(originalSize.height * scale),
-        };
-        windowCoordVm.setSize(newSize);
-      },
-    });
-    e0.stopPropagation();
-  },
-};
-
 export const deskAreaHandlers = {
   handlePointerDown(e0: IPointerEvent) {
     if (e0.currentTarget === e0.target) {
       startDragSessionEx(e0, {
         onTap() {
           if (appConfig.evacuateWindowsOnTapDesk) {
-            actions.toggleWindowsEvacuated();
+            windowSystem.toggleEvacuate();
           }
         },
       });

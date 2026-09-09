@@ -1,10 +1,14 @@
 import { ReactNode } from "react";
-import { Icons } from "@/common/icons";
-import { WindowStatus } from "@/domain/types";
-import { unitWindowHandlers } from "@/presenter/desk-area-handlers";
-import { WindowCoordViewModel } from "@/presenter/window-view-models";
+import { unitWindowHandlers } from "./handlers";
+import { Icons } from "./icons";
+import { actions, storeSlice } from "./store";
+import { WindowStatus } from "./types";
+import {
+  useWindowCoordViewModel,
+  WindowCoordViewModel,
+} from "./window-view-models";
 
-export const InnerWindow = ({
+const WindowFrameView = ({
   title,
   windowCoordVm,
   children,
@@ -115,5 +119,32 @@ export const InnerWindow = ({
         </div>
       </div>
     </>
+  );
+};
+
+export const WindowFrame = ({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
+}) => {
+  const { windowsEvacuated, currentWindowId, windowSpecs } =
+    storeSlice.useSnapshot();
+  const windowCoordVm = useWindowCoordViewModel(id);
+  const windowSpec = windowSpecs[id];
+  return (
+    <WindowFrameView
+      title={title}
+      windowCoordVm={windowCoordVm}
+      children={children}
+      evacuated={windowsEvacuated}
+      close={() => actions.setWindowStatus(id, "none")}
+      isCurrent={currentWindowId === id}
+      windowStatus={windowSpec?.status ?? "none"}
+      toggleMinimized={() => actions.toggleWindowMinimized(id)}
+    />
   );
 };

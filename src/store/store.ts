@@ -1,3 +1,4 @@
+import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
 import { Point } from "@/domain/common-types";
@@ -10,18 +11,18 @@ import {
   UnitItem,
   UnitStuff,
   WindowId,
-  WindowSpec,
 } from "@/domain/types";
+import { pickObjectMembers } from "@/utils/helpers";
 
 type StoreState = {
   //will be persisted in project
   unitItems: UnitItem[];
   offStageUnitItems: OffStageUnitItem[];
   windowSpecs: Record<WindowId, WindowSpec>;
-  wireConnectionKeys: string[];
   currentWindowId: string | null;
-  currentNoteChannelId: string;
   windowsEvacuated: boolean;
+  wireConnectionKeys: string[];
+  currentNoteChannelId: string;
   midiInEnabled: boolean;
   bpm: number;
   masterVolume: number;
@@ -43,6 +44,7 @@ const blankStoreState: StoreState = {
   wireConnectionKeys: [],
   windowSpecs: {},
   currentWindowId: null,
+  windowsEvacuated: false,
   currentNoteChannelId: "",
   midiInEnabled: false,
   bpm: 120,
@@ -50,7 +52,6 @@ const blankStoreState: StoreState = {
   //
   unitStuffs: {},
   portStuffs: {},
-  windowsEvacuated: false,
   draggingPortKey: null,
   previewDestPortKey: null,
   previewDestPosition: null,
@@ -77,6 +78,19 @@ if (0) {
 
 export const store = ((window as any).store ??=
   createStore<StoreState>(defaultStoreState)) as Store<StoreState>;
+
+const windowSliceKeys: (keyof StoreState)[] = [
+  "windowSpecs",
+  "currentWindowId",
+  "windowsEvacuated",
+];
+export const windowSystem = createWindowSystem({
+  storeSlice: {
+    get: () => pickObjectMembers(store.state, windowSliceKeys),
+    assign: (attrs) => store.assign(attrs),
+    useSnapshot: () => pickObjectMembers(store.useSnapshot(), windowSliceKeys),
+  },
+});
 
 if (import.meta.hot) {
   function applyStateEvacuationWorkaround() {

@@ -1,11 +1,7 @@
+import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
 import { hostSystem } from "@/domain/host-system-instance";
-import {
-  OffStageUnitItem,
-  UnitItem,
-  WindowId,
-  WindowSpec,
-} from "@/domain/types";
+import { OffStageUnitItem, UnitItem, WindowId } from "@/domain/types";
 import { store } from "@/store/store";
 import { pickObjectMembers } from "@/utils/helpers";
 

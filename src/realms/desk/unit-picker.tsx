@@ -4,7 +4,7 @@ import { UnitAddingItem } from "@/domain/types";
 import { CatalogKey, catalog } from "@/domain/unit-entries";
 import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { actions } from "@/store/actions";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 import { createDragSessionEx } from "@/utils/drag-session";
 
 const pickerItemHandlers = {
@@ -16,7 +16,7 @@ const pickerItemHandlers = {
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {
         actions.setUnitPickerVisible(false);
-        actions.setWindowsEvacuated(true);
+        windowSystem.setEvacuate(true);
       },
       onMove(pos) {
         actions.setUnitAddingItem({ catalogKey, position: pos });

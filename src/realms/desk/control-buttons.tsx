@@ -1,7 +1,7 @@
 import { Icons } from "@/common/icons";
 import { NumberSlider } from "@/components/number-slider";
 import { actions } from "@/store/actions";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 import { cz } from "@/utils/cz";
 
 const ControlButton = ({
@@ -35,14 +35,14 @@ export const PickerLaunchButton = () => {
 };
 
 export const WindowEvacuationButton = () => {
-  const { windowSpecs } = store.useSnapshot();
-  const hasWindow = Object.values(windowSpecs).some(
-    (spec) => spec.status === "visible",
-  );
+  // const { windowSpecs } = store.useSnapshot();
+  // const hasWindow = Object.values(windowSpecs).some(
+  //   (spec) => spec.status === "visible",
+  // );
   return (
     <ControlButton
-      onClick={actions.toggleWindowsEvacuated}
-      disabled={!hasWindow}
+      onClick={windowSystem.toggleEvacuate}
+      // disabled={!hasWindow}
       children={<Icons.DisplayFullWidth />}
     />
   );

@@ -2,12 +2,12 @@ import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
 import { ControlButtons } from "@/realms/desk/control-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
 import { UnitPickerRoot } from "@/realms/desk/unit-picker";
-import { actions } from "@/store/actions";
+import { windowSystem } from "@/store/store";
 
 const TopBar = () => {
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.currentTarget === e.target) {
-      actions.toggleWindowsEvacuated();
+      windowSystem.toggleEvacuate();
     }
   };
   return (

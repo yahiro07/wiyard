@@ -34,14 +34,6 @@ export type UnitItem = BoardUnitItem | EdgeUnitItem;
 export type WindowId = string; //unitId | "sequencerWindow"
 export const kSequencerWindowId = "sequencerWindow";
 
-export type WindowStatus = "visible" | "minimized" | "none";
-
-export type WindowSpec = {
-  position: Point;
-  status: WindowStatus;
-  size: Size;
-};
-
 export type UnitPortSpec = {
   direction: HsPortDirection;
   subtype: HsPortSubtype;

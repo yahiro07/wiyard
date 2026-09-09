@@ -1,3 +1,4 @@
+import { WindowSpec, WindowStatus } from "@lib/window-system";
 import { Point } from "@/domain/common-types";
 import {
   filterUnitRelatedWires,
@@ -9,14 +10,11 @@ import {
   PortStuff,
   UnitAddingItem,
   UnitStuff,
-  WindowId,
-  WindowSpec,
-  WindowStatus,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
 import { persistence } from "@/store/persistence";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
 
 export const actionsInternal = {
@@ -33,44 +31,27 @@ export const actions = {
   setUnitCardPosition(unitId: string, newPos: Point) {
     actionsInternal.patchUnitAttrs(unitId, { cardPosition: newPos });
   },
-  setCurrentWindowId(windowId: string | null) {
-    store.setCurrentWindowId(windowId);
-  },
   setWindowStatus(windowId: string, status: WindowStatus) {
-    const windowSpec = store.state.windowSpecs[windowId];
-    if (!windowSpec) {
-      const size =
-        windowId === kSequencerWindowId
-          ? { width: 380 + 190, height: 300 }
-          : (store.state.unitStuffs[windowId]?.viewSize ?? {
-              width: 300,
-              height: 200,
-            });
+    const exists = windowSystem.has(windowId);
+    if (!exists) {
+      let size = { width: 300, height: 200 };
+      if (windowId === kSequencerWindowId) {
+        size = { width: 570, height: 300 };
+      } else {
+        const viewSize = store.state.unitStuffs[windowId]?.viewSize;
+        if (viewSize) {
+          size.width = viewSize.width;
+          size.height = viewSize.height;
+        }
+      }
       const newWindowSpec: WindowSpec = {
         position: { x: 0, y: 0 },
         size,
         status,
       };
-      store.patchWindowSpecs({ [windowId]: newWindowSpec });
-    } else {
-      store.patchWindowSpecs({ [windowId]: { ...windowSpec, status } });
+      windowSystem.add(windowId, newWindowSpec);
     }
-  },
-  toggleWindowMinimized(windowId: string) {
-    const windowSpec = store.state.windowSpecs[windowId];
-    if (!windowSpec) return;
-    store.patchWindowSpecs({
-      [windowId]: {
-        ...windowSpec,
-        status: windowSpec.status === "visible" ? "minimized" : "visible",
-      },
-    });
-  },
-  toggleWindowsEvacuated() {
-    store.toggleWindowsEvacuated();
-  },
-  setWindowsEvacuated(evacuated: boolean) {
-    store.setWindowsEvacuated(evacuated);
+    windowSystem.setStatus(windowId, status);
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
@@ -144,14 +125,8 @@ export const actions = {
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
-    if (store.state.currentWindowId === unitId) {
-      store.setCurrentWindowId(null);
-    }
     store.setMenuTargetUnitId(null);
-
-    store.produceWindowSpecs((draft) => {
-      setOrDeleteValue(draft, unitId, null);
-    });
+    windowSystem.remove(unitId);
   },
   toggleMidiInEnabled() {
     store.toggleMidiInEnabled();
@@ -161,13 +136,5 @@ export const actions = {
   },
   savePersistentState() {
     persistence.save();
-  },
-  patchWindowSpec(windowId: WindowId, attrs: Partial<WindowSpec>) {
-    const windowSpec = store.state.windowSpecs[windowId];
-    if (!windowSpec) return;
-    store.setWindowSpecs((prev) => ({
-      ...prev,
-      [windowId]: { ...prev[windowId], ...attrs },
-    }));
   },
 };
