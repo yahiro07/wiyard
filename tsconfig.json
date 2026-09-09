@@ -10,7 +10,8 @@
     "noEmit": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@lib/window-system": ["./lib/window-system/index.ts"]
     }
   },
   "include": ["src"]
