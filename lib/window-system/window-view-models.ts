@@ -1,6 +1,6 @@
+import { Point, Size } from "../utils/common-types";
 import { actionsInternal, storeSlice } from "./store";
 import { WindowSpec } from "./types";
-import { Point, Size } from "./utils/common-types";
 
 export type WindowCoordViewModel = {
   windowId: string;

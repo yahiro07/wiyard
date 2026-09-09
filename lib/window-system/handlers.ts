@@ -1,6 +1,6 @@
+import { startDragSessionEx } from "../utils/drag-session";
+import { vectorOp } from "../utils/geometry-helper";
 import { actions } from "./store";
-import { startDragSessionEx } from "./utils/drag-session";
-import { vectorOp } from "./utils/geometry-helper";
 import { WindowCoordViewModel } from "./window-view-models";
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;

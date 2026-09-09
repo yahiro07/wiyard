@@ -1,4 +1,4 @@
-import { Point, Size } from "./utils/common-types";
+import { Point, Size } from "../utils/common-types";
 
 export type WindowStatus = "visible" | "minimized" | "none";
 
