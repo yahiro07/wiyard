@@ -10,11 +10,10 @@ export function getDeskAreaElement() {
   return document.getElementById("domDeskArea") as HTMLElement;
 }
 
+type IPointerEvent = React.PointerEvent<HTMLDivElement>;
+
 export const unitCardHandlers = {
-  handlePointerDown(
-    e0: React.PointerEvent<HTMLDivElement>,
-    unitItem: StageUnitItem,
-  ) {
+  handlePointerDown(e0: IPointerEvent, unitItem: StageUnitItem) {
     const unitOriginalPos = unitItem.cardPosition;
     let prevPos = unitOriginalPos;
 
@@ -48,7 +47,7 @@ export const unitCardHandlers = {
         if (unitItem.type === "board") {
           actions.setWindowsEvacuated(false);
           actions.setUnitWindowVisible(unitItem.unitId, true);
-          actions.setCurrentEffectUnitId(unitItem.unitId);
+          actions.setCurrentWindowUnitId(unitItem.unitId);
         } else if (
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"
@@ -71,8 +70,11 @@ export const unitCardHandlers = {
 };
 
 export const unitWindowHandlers = {
+  handleBasePointerDown(e0: IPointerEvent, windowUnitId: string) {
+    actions.setCurrentWindowUnitId(windowUnitId);
+  },
   handleTitleBarPointerDown(
-    e0: React.PointerEvent<HTMLDivElement>,
+    e0: IPointerEvent,
     windowCoordVm: WindowCoordViewModel,
   ) {
     const unitOriginalPos = windowCoordVm.position;
@@ -89,7 +91,7 @@ export const unitWindowHandlers = {
 };
 
 export const deskAreaHandlers = {
-  handlePointerDown(e0: React.PointerEvent<HTMLDivElement>) {
+  handlePointerDown(e0: IPointerEvent) {
     if (e0.currentTarget === e0.target) {
       startDragSessionEx(e0, {
         onTap() {

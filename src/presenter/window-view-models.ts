@@ -4,6 +4,7 @@ import { actionsInternal } from "@/store/actions";
 import { store } from "@/store/store";
 
 export type WindowCoordViewModel = {
+  windowUnitId: string;
   position: Point;
   setPosition: (position: Point) => void;
   size: Size;
@@ -18,6 +19,7 @@ export function useWindowCoordViewModel(
   const size = unitStuffs[unitItem.unitId]?.viewSize ?? fallbackSize;
 
   return {
+    windowUnitId: unitItem.unitId,
     position: unitItem.windowPosition,
     setPosition: (position: Point) => {
       actionsInternal.patchUnitAttrs(unitItem.unitId, {
@@ -31,6 +33,7 @@ export function useWindowCoordViewModel(
 export function useSequencerWindowViewModel(): WindowCoordViewModel {
   const { sequencerWindowPosition } = store.useSnapshot();
   return {
+    windowUnitId: "sequencerWindow",
     position: sequencerWindowPosition,
     setPosition: (position: Point) => {
       store.setSequencerWindowPosition(position);

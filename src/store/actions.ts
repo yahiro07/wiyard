@@ -36,8 +36,8 @@ export const actions = {
   setUnitCardPosition(unitId: string, newPos: Point) {
     actionsInternal.patchUnitAttrs(unitId, { cardPosition: newPos });
   },
-  setCurrentEffectUnitId(unitId: string | null) {
-    store.setCurrentEffectUnitId(unitId);
+  setCurrentWindowUnitId(unitId: string | null) {
+    store.setCurrentWindowUnitId(unitId);
   },
   setUnitWindowVisible(unitId: string, visible: boolean) {
     actionsInternal.patchUnitAttrs(unitId, { windowVisible: visible });
@@ -128,8 +128,8 @@ export const actions = {
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
-    if (store.state.currentEffectUnitId === unitId) {
-      store.setCurrentEffectUnitId(null);
+    if (store.state.currentWindowUnitId === unitId) {
+      store.setCurrentWindowUnitId(null);
     }
     store.setMenuTargetUnitId(null);
   },

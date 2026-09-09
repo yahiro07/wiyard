@@ -9,8 +9,8 @@ import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const { windowsEvacuated } = store.useSnapshot();
-  // const isCurrent = unitItem.unitId === currentEffectUnitId;
+  const { windowsEvacuated, currentWindowUnitId } = store.useSnapshot();
+  const isCurrent = unitItem.unitId === currentWindowUnitId;
   const windowCoordVm = useWindowCoordViewModel(unitItem);
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
@@ -23,6 +23,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
       displayed={unitItem.windowVisible}
       evacuated={windowsEvacuated}
       close={() => actions.setUnitWindowVisible(unitItem.unitId, false)}
+      isCurrent={isCurrent}
     >
       <UnitFrameScaled
         unitId={unitItem.unitId}

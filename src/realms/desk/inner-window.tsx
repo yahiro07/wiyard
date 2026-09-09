@@ -10,6 +10,7 @@ export const InnerWindow = ({
   children,
   evacuated,
   close,
+  isCurrent,
 }: {
   title: string;
   windowCoordVm: WindowCoordViewModel;
@@ -17,6 +18,7 @@ export const InnerWindow = ({
   children: ReactNode;
   evacuated: boolean;
   close: () => void;
+  isCurrent: boolean;
 }) => {
   const { width, height } = windowCoordVm.size;
   return (
@@ -29,9 +31,18 @@ export const InnerWindow = ({
         // bottom: evacuated ? "40px" : undefined,
         //windows are always exist in dom, so as to keep units working
         display: displayed ? "block" : "none",
+        zIndex: isCurrent ? 1 : undefined,
       }}
     >
-      <div style={{ width }}>
+      <div
+        style={{ width }}
+        onPointerDown={(e) =>
+          unitWindowHandlers.handleBasePointerDown(
+            e,
+            windowCoordVm.windowUnitId,
+          )
+        }
+      >
         <div
           className="bg-gray-600/70 flex-c h-34px cursor-pointer relative justify-end px-2"
           onPointerDown={(e) =>

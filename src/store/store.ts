@@ -10,7 +10,7 @@ type StoreState = {
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   sequencerWindowPosition: Point;
-  currentEffectUnitId: string | null;
+  currentWindowUnitId: string | null;
   sequencerWindowVisible: boolean;
   currentNoteChannelId: string;
   windowsEvacuated: boolean;
@@ -34,7 +34,7 @@ const blankStoreState: StoreState = {
   wireConnectionKeys: [],
   sequencerWindowPosition: defaultWindowPosition,
   sequencerWindowVisible: false,
-  currentEffectUnitId: null,
+  currentWindowUnitId: null,
   currentNoteChannelId: "",
   midiInEnabled: false,
   bpm: 120,
