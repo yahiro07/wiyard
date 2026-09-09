@@ -1,4 +1,4 @@
-import { Point } from "@/domain/common-types";
+import { Point, Size } from "@/domain/common-types";
 import { defaultWindowPosition } from "@/domain/default-data";
 import {
   filterUnitRelatedWires,
@@ -23,6 +23,7 @@ export const actionsInternal = {
       cardPosition: Point;
       windowPosition: Point;
       windowStatus: WindowStatus;
+      windowSize: Size;
     }>,
   ) {
     store.setUnitItems((prev) =>

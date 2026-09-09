@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Point, Size } from "@/domain/common-types";
 import { StageUnitItem } from "@/domain/types";
 import { actionsInternal } from "@/store/actions";
@@ -8,6 +9,7 @@ export type WindowCoordViewModel = {
   position: Point;
   setPosition: (position: Point) => void;
   size: Size;
+  setSize: (size: Size) => void;
 };
 
 const fallbackSize = { width: 300, height: 200 };
@@ -16,7 +18,16 @@ export function useWindowCoordViewModel(
   unitItem: StageUnitItem,
 ): WindowCoordViewModel {
   const { unitStuffs } = store.useSnapshot();
-  const size = unitStuffs[unitItem.unitId]?.viewSize ?? fallbackSize;
+  const defaultSize = unitStuffs[unitItem.unitId]?.viewSize;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: manual management
+  useEffect(() => {
+    if (defaultSize && !unitItem.windowSize) {
+      actionsInternal.patchUnitAttrs(unitItem.unitId, {
+        windowSize: defaultSize,
+      });
+    }
+  }, [defaultSize]);
 
   return {
     windowUnitId: unitItem.unitId,
@@ -26,7 +37,12 @@ export function useWindowCoordViewModel(
         windowPosition: position,
       });
     },
-    size,
+    size: unitItem.windowSize ?? fallbackSize,
+    setSize: (size: Size) => {
+      actionsInternal.patchUnitAttrs(unitItem.unitId, {
+        windowSize: size,
+      });
+    },
   };
 }
 
@@ -39,5 +55,8 @@ export function useSequencerWindowViewModel(): WindowCoordViewModel {
       store.setSequencerWindowPosition(position);
     },
     size: { width: 380 + 190, height: 300 },
+    setSize: (size: Size) => {
+      // store.setSequencerWindowSize(size);
+    },
   };
 }

@@ -12,6 +12,7 @@ export type BoardUnitItem = {
   cardPosition: Point;
   windowPosition: Point;
   windowStatus: WindowStatus;
+  windowSize?: Size;
 };
 
 //note input port and speaker output port, used for input/output of the board area
@@ -21,7 +22,8 @@ export type EdgeUnitItem = {
   noteChannelId: string;
   internalUnitKey: InternalUnitKey;
   cardPosition: Point;
-  windowPosition: Point;
+  windowPosition: Point; //not used
+  windowSize?: Size; //not used
 };
 
 //units placed on board area
