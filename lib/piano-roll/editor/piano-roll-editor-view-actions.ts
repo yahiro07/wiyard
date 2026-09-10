@@ -208,7 +208,9 @@ export function createNoteEditActions(store: AppStore) {
             const deltaYi = movedCoord.yi - originalCoord.yi;
 
             const duration = originalNote.duration + deltaXi;
-            const pitch = originalNote.pitch + deltaYi;
+            const pitch = isNewNote
+              ? originalNote.pitch + deltaYi
+              : originalNote.pitch;
 
             if (pitch !== store.state.previewNotePitch) {
               store.setPreviewNotePitch(pitch);
