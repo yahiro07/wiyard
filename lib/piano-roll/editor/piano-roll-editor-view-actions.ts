@@ -59,6 +59,8 @@ function createTapChecker() {
   };
 }
 
+type setCursorFn = (cursor: string) => void;
+
 export function createNoteEditActions(store: AppStore) {
   const self = {
     mapPointerPositionToCell(
@@ -111,7 +113,11 @@ export function createNoteEditActions(store: AppStore) {
     removeNote(noteId: number) {
       store.setNotes((prev) => prev.filter((note) => note.id !== noteId));
     },
-    startInsertNewNote(e0: PointerEvent, sectionRange: SectionRange) {
+    startInsertNewNote(
+      e0: PointerEvent,
+      sectionRange: SectionRange,
+      setCursor: setCursorFn,
+    ) {
       const { xi, yi } = self.mapPointerPositionToCell(
         e0.currentTarget as HTMLElement,
         e0.clientX,
@@ -119,9 +125,13 @@ export function createNoteEditActions(store: AppStore) {
       );
       const position = sectionRange.offset + xi;
       const note = self.addNote(position, yi);
-      self.startAdjustDuration(e0, note, true);
+      self.startAdjustDuration(e0, note, true, setCursor);
     },
-    startMoveNote(e0: PointerEvent, originalNote: Note) {
+    startMoveNote(
+      e0: PointerEvent,
+      originalNote: Note,
+      setCursor: setCursorFn,
+    ) {
       let noteLatest = originalNote;
       const baseEl = e0.currentTarget as HTMLElement;
       const originalCoord = self.mapPointerPositionToCell(
@@ -130,6 +140,8 @@ export function createNoteEditActions(store: AppStore) {
         e0.clientY,
       );
       store.setPreviewNotePitch(originalNote.pitch);
+
+      setCursor("move");
 
       const tapChecker = createTapChecker();
       startDragSession(
@@ -159,6 +171,7 @@ export function createNoteEditActions(store: AppStore) {
               self.removeNote(noteLatest.id);
             }
             store.setPreviewNotePitch(null);
+            setCursor("auto");
           },
         },
         { coordinate: "page" },
@@ -168,6 +181,7 @@ export function createNoteEditActions(store: AppStore) {
       e0: PointerEvent,
       originalNote: Note,
       isNewNote: boolean,
+      setCursor: setCursorFn,
     ) {
       let noteLatest = originalNote;
       const baseEl = e0.currentTarget as HTMLElement;
@@ -177,6 +191,8 @@ export function createNoteEditActions(store: AppStore) {
         e0.clientY,
       );
       store.setPreviewNotePitch(originalNote.pitch);
+
+      setCursor(isNewNote ? "pointer" : "e-resize");
 
       const tapChecker = createTapChecker();
       startDragSession(
@@ -206,6 +222,9 @@ export function createNoteEditActions(store: AppStore) {
               self.removeNote(noteLatest.id);
             }
             store.setPreviewNotePitch(null);
+          },
+          onUpOrCancel() {
+            setCursor("auto");
           },
         },
         { coordinate: "page" },

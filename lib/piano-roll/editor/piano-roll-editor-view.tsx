@@ -37,28 +37,23 @@ const EditInputLayer = ({
     );
     const hitNoteInfo = hitTestNote(notes, sectionRange, xiFloat, yi);
     if (hitNoteInfo?.part === "tail") {
-      noteEditActions.startAdjustDuration(e, hitNoteInfo.note, false);
-      setCursor("e-resize");
+      noteEditActions.startAdjustDuration(
+        e,
+        hitNoteInfo.note,
+        false,
+        setCursor,
+      );
     } else if (hitNoteInfo?.part === "body") {
-      noteEditActions.startMoveNote(e, hitNoteInfo.note);
-      setCursor("move");
+      noteEditActions.startMoveNote(e, hitNoteInfo.note, setCursor);
     } else {
-      noteEditActions.startInsertNewNote(e, sectionRange);
-      setCursor("pointer");
+      noteEditActions.startInsertNewNote(e, sectionRange, setCursor);
     }
   };
+  useEffect(() => {
+    document.body.style.cursor = cursor;
+  }, [cursor]);
 
-  const handlePointerUp = () => {
-    setCursor("auto");
-  };
-  return (
-    <div
-      className="absolute-full"
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      style={{ cursor }}
-    />
-  );
+  return <div className="absolute-full" onPointerDown={handlePointerDown} />;
 };
 
 const NoteView = ({
