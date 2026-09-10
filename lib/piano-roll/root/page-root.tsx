@@ -104,20 +104,8 @@ const SightControlKnobs = () => {
   };
   return (
     <div className="flex-ha gap-2">
-      <LabeledBox label="xpos">
-        <Knob
-          value={sight.xPosition}
-          onChange={(v) => patchSight({ xPosition: v })}
-        />
-      </LabeledBox>
       <LabeledBox label="xzoom">
         <Knob value={sight.xZoom} onChange={(v) => patchSight({ xZoom: v })} />
-      </LabeledBox>
-      <LabeledBox label="ypos">
-        <Knob
-          value={sight.yPosition}
-          onChange={(v) => patchSight({ yPosition: v })}
-        />
       </LabeledBox>
       <LabeledBox label="yzoom">
         <Knob value={sight.yZoom} onChange={(v) => patchSight({ yZoom: v })} />

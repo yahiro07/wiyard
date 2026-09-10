@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ScrollBarH, ScrollBarV } from "../components/scroll-bar";
 import { Note } from "../definitions/types";
 import { noteNameLabels, uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
@@ -275,7 +276,7 @@ const GridBackgroundContainer = ({
   const contentX1 = contentX0 + viewW;
 
   const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const contentY0 = (1 - sight.yPosition) * maxScrollY;
+  const contentY0 = sight.yPosition * maxScrollY;
   const contentY1 = contentY0 + viewH;
 
   const gridDisplaySpec: PianoRollGridDisplaySpec = useMemo(
@@ -327,29 +328,57 @@ export const PianoRollEditorView = () => {
 
   const contentH = displaySpec.cellH * numKeys;
   const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const ty = -(1 - sight.yPosition) * maxScrollY;
+  const ty = -sight.yPosition * maxScrollY;
 
   return (
     <div
       className={cz(
-        "overflow-hidden relative",
+        "overflow-hidden relative bd-red",
         // "bd-red",
         //todo: make full size and get size with resize observer
         0 ? "w-full grow" : "w-1200px h-800px",
       )}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "80px 1fr 40px",
+        gridTemplateRows: "20px 1fr 40px",
+      }}
     >
-      {configs.useNewGrid && (
-        <div className="absolute left-0 top-0 ml-82px">
-          <GridBackgroundContainer displaySpec={displaySpec} />
+      <div>cc</div>
+      <div>dd</div>
+      <div>ee</div>
+      <div className="overflow-hidden">
+        <div style={{ transform: `translateY(${ty}px)` }}>
+          <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
         </div>
-      )}
-      <div
-        className="flex-h gap-0.5"
-        style={{ transform: `translateY(${ty}px)` }}
-      >
-        <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
-        <PianoRollEditPart displaySpec={displaySpec} />
       </div>
+      <div className="overflow-hidden relative">
+        <GridBackgroundContainer displaySpec={displaySpec} />
+        <div
+          className="absolute-full"
+          style={{ transform: `translateY(${ty}px)` }}
+        >
+          <PianoRollEditPart displaySpec={displaySpec} />
+        </div>
+      </div>
+      <div>
+        <ScrollBarV
+          position={sight.yPosition}
+          onChange={(v) => {
+            store.setSight({ ...sight, yPosition: v });
+          }}
+        />
+      </div>
+      <div>ff</div>
+      <div>
+        <ScrollBarH
+          position={sight.xPosition}
+          onChange={(v) => {
+            store.setSight({ ...sight, xPosition: v });
+          }}
+        />
+      </div>
+      <div>gg</div>
     </div>
   );
 };
