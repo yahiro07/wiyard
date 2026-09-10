@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollBarH, ScrollBarV } from "../components/scroll-bar";
 import { Note } from "../definitions/types";
 import { noteNameLabels, uiConfig } from "../definitions/ui-config";
@@ -314,57 +314,34 @@ const GridBackgroundContainer = ({
   return <PianoRollGrid displaySpec={gridDisplaySpec} />;
 };
 
-export const PianoRollEditorView = () => {
-  const measuredDivRef = useRef<HTMLDivElement>(null);
+const EditorCommonLayout = ({
+  sideContent,
+  mainContent,
+  measuredDivRef,
+  sideContentWidth,
+}: {
+  sideContent: ReactNode;
+  mainContent: ReactNode;
+  measuredDivRef: React.RefObject<HTMLDivElement | null>;
+  sideContentWidth: number;
+}) => {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
-  const { numKeys } = uiConfig;
-
-  const size = useDomElementSize(measuredDivRef);
-  const viewW = size?.width ?? 100;
-  const viewH = size?.height ?? 100;
-
-  const displaySpec: DisplaySpec = {
-    viewW,
-    viewH,
-    cellW: mapUnaryTo(sight.xZoom, 20, 80),
-    cellH: mapUnaryTo(sight.yZoom, 20, 60),
-  };
-  const keysWidth = 80;
-
-  const contentH = displaySpec.cellH * numKeys;
-  const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const ty = -sight.yPosition * maxScrollY;
-
   return (
     <div
-      className={cz(
-        "overflow-hidden relative",
-        // "bd-red",
-        "w-full grow",
-      )}
+      className={cz("overflow-hidden relative", "w-full grow")}
       style={{
         display: "grid",
-        gridTemplateColumns: "80px 1fr 40px",
+        gridTemplateColumns: `${sideContentWidth}px 1fr 40px`,
         gridTemplateRows: "20px 1fr 40px",
       }}
     >
       <div>cc</div>
       <div>dd</div>
       <div>ee</div>
-      <div className="overflow-hidden">
-        <div style={{ transform: `translateY(${ty}px)` }}>
-          <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
-        </div>
-      </div>
+      <div className="overflow-hidden">{sideContent}</div>
       <div className="overflow-hidden relative" ref={measuredDivRef}>
-        <GridBackgroundContainer displaySpec={displaySpec} />
-        <div
-          className="absolute-full"
-          style={{ transform: `translateY(${ty}px)` }}
-        >
-          <PianoRollEditPart displaySpec={displaySpec} />
-        </div>
+        {mainContent}
       </div>
       <div>
         <ScrollBarV
@@ -385,5 +362,51 @@ export const PianoRollEditorView = () => {
       </div>
       <div>gg</div>
     </div>
+  );
+};
+
+export const PianoRollEditorView = () => {
+  const measuredDivRef = useRef<HTMLDivElement>(null);
+  const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
+  const { numKeys } = uiConfig;
+
+  const size = useDomElementSize(measuredDivRef);
+  const viewW = size?.width ?? 100;
+  const viewH = size?.height ?? 100;
+
+  const displaySpec: DisplaySpec = {
+    viewW,
+    viewH,
+    cellW: mapUnaryTo(sight.xZoom, 20, 80),
+    cellH: mapUnaryTo(sight.yZoom, 20, 60),
+  };
+  const keysWidth = 100;
+
+  const contentH = displaySpec.cellH * numKeys;
+  const maxScrollY = bottomLimit(contentH - viewH, 0);
+  const ty = -sight.yPosition * maxScrollY;
+
+  return (
+    <EditorCommonLayout
+      measuredDivRef={measuredDivRef}
+      sideContent={
+        <div style={{ transform: `translateY(${ty}px)` }}>
+          <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
+        </div>
+      }
+      sideContentWidth={keysWidth}
+      mainContent={
+        <>
+          <GridBackgroundContainer displaySpec={displaySpec} />
+          <div
+            className="absolute-full"
+            style={{ transform: `translateY(${ty}px)` }}
+          >
+            <PianoRollEditPart displaySpec={displaySpec} />
+          </div>
+        </>
+      }
+    />
   );
 };
