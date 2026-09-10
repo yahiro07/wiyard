@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { uiColors } from "../definitions/ui-theme";
 
 export type PianoRollGridDisplaySpec = {
   contentW: number;
@@ -36,9 +37,11 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
 
   for (let i = 0; i < ds.numKeysFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
-    if (ds.contentY0 <= y && y < ds.contentY1) {
+    if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
       const isBlackKey = blackKeys.includes(i % 12);
-      ctx.fillStyle = isBlackKey ? "#222" : "#333";
+      ctx.fillStyle = isBlackKey
+        ? uiColors.clPianoRollBgBlackKey
+        : uiColors.clPianoRollBg;
       ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
     }
   }
@@ -46,7 +49,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
   for (let i = 0; i < ds.numStepsFull; i++) {
     const x = i * ds.cellW;
     if (ds.contentX0 <= x && x < ds.contentX1) {
-      ctx.strokeStyle = i % 16 === 0 ? "#0f0" : "#060";
+      ctx.strokeStyle = i % 16 === 0 ? "#0006" : "#0002";
       ctx.beginPath();
       ctx.moveTo(x, ds.contentY0);
       ctx.lineTo(x, ds.contentY1);
@@ -57,7 +60,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
   for (let i = 0; i < ds.numKeysFull; i++) {
     const y = (ds.numKeysFull - i) * ds.cellH;
     if (ds.contentY0 <= y && y < ds.contentY1) {
-      ctx.strokeStyle = "#0f0";
+      ctx.strokeStyle = "#0002";
       ctx.beginPath();
       ctx.moveTo(ds.contentX0, y);
       ctx.lineTo(rightX, y);

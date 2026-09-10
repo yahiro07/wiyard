@@ -323,7 +323,6 @@ export const PianoRollEditorView = () => {
   const size = useDomElementSize(measuredDivRef);
   const viewW = size?.width ?? 100;
   const viewH = size?.height ?? 100;
-  console.log(viewW, viewH);
 
   const displaySpec: DisplaySpec = {
     viewW,

@@ -1,4 +1,15 @@
+import { colorMod } from "../utils/color-mod";
+import { colorStyle } from "../utils/color-style";
+import { cz } from "../utils/cz";
 import { KnobFrame } from "./headless/knob-frame";
+
+const colorStyles = {
+  base: colorStyle({ bg: colorMod("#404046", "v-2 h220"), bd: "#2c2c2c" }),
+  track: colorStyle({
+    bg: colorMod("#568", "v-18 s-20 h220"),
+    bd: colorMod("#568", "v-10 s-20"),
+  }),
+};
 
 export const ScrollBarH = ({
   position,
@@ -17,10 +28,13 @@ export const ScrollBarH = ({
       horizontal
       dragRange={1200}
     >
-      <div className="w-full h-40px bg-#666 relative">
+      <div className={cz("w-full h-40px relative")} style={colorStyles.base}>
         <div
-          className="w-200px h-full absolute bg-#888 bd-#555 top-0"
-          style={{ left: `calc(${position * 100}% - ${position * 200}px)` }}
+          className={cz("w-200px h-full absolute top-0")}
+          style={{
+            ...colorStyles.track,
+            left: `calc(${position * 100}% - ${position * 200}px)`,
+          }}
         />
       </div>
     </KnobFrame>
@@ -45,10 +59,13 @@ export const ScrollBarV = ({
       dragRange={800}
       invert
     >
-      <div className="h-full w-40px bg-#666 relative">
+      <div className={cz("h-full w-40px relative")} style={colorStyles.base}>
         <div
-          className="h-200px w-full absolute bg-#888 bd-#555 left-0"
-          style={{ top: `calc(${position * 100}% - ${position * 200}px)` }}
+          className={cz("h-200px w-full absolute left-0")}
+          style={{
+            ...colorStyles.track,
+            top: `calc(${position * 100}% - ${position * 200}px)`,
+          }}
         />
       </div>
     </KnobFrame>
