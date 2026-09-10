@@ -1,5 +1,5 @@
 import { createStore, Store } from "snap-store";
-import { LoopBarLength, Note } from "../definitions/model";
+import { LoopBarLength, Note } from "../definitions/types";
 
 type StoreState = {
   octave: number;
@@ -24,8 +24,7 @@ const defaultStoreState: StoreState = {
   previewNotePitch: null,
   stateLoadRevision: 0,
 };
-if (1) {
-  //debug
+if (import.meta.env.DEV) {
   const base = 21;
   defaultStoreState.notes = [
     { id: 0, position: 0, duration: 2, pitch: base + 14 },
@@ -39,5 +38,5 @@ if (1) {
 }
 
 export function createAppStore(): AppStore {
-  return createStore<StoreState>(defaultStoreState);
+  return createStore<StoreState>(structuredClone(defaultStoreState));
 }

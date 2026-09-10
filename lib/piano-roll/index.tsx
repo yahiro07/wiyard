@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { AppProvider } from "./root/app-context";
 import { setupUnit } from "./root/drivers";
@@ -7,10 +6,9 @@ import { createAppStore } from "./root/store";
 
 export const createPianoRollUnit: ReactUnitTemplateFn = (unitInterface) => {
   const store = createAppStore();
-  const { setupSynchronization } = setupUnit(unitInterface, store);
+  setupUnit(unitInterface, store);
   return {
     RenderUi() {
-      useEffect(setupSynchronization, [setupSynchronization]);
       return (
         <AppProvider store={store}>
           <PageRoot />

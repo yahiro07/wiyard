@@ -1,7 +1,7 @@
-import { LoopBarLength, Note } from "../definitions/model";
+import { LoopBarLength, Note } from "../definitions/types";
+import { uiConfig } from "../definitions/ui-config";
 import { AppStore } from "../root/store";
 import { startDragSession } from "../utils/drag-session-v0";
-import { uiConfig } from "./ui-config";
 
 type PointerEvent = React.PointerEvent<HTMLDivElement>;
 

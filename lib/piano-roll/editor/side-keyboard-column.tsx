@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { noteNameLabels, uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { startDragSession } from "../utils/drag-session-v0";
 import { seqNumbers } from "../utils/helpers";
-import { noteNameLabels, uiConfig } from "./ui-config";
 
 const keyTypes = [
   "whiteL",

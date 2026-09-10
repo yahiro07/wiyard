@@ -1,4 +1,4 @@
-import { uiConfig } from "../editor/ui-config";
+import { uiConfig } from "../definitions/ui-config";
 import { cz } from "../utils/cz";
 import "./grid-background-styles.css";
 

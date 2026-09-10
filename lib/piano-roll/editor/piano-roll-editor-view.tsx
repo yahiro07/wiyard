@@ -1,5 +1,6 @@
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
-import { Note } from "../definitions/model";
+import { Note } from "../definitions/types";
+import { noteNameLabels, uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { seqNumbers } from "../utils/helpers";
@@ -11,7 +12,6 @@ import {
   SectionRange,
 } from "./piano-roll-editor-view-actions";
 import { SideKeyboardColumn } from "./side-keyboard-column";
-import { noteNameLabels, uiConfig } from "./ui-config";
 
 type PointerEvent = React.PointerEvent<HTMLDivElement>;
 

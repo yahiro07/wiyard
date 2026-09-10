@@ -6,3 +6,10 @@ export type Note = {
   position: number;
   duration: number;
 };
+
+export type SequencerEditState = {
+  notes: Note[];
+  octave: number;
+  duty: number;
+  loopBars: LoopBarLength;
+};

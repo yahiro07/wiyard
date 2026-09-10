@@ -1,4 +1,3 @@
-import { uiColorsCssVarsStyle } from "../common/ui-theme";
 import { Button } from "../components/button";
 import { EffectorBody } from "../components/effector-body";
 import { IconButton } from "../components/icon-button";
@@ -6,7 +5,8 @@ import { Icons } from "../components/icons";
 import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
-import { LoopBarLength } from "../definitions/model";
+import { LoopBarLength } from "../definitions/types";
+import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
 import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
 import { useAppContext } from "./app-context";
