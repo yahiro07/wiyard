@@ -5,7 +5,7 @@ import { Icons } from "../components/icons";
 import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
-import { LoopBarLength } from "../definitions/types";
+import { LoopBarLength, Sight } from "../definitions/types";
 import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
 import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
@@ -96,6 +96,36 @@ const TrashButtonContainer = () => {
   );
 };
 
+const SightControlKnobs = () => {
+  const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
+  const patchSight = (attrs: Partial<Sight>) => {
+    store.setSight({ ...sight, ...attrs });
+  };
+  return (
+    <div className="flex-ha gap-2">
+      <LabeledBox label="xpos">
+        <Knob
+          value={sight.xPosition}
+          onChange={(v) => patchSight({ xPosition: v })}
+        />
+      </LabeledBox>
+      <LabeledBox label="ypos">
+        <Knob
+          value={sight.yPosition}
+          onChange={(v) => patchSight({ yPosition: v })}
+        />
+      </LabeledBox>
+      <LabeledBox label="xzoom">
+        <Knob value={sight.xZoom} onChange={(v) => patchSight({ xZoom: v })} />
+      </LabeledBox>
+      <LabeledBox label="yzoom">
+        <Knob value={sight.yZoom} onChange={(v) => patchSight({ yZoom: v })} />
+      </LabeledBox>
+    </div>
+  );
+};
+
 const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
@@ -109,6 +139,7 @@ const TopBar = () => {
             <LoopBarsSelectorContainer />
           </div>
           <PagerContainer />
+          <SightControlKnobs />
         </div>
       </div>
     </div>

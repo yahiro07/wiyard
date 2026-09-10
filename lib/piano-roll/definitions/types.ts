@@ -13,3 +13,18 @@ export type SequencerEditState = {
   duty: number;
   loopBars: LoopBarLength;
 };
+
+export type Sight = {
+  xPosition: number; //0~1
+  yPosition: number; //0~1
+  xZoom: number; //0~1
+  yZoom: number; //0~1
+};
+
+// export type Sight2 = {
+//   //all values are float
+//   xBarPosition: number; //0~16
+//   xBarDuration: number; //0~16
+//   yPitchCenter: number; //0~61
+//   yPitchRange: number; //0~61
+// };

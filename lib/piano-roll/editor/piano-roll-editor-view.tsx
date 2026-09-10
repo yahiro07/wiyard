@@ -241,10 +241,7 @@ export const PianoRollEditorView = () => {
   const { store } = useAppContext();
   const { loopBars } = store.useSnapshot();
   const { numKeys } = uiConfig;
-  const displaySpec: DisplaySpec = {
-    cellW: 40,
-    cellH: 40,
-  };
+  const displaySpec: DisplaySpec = { cellW: 80, cellH: 60 };
   const nx = Math.max(32, loopBars * 16);
   const editorW = displaySpec.cellW * nx;
   const editorH = displaySpec.cellH * numKeys;
