@@ -11,6 +11,7 @@ import {
   hitTestNote,
   SectionRange,
 } from "./piano-roll-editor-view-actions";
+import { PianoRollGrid, PianoRollGridDisplaySpec } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 
 type PointerEvent = React.PointerEvent<HTMLDivElement>;
@@ -206,14 +207,39 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const { store } = useAppContext();
   const { loopBars, sight } = store.useSnapshot();
   const { numKeys } = uiConfig;
-  const nx = bottomLimit(loopBars * 16, 32);
-  const contentW = displaySpec.cellW * nx;
-  const contentH = displaySpec.cellH * numKeys;
+  const { cellW, cellH } = displaySpec;
+
+  const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
+  const nx = contentBars * 16;
+  const contentW = cellW * nx;
+  const contentH = cellH * numKeys;
 
   //todo get size with resize observer
   const viewW = 1200 - 80;
+  const viewH = 800;
   const maxScrollX = bottomLimit(contentW - viewW, 0);
-  const left = -sight.xPosition * maxScrollX;
+  const contentX0 = sight.xPosition * maxScrollX;
+  const contentX1 = contentX0 + viewW;
+  const left = -contentX0;
+
+  const maxScrollY = bottomLimit(contentH - viewH, 0);
+  const contentY0 = (1 - sight.yPosition) * maxScrollY;
+  const contentY1 = contentY0 + viewH;
+
+  const gridDisplaySpec: PianoRollGridDisplaySpec = {
+    contentW,
+    contentH,
+    viewW,
+    viewH,
+    contentX0,
+    contentX1,
+    contentY0,
+    contentY1,
+    cellW,
+    cellH,
+    numStepsFull: nx,
+    numKeysFull: numKeys,
+  };
 
   return (
     <div className={cz("overflow-hidden bd-sky")}>
@@ -225,12 +251,16 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
           transform: `translateX(${left}px)`,
         }}
       >
-        <GridBackground
-          nx={nx}
-          ny={numKeys}
-          width={contentW}
-          height={contentH}
-        />
+        {1 ? (
+          <PianoRollGrid displaySpec={gridDisplaySpec} />
+        ) : (
+          <GridBackground
+            nx={nx}
+            ny={numKeys}
+            width={contentW}
+            height={contentH}
+          />
+        )}
         <RepeatingNoteLayers displaySpec={displaySpec} />
         <PlayPositionLineLayer displaySpec={displaySpec} />
       </div>

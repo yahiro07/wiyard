@@ -14,7 +14,6 @@ export const GridBackground = ({
 }) => {
   const cellW = width / nx;
   const cellH = height / ny;
-  console.log({ nx, ny, width, height, cellW, cellH });
 
   return (
     <div className="grid-background-root" style={{ width, height }}>
