@@ -1,12 +1,14 @@
+import { useEffect } from "react";
 import { ReactUnitTemplateFn } from "wafer-host/react";
+import { setupUnit } from "./root/drivers";
+import { PageRoot } from "./root/page-root";
 
 export const createPianoRollUnit: ReactUnitTemplateFn = (unitInterface) => {
-  unitInterface.completeSetup({
-    unitAspects: { unitType: "sequencer" },
-  });
+  const { setupSynchronization } = setupUnit(unitInterface);
   return {
     RenderUi() {
-      return <div>piano roll</div>;
+      useEffect(setupSynchronization, [setupSynchronization]);
+      return <PageRoot />;
     },
   };
 };
