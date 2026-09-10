@@ -45,11 +45,11 @@ const GridBackgroundContainer = ({
   displaySpec: DisplaySpec;
 }) => {
   const { store } = useAppContext();
-  const { loopBars, sight } = store.useSnapshot();
+  const { sight } = store.useSnapshot();
   const { viewW, viewH, cellW, cellH } = displaySpec;
   const { numPitches } = configs;
 
-  const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
+  const contentBars = 2; //fixed for pattern
   const nx = contentBars * 16;
   const contentW = cellW * nx;
   const contentH = cellH * numPitches;
@@ -98,7 +98,7 @@ const GridBackgroundContainer = ({
 
 export const PatternEditorView = () => {
   const { store } = useAppContext();
-  const { loopBars, sight } = store.useSnapshot();
+  const { sight } = store.useSnapshot();
   const measuredDivRef = useRef<HTMLDivElement>(null);
   const size = useDomElementSize(measuredDivRef);
   const viewW = size?.width ?? 100;

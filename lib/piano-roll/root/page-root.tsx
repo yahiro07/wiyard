@@ -5,7 +5,11 @@ import { Icons } from "../components/icons";
 import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
-import { LoopBarLength, Sight } from "../definitions/types";
+import {
+  LoopBarLength,
+  PatternLoopBarLength,
+  Sight,
+} from "../definitions/types";
 import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
 import { PatternEditorView } from "../editor/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
@@ -38,8 +42,15 @@ const OctaveKnobContainer = () => {
   );
 };
 
-export const loopBarsOptions = createSelectorOptions<LoopBarLength>(
+const loopBarsOptions = createSelectorOptions<LoopBarLength>(
   ([0.25, 0.5, 1, 2, 4, 8, 16] satisfies LoopBarLength[]).map((v) => [
+    v,
+    `${v < 1 ? `1/${1 / v}` : v}`,
+  ]),
+);
+
+const patternLoopBarsOptions = createSelectorOptions<PatternLoopBarLength>(
+  ([0.25, 0.5, 1, 2] satisfies LoopBarLength[]).map((v) => [
     v,
     `${v < 1 ? `1/${1 / v}` : v}`,
   ]),
@@ -47,14 +58,19 @@ export const loopBarsOptions = createSelectorOptions<LoopBarLength>(
 
 const LoopBarsSelectorContainer = () => {
   const { store } = useAppContext();
-  const st = store.useSnapshot();
+  const { loopBars, patternLoopBars, isPatternView } = store.useSnapshot();
+  const [options, value, onChange] = isPatternView
+    ? [patternLoopBarsOptions, patternLoopBars, store.setPatternLoopBars]
+    : [loopBarsOptions, loopBars, store.setLoopBars];
   return (
     <LabeledBox label="loop bars">
       <ShiftSelector
         minWidth={50}
-        value={st.loopBars}
-        options={loopBarsOptions}
-        onChange={store.setLoopBars}
+        value={value}
+        options={options}
+        onChange={
+          onChange as (value: LoopBarLength | PatternLoopBarLength) => void
+        }
       />
     </LabeledBox>
   );

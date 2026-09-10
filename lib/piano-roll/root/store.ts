@@ -1,5 +1,10 @@
 import { createStore, Store } from "snap-store";
-import { LoopBarLength, Note, Sight } from "../definitions/types";
+import {
+  LoopBarLength,
+  Note,
+  PatternLoopBarLength,
+  Sight,
+} from "../definitions/types";
 
 type StoreState = {
   octave: number;
@@ -13,6 +18,7 @@ type StoreState = {
   sight: Sight;
   patternNotes: Note[];
   isPatternView: boolean;
+  patternLoopBars: PatternLoopBarLength;
 };
 
 export type AppStore = Store<StoreState>;
@@ -29,6 +35,7 @@ const defaultStoreState: StoreState = {
   sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.5, yZoom: 0.5 },
   patternNotes: [],
   isPatternView: false,
+  patternLoopBars: 0.25,
 };
 if (import.meta.env.DEV) {
   const base = 24;
