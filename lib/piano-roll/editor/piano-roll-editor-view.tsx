@@ -278,20 +278,36 @@ const GridBackgroundContainer = ({
   const contentY0 = (1 - sight.yPosition) * maxScrollY;
   const contentY1 = contentY0 + viewH;
 
-  const gridDisplaySpec: PianoRollGridDisplaySpec = {
-    contentW,
-    contentH,
-    viewW,
-    viewH,
-    contentX0,
-    contentX1,
-    contentY0,
-    contentY1,
-    cellW,
-    cellH,
-    numStepsFull: nx,
-    numKeysFull: numKeys,
-  };
+  const gridDisplaySpec: PianoRollGridDisplaySpec = useMemo(
+    () => ({
+      contentW,
+      contentH,
+      viewW,
+      viewH,
+      contentX0,
+      contentX1,
+      contentY0,
+      contentY1,
+      cellW,
+      cellH,
+      numStepsFull: nx,
+      numKeysFull: numKeys,
+    }),
+    [
+      contentW,
+      contentH,
+      // viewW,
+      // viewH,
+      contentX0,
+      contentX1,
+      contentY0,
+      contentY1,
+      cellW,
+      cellH,
+      nx,
+      // numKeys,
+    ],
+  );
 
   return <PianoRollGrid displaySpec={gridDisplaySpec} />;
 };
