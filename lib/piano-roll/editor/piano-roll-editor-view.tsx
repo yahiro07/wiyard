@@ -240,7 +240,9 @@ export const PianoRollEditorView = () => {
         // e.preventDefault();
       }}
     >
-      <SideKeyboardColumn />
+      <div className="sticky left-0  z-10">
+        <SideKeyboardColumn />
+      </div>
       <div
         className="relative flex-h"
         style={{ width: editorW, height: editorH }}
