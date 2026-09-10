@@ -1,9 +1,9 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { persistence } from "./persistence";
+import { createPersistence } from "./persistence";
 import { createSequencerEngine } from "./sequencer";
-import { store } from "./store";
+import { AppStore } from "./store";
 
-export function setupUnit(unitInterface: UnitInterface) {
+export function setupUnit(unitInterface: UnitInterface, store: AppStore) {
   const st = store.state;
   const engine = createSequencerEngine(unitInterface);
 
@@ -34,7 +34,7 @@ export function setupUnit(unitInterface: UnitInterface) {
         engine.processStep(stepIndex, time, unitDuration);
       },
     },
-    persistence: persistence,
+    persistence: createPersistence(store),
   });
 
   return {

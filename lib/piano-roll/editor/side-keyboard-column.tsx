@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { store } from "../root/store";
+import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { startDragSession } from "../utils/drag-session-v0";
 import { seqNumbers } from "../utils/helpers";
@@ -58,6 +58,8 @@ function getKeyStyle(subIndex: number, cellH: number) {
 }
 
 const KeyboardKey = ({ yi }: { yi: number }) => {
+  const { store } = useAppContext();
+
   const { cellH } = uiConfig;
   const subIndex = yi % 12;
   const label = subIndex === 0 && noteNameLabels[yi];

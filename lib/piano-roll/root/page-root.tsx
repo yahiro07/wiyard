@@ -9,9 +9,10 @@ import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength } from "../definitions/model";
 import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
-import { store } from "./store";
+import { useAppContext } from "./app-context";
 
 const DutyKnobContainer = () => {
+  const { store } = useAppContext();
   const st = store.useSnapshot();
   return (
     <LabeledBox label="duty">
@@ -21,6 +22,7 @@ const DutyKnobContainer = () => {
 };
 
 const OctaveKnobContainer = () => {
+  const { store } = useAppContext();
   const st = store.useSnapshot();
   return (
     <LabeledBox label="octave">
@@ -43,6 +45,7 @@ export const loopBarsOptions = createSelectorOptions<LoopBarLength>(
 );
 
 const LoopBarsSelectorContainer = () => {
+  const { store } = useAppContext();
   const st = store.useSnapshot();
   return (
     <LabeledBox label="loop bars">
@@ -61,6 +64,7 @@ const PianoRollEditorViewContainer = () => {
 };
 
 const PagerContainer = () => {
+  const { store } = useAppContext();
   const st = store.useSnapshot();
   const totalPages = Math.max(1, st.loopBars / 2);
   const canShiftLeft = st.pageIndex > 0;
@@ -87,6 +91,7 @@ const PagerContainer = () => {
 };
 
 const TrashButtonContainer = () => {
+  const { store } = useAppContext();
   const hasNote = store.useSnapshot().notes.length > 0;
   return (
     <IconButton disabled={!hasNote} onClick={() => store.setNotes([])}>
