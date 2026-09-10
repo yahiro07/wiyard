@@ -34,7 +34,7 @@ export function setupUnit(unitInterface: UnitInterface, store: AppStore) {
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
-      viewSize: [800, 450],
+      // viewSize: [800, 450],
     },
     clockHandlers: {
       start() {

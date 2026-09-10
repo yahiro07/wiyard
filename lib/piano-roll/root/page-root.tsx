@@ -59,10 +59,6 @@ const LoopBarsSelectorContainer = () => {
   );
 };
 
-const PianoRollEditorViewContainer = () => {
-  return <PianoRollEditorView />;
-};
-
 const PagerContainer = () => {
   const { store } = useAppContext();
   const st = store.useSnapshot();
@@ -121,12 +117,10 @@ const TopBar = () => {
 
 export const PageRoot = () => {
   return (
-    <div style={uiColorsCssVarsStyle}>
-      <EffectorBody className="w-800px h-450px flex-c">
-        <div className="flex-v gap-2">
-          <TopBar />
-          <PianoRollEditorViewContainer />
-        </div>
+    <div className="w-full h-full" style={uiColorsCssVarsStyle}>
+      <EffectorBody className="w-full h-full flex-vc gap-2">
+        <TopBar />
+        <PianoRollEditorView />
       </EffectorBody>
     </div>
   );

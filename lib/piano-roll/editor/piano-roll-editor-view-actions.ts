@@ -17,8 +17,10 @@ export function getSectionStride(loopBars: LoopBarLength, pageIndex: number) {
     return { nx, sectionOffset: 0, sectionStride };
   } else {
     const nx = 1;
-    const sectionStride = 32;
-    const sectionOffset = pageIndex * sectionStride;
+    // const sectionStride = 32;
+    // const sectionOffset = pageIndex * sectionStride;
+    const sectionOffset = 0;
+    const sectionStride = loopBars * 16;
     return { nx, sectionOffset, sectionStride };
   }
 }

@@ -220,18 +220,24 @@ function useSetInitialScrollPosition(
 }
 
 export const PianoRollEditorView = () => {
+  const { store } = useAppContext();
+  const { loopBars } = store.useSnapshot();
   const { cellW, cellH, numKeys } = uiConfig;
-  const editorW = cellW * 32;
+  const nx = Math.max(32, loopBars * 16);
+  const editorW = cellW * nx;
   const editorH = cellH * numKeys;
   const baseDivRef = useRef<HTMLDivElement>(null);
   useSetInitialScrollPosition(baseDivRef);
   return (
     <div
       ref={baseDivRef}
-      className="flex-h gap-0.5 h-340px overflow-x-hidden overflow-y-scroll touch-pan-y"
+      className={cz(
+        "flex-h gap-0.5 overflow-x-scroll overflow-y-scroll touch-pan-y",
+        "grow bd-red w-full",
+      )}
       onWheel={(e) => {
         e.stopPropagation();
-        e.preventDefault();
+        // e.preventDefault();
       }}
     >
       <SideKeyboardColumn />
@@ -239,7 +245,7 @@ export const PianoRollEditorView = () => {
         className="relative flex-h"
         style={{ width: editorW, height: editorH }}
       >
-        <GridBackground nx={32} ny={numKeys} width={editorW} height={editorH} />
+        <GridBackground nx={nx} ny={numKeys} width={editorW} height={editorH} />
         <RepeatingNoteLayers />
         <PlayPositionLineLayer />
       </div>
