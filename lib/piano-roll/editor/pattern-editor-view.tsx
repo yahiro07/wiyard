@@ -31,7 +31,7 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
             )}
             style={{ height: cellH }}
           >
-            {i - 7 >= 0 ? i - 7 + 1 : i - 7}
+            {i - 7 >= 0 ? i - 7 + 1 : i - 7 - 1}
           </div>
         ))}
       </div>
