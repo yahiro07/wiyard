@@ -7,8 +7,6 @@ const numKeys = octaveCount * 12 + 1;
 export const uiConfig = {
   octaveStart,
   octaveCount,
-  cellW: 20,
-  cellH: 20,
   numKeys,
 };
 

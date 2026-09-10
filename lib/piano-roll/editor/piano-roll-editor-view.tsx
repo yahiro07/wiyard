@@ -15,6 +15,8 @@ import { SideKeyboardColumn } from "./side-keyboard-column";
 
 type PointerEvent = React.PointerEvent<HTMLDivElement>;
 
+type DisplaySpec = { cellW: number; cellH: number };
+
 const EditInputLayer = ({
   notes,
   sectionRange,
@@ -62,11 +64,13 @@ const EditInputLayer = ({
 const NoteView = ({
   note,
   sectionRange,
+  displaySpec,
 }: {
   note: Note;
   sectionRange: SectionRange;
+  displaySpec: DisplaySpec;
 }) => {
-  const { cellW, cellH } = uiConfig;
+  const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi = note.pitch;
   const dur = note.duration;
@@ -80,10 +84,7 @@ const NoteView = ({
         height: cellH,
       }}
     >
-      <div
-        className={styleNoteView.label}
-        style={{ height: uiConfig.cellH - 2 }}
-      >
+      <div className={styleNoteView.label} style={{ height: cellH - 2 }}>
         {noteNameLabels[yi]}
       </div>
     </div>
@@ -100,9 +101,11 @@ const styleNoteView = {
 const NotesDisplayLayer = ({
   notes,
   sectionRange,
+  displaySpec,
 }: {
   notes: Note[];
   sectionRange: SectionRange;
+  displaySpec: DisplaySpec;
 }) => {
   return (
     <div className="absolute-full">
@@ -113,7 +116,12 @@ const NotesDisplayLayer = ({
             note.position < sectionRange.offset + sectionRange.duration,
         )
         .map((note) => (
-          <NoteView key={note.id} note={note} sectionRange={sectionRange} />
+          <NoteView
+            key={note.id}
+            note={note}
+            sectionRange={sectionRange}
+            displaySpec={displaySpec}
+          />
         ))}
     </div>
   );
@@ -122,25 +130,31 @@ const NotesDisplayLayer = ({
 const NoteLayerStrip = ({
   notes,
   sectionRange,
+  displaySpec,
 }: {
   notes: Note[];
   sectionRange: SectionRange;
+  displaySpec: DisplaySpec;
 }) => {
-  const { cellW, cellH, numKeys } = uiConfig;
-  const editorH = cellH * numKeys;
+  const { cellW, cellH } = displaySpec;
+  const editorH = cellH * uiConfig.numKeys;
   const editorW = cellW * sectionRange.duration;
   return (
     <div
       className="relative overflow-hidden touch-none"
       style={{ width: editorW, height: editorH }}
     >
-      <NotesDisplayLayer notes={notes} sectionRange={sectionRange} />
+      <NotesDisplayLayer
+        notes={notes}
+        sectionRange={sectionRange}
+        displaySpec={displaySpec}
+      />
       <EditInputLayer notes={notes} sectionRange={sectionRange} />
     </div>
   );
 };
 
-const RepeatingNoteLayers = () => {
+const RepeatingNoteLayers = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const { store } = useAppContext();
   const st = store.useSnapshot();
   const { nx, sectionOffset, sectionStride } = getSectionStride(
@@ -159,6 +173,7 @@ const RepeatingNoteLayers = () => {
             key={i}
             notes={st.notes}
             sectionRange={sectionRange}
+            displaySpec={displaySpec}
           />
         );
       })}
@@ -166,9 +181,13 @@ const RepeatingNoteLayers = () => {
   );
 };
 
-const PlayPositionLineLayer = () => {
+const PlayPositionLineLayer = ({
+  displaySpec,
+}: {
+  displaySpec: DisplaySpec;
+}) => {
   const { store } = useAppContext();
-  const { cellW } = uiConfig;
+  const { cellW } = displaySpec;
   const { playPos } = store.useSnapshot();
   if (playPos === null) return;
   const barW = cellW * 1.5;
@@ -188,7 +207,8 @@ const stylePlayPositionLineLayer = {
   ),
 };
 
-function calculateNotesCenter(notes: Note[]) {
+function calculateNotesCenter(notes: Note[], displaySpec: DisplaySpec) {
+  const { cellH } = displaySpec;
   let minPitch = notes[0].pitch;
   let maxPitch = notes[0].pitch;
   for (const note of notes) {
@@ -197,13 +217,14 @@ function calculateNotesCenter(notes: Note[]) {
   }
   const midPitch = (minPitch + maxPitch) / 2;
 
-  const { cellH, numKeys } = uiConfig;
+  const { numKeys } = uiConfig;
   const editorH = cellH * numKeys;
   return editorH - (midPitch + 0.5) * cellH;
 }
 
 function useSetInitialScrollPosition(
   baseDivRef: RefObject<HTMLDivElement | null>,
+  displaySpec: DisplaySpec,
 ) {
   const { store } = useAppContext();
   const { stateLoadRevision, notes } = store.useSnapshot();
@@ -213,7 +234,9 @@ function useSetInitialScrollPosition(
     const el = baseDivRef.current;
     if (el) {
       const centerY =
-        notes.length > 0 ? calculateNotesCenter(notes) : el.scrollHeight / 2;
+        notes.length > 0
+          ? calculateNotesCenter(notes, displaySpec)
+          : el.scrollHeight / 2;
       el.scrollTop = centerY - el.clientHeight / 2;
     }
   }, [stateLoadRevision]);
@@ -222,12 +245,16 @@ function useSetInitialScrollPosition(
 export const PianoRollEditorView = () => {
   const { store } = useAppContext();
   const { loopBars } = store.useSnapshot();
-  const { cellW, cellH, numKeys } = uiConfig;
+  const { numKeys } = uiConfig;
+  const displaySpec: DisplaySpec = {
+    cellW: 40,
+    cellH: 40,
+  };
   const nx = Math.max(32, loopBars * 16);
-  const editorW = cellW * nx;
-  const editorH = cellH * numKeys;
+  const editorW = displaySpec.cellW * nx;
+  const editorH = displaySpec.cellH * numKeys;
   const baseDivRef = useRef<HTMLDivElement>(null);
-  useSetInitialScrollPosition(baseDivRef);
+  useSetInitialScrollPosition(baseDivRef, displaySpec);
   return (
     <div
       ref={baseDivRef}
@@ -241,15 +268,15 @@ export const PianoRollEditorView = () => {
       }}
     >
       <div className="sticky left-0  z-10">
-        <SideKeyboardColumn />
+        <SideKeyboardColumn cellH={displaySpec.cellH} />
       </div>
       <div
         className="relative flex-h"
         style={{ width: editorW, height: editorH }}
       >
         <GridBackground nx={nx} ny={numKeys} width={editorW} height={editorH} />
-        <RepeatingNoteLayers />
-        <PlayPositionLineLayer />
+        <RepeatingNoteLayers displaySpec={displaySpec} />
+        <PlayPositionLineLayer displaySpec={displaySpec} />
       </div>
     </div>
   );

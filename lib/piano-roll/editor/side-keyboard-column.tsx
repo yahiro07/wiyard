@@ -57,10 +57,9 @@ function getKeyStyle(subIndex: number, cellH: number) {
   return keyStyle;
 }
 
-const KeyboardKey = ({ yi }: { yi: number }) => {
+const KeyboardKey = ({ yi, cellH }: { yi: number; cellH: number }) => {
   const { store } = useAppContext();
 
-  const { cellH } = uiConfig;
   const subIndex = yi % 12;
   const label = subIndex === 0 && noteNameLabels[yi];
   const [pressed, setPressed] = useState(false);
@@ -102,12 +101,12 @@ const keyboardKeyStyles = {
   ),
 };
 
-export const SideKeyboardColumn = () => {
+export const SideKeyboardColumn = ({ cellH }: { cellH: number }) => {
   const { numKeys } = uiConfig;
   return (
     <div>
       {seqNumbers(numKeys).map((i) => (
-        <KeyboardKey key={i} yi={numKeys - i - 1} />
+        <KeyboardKey key={i} yi={numKeys - i - 1} cellH={cellH} />
       ))}
     </div>
   );

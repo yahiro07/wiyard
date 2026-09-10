@@ -1,4 +1,3 @@
-import { uiConfig } from "../definitions/ui-config";
 import { cz } from "../utils/cz";
 import "./grid-background-styles.css";
 
@@ -13,7 +12,8 @@ export const GridBackground = ({
   width: number;
   height: number;
 }) => {
-  const { cellW, cellH } = uiConfig;
+  const cellW = width / nx;
+  const cellH = height / ny;
   return (
     <div className="grid-background-root" style={{ width, height }}>
       {Array.from({ length: nx * ny }).map((_, i) => {
