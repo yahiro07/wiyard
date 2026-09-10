@@ -12,6 +12,7 @@ type StoreState = {
   stateLoadRevision: number;
   sight: Sight;
   patternNotes: Note[];
+  isPatternView: boolean;
 };
 
 export type AppStore = Store<StoreState>;
@@ -27,6 +28,7 @@ const defaultStoreState: StoreState = {
   stateLoadRevision: 0,
   sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.5, yZoom: 0.5 },
   patternNotes: [],
+  isPatternView: false,
 };
 if (import.meta.env.DEV) {
   const base = 24;

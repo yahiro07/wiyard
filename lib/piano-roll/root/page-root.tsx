@@ -8,6 +8,7 @@ import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, Sight } from "../definitions/types";
 import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
 import { PatternEditorView } from "../editor/pattern-editor-view";
+import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
 import { useAppContext } from "./app-context";
 
@@ -114,6 +115,18 @@ const SightControlKnobs = () => {
   );
 };
 
+const ViewModeSelector = () => {
+  const { store } = useAppContext();
+  const { isPatternView } = store.useSnapshot();
+  return (
+    <Button
+      active={isPatternView}
+      onClick={store.toggleIsPatternView}
+      text="pattern"
+    />
+  );
+};
+
 const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
@@ -121,6 +134,7 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
+            <ViewModeSelector />
             <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
@@ -135,12 +149,12 @@ const TopBar = () => {
 };
 
 export const PageRoot = () => {
+  const { isPatternView } = useAppContext().store.useSnapshot();
   return (
     <div className="w-full h-full" style={uiColorsCssVarsStyle}>
       <EffectorBody className="w-full h-full flex-vc gap-2">
         <TopBar />
-        {/* <PianoRollEditorView /> */}
-        <PatternEditorView />
+        {isPatternView ? <PatternEditorView /> : <PianoRollEditorView />}
       </EffectorBody>
     </div>
   );
