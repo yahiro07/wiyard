@@ -1,3 +1,4 @@
+import { uiColorsCssVarsStyle } from "../common/ui-theme";
 import { Button } from "../components/button";
 import { EffectorBody } from "../components/effector-body";
 import { IconButton } from "../components/icon-button";
@@ -115,11 +116,13 @@ const TopBar = () => {
 
 export const PageRoot = () => {
   return (
-    <EffectorBody className="w-800px h-450px flex-c">
-      <div className="flex-v gap-2">
-        <TopBar />
-        <PianoRollEditorViewContainer />
-      </div>
-    </EffectorBody>
+    <div style={uiColorsCssVarsStyle}>
+      <EffectorBody className="w-800px h-450px flex-c">
+        <div className="flex-v gap-2">
+          <TopBar />
+          <PianoRollEditorViewContainer />
+        </div>
+      </EffectorBody>
+    </div>
   );
 };

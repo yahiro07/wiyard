@@ -1,0 +1,25 @@
+.grid-background-root {
+  border: solid 0.5px #222;
+}
+
+.grid-background-root > div {
+  position: absolute;
+  background: var(--cl-piano-roll-bg);
+
+  &.--is-black-key {
+    background: var(--cl-piano-roll-bg-black-key);
+  }
+
+  &.--has-bottom-border {
+    border-bottom: solid 0.5px var(--cl-grid-strong);
+  }
+
+  border-right: solid 0.5px var(--cl-grid-weak-2);
+
+  &.--border-stronger1 {
+    border-right-color: var(--cl-grid-strong);
+  }
+  &.--border-stronger2 {
+    border-right-color: var(--cl-grid-strong-2);
+  }
+}

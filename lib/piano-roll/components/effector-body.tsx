@@ -9,7 +9,7 @@ export const EffectorBody = ({
   className?: string;
 }) => {
   return (
-    <div className={cz("bg-clPanelBody p-4 text-white", className)}>
+    <div className={cz("bg-[var(--cl-panel-body)] p-4 text-white", className)}>
       {children}
     </div>
   );

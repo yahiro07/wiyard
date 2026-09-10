@@ -1,6 +1,7 @@
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import { LoopBarLength, Note } from "../definitions/model";
 import { store } from "../root/store";
+import { cz } from "../utils/cz";
 import { startDragSession } from "../utils/drag-session-v0";
 import { seqNumbers } from "../utils/helpers";
 import { GridBackground } from "./grid-background";
@@ -296,8 +297,10 @@ const NoteView = ({
 };
 const styleNoteView = {
   base: "absolute flex-c cursor-pointer",
-  label:
-    "bg-clNoteBg w-full flex-ha rounded-2px pl-0.5 text-#0008 text-10px font-monospace bd-#0004",
+  label: cz(
+    "w-full flex-ha rounded-2px pl-0.5 text-#0008 text-10px font-monospace",
+    "bg-[var(--cl-note-bg)] bd-#0004",
+  ),
 };
 
 const NotesDisplayLayer = ({
@@ -383,7 +386,10 @@ const PlayPositionLineLayer = () => {
   );
 };
 const stylePlayPositionLineLayer = {
-  base: "absolute top-0 pointer-events-none h-full border-r border-solid border-#0ff4 bg-[linear-gradient(to_right,#0cc0,#0ff3)]",
+  base: cz(
+    "absolute top-0 pointer-events-none h-full",
+    "border-r border-solid border-#0ff4 bg-[linear-gradient(to_right,#0cc0,#0ff3)]",
+  ),
 };
 
 function calculateNotesCenter(notes: Note[]) {
