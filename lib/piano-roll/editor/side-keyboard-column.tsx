@@ -91,7 +91,7 @@ const KeyboardKey = ({ yi, cellH }: { yi: number; cellH: number }) => {
   );
 };
 const keyboardKeyStyles = {
-  base: cz("w-80px relative pointer-events-none"),
+  base: cz("relative pointer-events-none"),
   inner: cz("absolute pointer-events-auto cursor-pointer"),
   innerPressed: "bg-#4dd!",
   label: cz(
@@ -101,10 +101,16 @@ const keyboardKeyStyles = {
   ),
 };
 
-export const SideKeyboardColumn = ({ cellH }: { cellH: number }) => {
+export const SideKeyboardColumn = ({
+  width,
+  cellH,
+}: {
+  width: number;
+  cellH: number;
+}) => {
   const { numKeys } = uiConfig;
   return (
-    <div>
+    <div className="shrink-0" style={{ width }}>
       {seqNumbers(numKeys).map((i) => (
         <KeyboardKey key={i} yi={numKeys - i - 1} cellH={cellH} />
       ))}

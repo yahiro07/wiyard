@@ -1,7 +1,15 @@
 import { Persistence } from "wafer-host/unit-types";
 import { LoopBarLength } from "../definitions/types";
-import { unaryFromByte, unaryToByte } from "../utils/helpers";
+import { clampValue } from "../utils/helpers";
 import { AppStore } from "./store";
+
+function unaryToByte(value: number): number {
+  return (clampValue(value, 0, 1) * 255) >>> 0;
+}
+
+function unaryFromByte(byte: number): number {
+  return byte / 255;
+}
 
 export function createPersistence(store: AppStore): Persistence {
   return {

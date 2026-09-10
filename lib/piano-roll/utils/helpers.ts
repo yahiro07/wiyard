@@ -28,14 +28,28 @@ export function linearInterpolate(
   return v;
 }
 
-export function unaryToByte(value: number): number {
-  return (value * 255) >>> 0;
+export function mapUnaryTo(value: number, d0: number, d1: number) {
+  return d0 + (d1 - d0) * value;
 }
 
-export function unaryFromByte(byte: number): number {
-  return byte / 255;
+export function mapUnaryFrom(
+  val: number,
+  lo: number,
+  hi: number,
+  clamp?: boolean,
+) {
+  if (hi === lo) return lo;
+  const v = (val - lo) / (hi - lo);
+  if (clamp) {
+    return clampValue(v, 0, 1);
+  }
+  return v;
 }
 
-export function npx(value: number) {
-  return `${value}px`;
+export function bottomLimit(value: number, lo: number) {
+  return Math.max(value, lo);
+}
+
+export function topLimit(value: number, hi: number) {
+  return Math.min(value, hi);
 }

@@ -1,9 +1,9 @@
-import { RefObject, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Note } from "../definitions/types";
 import { noteNameLabels, uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
-import { seqNumbers } from "../utils/helpers";
+import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
 import { GridBackground } from "./grid-background";
 import {
   createNoteEditActions,
@@ -202,73 +202,74 @@ const stylePlayPositionLineLayer = {
   ),
 };
 
-function calculateNotesCenter(notes: Note[], displaySpec: DisplaySpec) {
-  const { cellH } = displaySpec;
-  let minPitch = notes[0].pitch;
-  let maxPitch = notes[0].pitch;
-  for (const note of notes) {
-    if (note.pitch < minPitch) minPitch = note.pitch;
-    if (note.pitch > maxPitch) maxPitch = note.pitch;
-  }
-  const midPitch = (minPitch + maxPitch) / 2;
-
-  const { numKeys } = uiConfig;
-  const editorH = cellH * numKeys;
-  return editorH - (midPitch + 0.5) * cellH;
-}
-
-function useSetInitialScrollPosition(
-  baseDivRef: RefObject<HTMLDivElement | null>,
-  displaySpec: DisplaySpec,
-) {
+const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const { store } = useAppContext();
-  const { stateLoadRevision, notes } = store.useSnapshot();
+  const { loopBars, sight } = store.useSnapshot();
+  const { numKeys } = uiConfig;
+  const nx = bottomLimit(loopBars * 16, 32);
+  const contentW = displaySpec.cellW * nx;
+  const contentH = displaySpec.cellH * numKeys;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: manual management
-  useEffect(() => {
-    const el = baseDivRef.current;
-    if (el) {
-      const centerY =
-        notes.length > 0
-          ? calculateNotesCenter(notes, displaySpec)
-          : el.scrollHeight / 2;
-      el.scrollTop = centerY - el.clientHeight / 2;
-    }
-  }, [stateLoadRevision]);
-}
+  //todo get size with resize observer
+  const viewW = 1200 - 80;
+  const maxScrollX = bottomLimit(contentW - viewW, 0);
+  const left = -sight.xPosition * maxScrollX;
+
+  return (
+    <div className={cz("overflow-hidden bd-sky")}>
+      <div
+        className="relative flex-h"
+        style={{
+          width: contentW,
+          height: contentH,
+          transform: `translateX(${left}px)`,
+        }}
+      >
+        <GridBackground
+          nx={nx}
+          ny={numKeys}
+          width={contentW}
+          height={contentH}
+        />
+        <RepeatingNoteLayers displaySpec={displaySpec} />
+        <PlayPositionLineLayer displaySpec={displaySpec} />
+      </div>
+    </div>
+  );
+};
 
 export const PianoRollEditorView = () => {
   const { store } = useAppContext();
-  const { loopBars } = store.useSnapshot();
+  const { sight } = store.useSnapshot();
   const { numKeys } = uiConfig;
-  const displaySpec: DisplaySpec = { cellW: 80, cellH: 60 };
-  const nx = Math.max(32, loopBars * 16);
-  const editorW = displaySpec.cellW * nx;
-  const editorH = displaySpec.cellH * numKeys;
-  const baseDivRef = useRef<HTMLDivElement>(null);
-  useSetInitialScrollPosition(baseDivRef, displaySpec);
+  const displaySpec: DisplaySpec = {
+    cellW: mapUnaryTo(sight.xZoom, 20, 80),
+    cellH: mapUnaryTo(sight.yZoom, 20, 60),
+  };
+  const keysWidth = 80;
+
+  //todo get size with resize observer
+  const viewH = 800;
+
+  const contentH = displaySpec.cellH * numKeys;
+  const maxScrollY = bottomLimit(contentH - viewH, 0);
+  const ty = -(1 - sight.yPosition) * maxScrollY;
+
   return (
     <div
-      ref={baseDivRef}
       className={cz(
-        "flex-h gap-0.5 overflow-x-scroll overflow-y-scroll touch-pan-y",
-        "grow bd-red w-full",
+        "overflow-hidden",
+        "bd-red",
+        //todo: make full size and get size with resize observer
+        0 ? "w-full grow" : "w-1200px h-800px",
       )}
-      onWheel={(e) => {
-        e.stopPropagation();
-        // e.preventDefault();
-      }}
     >
-      <div className="sticky left-0  z-10">
-        <SideKeyboardColumn cellH={displaySpec.cellH} />
-      </div>
       <div
-        className="relative flex-h"
-        style={{ width: editorW, height: editorH }}
+        className="flex-h gap-0.5"
+        style={{ transform: `translateY(${ty}px)` }}
       >
-        <GridBackground nx={nx} ny={numKeys} width={editorW} height={editorH} />
-        <RepeatingNoteLayers displaySpec={displaySpec} />
-        <PlayPositionLineLayer displaySpec={displaySpec} />
+        <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
+        <PianoRollEditPart displaySpec={displaySpec} />
       </div>
     </div>
   );

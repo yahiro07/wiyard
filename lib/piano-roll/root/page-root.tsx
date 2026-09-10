@@ -110,14 +110,14 @@ const SightControlKnobs = () => {
           onChange={(v) => patchSight({ xPosition: v })}
         />
       </LabeledBox>
+      <LabeledBox label="xzoom">
+        <Knob value={sight.xZoom} onChange={(v) => patchSight({ xZoom: v })} />
+      </LabeledBox>
       <LabeledBox label="ypos">
         <Knob
           value={sight.yPosition}
           onChange={(v) => patchSight({ yPosition: v })}
         />
-      </LabeledBox>
-      <LabeledBox label="xzoom">
-        <Knob value={sight.xZoom} onChange={(v) => patchSight({ xZoom: v })} />
       </LabeledBox>
       <LabeledBox label="yzoom">
         <Knob value={sight.yZoom} onChange={(v) => patchSight({ yZoom: v })} />
