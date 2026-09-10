@@ -14,9 +14,16 @@ export type PianoRollGridDisplaySpec = {
 };
 
 export const PianoRollGrid = ({
-  displaySpec,
+  displaySpec: ds,
 }: {
   displaySpec: PianoRollGridDisplaySpec;
 }) => {
-  return <div></div>;
+  return (
+    <div
+      className="flex-c bd-green"
+      style={{ width: ds.viewW, height: ds.viewH }}
+    >
+      new grid impl
+    </div>
+  );
 };

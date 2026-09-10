@@ -203,6 +203,13 @@ const stylePlayPositionLineLayer = {
   ),
 };
 
+const configs = {
+  useNewGrid: false,
+};
+if (1) {
+  configs.useNewGrid = true;
+}
+
 const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const { store } = useAppContext();
   const { loopBars, sight } = store.useSnapshot();
@@ -215,12 +222,57 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const contentH = cellH * numKeys;
 
   //todo get size with resize observer
-  const viewW = 1200 - 80;
+  const viewW = 1200 - 80 - 2;
+  const maxScrollX = bottomLimit(contentW - viewW, 0);
+  const contentX0 = sight.xPosition * maxScrollX;
+  const left = -contentX0;
+
+  return (
+    <div className={cz("overflow-hidden")}>
+      <div
+        className="relative flex-h"
+        style={{
+          width: contentW,
+          height: contentH,
+          transform: `translateX(${left}px)`,
+        }}
+      >
+        {!configs.useNewGrid && (
+          <GridBackground
+            nx={nx}
+            ny={numKeys}
+            width={contentW}
+            height={contentH}
+          />
+        )}
+        <RepeatingNoteLayers displaySpec={displaySpec} />
+        <PlayPositionLineLayer displaySpec={displaySpec} />
+      </div>
+    </div>
+  );
+};
+
+const GridBackgroundContainer = ({
+  displaySpec,
+}: {
+  displaySpec: DisplaySpec;
+}) => {
+  const { store } = useAppContext();
+  const { loopBars, sight } = store.useSnapshot();
+  const { numKeys } = uiConfig;
+  const { cellW, cellH } = displaySpec;
+
+  const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
+  const nx = contentBars * 16;
+  const contentW = cellW * nx;
+  const contentH = cellH * numKeys;
+
+  //todo get size with resize observer
+  const viewW = 1200 - 80 - 2;
   const viewH = 800;
   const maxScrollX = bottomLimit(contentW - viewW, 0);
   const contentX0 = sight.xPosition * maxScrollX;
   const contentX1 = contentX0 + viewW;
-  const left = -contentX0;
 
   const maxScrollY = bottomLimit(contentH - viewH, 0);
   const contentY0 = (1 - sight.yPosition) * maxScrollY;
@@ -241,31 +293,7 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
     numKeysFull: numKeys,
   };
 
-  return (
-    <div className={cz("overflow-hidden bd-sky")}>
-      <div
-        className="relative flex-h"
-        style={{
-          width: contentW,
-          height: contentH,
-          transform: `translateX(${left}px)`,
-        }}
-      >
-        {1 ? (
-          <PianoRollGrid displaySpec={gridDisplaySpec} />
-        ) : (
-          <GridBackground
-            nx={nx}
-            ny={numKeys}
-            width={contentW}
-            height={contentH}
-          />
-        )}
-        <RepeatingNoteLayers displaySpec={displaySpec} />
-        <PlayPositionLineLayer displaySpec={displaySpec} />
-      </div>
-    </div>
-  );
+  return <PianoRollGrid displaySpec={gridDisplaySpec} />;
 };
 
 export const PianoRollEditorView = () => {
@@ -288,12 +316,17 @@ export const PianoRollEditorView = () => {
   return (
     <div
       className={cz(
-        "overflow-hidden",
-        "bd-red",
+        "overflow-hidden relative",
+        // "bd-red",
         //todo: make full size and get size with resize observer
         0 ? "w-full grow" : "w-1200px h-800px",
       )}
     >
+      {configs.useNewGrid && (
+        <div className="absolute left-0 top-0 ml-82px">
+          <GridBackgroundContainer displaySpec={displaySpec} />
+        </div>
+      )}
       <div
         className="flex-h gap-0.5"
         style={{ transform: `translateY(${ty}px)` }}
