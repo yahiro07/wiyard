@@ -2,8 +2,8 @@ import { colorMod } from "../utils/color-mod";
 
 export const uiColors = {
   clPanelBody: colorMod("#445", "h220"),
-  clPianoRollBg: colorMod("#334", "h205"),
-  clPianoRollBgBlackKey: colorMod("#334", "h205 v-2"),
+  clPianoRollBg: colorMod("#334", "h220"),
+  clPianoRollBgBlackKey: colorMod("#334", "h220 v-2"),
   clNoteBg: "#6cc",
   clPatternGridBg: colorMod("#334", "h220"),
   clPatternGridBgPrimary: colorMod("#334", "h220 v-2"),
