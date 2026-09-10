@@ -99,7 +99,7 @@ const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
       <div className="flex-ha justify-between">
-        <div className="font-bold text-24px">Fluorite Piano Roll</div>
+        <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
             <TrashButtonContainer />
