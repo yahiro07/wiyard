@@ -5,6 +5,8 @@ export const uiColors = {
   clPianoRollBg: colorMod("#334", "h205"),
   clPianoRollBgBlackKey: colorMod("#334", "h205 v-2"),
   clNoteBg: "#6cc",
+  clPatternGridBg: colorMod("#334", "h220"),
+  clPatternGridBgPrimary: colorMod("#334", "h220 v-2"),
 };
 
 export const uiColorsCssVarsStyle = {

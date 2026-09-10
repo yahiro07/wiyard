@@ -41,6 +41,7 @@ if (import.meta.env.DEV) {
     { id: 5, position: 16, duration: 8, pitch: base + 9 },
     { id: 6, position: 32, duration: 16, pitch: base + 12 },
   ];
+  defaultStoreState.isPatternView = true;
 }
 
 export function createAppStore(): AppStore {
