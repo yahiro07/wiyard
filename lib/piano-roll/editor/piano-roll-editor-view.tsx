@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollBarH, ScrollBarV } from "../components/scroll-bar";
 import { Note } from "../definitions/types";
 import { noteNameLabels, uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
+import { useDomElementSize } from "../utils/use-dom-element-size";
 import { GridBackground } from "./grid-background";
 import {
   createNoteEditActions,
@@ -255,8 +256,12 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
 
 const GridBackgroundContainer = ({
   displaySpec,
+  viewW,
+  viewH,
 }: {
   displaySpec: DisplaySpec;
+  viewW: number;
+  viewH: number;
 }) => {
   const { store } = useAppContext();
   const { loopBars, sight } = store.useSnapshot();
@@ -268,9 +273,6 @@ const GridBackgroundContainer = ({
   const contentW = cellW * nx;
   const contentH = cellH * numKeys;
 
-  //todo get size with resize observer
-  const viewW = 1200 - 80 - 2;
-  const viewH = 800;
   const maxScrollX = bottomLimit(contentW - viewW, 0);
   const contentX0 = sight.xPosition * maxScrollX;
   const contentX1 = contentX0 + viewW;
@@ -297,8 +299,8 @@ const GridBackgroundContainer = ({
     [
       contentW,
       contentH,
-      // viewW,
-      // viewH,
+      viewW,
+      viewH,
       contentX0,
       contentX1,
       contentY0,
@@ -314,6 +316,7 @@ const GridBackgroundContainer = ({
 };
 
 export const PianoRollEditorView = () => {
+  const measuredDivRef = useRef<HTMLDivElement>(null);
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
   const { numKeys } = uiConfig;
@@ -323,8 +326,9 @@ export const PianoRollEditorView = () => {
   };
   const keysWidth = 80;
 
-  //todo get size with resize observer
-  const viewH = 800;
+  const size = useDomElementSize(measuredDivRef);
+  const viewW = size?.width ?? 100;
+  const viewH = size?.height ?? 100;
 
   const contentH = displaySpec.cellH * numKeys;
   const maxScrollY = bottomLimit(contentH - viewH, 0);
@@ -335,8 +339,7 @@ export const PianoRollEditorView = () => {
       className={cz(
         "overflow-hidden relative bd-red",
         // "bd-red",
-        //todo: make full size and get size with resize observer
-        0 ? "w-full grow" : "w-1200px h-800px",
+        "w-full grow",
       )}
       style={{
         display: "grid",
@@ -352,8 +355,12 @@ export const PianoRollEditorView = () => {
           <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
         </div>
       </div>
-      <div className="overflow-hidden relative">
-        <GridBackgroundContainer displaySpec={displaySpec} />
+      <div className="overflow-hidden relative bd-blue" ref={measuredDivRef}>
+        <GridBackgroundContainer
+          displaySpec={displaySpec}
+          viewW={viewW}
+          viewH={viewH}
+        />
         <div
           className="absolute-full"
           style={{ transform: `translateY(${ty}px)` }}
