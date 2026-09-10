@@ -81,13 +81,15 @@ export const PianoRollGrid = ({
     }
   }, [ds]);
 
+  const width = Math.round(ds.viewW);
+  const height = Math.round(ds.viewH);
   return (
     <canvas
       className="bg-#888"
       ref={canvasRef}
-      width={ds.viewW}
-      height={ds.viewH}
-      style={{ width: ds.viewW, height: ds.viewH }}
+      width={width}
+      height={height}
+      style={{ width, height }}
     />
   );
 };

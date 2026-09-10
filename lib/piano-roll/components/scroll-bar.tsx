@@ -17,9 +17,9 @@ export const ScrollBarH = ({
       horizontal
       dragRange={1200}
     >
-      <div className="w-full h-40px bg-#888 relative">
+      <div className="w-full h-40px bg-#666 relative">
         <div
-          className="w-200px h-full absolute bd-red-500 top-0"
+          className="w-200px h-full absolute bg-#888 bd-#555 top-0"
           style={{ left: `calc(${position * 100}% - ${position * 200}px)` }}
         />
       </div>
@@ -45,9 +45,9 @@ export const ScrollBarV = ({
       dragRange={800}
       invert
     >
-      <div className="h-full w-40px bg-#888 relative">
+      <div className="h-full w-40px bg-#666 relative">
         <div
-          className="h-200px w-full absolute bd-red-500 left-0"
+          className="h-200px w-full absolute bg-#888 bd-#555 left-0"
           style={{ top: `calc(${position * 100}% - ${position * 200}px)` }}
         />
       </div>

@@ -9,7 +9,7 @@ function setupDomSizeAffecter(
     const entry = entries[0];
     if (entry) {
       const { width, height } = entry.contentRect;
-      setTimeout(() => destFn({ width, height }), 1);
+      destFn({ width, height });
     }
   });
   observer.observe(element);

@@ -18,7 +18,12 @@ import { SideKeyboardColumn } from "./side-keyboard-column";
 
 type PointerEvent = React.PointerEvent<HTMLDivElement>;
 
-type DisplaySpec = { cellW: number; cellH: number };
+type DisplaySpec = {
+  viewW: number;
+  viewH: number;
+  cellW: number;
+  cellH: number;
+};
 
 const EditInputLayer = ({
   notes,
@@ -216,15 +221,13 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const { store } = useAppContext();
   const { loopBars, sight } = store.useSnapshot();
   const { numKeys } = uiConfig;
-  const { cellW, cellH } = displaySpec;
+  const { viewW, cellW, cellH } = displaySpec;
 
   const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
   const nx = contentBars * 16;
   const contentW = cellW * nx;
   const contentH = cellH * numKeys;
 
-  //todo get size with resize observer
-  const viewW = 1200 - 80 - 2;
   const maxScrollX = bottomLimit(contentW - viewW, 0);
   const contentX0 = sight.xPosition * maxScrollX;
   const left = -contentX0;
@@ -256,17 +259,13 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
 
 const GridBackgroundContainer = ({
   displaySpec,
-  viewW,
-  viewH,
 }: {
   displaySpec: DisplaySpec;
-  viewW: number;
-  viewH: number;
 }) => {
   const { store } = useAppContext();
   const { loopBars, sight } = store.useSnapshot();
   const { numKeys } = uiConfig;
-  const { cellW, cellH } = displaySpec;
+  const { viewW, viewH, cellW, cellH } = displaySpec;
 
   const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
   const nx = contentBars * 16;
@@ -320,15 +319,19 @@ export const PianoRollEditorView = () => {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
   const { numKeys } = uiConfig;
-  const displaySpec: DisplaySpec = {
-    cellW: mapUnaryTo(sight.xZoom, 20, 80),
-    cellH: mapUnaryTo(sight.yZoom, 20, 60),
-  };
-  const keysWidth = 80;
 
   const size = useDomElementSize(measuredDivRef);
   const viewW = size?.width ?? 100;
   const viewH = size?.height ?? 100;
+  console.log(viewW, viewH);
+
+  const displaySpec: DisplaySpec = {
+    viewW,
+    viewH,
+    cellW: mapUnaryTo(sight.xZoom, 20, 80),
+    cellH: mapUnaryTo(sight.yZoom, 20, 60),
+  };
+  const keysWidth = 80;
 
   const contentH = displaySpec.cellH * numKeys;
   const maxScrollY = bottomLimit(contentH - viewH, 0);
@@ -337,7 +340,7 @@ export const PianoRollEditorView = () => {
   return (
     <div
       className={cz(
-        "overflow-hidden relative bd-red",
+        "overflow-hidden relative",
         // "bd-red",
         "w-full grow",
       )}
@@ -355,12 +358,8 @@ export const PianoRollEditorView = () => {
           <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
         </div>
       </div>
-      <div className="overflow-hidden relative bd-blue" ref={measuredDivRef}>
-        <GridBackgroundContainer
-          displaySpec={displaySpec}
-          viewW={viewW}
-          viewH={viewH}
-        />
+      <div className="overflow-hidden relative" ref={measuredDivRef}>
+        <GridBackgroundContainer displaySpec={displaySpec} />
         <div
           className="absolute-full"
           style={{ transform: `translateY(${ty}px)` }}
