@@ -11,6 +11,7 @@ type StoreState = {
   previewNotePitch: number | null;
   stateLoadRevision: number;
   sight: Sight;
+  patternNotes: Note[];
 };
 
 export type AppStore = Store<StoreState>;
@@ -25,6 +26,7 @@ const defaultStoreState: StoreState = {
   previewNotePitch: null,
   stateLoadRevision: 0,
   sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.5, yZoom: 0.5 },
+  patternNotes: [],
 };
 if (import.meta.env.DEV) {
   const base = 24;

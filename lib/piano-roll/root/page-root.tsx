@@ -7,7 +7,7 @@ import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, Sight } from "../definitions/types";
 import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
-import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
+import { PatternEditorView } from "../editor/pattern-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
 import { useAppContext } from "./app-context";
 
@@ -139,7 +139,8 @@ export const PageRoot = () => {
     <div className="w-full h-full" style={uiColorsCssVarsStyle}>
       <EffectorBody className="w-full h-full flex-vc gap-2">
         <TopBar />
-        <PianoRollEditorView />
+        {/* <PianoRollEditorView /> */}
+        <PatternEditorView />
       </EffectorBody>
     </div>
   );
