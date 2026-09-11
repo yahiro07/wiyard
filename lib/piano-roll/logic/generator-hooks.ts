@@ -10,7 +10,7 @@ export function useGenerateMappedNotes() {
     //usually mapped notes are generated when user edits notes or options
     const mappedNotes = patternEnabled
       ? generateMappedNotes(inputNotes, patternNotes, { loopBars, patternBars })
-      : null;
+      : inputNotes;
     store.setMappedNotes(mappedNotes);
   }, [
     inputNotes,

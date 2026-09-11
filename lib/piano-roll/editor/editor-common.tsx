@@ -350,7 +350,7 @@ export const RepeatingNoteLayers = ({
   );
   const notes = useMemo(() => {
     if (editorKind === "main") {
-      return mappedNotes ? [...inputNotes, ...mappedNotes] : inputNotes;
+      return [...inputNotes, ...mappedNotes];
     } else {
       return patternNotes;
     }
