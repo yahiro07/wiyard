@@ -6,17 +6,20 @@ export const IconButton = ({
   children,
   disabled,
   onClick,
+  active,
 }: {
   className?: string;
   children: ReactNode;
   disabled?: boolean;
   onClick: () => void;
+  active?: boolean;
 }) => {
   return (
     <button
       type="button"
       className={cz(
-        "[all:unset] mt-3 bg-transparent text-white p-2 cursor-pointer",
+        "bg-transparent text-white p-2 cursor-pointer",
+        !disabled && active && "!text-#7af",
         disabled && "opacity-30 pointer-events-none",
         className,
       )}

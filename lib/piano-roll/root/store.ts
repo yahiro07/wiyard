@@ -19,6 +19,7 @@ type StoreState = {
   patternNotes: Note[];
   isPatternView: boolean;
   patternLoopBars: PatternLoopBarLength;
+  patternEnabled: boolean;
 };
 
 export type AppStore = Store<StoreState>;
@@ -36,6 +37,7 @@ const defaultStoreState: StoreState = {
   patternNotes: [],
   isPatternView: false,
   patternLoopBars: 0.25,
+  patternEnabled: false,
 };
 if (import.meta.env.DEV) {
   const base = 24;

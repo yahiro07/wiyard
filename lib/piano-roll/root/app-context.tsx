@@ -18,3 +18,10 @@ export const AppProvider = ({
 export function useAppContext() {
   return useContext(AppContext);
 }
+
+export function useStoreAccess() {
+  const { store } = useAppContext();
+  const st = store.useSnapshot();
+  const mt = store.mutations;
+  return [st, mt] as const;
+}

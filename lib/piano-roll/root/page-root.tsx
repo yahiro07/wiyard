@@ -14,7 +14,7 @@ import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
 import { PatternEditorView } from "../editor/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
-import { useAppContext } from "./app-context";
+import { useAppContext, useStoreAccess } from "./app-context";
 
 const DutyKnobContainer = () => {
   const { store } = useAppContext();
@@ -143,6 +143,24 @@ const ViewModeSelector = () => {
   );
 };
 
+const PatternToggleButton = () => {
+  const [{ patternEnabled, patternNotes }, mt] = useStoreAccess();
+  const hasPatternNotes = patternNotes.length > 0;
+  return (
+    <IconButton
+      active={patternEnabled}
+      disabled={!hasPatternNotes}
+      onClick={mt.togglePatternEnabled}
+      className="!p-1px "
+    >
+      <div className="w-28px h-28px relative">
+        <Icons.Fish size={13} className="absolute top-0 left-0 m-2px" />
+        <Icons.Fish size={13} className="absolute bottom-0 right-0 m-2px" />
+      </div>
+    </IconButton>
+  );
+};
+
 const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
@@ -150,7 +168,10 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
-            <ViewModeSelector />
+            <div className="flex-ha gap-2">
+              <ViewModeSelector />
+              <PatternToggleButton />
+            </div>
             <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
