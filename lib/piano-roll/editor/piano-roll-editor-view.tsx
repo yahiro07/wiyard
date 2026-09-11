@@ -7,23 +7,14 @@ import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
 import { useDomElementSize } from "../utils/use-dom-element-size";
 import { useGridDisplaySpec } from "./editor-common";
 import { EditorCommonLayout } from "./editor-common-layout";
+import { DisplaySpec, IPointerEvent, SectionRange } from "./editor-types";
 import {
   createNoteEditActions,
   getSectionStride,
   hitTestNote,
-  SectionRange,
 } from "./piano-roll-editor-view-actions";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
-
-type PointerEvent = React.PointerEvent<HTMLDivElement>;
-
-type DisplaySpec = {
-  viewW: number;
-  viewH: number;
-  cellW: number;
-  cellH: number;
-};
 
 const EditInputLayer = ({
   notes,
@@ -37,7 +28,7 @@ const EditInputLayer = ({
 
   const [cursor, setCursor] = useState<string>("auto");
 
-  const handlePointerDown = (e: PointerEvent) => {
+  const handlePointerDown = (e: IPointerEvent) => {
     const { xiFloat, yi } = noteEditActions.mapPointerPositionToCell(
       e.currentTarget as HTMLElement,
       e.clientX,

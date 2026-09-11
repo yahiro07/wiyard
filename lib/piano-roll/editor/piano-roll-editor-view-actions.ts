@@ -2,13 +2,7 @@ import { LoopBarLength, Note } from "../definitions/types";
 import { uiConfig } from "../definitions/ui-config";
 import { AppStore } from "../root/store";
 import { startDragSession } from "../utils/drag-session-v0";
-
-type PointerEvent = React.PointerEvent<HTMLDivElement>;
-
-export type SectionRange = {
-  offset: number;
-  duration: number;
-};
+import { IPointerEvent, SectionRange } from "./editor-types";
 
 export function getSectionStride(loopBars: LoopBarLength, pageIndex: number) {
   if (loopBars < 2) {
@@ -114,7 +108,7 @@ export function createNoteEditActions(store: AppStore) {
       store.setNotes((prev) => prev.filter((note) => note.id !== noteId));
     },
     startInsertNewNote(
-      e0: PointerEvent,
+      e0: IPointerEvent,
       sectionRange: SectionRange,
       setCursor: setCursorFn,
     ) {
@@ -128,7 +122,7 @@ export function createNoteEditActions(store: AppStore) {
       self.startAdjustDuration(e0, note, true, setCursor);
     },
     startMoveNote(
-      e0: PointerEvent,
+      e0: IPointerEvent,
       originalNote: Note,
       setCursor: setCursorFn,
     ) {
@@ -178,7 +172,7 @@ export function createNoteEditActions(store: AppStore) {
       );
     },
     startAdjustDuration(
-      e0: PointerEvent,
+      e0: IPointerEvent,
       originalNote: Note,
       isNewNote: boolean,
       setCursor: setCursorFn,

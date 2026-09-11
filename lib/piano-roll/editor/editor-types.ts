@@ -19,3 +19,10 @@ export type GridDisplaySpec = {
   numStepsFull: number;
   numPitchesFull: number;
 };
+
+export type SectionRange = {
+  offset: number;
+  duration: number;
+};
+
+export type IPointerEvent = React.PointerEvent<HTMLDivElement>;
