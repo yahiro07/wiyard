@@ -175,10 +175,16 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
             const deltaYi = movedCoord.yi - originalCoord.yi;
 
             const duration = originalNote.duration + deltaXi;
-            const pitch = isNewNote
-              ? originalNote.pitch + deltaYi
-              : originalNote.pitch;
-
+            let pitch = originalNote.pitch;
+            if (1) {
+              //allow pitch change for duration edit
+              pitch = originalNote.pitch + deltaYi;
+            } else {
+              //disable pitch change for duration edit
+              pitch = isNewNote
+                ? originalNote.pitch + deltaYi
+                : originalNote.pitch;
+            }
             if (pitch !== storeAccess.getPreviewNotePitch()) {
               storeAccess.setPreviewNotePitch(pitch);
             }
