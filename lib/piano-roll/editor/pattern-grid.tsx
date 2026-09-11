@@ -1,22 +1,8 @@
 import { useEffect, useRef } from "react";
 import { uiColors } from "../definitions/ui-theme";
+import { GridDisplaySpec } from "./editor-types";
 
-export type PatternGridDisplaySpec = {
-  contentW: number;
-  contentH: number;
-  viewW: number;
-  viewH: number;
-  contentX0: number;
-  contentX1: number;
-  contentY0: number;
-  contentY1: number;
-  cellW: number;
-  cellH: number;
-  numStepsFull: number;
-  numPitchesFull: number;
-};
-
-function renderGrid(canvas: HTMLCanvasElement, ds: PatternGridDisplaySpec) {
+function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   ctx.save();
@@ -71,7 +57,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PatternGridDisplaySpec) {
 export const PatternGrid = ({
   displaySpec: ds,
 }: {
-  displaySpec: PatternGridDisplaySpec;
+  displaySpec: GridDisplaySpec;
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 

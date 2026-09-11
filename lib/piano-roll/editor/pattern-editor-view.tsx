@@ -1,27 +1,19 @@
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
+import { uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
 import { useDomElementSize } from "../utils/use-dom-element-size";
+import { useGridDisplaySpec } from "./editor-common";
 import { EditorCommonLayout } from "./editor-common-layout";
-import { PatternGrid, PatternGridDisplaySpec } from "./pattern-grid";
-
-const configs = {
-  numPitches: 22,
-};
-
-type DisplaySpec = {
-  viewW: number;
-  viewH: number;
-  cellW: number;
-  cellH: number;
-};
+import { DisplaySpec } from "./editor-types";
+import { PatternGrid } from "./pattern-grid";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   return (
     <div className="flex-c h-full">
       <div className="flex-v flex-col-reverse">
-        {seqNumbers(configs.numPitches).map((i) => (
+        {seqNumbers(uiConfig.numPatternPitches).map((i) => (
           <div
             key={i}
             className={cz(
@@ -44,55 +36,12 @@ const GridBackgroundContainer = ({
 }: {
   displaySpec: DisplaySpec;
 }) => {
-  const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
-  const { viewW, viewH, cellW, cellH } = displaySpec;
-  const { numPitches } = configs;
-
   const contentBars = 2; //fixed for pattern
-  const nx = contentBars * 16;
-  const contentW = cellW * nx;
-  const contentH = cellH * numPitches;
-
-  const maxScrollX = bottomLimit(contentW - viewW, 0);
-  const contentX0 = sight.xPosition * maxScrollX;
-  const contentX1 = contentX0 + viewW;
-
-  const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const contentY0 = sight.yPosition * maxScrollY;
-  const contentY1 = contentY0 + viewH;
-
-  const gridDisplaySpec: PatternGridDisplaySpec = useMemo(
-    () => ({
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      numStepsFull: nx,
-      numPitchesFull: numPitches,
-    }),
-    [
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      nx,
-      // numKeys,
-    ],
+  const gridDisplaySpec = useGridDisplaySpec(
+    displaySpec,
+    contentBars,
+    uiConfig.numPatternPitches,
   );
-
   return <PatternGrid displaySpec={gridDisplaySpec} />;
 };
 
@@ -111,7 +60,7 @@ export const PatternEditorView = () => {
     cellH: mapUnaryTo(sight.yZoom, 20, 60),
   };
   const keysWidth = 100;
-  const contentH = displaySpec.cellH * configs.numPitches;
+  const contentH = displaySpec.cellH * uiConfig.numPatternPitches;
   const maxScrollY = bottomLimit(contentH - viewH, 0);
   const ty = -sight.yPosition * maxScrollY;
 

@@ -8,6 +8,7 @@ export const uiConfig = {
   octaveStart,
   octaveCount,
   numKeys,
+  numPatternPitches: 22,
 };
 
 const subNoteNames = [

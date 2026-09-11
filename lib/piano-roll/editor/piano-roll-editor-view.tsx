@@ -5,6 +5,7 @@ import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
 import { useDomElementSize } from "../utils/use-dom-element-size";
+import { useGridDisplaySpec } from "./editor-common";
 import { EditorCommonLayout } from "./editor-common-layout";
 import { GridBackground } from "./grid-background";
 import {
@@ -13,7 +14,7 @@ import {
   hitTestNote,
   SectionRange,
 } from "./piano-roll-editor-view-actions";
-import { PianoRollGrid, PianoRollGridDisplaySpec } from "./piano-roll-grid";
+import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 
 type PointerEvent = React.PointerEvent<HTMLDivElement>;
@@ -263,54 +264,15 @@ const GridBackgroundContainer = ({
   displaySpec: DisplaySpec;
 }) => {
   const { store } = useAppContext();
-  const { loopBars, sight } = store.useSnapshot();
-  const { numKeys } = uiConfig;
-  const { viewW, viewH, cellW, cellH } = displaySpec;
-
+  const { loopBars } = store.useSnapshot();
+  const { numKeys: numPitches } = uiConfig;
   const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
-  const nx = contentBars * 16;
-  const contentW = cellW * nx;
-  const contentH = cellH * numKeys;
 
-  const maxScrollX = bottomLimit(contentW - viewW, 0);
-  const contentX0 = sight.xPosition * maxScrollX;
-  const contentX1 = contentX0 + viewW;
-
-  const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const contentY0 = sight.yPosition * maxScrollY;
-  const contentY1 = contentY0 + viewH;
-
-  const gridDisplaySpec: PianoRollGridDisplaySpec = useMemo(
-    () => ({
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      numStepsFull: nx,
-      numKeysFull: numKeys,
-    }),
-    [
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      nx,
-      // numKeys,
-    ],
+  const gridDisplaySpec = useGridDisplaySpec(
+    displaySpec,
+    contentBars,
+    numPitches,
   );
-
   return <PianoRollGrid displaySpec={gridDisplaySpec} />;
 };
 
