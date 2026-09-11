@@ -1,3 +1,4 @@
+import { debugConfig } from "../../definitions/ui-config";
 import { uiColors } from "../../definitions/ui-theme";
 import { GridDisplaySpec } from "../common/editor-types";
 import { GridCanvas } from "../common/grid-canvas";
@@ -23,7 +24,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
       let i2 = i; //C
-      if (0) {
+      if (debugConfig.keyAm) {
         i2 = i + 2; //Am
       }
       const isTonic = i2 % 7 === 0;
