@@ -35,7 +35,13 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   for (let i = 0; i < ds.numStepsFull; i++) {
     const x = i * ds.cellW;
     if (ds.contentX0 <= x && x < ds.contentX1) {
-      ctx.strokeStyle = i % 16 === 0 ? "#0006" : "#0002";
+      let color = "#0002";
+      if (i % 16 === 0) {
+        color = "#0008";
+      } else if (i % 4 === 0) {
+        color = "#0004";
+      }
+      ctx.strokeStyle = color;
       ctx.beginPath();
       ctx.moveTo(x, ds.contentY0);
       ctx.lineTo(x, ds.contentY1);
