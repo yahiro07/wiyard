@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { LoopBarLength, Note } from "../../definitions/types";
+import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { useAppContext } from "../../root/app-context";
 import { bottomLimit } from "../../utils/helpers";
 import { DisplaySpec, SectionRange } from "./editor-types";
@@ -79,10 +79,13 @@ export function hitTestNote(
   sectionRange: SectionRange,
   xiFloat: number,
   yi: number,
+  editorKind: EditorKind,
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
+  const targetPitch =
+    editorKind === "mainD" ? diatonicLanesPitchHelper.mapYIndexToPitch(yi) : yi;
   for (const note of notes) {
-    if (note.pitch === yi) {
+    if (note.pitch === targetPitch) {
       const relPos = note.position - sectionRange.offset;
       const dur = note.duration;
       const noteTailPos = relPos + dur;
@@ -99,16 +102,18 @@ export function getPatternPitchLabel(pitch: number) {
   return pitch - 7 >= 0 ? pitch - 7 + 1 : pitch - 7 - 1;
 }
 
-const subMap = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+const subMapD = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+const subMapP = [0, 2, 4, 5, 7, 9, 11];
 
 export const diatonicLanesPitchHelper = {
-  mapYIndexToDisplayPitch(yi: number, snapToScaleNote?: boolean) {
-    const oct = Math.floor(yi / 12);
-    const sub = yi % 12;
-    const pitch = oct * 7 + subMap[sub];
-    if (snapToScaleNote) {
-      return Math.round(pitch);
-    }
-    return pitch;
+  mapPitchToDisplayYIndex(pitch: number) {
+    const oct = Math.floor(pitch / 12);
+    const sub = pitch % 12;
+    return oct * 7 + subMapD[sub];
+  },
+  mapYIndexToPitch(yi: number) {
+    const oct = Math.floor(yi / 7);
+    const sub = yi % 7;
+    return oct * 12 + subMapP[sub];
   },
 };

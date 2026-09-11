@@ -22,7 +22,10 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
-      const i2 = i + 2;
+      let i2 = i; //C
+      if (0) {
+        i2 = i + 2; //Am
+      }
       const isTonic = i2 % 7 === 0;
       const isDominant = i2 % 7 === 4;
       let color = uiColors.clDiatonicLanesGridBg;

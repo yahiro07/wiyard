@@ -42,7 +42,7 @@ const NoteView = ({
   const yi0 = note.pitch;
   let yi = note.pitch;
   if (editorKind === "mainD") {
-    yi = diatonicLanesPitchHelper.mapYIndexToDisplayPitch(yi0);
+    yi = diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch);
   }
   const isPattern = editorKind === "pattern";
   let noteKind: NoteKind = "input";

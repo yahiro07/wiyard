@@ -17,7 +17,10 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
     <div className="flex-c h-full">
       <div className="flex-v flex-col-reverse">
         {seqNumbers(uiConfig.numDiatonicLanes).map((i) => {
-          const i2 = i + 2;
+          let i2 = i; //C
+          if (0) {
+            i2 = i + 2; //Am
+          }
           return (
             <div
               key={i}

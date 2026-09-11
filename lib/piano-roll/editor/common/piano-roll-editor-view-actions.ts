@@ -2,7 +2,10 @@ import { EditorKind, Note } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
 import { AppStore } from "../../root/store";
 import { startDragSession } from "../../utils/drag-session-v0";
-import { getSectionStride } from "./editor-common-logic";
+import {
+  diatonicLanesPitchHelper,
+  getSectionStride,
+} from "./editor-common-logic";
 import { IPointerEvent, SectionRange } from "./editor-types";
 
 function createTapChecker() {
@@ -20,7 +23,12 @@ type setCursorFn = (cursor: string) => void;
 
 export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
   const isPattern = editorKind === "pattern";
-  const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
+  // const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
+  const numPitches = {
+    main: uiConfig.numKeys,
+    mainD: uiConfig.numDiatonicLanes,
+    pattern: uiConfig.numPatternPitches,
+  }[editorKind];
   const storeAccess = {
     getNotes: () =>
       isPattern ? store.state.patternNotes : store.state.inputNotes,
@@ -28,6 +36,21 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
     getPreviewNotePitch: () =>
       isPattern ? null : store.state.previewNotePitch,
     setPreviewNotePitch: isPattern ? () => {} : store.setPreviewNotePitch,
+  };
+
+  const core = {
+    mapYIndexToPitch(yi: number) {
+      if (editorKind === "mainD") {
+        return diatonicLanesPitchHelper.mapYIndexToPitch(yi);
+      }
+      return yi;
+    },
+    shiftPitch(originalPitch: number, deltaYi: number) {
+      if (editorKind === "mainD") {
+        return Math.round(originalPitch + (deltaYi * 12) / 7);
+      }
+      return originalPitch + deltaYi;
+    },
   };
 
   const self = {
@@ -49,11 +72,12 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
       const notes = storeAccess.getNotes();
       const nextId =
         notes.length > 0 ? Math.max(...notes.map((note) => note.id)) + 1 : 0;
+      const pitch = core.mapYIndexToPitch(yi);
       const newNote: Note = {
         id: nextId,
         position,
         duration: 1,
-        pitch: yi,
+        pitch,
       };
       storeAccess.setNotes((prev) => [...prev, newNote]);
       return newNote;
@@ -124,7 +148,7 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
             const deltaYi = movedCoord.yi - originalCoord.yi;
 
             const position = originalNote.position + deltaXi;
-            const pitch = originalNote.pitch + deltaYi;
+            const pitch = core.shiftPitch(originalNote.pitch, deltaYi);
 
             if (storeAccess.getPreviewNotePitch() !== pitch) {
               storeAccess.setPreviewNotePitch(pitch);
@@ -175,16 +199,17 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
             const deltaYi = movedCoord.yi - originalCoord.yi;
 
             const duration = originalNote.duration + deltaXi;
-            let pitch = originalNote.pitch;
+            let canShiftPitch = false;
             if (1) {
               //allow pitch change for duration edit
-              pitch = originalNote.pitch + deltaYi;
+              canShiftPitch = true;
             } else {
               //disable pitch change for duration edit
-              pitch = isNewNote
-                ? originalNote.pitch + deltaYi
-                : originalNote.pitch;
+              canShiftPitch = isNewNote;
             }
+            const pitch = canShiftPitch
+              ? core.shiftPitch(originalNote.pitch, deltaYi)
+              : originalNote.pitch;
             if (pitch !== storeAccess.getPreviewNotePitch()) {
               storeAccess.setPreviewNotePitch(pitch);
             }

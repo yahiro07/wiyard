@@ -27,7 +27,13 @@ export const EditInputLayer = ({
       e.clientX,
       e.clientY,
     );
-    const hitNoteInfo = hitTestNote(notes, sectionRange, xiFloat, yi);
+    const hitNoteInfo = hitTestNote(
+      notes,
+      sectionRange,
+      xiFloat,
+      yi,
+      editorKind,
+    );
     if (hitNoteInfo?.note.parentNoteId !== undefined) {
       //move parent
       const parentNote = notes.find(
