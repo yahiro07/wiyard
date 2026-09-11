@@ -1,4 +1,4 @@
-import { Note } from "../definitions/types";
+import { EditorKind, Note } from "../definitions/types";
 import { uiConfig } from "../definitions/ui-config";
 import { AppStore } from "../root/store";
 import { startDragSession } from "../utils/drag-session-v0";
@@ -18,7 +18,8 @@ function createTapChecker() {
 
 type setCursorFn = (cursor: string) => void;
 
-export function createNoteEditActions(store: AppStore, isPattern: boolean) {
+export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
+  const isPattern = editorKind === "pattern";
   const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
   const storeAccess = {
     getNotes: () =>

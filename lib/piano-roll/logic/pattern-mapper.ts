@@ -33,10 +33,10 @@ function shiftNotePitch(
 }
 
 const notesMapperBasic1 = createNotesMapperFn(
-  ({ inputNotes, patternNotes, loopBars, patternBars }) => {
+  ({ inputNotes, patternNotes }) => {
     const scalePitches = buildScalePitches();
 
-    let idSequence = 1;
+    let seqNoteIndex = 0;
     return inputNotes.flatMap((inputNote) => {
       return patternNotes.map((patternNote) => {
         const pitch = shiftNotePitch(
@@ -45,37 +45,19 @@ const notesMapperBasic1 = createNotesMapperFn(
           scalePitches,
         );
         return {
-          id: idSequence++,
+          id: 0xffff + seqNoteIndex++,
           position: inputNote.position + patternNote.position,
           pitch,
           duration: patternNote.duration,
+          parentNoteId: inputNote.id,
         };
       });
     });
   },
 );
 
-const notesMapperSerialFill = createNotesMapperFn(
-  ({ inputNotes, patternNotes, loopBars, patternBars }) => {
-    if (inputNotes.length === 0) return [];
-    const firstNote = inputNotes[0];
-    let pitchPoints = [
-      { pos: 0, pitch: firstNote.pitch },
-      ...inputNotes.map((note) => ({
-        pos: note.position,
-        pitch: note.pitch,
-      })),
-    ];
-    pitchPoints = pitchPoints.filter(
-      (pp, index) => pitchPoints.findIndex((it) => it.pos === pp.pos) === index,
-    );
-    return [];
-  },
-);
-
 const notesMappers = {
   basic1: notesMapperBasic1,
-  serialFill: notesMapperSerialFill,
 };
 
 export function generateMappedNotes(

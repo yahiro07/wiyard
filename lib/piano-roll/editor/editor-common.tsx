@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { LoopBarLength, Note, NoteKind } from "../definitions/types";
+import {
+  EditorKind,
+  LoopBarLength,
+  Note,
+  NoteKind,
+} from "../definitions/types";
 import { noteNameLabels, uiConfig } from "../definitions/ui-config";
 import { useAppContext, useStoreAccess } from "../root/app-context";
 import { colorStyle } from "../utils/color-style";
@@ -140,15 +145,15 @@ export function getPatternPitchLabel(pitch: number) {
 export const EditInputLayer = ({
   notes,
   sectionRange,
-  isPattern,
+  editorKind,
 }: {
   notes: Note[];
   sectionRange: SectionRange;
-  isPattern: boolean;
+  editorKind: EditorKind;
 }) => {
   const { store } = useAppContext();
   const [noteEditActions] = useState(() =>
-    createNoteEditActions(store, isPattern),
+    createNoteEditActions(store, editorKind),
   );
 
   const [cursor, setCursor] = useState<string>("auto");
@@ -160,7 +165,15 @@ export const EditInputLayer = ({
       e.clientY,
     );
     const hitNoteInfo = hitTestNote(notes, sectionRange, xiFloat, yi);
-    if (hitNoteInfo?.part === "tail") {
+    if (hitNoteInfo?.note.parentNoteId !== undefined) {
+      //move parent
+      const parentNote = notes.find(
+        (n) => n.id === hitNoteInfo.note.parentNoteId,
+      );
+      if (parentNote) {
+        noteEditActions.startMoveNote(e, parentNote, setCursor);
+      }
+    } else if (hitNoteInfo?.part === "tail") {
       noteEditActions.startAdjustDuration(
         e,
         hitNoteInfo.note,
@@ -190,20 +203,26 @@ export const NoteView = ({
   note,
   sectionRange,
   displaySpec,
-  noteKind,
+  editorKind,
   patternEnabled,
 }: {
   note: Note;
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
-  noteKind: NoteKind;
+  editorKind: EditorKind;
   patternEnabled: boolean;
 }) => {
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi = note.pitch;
   const dur = note.duration;
-  const isPattern = noteKind === "pattern";
+  const isPattern = editorKind === "pattern";
+  let noteKind: NoteKind = "input";
+  if (isPattern) {
+    noteKind = "pattern";
+  } else if (note.parentNoteId !== undefined) {
+    noteKind = "mapped";
+  }
   let bgColor = noteColors[noteKind];
   let borderColor = "#0006";
   if (patternEnabled) {
@@ -245,12 +264,12 @@ export const NotesDisplayLayer = ({
   notes,
   sectionRange,
   displaySpec,
-  noteKind,
+  editorKind,
 }: {
   notes: Note[];
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
-  noteKind: NoteKind;
+  editorKind: EditorKind;
 }) => {
   const [{ patternEnabled }] = useStoreAccess();
   return (
@@ -267,7 +286,7 @@ export const NotesDisplayLayer = ({
             note={note}
             sectionRange={sectionRange}
             displaySpec={displaySpec}
-            noteKind={noteKind}
+            editorKind={editorKind}
             patternEnabled={patternEnabled}
           />
         ))}
@@ -279,15 +298,14 @@ export const NoteLayerStrip = ({
   notes,
   sectionRange,
   displaySpec,
-  noteKind,
+  editorKind,
 }: {
   notes: Note[];
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
-  noteKind: NoteKind;
+  editorKind: EditorKind;
 }) => {
-  const isPattern = noteKind === "pattern";
-  const isMapped = noteKind === "mapped";
+  const isPattern = editorKind === "pattern";
   const { cellW, cellH } = displaySpec;
   const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
   const editorH = cellH * numPitches;
@@ -301,47 +319,45 @@ export const NoteLayerStrip = ({
         notes={notes}
         sectionRange={sectionRange}
         displaySpec={displaySpec}
-        noteKind={noteKind}
+        editorKind={editorKind}
       />
-      {!isMapped && (
-        <EditInputLayer
-          notes={notes}
-          sectionRange={sectionRange}
-          isPattern={isPattern}
-        />
-      )}
+      <EditInputLayer
+        notes={notes}
+        sectionRange={sectionRange}
+        editorKind={editorKind}
+      />
     </div>
   );
 };
 
 export const RepeatingNoteLayers = ({
   displaySpec,
-  noteKind,
+  editorKind,
 }: {
   displaySpec: DisplaySpec;
-  noteKind: NoteKind;
+  editorKind: EditorKind;
 }) => {
   const { store } = useAppContext();
-  const st = store.useSnapshot();
+  const { loopBars, pageIndex, inputNotes, mappedNotes, patternNotes } =
+    store.useSnapshot();
   const { nx, sectionOffset, sectionStride } = getSectionStride(
-    st.loopBars,
-    st.pageIndex,
+    loopBars,
+    pageIndex,
   );
   const sectionRange = useMemo(
     () => ({ offset: sectionOffset, duration: sectionStride }),
     [sectionOffset, sectionStride],
   );
-  const notes = {
-    input: st.inputNotes,
-    pattern: st.patternNotes,
-    mapped: st.mappedNotes,
-  }[noteKind];
-  const isMapped = noteKind === "mapped";
-  if (!notes) return null;
+  const notes = useMemo(() => {
+    if (editorKind === "main") {
+      return mappedNotes ? [...inputNotes, ...mappedNotes] : inputNotes;
+    } else {
+      return patternNotes;
+    }
+  }, [inputNotes, mappedNotes, patternNotes, editorKind]);
+
   return (
-    <div
-      className={cz("absolute-full flex-h", isMapped && "pointer-events-none")}
-    >
+    <div className={cz("absolute-full flex-h")}>
       {seqNumbers(nx).map((i) => {
         return (
           <NoteLayerStrip
@@ -349,7 +365,7 @@ export const RepeatingNoteLayers = ({
             notes={notes}
             sectionRange={sectionRange}
             displaySpec={displaySpec}
-            noteKind={noteKind}
+            editorKind={editorKind}
           />
         );
       })}

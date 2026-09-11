@@ -7,6 +7,7 @@ export type Note = {
   pitch: number;
   position: number;
   duration: number;
+  parentNoteId?: number;
 };
 
 export type SequencerEditState = {
@@ -30,5 +31,7 @@ export type Sight = {
 //   yPitchCenter: number; //0~61
 //   yPitchRange: number; //0~61
 // };
+
+export type EditorKind = "main" | "pattern";
 
 export type NoteKind = "input" | "pattern" | "mapped";
