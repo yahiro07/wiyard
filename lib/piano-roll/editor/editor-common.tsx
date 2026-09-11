@@ -91,7 +91,7 @@ export const GridCanvas = ({
   const height = Math.round(ds.viewH);
   return (
     <canvas
-      className="bg-#888"
+      className="bg-#282828"
       ref={canvasRef}
       width={width}
       height={height}

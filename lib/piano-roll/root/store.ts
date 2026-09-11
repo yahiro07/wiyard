@@ -54,8 +54,8 @@ if (import.meta.env.DEV) {
   ];
   defaultStoreState.patternNotes = [
     { id: 0, position: 0, duration: 2, pitch: 7 },
-    { id: 1, position: 2, duration: 2, pitch: 8 },
-    { id: 2, position: 4, duration: 2, pitch: 9 },
+    { id: 1, position: 2, duration: 2, pitch: 9 },
+    { id: 2, position: 4, duration: 2, pitch: 11 },
   ];
   // defaultStoreState.isPatternView = true;
   defaultStoreState.patternEnabled = true;
