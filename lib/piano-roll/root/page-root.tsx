@@ -171,7 +171,7 @@ const TopBar = () => {
             <DutyKnobContainer />
             <LoopBarsSelectorContainer />
           </div>
-          <PagerContainer />
+          {/* <PagerContainer /> */}
           <SightControlKnobs />
         </div>
       </div>
