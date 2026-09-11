@@ -9,7 +9,7 @@ import { uiConfig } from "../definitions/ui-config";
 import { useAppContext, useStoreAccess } from "../root/app-context";
 import { colorStyle } from "../utils/color-style";
 import { cz } from "../utils/cz";
-import { bottomLimit, seqNumbers } from "../utils/helpers";
+import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
 import {
   DisplaySpec,
   GridDisplaySpec,
@@ -207,6 +207,7 @@ export const NoteView = ({
   editorKind,
   patternEnabled,
   octaveShift,
+  duty: inputDuty,
 }: {
   note: Note;
   sectionRange: SectionRange;
@@ -214,11 +215,11 @@ export const NoteView = ({
   editorKind: EditorKind;
   patternEnabled: boolean;
   octaveShift: number;
+  duty: number;
 }) => {
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi = note.pitch;
-  const dur = note.duration;
   const isPattern = editorKind === "pattern";
   let noteKind: NoteKind = "input";
   if (isPattern) {
@@ -234,6 +235,16 @@ export const NoteView = ({
       borderColor = "#6cc6";
     }
   }
+  let duty = 1;
+  if (
+    (!patternEnabled && noteKind === "input") ||
+    (patternEnabled && noteKind === "mapped")
+  ) {
+    duty = inputDuty;
+  }
+  const dutyM = mapUnaryTo(duty, 0.2, 1);
+  const dur = note.duration * dutyM;
+
   return (
     <div
       className={styleNoteView.base}
@@ -276,7 +287,7 @@ export const NotesDisplayLayer = ({
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
 }) => {
-  const [{ patternEnabled, octave }] = useStoreAccess();
+  const [{ patternEnabled, octave, duty }] = useStoreAccess();
   return (
     <div className="absolute-full">
       {notes
@@ -294,6 +305,7 @@ export const NotesDisplayLayer = ({
             editorKind={editorKind}
             patternEnabled={patternEnabled}
             octaveShift={octave}
+            duty={duty}
           />
         ))}
     </div>
