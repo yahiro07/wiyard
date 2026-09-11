@@ -311,7 +311,7 @@ export const RepeatingNoteLayers = ({
         return (
           <NoteLayerStrip
             key={i}
-            notes={isPattern ? st.patternNotes : st.notes}
+            notes={isPattern ? st.patternNotes : st.inputNotes}
             sectionRange={sectionRange}
             displaySpec={displaySpec}
             isPattern={isPattern}

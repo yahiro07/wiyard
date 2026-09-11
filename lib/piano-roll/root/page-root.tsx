@@ -105,9 +105,9 @@ const PagerContainer = () => {
 
 const TrashButtonContainer = () => {
   const { store } = useAppContext();
-  const hasNote = store.useSnapshot().notes.length > 0;
+  const hasNote = store.useSnapshot().inputNotes.length > 0;
   return (
-    <IconButton disabled={!hasNote} onClick={() => store.setNotes([])}>
+    <IconButton disabled={!hasNote} onClick={() => store.setInputNotes([])}>
       <Icons.Trash size={20} />
     </IconButton>
   );

@@ -21,8 +21,9 @@ type setCursorFn = (cursor: string) => void;
 export function createNoteEditActions(store: AppStore, isPattern: boolean) {
   const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
   const storeAccess = {
-    getNotes: () => (isPattern ? store.state.patternNotes : store.state.notes),
-    setNotes: isPattern ? store.setPatternNotes : store.setNotes,
+    getNotes: () =>
+      isPattern ? store.state.patternNotes : store.state.inputNotes,
+    setNotes: isPattern ? store.setPatternNotes : store.setInputNotes,
     getPreviewNotePitch: () =>
       isPattern ? null : store.state.previewNotePitch,
     setPreviewNotePitch: isPattern ? () => {} : store.setPreviewNotePitch,

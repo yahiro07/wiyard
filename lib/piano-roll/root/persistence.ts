@@ -21,9 +21,9 @@ export function createPersistence(store: AppStore): Persistence {
         st.octave + 10,
         unaryToByte(st.duty),
         Math.floor(st.loopBars * 4),
-        (st.notes.length >> 8) & 0xff,
-        st.notes.length & 0xff,
-        ...st.notes.flatMap((note) => {
+        (st.inputNotes.length >> 8) & 0xff,
+        st.inputNotes.length & 0xff,
+        ...st.inputNotes.flatMap((note) => {
           return [
             (note.id >> 8) & 0xff,
             note.id & 0xff,
@@ -60,7 +60,7 @@ export function createPersistence(store: AppStore): Persistence {
         octave,
         duty,
         loopBars: loopBars as LoopBarLength,
-        notes,
+        inputNotes: notes,
         pageIndex: 0,
       });
       store.setStateLoadRevision((prev) => prev + 1);

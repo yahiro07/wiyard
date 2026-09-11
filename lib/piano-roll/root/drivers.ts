@@ -7,9 +7,9 @@ export function setupUnit(unitInterface: UnitInterface, store: AppStore) {
   const engine = createSequencerEngine(unitInterface);
 
   const unsubscribeStore = store.subscribe(
-    ({ notes, previewNotePitch, octave, duty, loopBars }) => {
-      if (notes !== undefined) {
-        engine.setNotes(notes);
+    ({ inputNotes, previewNotePitch, octave, duty, loopBars }) => {
+      if (inputNotes !== undefined) {
+        engine.setNotes(inputNotes);
       }
       if (loopBars !== undefined) {
         engine.setLoopBars(loopBars);

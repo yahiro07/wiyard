@@ -12,7 +12,7 @@ type StoreState = {
   playPos: number | null;
   loopBars: LoopBarLength;
   pageIndex: number;
-  notes: Note[];
+  inputNotes: Note[];
   previewNotePitch: number | null;
   stateLoadRevision: number;
   sight: Sight;
@@ -30,7 +30,7 @@ const defaultStoreState: StoreState = {
   playPos: null,
   loopBars: 2,
   pageIndex: 0,
-  notes: [],
+  inputNotes: [],
   previewNotePitch: null,
   stateLoadRevision: 0,
   sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.5, yZoom: 0.5 },
@@ -41,7 +41,7 @@ const defaultStoreState: StoreState = {
 };
 if (import.meta.env.DEV) {
   const base = 24;
-  defaultStoreState.notes = [
+  defaultStoreState.inputNotes = [
     { id: 0, position: 0, duration: 2, pitch: base + 0 },
     { id: 1, position: 2, duration: 2, pitch: base + 2 },
     { id: 2, position: 4, duration: 2, pitch: base + 4 },
