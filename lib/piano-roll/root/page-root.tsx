@@ -173,6 +173,17 @@ const DiatonicLanesToggleButton = () => {
   );
 };
 
+const DiatonicLanesAllowSemitoneInputToggleButton = () => {
+  const [{ diatonicLanesAllowSemitoneInput }, mt] = useStoreAccess();
+  return (
+    <Button
+      active={diatonicLanesAllowSemitoneInput}
+      onClick={mt.toggleDiatonicLanesAllowSemitoneInput}
+      text="semi"
+    />
+  );
+};
+
 const RealizeButton = () => {
   const [
     { realized, patternEnabled, inputNotes, patternNotes, isPatternView },
@@ -211,7 +222,11 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
-            <DiatonicLanesToggleButton />
+            <div className="flex-ha gap-2">
+              <DiatonicLanesToggleButton />
+              <DiatonicLanesAllowSemitoneInputToggleButton />
+            </div>
+
             <div className="flex-ha">
               <ViewModeSelector />
               <PatternToggleButton />

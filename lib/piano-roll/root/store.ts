@@ -24,6 +24,7 @@ type StoreState = {
   realized: boolean;
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
+  diatonicLanesAllowSemitoneInput: boolean;
 };
 
 export type AppStore = Store<StoreState>;
@@ -46,6 +47,7 @@ const defaultStoreState: StoreState = {
   realized: false,
   backupInputNotes: null,
   diatonicLanesEnabled: false,
+  diatonicLanesAllowSemitoneInput: false,
 };
 if (import.meta.env.DEV) {
   const base = 24;

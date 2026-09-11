@@ -47,10 +47,11 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
     },
     shiftPitch(originalPitch: number, deltaYi: number) {
       if (editorKind === "mainD") {
+        const snapToScale = !store.state.diatonicLanesAllowSemitoneInput;
         return diatonicLanesPitchHelper.shiftPitch(
           originalPitch,
           deltaYi,
-          true,
+          snapToScale,
         );
       }
       return originalPitch + Math.round(deltaYi);
