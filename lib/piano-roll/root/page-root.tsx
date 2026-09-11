@@ -11,6 +11,7 @@ import { PatternEditorView } from "../editor/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
 import { useAppContext, useStoreAccess } from "./app-context";
+import { useControlActions } from "./control-actions";
 
 const DutyKnobContainer = () => {
   const { store } = useAppContext();
@@ -138,20 +139,43 @@ const ViewModeSelector = () => {
 };
 
 const PatternToggleButton = () => {
-  const [{ patternEnabled, patternNotes }, mt] = useStoreAccess();
+  const [{ patternEnabled, patternNotes, realized }, mt] = useStoreAccess();
   const hasPatternNotes = patternNotes.length > 0;
   return (
     <IconButton
       active={patternEnabled}
-      disabled={!hasPatternNotes}
+      disabled={realized || !hasPatternNotes}
       onClick={mt.togglePatternEnabled}
-      className="!p-1px "
     >
       <div className="w-28px h-28px relative">
         <Icons.Fish size={13} className="absolute top-0 left-0 m-2px" />
         <Icons.Fish size={13} className="absolute bottom-0 right-0 m-2px" />
       </div>
     </IconButton>
+  );
+};
+
+const RealizeButton = () => {
+  const [{ realized, patternEnabled, inputNotes, patternNotes }] =
+    useStoreAccess();
+  const controlActions = useControlActions();
+  const canRealize =
+    patternEnabled && inputNotes.length > 0 && patternNotes.length > 0;
+  return (
+    <div className="-ml-1">
+      {realized ? (
+        <IconButton onClick={controlActions.undoRealize}>
+          <Icons.Restore size={20} />
+        </IconButton>
+      ) : (
+        <IconButton
+          disabled={!canRealize}
+          onClick={controlActions.realizeNotes}
+        >
+          <Icons.Check size={20} />
+        </IconButton>
+      )}
+    </div>
   );
 };
 
@@ -162,9 +186,10 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
-            <div className="flex-ha gap-2">
+            <div className="flex-ha">
               <ViewModeSelector />
               <PatternToggleButton />
+              <RealizeButton />
             </div>
             <TrashButtonContainer />
             <OctaveKnobContainer />

@@ -21,6 +21,8 @@ type StoreState = {
   patternBars: PatternBarLength;
   patternEnabled: boolean;
   mappedNotes: Note[] | null;
+  realized: boolean;
+  backupInputNotes: Note[] | null;
 };
 
 export type AppStore = Store<StoreState>;
@@ -40,6 +42,8 @@ const defaultStoreState: StoreState = {
   patternBars: 0.25,
   patternEnabled: false,
   mappedNotes: null,
+  realized: false,
+  backupInputNotes: null,
 };
 if (import.meta.env.DEV) {
   const base = 24;
