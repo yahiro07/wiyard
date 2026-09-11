@@ -2,13 +2,25 @@ import { UnitInterface } from "wafer-host/unit-types";
 import { LoopBarLength, Note, SequencerEditState } from "../definitions/types";
 import { clampValue, linearInterpolate } from "../utils/helpers";
 
+export type SequencerEngine = {
+  setNotes(notes: Note[]): void;
+  setOctave(octave: number): void;
+  setDuty(duty: number): void;
+  setLoopBars(loopBars: LoopBarLength): void;
+  start(): void;
+  processStep(stepIndex: number, time: number, unitDuration: number): void;
+  stop(): void;
+  previewNoteOn(pitch: number): void;
+  previewNoteOff(): void;
+};
+
 function getNoteShifted(pitch: number, octave: number) {
   return clampValue(24 + octave * 12 + pitch, 0, 127);
 }
 
 export function createSequencerEngine(
   unitInterface: UnitInterface | undefined,
-) {
+): SequencerEngine {
   const editState: SequencerEditState = {
     notes: [],
     octave: 0,

@@ -20,7 +20,7 @@ type StoreState = {
   isPatternView: boolean;
   patternBars: PatternBarLength;
   patternEnabled: boolean;
-  mappedNotes: Note[];
+  mappedNotes: Note[] | null;
   realized: boolean;
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
@@ -42,7 +42,7 @@ const defaultStoreState: StoreState = {
   isPatternView: false,
   patternBars: 0.25,
   patternEnabled: false,
-  mappedNotes: [],
+  mappedNotes: null,
   realized: false,
   backupInputNotes: null,
   diatonicLanesEnabled: false,

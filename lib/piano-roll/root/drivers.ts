@@ -1,16 +1,15 @@
 import { UnitInterface } from "wafer-host/unit-types";
 import { createPersistence } from "./persistence";
-import { createSequencerEngine } from "./sequencer";
+import { SequencerEngine } from "./sequencer";
 import { AppStore } from "./store";
 
-export function setupUnit(unitInterface: UnitInterface, store: AppStore) {
-  const engine = createSequencerEngine(unitInterface);
-
+export function setupUnit(
+  unitInterface: UnitInterface,
+  store: AppStore,
+  engine: SequencerEngine,
+) {
   const unsubscribeStore = store.subscribe(
-    ({ mappedNotes, previewNotePitch, octave, duty, loopBars }) => {
-      if (mappedNotes !== undefined) {
-        engine.setNotes(mappedNotes);
-      }
+    ({ previewNotePitch, octave, duty, loopBars }) => {
       if (loopBars !== undefined) {
         engine.setLoopBars(loopBars);
       }

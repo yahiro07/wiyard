@@ -1,17 +1,18 @@
 import { useLayoutEffect } from "react";
 import { useAppContext } from "../root/app-context";
+import { SequencerEngine } from "../root/sequencer";
 import { generateMappedNotes } from "./pattern-mapper";
 
-export function useGenerateMappedNotes() {
+export function useGenerateMappedNotes(engine: SequencerEngine) {
   const { store } = useAppContext();
   const { inputNotes, patternNotes, loopBars, patternBars, patternEnabled } =
     store.useSnapshot();
   useLayoutEffect(() => {
-    //usually mapped notes are generated when user edits notes or options
     const mappedNotes = patternEnabled
       ? generateMappedNotes(inputNotes, patternNotes, { loopBars, patternBars })
-      : inputNotes;
+      : null;
     store.setMappedNotes(mappedNotes);
+    engine.setNotes(mappedNotes ?? inputNotes);
   }, [
     inputNotes,
     patternNotes,
@@ -19,5 +20,6 @@ export function useGenerateMappedNotes() {
     store.setMappedNotes,
     loopBars,
     patternBars,
+    engine.setNotes,
   ]);
 }
