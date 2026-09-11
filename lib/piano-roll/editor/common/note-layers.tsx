@@ -183,8 +183,14 @@ export const RepeatingNoteLayers = ({
   editorKind: EditorKind;
 }) => {
   const { store } = useAppContext();
-  const { loopBars, pageIndex, inputNotes, mappedNotes, patternNotes } =
-    store.useSnapshot();
+  const {
+    loopBars,
+    pageIndex,
+    inputNotes,
+    mappedNotes,
+    patternNotes,
+    patternEnabled,
+  } = store.useSnapshot();
   const { nx, sectionOffset, sectionStride } = getSectionStride(
     loopBars,
     pageIndex,
@@ -195,12 +201,11 @@ export const RepeatingNoteLayers = ({
   );
   const notes = useMemo(() => {
     if (editorKind === "main") {
-      return [...inputNotes, ...mappedNotes];
+      return patternEnabled ? [...inputNotes, ...mappedNotes] : inputNotes;
     } else {
       return patternNotes;
     }
-  }, [inputNotes, mappedNotes, patternNotes, editorKind]);
-
+  }, [inputNotes, mappedNotes, patternNotes, editorKind, patternEnabled]);
   return (
     <div className={cz("absolute-full flex-h")}>
       {seqNumbers(nx).map((i) => {
