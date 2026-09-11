@@ -1,5 +1,6 @@
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { useGenerateMappedNotes } from "./logic/generator-hooks";
+import { useFixStates } from "./logic/state-fix-hooks";
 import { AppProvider } from "./root/app-context";
 import { setupUnit } from "./root/drivers";
 import { PageRoot } from "./root/page-root";
@@ -7,6 +8,7 @@ import { createAppStore } from "./root/store";
 
 const EffectsHookBox = () => {
   useGenerateMappedNotes();
+  useFixStates();
   return null;
 };
 

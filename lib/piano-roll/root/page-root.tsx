@@ -139,12 +139,13 @@ const ViewModeSelector = () => {
 };
 
 const PatternToggleButton = () => {
-  const [{ patternEnabled, patternNotes, realized }, mt] = useStoreAccess();
+  const [{ patternEnabled, patternNotes, realized, isPatternView }, mt] =
+    useStoreAccess();
   const hasPatternNotes = patternNotes.length > 0;
   return (
     <IconButton
       active={patternEnabled}
-      disabled={realized || !hasPatternNotes}
+      disabled={realized || !hasPatternNotes || isPatternView}
       onClick={mt.togglePatternEnabled}
     >
       <div className="w-28px h-28px relative">
@@ -156,15 +157,22 @@ const PatternToggleButton = () => {
 };
 
 const RealizeButton = () => {
-  const [{ realized, patternEnabled, inputNotes, patternNotes }] =
-    useStoreAccess();
+  const [
+    { realized, patternEnabled, inputNotes, patternNotes, isPatternView },
+  ] = useStoreAccess();
   const controlActions = useControlActions();
   const canRealize =
-    patternEnabled && inputNotes.length > 0 && patternNotes.length > 0;
+    patternEnabled &&
+    inputNotes.length > 0 &&
+    patternNotes.length > 0 &&
+    !isPatternView;
   return (
     <div className="-ml-1">
       {realized ? (
-        <IconButton onClick={controlActions.undoRealize}>
+        <IconButton
+          disabled={isPatternView}
+          onClick={controlActions.undoRealize}
+        >
           <Icons.Restore size={20} />
         </IconButton>
       ) : (
