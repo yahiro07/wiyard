@@ -7,7 +7,6 @@ import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
 import { useDomElementSize } from "../utils/use-dom-element-size";
 import { useGridDisplaySpec } from "./editor-common";
 import { EditorCommonLayout } from "./editor-common-layout";
-import { GridBackground } from "./grid-background";
 import {
   createNoteEditActions,
   getSectionStride,
@@ -211,13 +210,6 @@ const stylePlayPositionLineLayer = {
   ),
 };
 
-const configs = {
-  useNewGrid: false,
-};
-if (1) {
-  configs.useNewGrid = true;
-}
-
 const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const { store } = useAppContext();
   const { loopBars, sight } = store.useSnapshot();
@@ -243,14 +235,6 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
           transform: `translateX(${left}px)`,
         }}
       >
-        {!configs.useNewGrid && (
-          <GridBackground
-            nx={nx}
-            ny={numKeys}
-            width={contentW}
-            height={contentH}
-          />
-        )}
         <RepeatingNoteLayers displaySpec={displaySpec} />
         <PlayPositionLineLayer displaySpec={displaySpec} />
       </div>
