@@ -6,7 +6,11 @@ import { colorStyle } from "../../utils/color-style";
 import { cz } from "../../utils/cz";
 import { mapUnaryTo, seqNumbers } from "../../utils/helpers";
 import { EditInputLayer } from "./edit-input-layer";
-import { getPatternPitchLabel, getSectionStride } from "./editor-common-logic";
+import {
+  diatonicLanesPitchHelper,
+  getPatternPitchLabel,
+  getSectionStride,
+} from "./editor-common-logic";
 import { DisplaySpec, SectionRange } from "./editor-types";
 import { getNoteNameLabel } from "./note-name-helper";
 
@@ -15,8 +19,6 @@ const noteColors = {
   pattern: "#bd8",
   mapped: "#6cc",
 };
-
-const subMap = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
 const NoteView = ({
   note,
@@ -40,9 +42,7 @@ const NoteView = ({
   const yi0 = note.pitch;
   let yi = note.pitch;
   if (editorKind === "mainD") {
-    const oct = Math.floor(yi / 12);
-    const sub = yi % 12;
-    yi = oct * 7 + subMap[sub];
+    yi = diatonicLanesPitchHelper.mapYIndexToDisplayPitch(yi0);
   }
   const isPattern = editorKind === "pattern";
   let noteKind: NoteKind = "input";

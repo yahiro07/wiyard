@@ -98,3 +98,17 @@ export function hitTestNote(
 export function getPatternPitchLabel(pitch: number) {
   return pitch - 7 >= 0 ? pitch - 7 + 1 : pitch - 7 - 1;
 }
+
+const subMap = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+
+export const diatonicLanesPitchHelper = {
+  mapYIndexToDisplayPitch(yi: number, snapToScaleNote?: boolean) {
+    const oct = Math.floor(yi / 12);
+    const sub = yi % 12;
+    const pitch = oct * 7 + subMap[sub];
+    if (snapToScaleNote) {
+      return Math.round(pitch);
+    }
+    return pitch;
+  },
+};
