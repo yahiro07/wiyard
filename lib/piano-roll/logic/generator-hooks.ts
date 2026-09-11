@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useAppContext } from "../root/app-context";
 import { generateMappedNotes } from "./pattern-mapper";
 
@@ -6,7 +6,7 @@ export function useGenerateMappedNotes() {
   const { store } = useAppContext();
   const { inputNotes, patternNotes, loopBars, patternBars, patternEnabled } =
     store.useSnapshot();
-  useEffect(() => {
+  useLayoutEffect(() => {
     //usually mapped notes are generated when user edits notes or options
     const mappedNotes = patternEnabled
       ? generateMappedNotes(inputNotes, patternNotes, { loopBars, patternBars })
