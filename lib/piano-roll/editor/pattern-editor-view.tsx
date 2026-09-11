@@ -64,7 +64,7 @@ const PatternPianoRollEditPart = ({
           transform: `translateX(${left}px)`,
         }}
       >
-        <RepeatingNoteLayers displaySpec={displaySpec} isPattern={true} />
+        <RepeatingNoteLayers displaySpec={displaySpec} noteKind="pattern" />
       </div>
     </div>
   );

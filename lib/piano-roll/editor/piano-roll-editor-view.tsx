@@ -61,7 +61,8 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
           transform: `translateX(${left}px)`,
         }}
       >
-        <RepeatingNoteLayers displaySpec={displaySpec} isPattern={false} />
+        <RepeatingNoteLayers displaySpec={displaySpec} noteKind="input" />
+        <RepeatingNoteLayers displaySpec={displaySpec} noteKind="mapped" />
         <PlayPositionLineLayer displaySpec={displaySpec} />
       </div>
     </div>

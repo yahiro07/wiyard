@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { LoopBarLength, Note } from "../definitions/types";
+import { LoopBarLength, Note, NoteKind } from "../definitions/types";
 import { noteNameLabels, uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
@@ -183,17 +183,19 @@ export const NoteView = ({
   note,
   sectionRange,
   displaySpec,
-  isPattern,
+  noteKind,
 }: {
   note: Note;
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
-  isPattern: boolean;
+  noteKind: NoteKind;
 }) => {
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi = note.pitch;
   const dur = note.duration;
+  const isPattern = noteKind === "pattern";
+  const isMapped = noteKind === "mapped";
   return (
     <div
       className={styleNoteView.base}
@@ -205,7 +207,11 @@ export const NoteView = ({
       }}
     >
       <div
-        className={cz(styleNoteView.label, isPattern && "!bg-#bd8")}
+        className={cz(
+          styleNoteView.label,
+          isPattern && "!bg-#bd8",
+          isMapped && "!bg-#8bd",
+        )}
         style={{ height: cellH - 2 }}
       >
         {isPattern ? getPatternPitchLabel(yi) : noteNameLabels[yi]}
@@ -225,12 +231,12 @@ export const NotesDisplayLayer = ({
   notes,
   sectionRange,
   displaySpec,
-  isPattern,
+  noteKind,
 }: {
   notes: Note[];
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
-  isPattern: boolean;
+  noteKind: NoteKind;
 }) => {
   return (
     <div className="absolute-full">
@@ -246,7 +252,7 @@ export const NotesDisplayLayer = ({
             note={note}
             sectionRange={sectionRange}
             displaySpec={displaySpec}
-            isPattern={isPattern}
+            noteKind={noteKind}
           />
         ))}
     </div>
@@ -257,13 +263,15 @@ export const NoteLayerStrip = ({
   notes,
   sectionRange,
   displaySpec,
-  isPattern,
+  noteKind,
 }: {
   notes: Note[];
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
-  isPattern: boolean;
+  noteKind: NoteKind;
 }) => {
+  const isPattern = noteKind === "pattern";
+  const isMapped = noteKind === "mapped";
   const { cellW, cellH } = displaySpec;
   const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
   const editorH = cellH * numPitches;
@@ -277,23 +285,25 @@ export const NoteLayerStrip = ({
         notes={notes}
         sectionRange={sectionRange}
         displaySpec={displaySpec}
-        isPattern={isPattern}
+        noteKind={noteKind}
       />
-      <EditInputLayer
-        notes={notes}
-        sectionRange={sectionRange}
-        isPattern={isPattern}
-      />
+      {!isMapped && (
+        <EditInputLayer
+          notes={notes}
+          sectionRange={sectionRange}
+          isPattern={isPattern}
+        />
+      )}
     </div>
   );
 };
 
 export const RepeatingNoteLayers = ({
   displaySpec,
-  isPattern,
+  noteKind,
 }: {
   displaySpec: DisplaySpec;
-  isPattern: boolean;
+  noteKind: NoteKind;
 }) => {
   const { store } = useAppContext();
   const st = store.useSnapshot();
@@ -305,16 +315,25 @@ export const RepeatingNoteLayers = ({
     () => ({ offset: sectionOffset, duration: sectionStride }),
     [sectionOffset, sectionStride],
   );
+  const notes = {
+    input: st.inputNotes,
+    pattern: st.patternNotes,
+    mapped: st.mappedNotes,
+  }[noteKind];
+  const isMapped = noteKind === "mapped";
+  if (!notes) return null;
   return (
-    <div className="absolute-full flex-h">
+    <div
+      className={cz("absolute-full flex-h", isMapped && "pointer-events-none")}
+    >
       {seqNumbers(nx).map((i) => {
         return (
           <NoteLayerStrip
             key={i}
-            notes={isPattern ? st.patternNotes : st.inputNotes}
+            notes={notes}
             sectionRange={sectionRange}
             displaySpec={displaySpec}
-            isPattern={isPattern}
+            noteKind={noteKind}
           />
         );
       })}

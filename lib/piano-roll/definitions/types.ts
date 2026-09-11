@@ -1,6 +1,6 @@
 export type LoopBarLength = 0.25 | 0.5 | 1 | 2 | 4 | 8 | 16;
 
-export type PatternLoopBarLength = 0.25 | 0.5 | 1 | 2;
+export type PatternBarLength = 0.25 | 0.5 | 1 | 2;
 
 export type Note = {
   id: number;
@@ -30,3 +30,5 @@ export type Sight = {
 //   yPitchCenter: number; //0~61
 //   yPitchRange: number; //0~61
 // };
+
+export type NoteKind = "input" | "pattern" | "mapped";
