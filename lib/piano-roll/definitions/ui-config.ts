@@ -14,5 +14,5 @@ export const debugConfig = {
   keyAm: false,
 };
 if (appConfig.isDevelopment) {
-  // debugConfig.keyAm = true;
+  debugConfig.keyAm = true;
 }
