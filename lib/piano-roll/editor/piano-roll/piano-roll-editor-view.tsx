@@ -2,12 +2,13 @@ import { useRef } from "react";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
 import { cz } from "../../utils/cz";
-import { bottomLimit, mapUnaryTo } from "../../utils/helpers";
+import { bottomLimit } from "../../utils/helpers";
 import { useDomElementSize } from "../../utils/use-dom-element-size";
 import { EditorCommonLayout } from "../common/editor-common-layout";
 import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { DisplaySpec } from "../common/editor-types";
 import { RepeatingNoteLayers } from "../common/note-layers";
+import { useDisplaySpec } from "../common/use-display-spec";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 
@@ -38,20 +39,7 @@ const stylePlayPositionLineLayer = {
 };
 
 const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
-  const { store } = useAppContext();
-  const { loopBars, sight } = store.useSnapshot();
-  const { numKeys } = uiConfig;
-  const { viewW, cellW, cellH } = displaySpec;
-
-  const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
-  const nx = contentBars * 16;
-  const contentW = cellW * nx;
-  const contentH = cellH * numKeys;
-
-  const maxScrollX = bottomLimit(contentW - viewW, 0);
-  const contentX0 = sight.xPosition * maxScrollX;
-  const left = -contentX0;
-
+  const { contentW, contentH, tx } = displaySpec;
   return (
     <div className={cz("overflow-hidden")}>
       <div
@@ -59,7 +47,7 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
         style={{
           width: contentW,
           height: contentH,
-          transform: `translateX(${left}px)`,
+          transform: `translateX(${tx}px)`,
         }}
       >
         <RepeatingNoteLayers displaySpec={displaySpec} editorKind="main" />
@@ -69,61 +57,42 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   );
 };
 
-const GridBackgroundContainer = ({
-  displaySpec,
-}: {
-  displaySpec: DisplaySpec;
-}) => {
+export const PianoRollEditorView = () => {
+  const measuredDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(measuredDivRef);
+  const keysWidth = 100;
+
   const { store } = useAppContext();
-  const { loopBars } = store.useSnapshot();
-  const { numKeys: numPitches } = uiConfig;
+  const { loopBars, sight } = store.useSnapshot();
   const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
+
+  const displaySpec = useDisplaySpec({
+    contentBars,
+    numPitches: uiConfig.numKeys,
+    sight,
+    mainDivSize,
+  });
 
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
     contentBars,
-    numPitches,
+    uiConfig.numKeys,
   );
-  return <PianoRollGrid displaySpec={gridDisplaySpec} />;
-};
-
-export const PianoRollEditorView = () => {
-  const measuredDivRef = useRef<HTMLDivElement>(null);
-  const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
-  const { numKeys } = uiConfig;
-
-  const size = useDomElementSize(measuredDivRef);
-  const viewW = size?.width ?? 100;
-  const viewH = size?.height ?? 100;
-
-  const displaySpec: DisplaySpec = {
-    viewW,
-    viewH,
-    cellW: mapUnaryTo(sight.xZoom, 20, 80),
-    cellH: mapUnaryTo(sight.yZoom, 20, 60),
-  };
-  const keysWidth = 100;
-
-  const contentH = displaySpec.cellH * numKeys;
-  const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const ty = -sight.yPosition * maxScrollY;
-
   return (
     <EditorCommonLayout
       measuredDivRef={measuredDivRef}
       sideContent={
-        <div style={{ transform: `translateY(${ty}px)` }}>
+        <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
         </div>
       }
       sideContentWidth={keysWidth}
       mainContent={
         <>
-          <GridBackgroundContainer displaySpec={displaySpec} />
+          <PianoRollGrid displaySpec={gridDisplaySpec} />
           <div
             className="absolute-full"
-            style={{ transform: `translateY(${ty}px)` }}
+            style={{ transform: `translateY(${displaySpec.ty}px)` }}
           >
             <PianoRollEditPart displaySpec={displaySpec} />
           </div>

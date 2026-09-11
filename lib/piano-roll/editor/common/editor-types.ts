@@ -3,6 +3,10 @@ export type DisplaySpec = {
   viewH: number;
   cellW: number;
   cellH: number;
+  contentW: number;
+  contentH: number;
+  tx: number;
+  ty: number;
 };
 
 export type GridDisplaySpec = {
