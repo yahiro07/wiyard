@@ -116,4 +116,11 @@ export const diatonicLanesPitchHelper = {
     const sub = yi % 7;
     return oct * 12 + subMapP[sub];
   },
+  shiftPitch(originalPitch: number, deltaYi: number, snapToScaleNote: boolean) {
+    const yi = this.mapPitchToDisplayYIndex(originalPitch) + deltaYi;
+    if (snapToScaleNote) {
+      return this.mapYIndexToPitch(Math.round(yi));
+    }
+    return Math.round(originalPitch + (deltaYi * 12) / 7);
+  },
 };

@@ -47,7 +47,11 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
     },
     shiftPitch(originalPitch: number, deltaYi: number) {
       if (editorKind === "mainD") {
-        return Math.round(originalPitch + (deltaYi * 12) / 7);
+        return diatonicLanesPitchHelper.shiftPitch(
+          originalPitch,
+          deltaYi,
+          true,
+        );
       }
       return originalPitch + deltaYi;
     },
