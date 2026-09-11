@@ -235,15 +235,18 @@ export const NoteView = ({
       borderColor = "#6cc6";
     }
   }
+  const dur = note.duration;
   let duty = 1;
-  if (
-    (!patternEnabled && noteKind === "input") ||
-    (patternEnabled && noteKind === "mapped")
-  ) {
-    duty = inputDuty;
+  if (0) {
+    if (
+      (!patternEnabled && noteKind === "input") ||
+      (patternEnabled && noteKind === "mapped")
+    ) {
+      duty = inputDuty;
+    }
   }
   const dutyM = mapUnaryTo(duty, 0.2, 1);
-  const dur = note.duration * dutyM;
+  const cutoutPercent = (1 - dutyM) * 100;
 
   return (
     <div
@@ -256,7 +259,7 @@ export const NoteView = ({
       }}
     >
       <div
-        className={cz(styleNoteView.label)}
+        className={cz(styleNoteView.inner)}
         style={{
           height: cellH - 2,
           ...colorStyle({ bg: bgColor, bd: borderColor }),
@@ -265,15 +268,23 @@ export const NoteView = ({
         {isPattern
           ? getPatternPitchLabel(yi)
           : getNoteNameLabel(yi, octaveShift)}
+        {cutoutPercent > 0 && (
+          <div
+            className={cz(styleNoteView.cutout)}
+            style={{ width: `${cutoutPercent}%` }}
+          />
+        )}
       </div>
     </div>
   );
 };
 const styleNoteView = {
   base: "absolute flex-c cursor-pointer",
-  label: cz(
+  inner: cz(
     "w-full flex-ha rounded-2px pl-0.5 text-#0008 text-10px font-monospace",
+    "relative",
   ),
+  cutout: "absolute top-0 right-0 bg-black/15 h-full",
 };
 
 export const NotesDisplayLayer = ({
