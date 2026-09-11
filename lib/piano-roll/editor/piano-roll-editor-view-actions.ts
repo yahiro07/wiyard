@@ -1,46 +1,9 @@
-import { LoopBarLength, Note } from "../definitions/types";
+import { Note } from "../definitions/types";
 import { uiConfig } from "../definitions/ui-config";
 import { AppStore } from "../root/store";
 import { startDragSession } from "../utils/drag-session-v0";
+import { getSectionStride } from "./editor-common";
 import { IPointerEvent, SectionRange } from "./editor-types";
-
-export function getSectionStride(loopBars: LoopBarLength, pageIndex: number) {
-  if (loopBars < 2) {
-    const nx = 2 / loopBars;
-    const sectionStride = 32 / nx;
-    return { nx, sectionOffset: 0, sectionStride };
-  } else {
-    const nx = 1;
-    // const sectionStride = 32;
-    // const sectionOffset = pageIndex * sectionStride;
-    const sectionOffset = 0;
-    const sectionStride = loopBars * 16;
-    return { nx, sectionOffset, sectionStride };
-  }
-}
-
-type HitNoteInfo = { note: Note; part: "body" | "tail" };
-
-export function hitTestNote(
-  notes: Note[],
-  sectionRange: SectionRange,
-  xiFloat: number,
-  yi: number,
-): HitNoteInfo | undefined {
-  const xi = Math.floor(xiFloat);
-  for (const note of notes) {
-    if (note.pitch === yi) {
-      const relPos = note.position - sectionRange.offset;
-      const dur = note.duration;
-      const noteTailPos = relPos + dur;
-      if (note.duration >= 2 && xi === noteTailPos - 1) {
-        return { note, part: "tail" };
-      } else if (relPos <= xi && xi < relPos + dur) {
-        return { note, part: "body" };
-      }
-    }
-  }
-}
 
 function createTapChecker() {
   const startTime = Date.now();
@@ -55,7 +18,16 @@ function createTapChecker() {
 
 type setCursorFn = (cursor: string) => void;
 
-export function createNoteEditActions(store: AppStore) {
+export function createNoteEditActions(store: AppStore, isPattern: boolean) {
+  const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
+  const storeAccess = {
+    getNotes: () => (isPattern ? store.state.patternNotes : store.state.notes),
+    setNotes: isPattern ? store.setPatternNotes : store.setNotes,
+    getPreviewNotePitch: () =>
+      isPattern ? null : store.state.previewNotePitch,
+    setPreviewNotePitch: isPattern ? () => {} : store.setPreviewNotePitch,
+  };
+
   const self = {
     mapPointerPositionToCell(
       el: HTMLElement,
@@ -67,26 +39,25 @@ export function createNoteEditActions(store: AppStore) {
       const rect = el.getBoundingClientRect();
       const xiFloat = ((x - rect.left) / rect.width) * sectionStride;
       const xi = Math.floor(xiFloat);
-      const yiFloat = (1 - (y - rect.top) / rect.height) * uiConfig.numKeys;
+      const yiFloat = (1 - (y - rect.top) / rect.height) * numPitches;
       const yi = Math.floor(yiFloat);
       return { xi, xiFloat, yi, yiFloat };
     },
     addNote(position: number, yi: number) {
+      const notes = storeAccess.getNotes();
       const nextId =
-        store.state.notes.length > 0
-          ? Math.max(...store.state.notes.map((note) => note.id)) + 1
-          : 0;
+        notes.length > 0 ? Math.max(...notes.map((note) => note.id)) + 1 : 0;
       const newNote: Note = {
         id: nextId,
         position,
         duration: 1,
         pitch: yi,
       };
-      store.setNotes((prev) => [...prev, newNote]);
+      storeAccess.setNotes((prev) => [...prev, newNote]);
       return newNote;
     },
     setNoteAttrs(noteId: number, attrs: Partial<Note>) {
-      store.setNotes((prev) =>
+      storeAccess.setNotes((prev) =>
         prev.map((note) => (note.id === noteId ? { ...note, ...attrs } : note)),
       );
     },
@@ -105,7 +76,7 @@ export function createNoteEditActions(store: AppStore) {
       return note;
     },
     removeNote(noteId: number) {
-      store.setNotes((prev) => prev.filter((note) => note.id !== noteId));
+      storeAccess.setNotes((prev) => prev.filter((note) => note.id !== noteId));
     },
     startInsertNewNote(
       e0: IPointerEvent,
@@ -133,7 +104,7 @@ export function createNoteEditActions(store: AppStore) {
         e0.clientX,
         e0.clientY,
       );
-      store.setPreviewNotePitch(originalNote.pitch);
+      storeAccess.setPreviewNotePitch(originalNote.pitch);
 
       setCursor("move");
 
@@ -153,8 +124,8 @@ export function createNoteEditActions(store: AppStore) {
             const position = originalNote.position + deltaXi;
             const pitch = originalNote.pitch + deltaYi;
 
-            if (store.state.previewNotePitch !== pitch) {
-              store.setPreviewNotePitch(pitch);
+            if (storeAccess.getPreviewNotePitch() !== pitch) {
+              storeAccess.setPreviewNotePitch(pitch);
             }
 
             noteLatest = self.updateNoteXY(noteLatest, position, pitch);
@@ -164,7 +135,7 @@ export function createNoteEditActions(store: AppStore) {
             if (tapped) {
               self.removeNote(noteLatest.id);
             }
-            store.setPreviewNotePitch(null);
+            storeAccess.setPreviewNotePitch(null);
             setCursor("auto");
           },
         },
@@ -184,7 +155,7 @@ export function createNoteEditActions(store: AppStore) {
         e0.clientX,
         e0.clientY,
       );
-      store.setPreviewNotePitch(originalNote.pitch);
+      storeAccess.setPreviewNotePitch(originalNote.pitch);
 
       setCursor(isNewNote ? "pointer" : "e-resize");
 
@@ -206,8 +177,8 @@ export function createNoteEditActions(store: AppStore) {
               ? originalNote.pitch + deltaYi
               : originalNote.pitch;
 
-            if (pitch !== store.state.previewNotePitch) {
-              store.setPreviewNotePitch(pitch);
+            if (pitch !== storeAccess.getPreviewNotePitch()) {
+              storeAccess.setPreviewNotePitch(pitch);
             }
             noteLatest = self.updateNoteXYD(noteLatest, duration, pitch);
           },
@@ -217,7 +188,7 @@ export function createNoteEditActions(store: AppStore) {
             if (noteLatest.duration <= 0 || tapped) {
               self.removeNote(noteLatest.id);
             }
-            store.setPreviewNotePitch(null);
+            storeAccess.setPreviewNotePitch(null);
           },
           onUpOrCancel() {
             setCursor("auto");

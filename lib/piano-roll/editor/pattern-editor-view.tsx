@@ -4,7 +4,11 @@ import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
 import { useDomElementSize } from "../utils/use-dom-element-size";
-import { useGridDisplaySpec } from "./editor-common";
+import {
+  getPatternPitchLabel,
+  RepeatingNoteLayers,
+  useGridDisplaySpec,
+} from "./editor-common";
 import { EditorCommonLayout } from "./editor-common-layout";
 import { DisplaySpec } from "./editor-types";
 import { PatternGrid } from "./pattern-grid";
@@ -23,9 +27,44 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
             )}
             style={{ height: cellH }}
           >
-            {i - 7 >= 0 ? i - 7 + 1 : i - 7 - 1}
+            {getPatternPitchLabel(i)}
           </div>
         ))}
+      </div>
+    </div>
+  );
+};
+
+const PatternPianoRollEditPart = ({
+  displaySpec,
+}: {
+  displaySpec: DisplaySpec;
+}) => {
+  const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
+  const { numPatternPitches } = uiConfig;
+  const { viewW, cellW, cellH } = displaySpec;
+
+  const contentBars = 2;
+  const nx = contentBars * 16;
+  const contentW = cellW * nx;
+  const contentH = cellH * numPatternPitches;
+
+  const maxScrollX = bottomLimit(contentW - viewW, 0);
+  const contentX0 = sight.xPosition * maxScrollX;
+  const left = -contentX0;
+
+  return (
+    <div className={cz("overflow-hidden")}>
+      <div
+        className="relative flex-h"
+        style={{
+          width: contentW,
+          height: contentH,
+          transform: `translateX(${left}px)`,
+        }}
+      >
+        <RepeatingNoteLayers displaySpec={displaySpec} isPattern={true} />
       </div>
     </div>
   );
@@ -80,7 +119,7 @@ export const PatternEditorView = () => {
             className="absolute-full"
             style={{ transform: `translateY(${ty}px)` }}
           >
-            {/* <PianoRollEditPart displaySpec={displaySpec} /> */}
+            <PatternPianoRollEditPart displaySpec={displaySpec} />
           </div>
         </>
       }

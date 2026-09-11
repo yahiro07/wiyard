@@ -1,179 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Note } from "../definitions/types";
-import { noteNameLabels, uiConfig } from "../definitions/ui-config";
+import { useRef } from "react";
+import { uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
-import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
+import { bottomLimit, mapUnaryTo } from "../utils/helpers";
 import { useDomElementSize } from "../utils/use-dom-element-size";
-import { useGridDisplaySpec } from "./editor-common";
+import { RepeatingNoteLayers, useGridDisplaySpec } from "./editor-common";
 import { EditorCommonLayout } from "./editor-common-layout";
-import { DisplaySpec, IPointerEvent, SectionRange } from "./editor-types";
-import {
-  createNoteEditActions,
-  getSectionStride,
-  hitTestNote,
-} from "./piano-roll-editor-view-actions";
+import { DisplaySpec } from "./editor-types";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
-
-const EditInputLayer = ({
-  notes,
-  sectionRange,
-}: {
-  notes: Note[];
-  sectionRange: SectionRange;
-}) => {
-  const { store } = useAppContext();
-  const [noteEditActions] = useState(() => createNoteEditActions(store));
-
-  const [cursor, setCursor] = useState<string>("auto");
-
-  const handlePointerDown = (e: IPointerEvent) => {
-    const { xiFloat, yi } = noteEditActions.mapPointerPositionToCell(
-      e.currentTarget as HTMLElement,
-      e.clientX,
-      e.clientY,
-    );
-    const hitNoteInfo = hitTestNote(notes, sectionRange, xiFloat, yi);
-    if (hitNoteInfo?.part === "tail") {
-      noteEditActions.startAdjustDuration(
-        e,
-        hitNoteInfo.note,
-        false,
-        setCursor,
-      );
-    } else if (hitNoteInfo?.part === "body") {
-      noteEditActions.startMoveNote(e, hitNoteInfo.note, setCursor);
-    } else {
-      noteEditActions.startInsertNewNote(e, sectionRange, setCursor);
-    }
-  };
-  useEffect(() => {
-    document.body.style.cursor = cursor;
-  }, [cursor]);
-
-  return <div className="absolute-full" onPointerDown={handlePointerDown} />;
-};
-
-const NoteView = ({
-  note,
-  sectionRange,
-  displaySpec,
-}: {
-  note: Note;
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-}) => {
-  const { cellW, cellH } = displaySpec;
-  const pos = note.position - sectionRange.offset;
-  const yi = note.pitch;
-  const dur = note.duration;
-  return (
-    <div
-      className={styleNoteView.base}
-      style={{
-        left: pos * cellW,
-        bottom: yi * cellH,
-        width: cellW * dur - 0.5,
-        height: cellH,
-      }}
-    >
-      <div className={styleNoteView.label} style={{ height: cellH - 2 }}>
-        {noteNameLabels[yi]}
-      </div>
-    </div>
-  );
-};
-const styleNoteView = {
-  base: "absolute flex-c cursor-pointer",
-  label: cz(
-    "w-full flex-ha rounded-2px pl-0.5 text-#0008 text-10px font-monospace",
-    "bg-[var(--cl-note-bg)] bd-#0004",
-  ),
-};
-
-const NotesDisplayLayer = ({
-  notes,
-  sectionRange,
-  displaySpec,
-}: {
-  notes: Note[];
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-}) => {
-  return (
-    <div className="absolute-full">
-      {notes
-        .filter(
-          (note) =>
-            sectionRange.offset <= note.position &&
-            note.position < sectionRange.offset + sectionRange.duration,
-        )
-        .map((note) => (
-          <NoteView
-            key={note.id}
-            note={note}
-            sectionRange={sectionRange}
-            displaySpec={displaySpec}
-          />
-        ))}
-    </div>
-  );
-};
-
-const NoteLayerStrip = ({
-  notes,
-  sectionRange,
-  displaySpec,
-}: {
-  notes: Note[];
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-}) => {
-  const { cellW, cellH } = displaySpec;
-  const editorH = cellH * uiConfig.numKeys;
-  const editorW = cellW * sectionRange.duration;
-  return (
-    <div
-      className="relative overflow-hidden touch-none"
-      style={{ width: editorW, height: editorH }}
-    >
-      <NotesDisplayLayer
-        notes={notes}
-        sectionRange={sectionRange}
-        displaySpec={displaySpec}
-      />
-      <EditInputLayer notes={notes} sectionRange={sectionRange} />
-    </div>
-  );
-};
-
-const RepeatingNoteLayers = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
-  const { store } = useAppContext();
-  const st = store.useSnapshot();
-  const { nx, sectionOffset, sectionStride } = getSectionStride(
-    st.loopBars,
-    st.pageIndex,
-  );
-  const sectionRange = useMemo(
-    () => ({ offset: sectionOffset, duration: sectionStride }),
-    [sectionOffset, sectionStride],
-  );
-  return (
-    <div className="absolute-full flex-h">
-      {seqNumbers(nx).map((i) => {
-        return (
-          <NoteLayerStrip
-            key={i}
-            notes={st.notes}
-            sectionRange={sectionRange}
-            displaySpec={displaySpec}
-          />
-        );
-      })}
-    </div>
-  );
-};
 
 const PlayPositionLineLayer = ({
   displaySpec,
@@ -226,7 +61,7 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
           transform: `translateX(${left}px)`,
         }}
       >
-        <RepeatingNoteLayers displaySpec={displaySpec} />
+        <RepeatingNoteLayers displaySpec={displaySpec} isPattern={false} />
         <PlayPositionLineLayer displaySpec={displaySpec} />
       </div>
     </div>
