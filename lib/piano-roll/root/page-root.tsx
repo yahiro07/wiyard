@@ -100,9 +100,14 @@ const PagerContainer = () => {
 
 const TrashButtonContainer = () => {
   const { store } = useAppContext();
-  const hasNote = store.useSnapshot().inputNotes.length > 0;
+  const controlActions = useControlActions();
+  const { inputNotes, patternNotes, isPatternView } = store.useSnapshot();
+  const hasData = inputNotes.length > 0 || patternNotes.length > 0;
   return (
-    <IconButton disabled={!hasNote} onClick={() => store.setInputNotes([])}>
+    <IconButton
+      disabled={!hasData || isPatternView}
+      onClick={controlActions.clearEditData}
+    >
       <Icons.Trash size={20} />
     </IconButton>
   );

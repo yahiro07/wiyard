@@ -4,10 +4,11 @@ import { AppStore } from "./store";
 
 function createControlActions(store: AppStore) {
   return {
-    clearNotes() {
+    clearEditData() {
       store.assign({
         inputNotes: [],
         patternNotes: [],
+        patternEnabled: false,
         realized: false,
       });
     },
