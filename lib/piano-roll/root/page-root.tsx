@@ -6,7 +6,7 @@ import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
-import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
+import { DiatonicLanesEditorView } from "../editor/diatonic-lanes/diatonic-lanes-editor-view";
 import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
@@ -161,6 +161,18 @@ const PatternToggleButton = () => {
   );
 };
 
+const DiatonicLanesToggleButton = () => {
+  const [{ diatonicLanesEnabled }, mt] = useStoreAccess();
+  return (
+    <Button
+      active={diatonicLanesEnabled}
+      onClick={mt.toggleDiatonicLanesEnabled}
+    >
+      D
+    </Button>
+  );
+};
+
 const RealizeButton = () => {
   const [
     { realized, patternEnabled, inputNotes, patternNotes, isPatternView },
@@ -199,6 +211,7 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
+            <DiatonicLanesToggleButton />
             <div className="flex-ha">
               <ViewModeSelector />
               <PatternToggleButton />
@@ -218,12 +231,15 @@ const TopBar = () => {
 };
 
 export const PageRoot = () => {
-  const { isPatternView } = useAppContext().store.useSnapshot();
+  const { isPatternView, diatonicLanesEnabled } =
+    useAppContext().store.useSnapshot();
   return (
-    <div className="w-full h-full" style={uiColorsCssVarsStyle}>
+    <div className="w-full h-full">
       <EffectorBody className="w-full h-full flex-vc gap-2">
         <TopBar />
-        {isPatternView ? <PatternEditorView /> : <PianoRollEditorView />}
+        {isPatternView && <PatternEditorView />}
+        {!isPatternView && diatonicLanesEnabled && <DiatonicLanesEditorView />}
+        {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
       </EffectorBody>
     </div>
   );

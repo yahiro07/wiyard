@@ -6,10 +6,8 @@ export const uiColors = {
   clPianoRollBgBlackKey: colorMod("#334", "h220 v-2"),
   clPatternGridBg: colorMod("#334", "h220"),
   clPatternGridBgPrimary: colorMod("#334", "h220 v-2"),
+  //
+  clDiatonicLanesGridBg: colorMod("#334", "h220"),
+  clDiatonicLanesGridBgTonic: colorMod("#334", "h220 v-2"),
+  clDiatonicLanesGridBgDominant: colorMod("#334", "h220 v-1"),
 };
-
-export const uiColorsCssVarsStyle = {
-  "--cl-panel-body": uiColors.clPanelBody,
-  "--cl-piano-roll-bg": uiColors.clPianoRollBg,
-  "--cl-piano-roll-bg-black-key": uiColors.clPianoRollBgBlackKey,
-} as React.CSSProperties;

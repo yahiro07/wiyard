@@ -16,6 +16,8 @@ const noteColors = {
   mapped: "#6cc",
 };
 
+const subMap = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+
 const NoteView = ({
   note,
   sectionRange,
@@ -35,7 +37,13 @@ const NoteView = ({
 }) => {
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
-  const yi = note.pitch;
+  const yi0 = note.pitch;
+  let yi = note.pitch;
+  if (editorKind === "mainD") {
+    const oct = Math.floor(yi / 12);
+    const sub = yi % 12;
+    yi = oct * 7 + subMap[sub];
+  }
   const isPattern = editorKind === "pattern";
   let noteKind: NoteKind = "input";
   if (isPattern) {
@@ -82,8 +90,8 @@ const NoteView = ({
         }}
       >
         {isPattern
-          ? getPatternPitchLabel(yi)
-          : getNoteNameLabel(yi, octaveShift)}
+          ? getPatternPitchLabel(yi0)
+          : getNoteNameLabel(yi0, octaveShift)}
         {cutoutPercent > 0 && (
           <div
             className={cz(styleNoteView.cutout)}
@@ -150,9 +158,12 @@ const NoteLayerStrip = ({
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
 }) => {
-  const isPattern = editorKind === "pattern";
   const { cellW, cellH } = displaySpec;
-  const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
+  const numPitches = {
+    main: uiConfig.numKeys,
+    mainD: uiConfig.numDiatonicLanes,
+    pattern: uiConfig.numPatternPitches,
+  }[editorKind];
   const editorH = cellH * numPitches;
   const editorW = cellW * sectionRange.duration;
   return (
@@ -200,12 +211,13 @@ export const RepeatingNoteLayers = ({
     [sectionOffset, sectionStride],
   );
   const notes = useMemo(() => {
-    if (editorKind === "main") {
+    if (editorKind === "main" || editorKind === "mainD") {
       return patternEnabled ? [...inputNotes, ...mappedNotes] : inputNotes;
     } else {
       return patternNotes;
     }
   }, [inputNotes, mappedNotes, patternNotes, editorKind, patternEnabled]);
+  console.log({ notes });
   return (
     <div className={cz("absolute-full flex-h")}>
       {seqNumbers(nx).map((i) => {
