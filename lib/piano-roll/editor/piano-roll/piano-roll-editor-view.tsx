@@ -8,35 +8,10 @@ import { EditorCommonLayout } from "../common/editor-common-layout";
 import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { DisplaySpec } from "../common/editor-types";
 import { RepeatingNoteLayers } from "../common/note-layers";
+import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { useDisplaySpec } from "../common/use-display-spec";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
-
-const PlayPositionLineLayer = ({
-  displaySpec,
-}: {
-  displaySpec: DisplaySpec;
-}) => {
-  const { store } = useAppContext();
-  const { cellW } = displaySpec;
-  const { playPos } = store.useSnapshot();
-  if (playPos === null) return;
-  const barW = cellW * 1.5;
-  const localPos = playPos % 32;
-
-  return (
-    <div
-      className={stylePlayPositionLineLayer.base}
-      style={{ left: localPos * cellW - barW, width: barW }}
-    />
-  );
-};
-const stylePlayPositionLineLayer = {
-  base: cz(
-    "absolute top-0 pointer-events-none h-full",
-    "border-r border-solid border-#0ff4 bg-[linear-gradient(to_right,#0cc0,#0ff3)]",
-  ),
-};
 
 const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
   const { contentW, contentH, tx } = displaySpec;
