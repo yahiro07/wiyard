@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LoopBarLength, Note, NoteKind } from "../definitions/types";
 import { noteNameLabels, uiConfig } from "../definitions/ui-config";
-import { useAppContext } from "../root/app-context";
+import { useAppContext, useStoreAccess } from "../root/app-context";
+import { colorStyle } from "../utils/color-style";
 import { cz } from "../utils/cz";
 import { bottomLimit, seqNumbers } from "../utils/helpers";
 import {
@@ -179,23 +180,38 @@ export const EditInputLayer = ({
   return <div className="absolute-full" onPointerDown={handlePointerDown} />;
 };
 
+const noteColors = {
+  input: "#6cc",
+  pattern: "#bd8",
+  mapped: "#6cc",
+};
+
 export const NoteView = ({
   note,
   sectionRange,
   displaySpec,
   noteKind,
+  patternEnabled,
 }: {
   note: Note;
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
   noteKind: NoteKind;
+  patternEnabled: boolean;
 }) => {
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi = note.pitch;
   const dur = note.duration;
   const isPattern = noteKind === "pattern";
-  const isMapped = noteKind === "mapped";
+  let bgColor = noteColors[noteKind];
+  let borderColor = "#0006";
+  if (patternEnabled) {
+    if (noteKind === "input") {
+      bgColor = "#6cc1";
+      borderColor = "#6cc6";
+    }
+  }
   return (
     <div
       className={styleNoteView.base}
@@ -207,12 +223,11 @@ export const NoteView = ({
       }}
     >
       <div
-        className={cz(
-          styleNoteView.label,
-          isPattern && "!bg-#bd8",
-          isMapped && "!bg-#8bd",
-        )}
-        style={{ height: cellH - 2 }}
+        className={cz(styleNoteView.label)}
+        style={{
+          height: cellH - 2,
+          ...colorStyle({ bg: bgColor, bd: borderColor }),
+        }}
       >
         {isPattern ? getPatternPitchLabel(yi) : noteNameLabels[yi]}
       </div>
@@ -223,7 +238,6 @@ const styleNoteView = {
   base: "absolute flex-c cursor-pointer",
   label: cz(
     "w-full flex-ha rounded-2px pl-0.5 text-#0008 text-10px font-monospace",
-    "bg-[var(--cl-note-bg)] bd-#0004",
   ),
 };
 
@@ -238,6 +252,7 @@ export const NotesDisplayLayer = ({
   displaySpec: DisplaySpec;
   noteKind: NoteKind;
 }) => {
+  const [{ patternEnabled }] = useStoreAccess();
   return (
     <div className="absolute-full">
       {notes
@@ -253,6 +268,7 @@ export const NotesDisplayLayer = ({
             sectionRange={sectionRange}
             displaySpec={displaySpec}
             noteKind={noteKind}
+            patternEnabled={patternEnabled}
           />
         ))}
     </div>
