@@ -53,7 +53,7 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
           true,
         );
       }
-      return originalPitch + deltaYi;
+      return originalPitch + Math.round(deltaYi);
     },
   };
 
@@ -149,7 +149,7 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
               e.position.y,
             );
             const deltaXi = movedCoord.xi - originalCoord.xi;
-            const deltaYi = movedCoord.yi - originalCoord.yi;
+            const deltaYi = movedCoord.yiFloat - originalCoord.yiFloat;
 
             const position = originalNote.position + deltaXi;
             const pitch = core.shiftPitch(originalNote.pitch, deltaYi);
@@ -200,7 +200,7 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
               e.position.y,
             );
             const deltaXi = movedCoord.xi - originalCoord.xi;
-            const deltaYi = movedCoord.yi - originalCoord.yi;
+            const deltaYi = movedCoord.yiFloat - originalCoord.yiFloat;
 
             const duration = originalNote.duration + deltaXi;
             let canShiftPitch = false;

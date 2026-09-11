@@ -22,7 +22,7 @@ export const EditInputLayer = ({
   const [cursor, setCursor] = useState<string>("auto");
 
   const handlePointerDown = (e: IPointerEvent) => {
-    const { xiFloat, yi } = noteEditActions.mapPointerPositionToCell(
+    const { xiFloat, yiFloat } = noteEditActions.mapPointerPositionToCell(
       e.currentTarget as HTMLElement,
       e.clientX,
       e.clientY,
@@ -31,9 +31,10 @@ export const EditInputLayer = ({
       notes,
       sectionRange,
       xiFloat,
-      yi,
+      yiFloat,
       editorKind,
     );
+
     if (hitNoteInfo?.note.parentNoteId !== undefined) {
       //move parent
       const parentNote = notes.find(

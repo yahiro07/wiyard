@@ -78,22 +78,25 @@ export function hitTestNote(
   notes: Note[],
   sectionRange: SectionRange,
   xiFloat: number,
-  yi: number,
+  yiFloat: number,
   editorKind: EditorKind,
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
-  const targetPitch =
-    editorKind === "mainD" ? diatonicLanesPitchHelper.mapYIndexToPitch(yi) : yi;
-  for (const note of notes) {
-    if (note.pitch === targetPitch) {
-      const relPos = note.position - sectionRange.offset;
-      const dur = note.duration;
-      const noteTailPos = relPos + dur;
-      if (note.duration >= 2 && xi === noteTailPos - 1) {
-        return { note, part: "tail" };
-      } else if (relPos <= xi && xi < relPos + dur) {
-        return { note, part: "body" };
-      }
+  const isDiatonic = editorKind === "mainD";
+  for (let i = notes.length - 1; i >= 0; i--) {
+    const note = notes[i];
+    const noteYi = isDiatonic
+      ? diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch)
+      : note.pitch;
+    const yHit = noteYi <= yiFloat && yiFloat < noteYi + 1;
+    if (!yHit) continue;
+    const relPos = note.position - sectionRange.offset;
+    const dur = note.duration;
+    const noteTailPos = relPos + dur;
+    if (note.duration >= 2 && xi === noteTailPos - 1) {
+      return { note, part: "tail" };
+    } else if (relPos <= xi && xi < relPos + dur) {
+      return { note, part: "body" };
     }
   }
 }
@@ -116,8 +119,13 @@ export const diatonicLanesPitchHelper = {
     const sub = yi % 7;
     return oct * 12 + subMapP[sub];
   },
+  checkPitchOnScale(pitch: number) {
+    const sub = pitch % 12;
+    return subMapP.includes(sub);
+  },
   shiftPitch(originalPitch: number, deltaYi: number, snapToScaleNote: boolean) {
-    const yi = this.mapPitchToDisplayYIndex(originalPitch) + deltaYi;
+    const yi =
+      this.mapPitchToDisplayYIndex(originalPitch) + Math.round(deltaYi);
     if (snapToScaleNote) {
       return this.mapYIndexToPitch(Math.round(yi));
     }
