@@ -1,12 +1,13 @@
 import { useRef } from "react";
-import { uiConfig } from "../definitions/ui-config";
-import { useAppContext } from "../root/app-context";
-import { cz } from "../utils/cz";
-import { bottomLimit, mapUnaryTo } from "../utils/helpers";
-import { useDomElementSize } from "../utils/use-dom-element-size";
-import { RepeatingNoteLayers, useGridDisplaySpec } from "./editor-common";
-import { EditorCommonLayout } from "./editor-common-layout";
-import { DisplaySpec } from "./editor-types";
+import { uiConfig } from "../../definitions/ui-config";
+import { useAppContext } from "../../root/app-context";
+import { cz } from "../../utils/cz";
+import { bottomLimit, mapUnaryTo } from "../../utils/helpers";
+import { useDomElementSize } from "../../utils/use-dom-element-size";
+import { EditorCommonLayout } from "../common/editor-common-layout";
+import { useGridDisplaySpec } from "../common/editor-common-logic";
+import { DisplaySpec } from "../common/editor-types";
+import { RepeatingNoteLayers } from "../common/note-layers";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 

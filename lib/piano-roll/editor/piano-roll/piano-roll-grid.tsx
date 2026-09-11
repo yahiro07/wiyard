@@ -1,6 +1,8 @@
-import { uiColors } from "../definitions/ui-theme";
-import { GridCanvas } from "./editor-common";
-import { GridDisplaySpec } from "./editor-types";
+import { uiColors } from "../../definitions/ui-theme";
+import { GridDisplaySpec } from "../common/editor-types";
+import { GridCanvas } from "../common/grid-canvas";
+
+const blackKeys = [1, 3, 6, 8, 10];
 
 function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   const ctx = canvas.getContext("2d");
@@ -22,10 +24,10 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
-      const isPrimary = i % 7 === 0;
-      ctx.fillStyle = isPrimary
-        ? uiColors.clPatternGridBgPrimary
-        : uiColors.clPatternGridBg;
+      const isBlackKey = blackKeys.includes(i % 12);
+      ctx.fillStyle = isBlackKey
+        ? uiColors.clPianoRollBgBlackKey
+        : uiColors.clPianoRollBg;
       ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
     }
   }
@@ -60,7 +62,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   ctx.restore();
 }
 
-export const PatternGrid = ({
+export const PianoRollGrid = ({
   displaySpec: ds,
 }: {
   displaySpec: GridDisplaySpec;

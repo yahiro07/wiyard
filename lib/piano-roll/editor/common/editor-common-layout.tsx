@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { ScrollBarH, ScrollBarV } from "../components/scroll-bar";
-import { useAppContext } from "../root/app-context";
-import { cz } from "../utils/cz";
+import { ScrollBarH, ScrollBarV } from "../../components/scroll-bar";
+import { useAppContext } from "../../root/app-context";
+import { cz } from "../../utils/cz";
 
 export const EditorCommonLayout = ({
   sideContent,

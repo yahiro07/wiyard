@@ -1,16 +1,16 @@
 import { useRef } from "react";
-import { uiConfig } from "../definitions/ui-config";
-import { useAppContext } from "../root/app-context";
-import { cz } from "../utils/cz";
-import { bottomLimit, mapUnaryTo, seqNumbers } from "../utils/helpers";
-import { useDomElementSize } from "../utils/use-dom-element-size";
+import { uiConfig } from "../../definitions/ui-config";
+import { useAppContext } from "../../root/app-context";
+import { cz } from "../../utils/cz";
+import { bottomLimit, mapUnaryTo, seqNumbers } from "../../utils/helpers";
+import { useDomElementSize } from "../../utils/use-dom-element-size";
+import { EditorCommonLayout } from "../common/editor-common-layout";
 import {
   getPatternPitchLabel,
-  RepeatingNoteLayers,
   useGridDisplaySpec,
-} from "./editor-common";
-import { EditorCommonLayout } from "./editor-common-layout";
-import { DisplaySpec } from "./editor-types";
+} from "../common/editor-common-logic";
+import { DisplaySpec } from "../common/editor-types";
+import { RepeatingNoteLayers } from "../common/note-layers";
 import { PatternGrid } from "./pattern-grid";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {

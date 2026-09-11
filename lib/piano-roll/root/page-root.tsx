@@ -7,8 +7,8 @@ import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
 import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
-import { PatternEditorView } from "../editor/pattern-editor-view";
-import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
+import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
+import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
@@ -71,7 +71,7 @@ const LoopBarsSelectorContainer = () => {
   );
 };
 
-const PagerContainer = () => {
+const _PagerContainer = () => {
   const { store } = useAppContext();
   const st = store.useSnapshot();
   const totalPages = Math.max(1, st.loopBars / 2);

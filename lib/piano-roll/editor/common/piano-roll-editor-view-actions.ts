@@ -1,8 +1,8 @@
-import { EditorKind, Note } from "../definitions/types";
-import { uiConfig } from "../definitions/ui-config";
-import { AppStore } from "../root/store";
-import { startDragSession } from "../utils/drag-session-v0";
-import { getSectionStride } from "./editor-common";
+import { EditorKind, Note } from "../../definitions/types";
+import { uiConfig } from "../../definitions/ui-config";
+import { AppStore } from "../../root/store";
+import { startDragSession } from "../../utils/drag-session-v0";
+import { getSectionStride } from "./editor-common-logic";
 import { IPointerEvent, SectionRange } from "./editor-types";
 
 function createTapChecker() {

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { uiConfig } from "../definitions/ui-config";
-import { useAppContext } from "../root/app-context";
-import { cz } from "../utils/cz";
-import { startDragSession } from "../utils/drag-session-v0";
-import { seqNumbers } from "../utils/helpers";
-import { getNoteNameLabel } from "./note-name-helper";
+import { uiConfig } from "../../definitions/ui-config";
+import { useAppContext } from "../../root/app-context";
+import { cz } from "../../utils/cz";
+import { startDragSession } from "../../utils/drag-session-v0";
+import { seqNumbers } from "../../utils/helpers";
+import { getNoteNameLabel } from "../common/note-name-helper";
 
 const keyTypes = [
   "whiteL",
