@@ -5,7 +5,7 @@ import {
   Note,
   NoteKind,
 } from "../definitions/types";
-import { noteNameLabels, uiConfig } from "../definitions/ui-config";
+import { uiConfig } from "../definitions/ui-config";
 import { useAppContext, useStoreAccess } from "../root/app-context";
 import { colorStyle } from "../utils/color-style";
 import { cz } from "../utils/cz";
@@ -16,6 +16,7 @@ import {
   IPointerEvent,
   SectionRange,
 } from "./editor-types";
+import { getNoteNameLabel } from "./note-name-helper";
 import { createNoteEditActions } from "./piano-roll-editor-view-actions";
 
 export function useGridDisplaySpec(
@@ -205,12 +206,14 @@ export const NoteView = ({
   displaySpec,
   editorKind,
   patternEnabled,
+  octaveShift,
 }: {
   note: Note;
   sectionRange: SectionRange;
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
   patternEnabled: boolean;
+  octaveShift: number;
 }) => {
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
@@ -248,7 +251,9 @@ export const NoteView = ({
           ...colorStyle({ bg: bgColor, bd: borderColor }),
         }}
       >
-        {isPattern ? getPatternPitchLabel(yi) : noteNameLabels[yi]}
+        {isPattern
+          ? getPatternPitchLabel(yi)
+          : getNoteNameLabel(yi, octaveShift)}
       </div>
     </div>
   );
@@ -271,7 +276,7 @@ export const NotesDisplayLayer = ({
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
 }) => {
-  const [{ patternEnabled }] = useStoreAccess();
+  const [{ patternEnabled, octave }] = useStoreAccess();
   return (
     <div className="absolute-full">
       {notes
@@ -288,6 +293,7 @@ export const NotesDisplayLayer = ({
             displaySpec={displaySpec}
             editorKind={editorKind}
             patternEnabled={patternEnabled}
+            octaveShift={octave}
           />
         ))}
     </div>

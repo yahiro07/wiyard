@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { noteNameLabels, uiConfig } from "../definitions/ui-config";
+import { uiConfig } from "../definitions/ui-config";
 import { useAppContext } from "../root/app-context";
 import { cz } from "../utils/cz";
 import { startDragSession } from "../utils/drag-session-v0";
 import { seqNumbers } from "../utils/helpers";
+import { getNoteNameLabel } from "./note-name-helper";
 
 const keyTypes = [
   "whiteL",
@@ -57,22 +58,30 @@ function getKeyStyle(subIndex: number, cellH: number) {
   return keyStyle;
 }
 
-const KeyboardKey = ({ yi, cellH }: { yi: number; cellH: number }) => {
-  const { store } = useAppContext();
-
+const KeyboardKey = ({
+  yi,
+  cellH,
+  setPreviewNotePitch,
+  octaveShift,
+}: {
+  yi: number;
+  cellH: number;
+  setPreviewNotePitch: (pitch: number | null) => void;
+  octaveShift: number;
+}) => {
   const subIndex = yi % 12;
-  const label = subIndex === 0 && noteNameLabels[yi];
+  const label = subIndex === 0 && getNoteNameLabel(yi, octaveShift);
   const [pressed, setPressed] = useState(false);
 
   const keyStyle = getKeyStyle(subIndex, cellH);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     setPressed(true);
-    store.setPreviewNotePitch(yi);
+    setPreviewNotePitch(yi);
     startDragSession(e.nativeEvent, {
       onUpOrCancel() {
         setPressed(false);
-        store.setPreviewNotePitch(null);
+        setPreviewNotePitch(null);
       },
     });
   };
@@ -108,11 +117,19 @@ export const SideKeyboardColumn = ({
   width: number;
   cellH: number;
 }) => {
+  const { store } = useAppContext();
+  const { octave } = store.useSnapshot();
   const { numKeys } = uiConfig;
   return (
     <div className="shrink-0" style={{ width }}>
       {seqNumbers(numKeys).map((i) => (
-        <KeyboardKey key={i} yi={numKeys - i - 1} cellH={cellH} />
+        <KeyboardKey
+          key={i}
+          yi={numKeys - i - 1}
+          cellH={cellH}
+          setPreviewNotePitch={store.setPreviewNotePitch}
+          octaveShift={octave}
+        />
       ))}
     </div>
   );
