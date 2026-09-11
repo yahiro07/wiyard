@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useAppContext } from "../root/app-context";
 import { bottomLimit } from "../utils/helpers";
-import { DisplaySpec } from "./editor-types";
+import { DisplaySpec, GridDisplaySpec } from "./editor-types";
 
 export function useGridDisplaySpec(
   displaySpec: DisplaySpec,
@@ -55,3 +55,32 @@ export function useGridDisplaySpec(
     ],
   );
 }
+
+export const GridCanvas = ({
+  displaySpec: ds,
+  renderGrid,
+}: {
+  displaySpec: GridDisplaySpec;
+  renderGrid: (canvas: HTMLCanvasElement, ds: GridDisplaySpec) => void;
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      renderGrid(canvas, ds);
+    }
+  }, [ds, renderGrid]);
+
+  const width = Math.round(ds.viewW);
+  const height = Math.round(ds.viewH);
+  return (
+    <canvas
+      className="bg-#888"
+      ref={canvasRef}
+      width={width}
+      height={height}
+      style={{ width, height }}
+    />
+  );
+};

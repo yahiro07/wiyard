@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import { uiColors } from "../definitions/ui-theme";
+import { GridCanvas } from "./editor-common";
 import { GridDisplaySpec } from "./editor-types";
 
 const blackKeys = [1, 3, 6, 8, 10];
@@ -61,24 +61,5 @@ export const PianoRollGrid = ({
 }: {
   displaySpec: GridDisplaySpec;
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      renderGrid(canvas, ds);
-    }
-  }, [ds]);
-
-  const width = Math.round(ds.viewW);
-  const height = Math.round(ds.viewH);
-  return (
-    <canvas
-      className="bg-#888"
-      ref={canvasRef}
-      width={width}
-      height={height}
-      style={{ width, height }}
-    />
-  );
+  return <GridCanvas displaySpec={ds} renderGrid={renderGrid} />;
 };
