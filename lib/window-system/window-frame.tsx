@@ -81,7 +81,7 @@ const WindowFrameView = ({
                   e.stopPropagation();
                 }}
               >
-                <Icons.Minimize />
+                <Icons.Minimize size={18} />
               </button>
               <button
                 type="button"
@@ -91,7 +91,7 @@ const WindowFrameView = ({
                   e.stopPropagation();
                 }}
               >
-                <Icons.Close />
+                <Icons.Close size={24} />
               </button>
             </div>
 
