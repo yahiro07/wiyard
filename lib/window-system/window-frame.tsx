@@ -29,18 +29,8 @@ const WindowFrameView = ({
 }) => {
   const { width, height } = windowCoordVm.size;
   const displayed = windowStatus === "visible";
-  const minimized = windowStatus === "minimized";
   return (
     <>
-      {minimized && (
-        <div
-          className="absolute"
-          style={{ left: windowCoordVm.position.x, top: 0 }}
-          onClick={toggleMinimized}
-        >
-          {title}
-        </div>
-      )}
       <div
         className="absolute"
         style={{
