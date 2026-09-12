@@ -9,7 +9,7 @@ function getDeskAreaElement() {
   return document.getElementById("domDeskArea") as HTMLElement;
 }
 
-export const unitWindowHandlers = {
+export const windowFrameHandlers = {
   handleBasePointerDown(_: IPointerEvent, windowId: string) {
     actions.setCurrentWindowId(windowId);
   },

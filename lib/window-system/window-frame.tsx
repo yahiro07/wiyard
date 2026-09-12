@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 import { cz } from "../utils/cz";
-import { unitWindowHandlers } from "./handlers";
 import { Icons } from "./icons";
 import { actions, storeSlice } from "./store";
 import { WindowStatus } from "./types";
+import { windowFrameHandlers } from "./window-frame-handlers";
 import {
   useWindowCoordViewModel,
   WindowCoordViewModel,
@@ -29,7 +29,7 @@ const ResizeAnchor = ({
       <div
         className="w-6 h-6"
         onPointerDown={(e) => {
-          unitWindowHandlers.handleResizingAnchorPointerDown(e, windowCoordVm);
+          windowFrameHandlers.handleResizingAnchorPointerDown(e, windowCoordVm);
           e.stopPropagation();
         }}
       />
@@ -80,7 +80,7 @@ const WindowFrameView = ({
           className="relative"
           style={{ width }}
           onPointerDown={(e) =>
-            unitWindowHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
+            windowFrameHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
           }
         >
           <div
@@ -90,7 +90,7 @@ const WindowFrameView = ({
               !evacuated ? "h-34px" : "h-28px",
             )}
             onPointerDown={(e) =>
-              unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
+              windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
             }
           >
             <div className={cz("flex-ha gap-2", evacuated && "hidden")}>
