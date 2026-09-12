@@ -45,7 +45,7 @@ export const actions = {
         }
       }
       const newWindowSpec: WindowSpec = {
-        position: { x: 0, y: 0 },
+        position: { x: size.width / 2, y: size.height / 2 },
         size,
         status,
       };

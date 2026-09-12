@@ -1,4 +1,4 @@
-import { Point } from "./common-types";
+import { Point, Size } from "./common-types";
 
 export const vectorOp = {
   equals(v0: Point, v1: Point) {
@@ -21,6 +21,15 @@ export const vectorOp = {
   },
   scale(v: Point, m: number) {
     return { x: v.x * m, y: v.y * m };
+  },
+};
+
+export const sizeOp = {
+  scale(size: Size, m: number) {
+    return { width: size.width * m, height: size.height * m };
+  },
+  rounded(size: Size) {
+    return { width: Math.round(size.width), height: Math.round(size.height) };
   },
 };
 

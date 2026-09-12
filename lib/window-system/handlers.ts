@@ -1,9 +1,13 @@
-import { startDragSessionEx } from "../utils/drag-session";
-import { vectorOp } from "../utils/geometry-helper";
+import { createDragSessionEx, startDragSessionEx } from "../utils/drag-session";
+import { sizeOp, vectorOp } from "../utils/geometry-helper";
 import { actions, storeSlice } from "./store";
 import { WindowCoordViewModel } from "./window-view-models";
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;
+
+function getDeskAreaElement() {
+  return document.getElementById("domDeskArea") as HTMLElement;
+}
 
 export const unitWindowHandlers = {
   handleBasePointerDown(_: IPointerEvent, windowId: string) {
@@ -57,14 +61,26 @@ export const unitWindowHandlers = {
     e0: IPointerEvent,
     windowCoordVm: WindowCoordViewModel,
   ) {
+    const deskAreaElement = getDeskAreaElement();
     const originalSize = windowCoordVm.size;
-    startDragSessionEx(e0, {
-      onMove(_, delta) {
-        const scale = 1 - delta.y / 100;
-        const newSize = {
-          width: Math.round(originalSize.width * scale),
-          height: Math.round(originalSize.height * scale),
-        };
+    const dragSession = createDragSessionEx(e0, {
+      coordinateBaseElement: deskAreaElement,
+    });
+    const centerP = windowCoordVm.position;
+    const p0 = dragSession.startPosition;
+    const baseDelta = vectorOp.subtract(p0, centerP);
+    const oppositeP = vectorOp.subtract(centerP, baseDelta);
+
+    dragSession.run({
+      onMove(p1) {
+        const scale =
+          vectorOp.distance(p1, oppositeP) / vectorOp.distance(p0, oppositeP);
+        const newSize = sizeOp.rounded(sizeOp.scale(originalSize, scale));
+        const newPos = vectorOp.add(
+          oppositeP,
+          vectorOp.scale(baseDelta, scale),
+        );
+        windowCoordVm.setPosition(newPos);
         windowCoordVm.setSize(newSize);
       },
     });

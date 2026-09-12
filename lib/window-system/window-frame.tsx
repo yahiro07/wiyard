@@ -9,6 +9,34 @@ import {
   WindowCoordViewModel,
 } from "./window-view-models";
 
+const ResizeAnchor = ({
+  anchor,
+  windowCoordVm,
+}: {
+  anchor: "tl" | "tr" | "bl" | "br";
+  windowCoordVm: WindowCoordViewModel;
+}) => {
+  return (
+    <div
+      className={cz(
+        "absolute",
+        anchor === "tl" && "top-[-12px] left-[-12px] cursor-nwse-resize",
+        anchor === "tr" && "top-[-12px] right-[-12px] cursor-nesw-resize",
+        anchor === "bl" && "bottom-[-12px] left-[-12px] cursor-nesw-resize",
+        anchor === "br" && "bottom-[-12px] right-[-12px] cursor-nwse-resize",
+      )}
+    >
+      <div
+        className="w-6 h-6"
+        onPointerDown={(e) => {
+          unitWindowHandlers.handleResizingAnchorPointerDown(e, windowCoordVm);
+          e.stopPropagation();
+        }}
+      />
+    </div>
+  );
+};
+
 const WindowFrameView = ({
   title,
   windowCoordVm,
@@ -30,10 +58,14 @@ const WindowFrameView = ({
 }) => {
   const { width, height } = windowCoordVm.size;
   const displayed = windowStatus === "visible";
+
   return (
     <>
       <div
-        className="absolute"
+        className={cz(
+          "absolute",
+          !evacuated ? "-translate-x-1/2 -translate-y-1/2" : "-translate-x-1/2",
+        )}
         style={{
           left: windowCoordVm.position.x,
           top: evacuated ? "0" : windowCoordVm.position.y,
@@ -45,6 +77,7 @@ const WindowFrameView = ({
         }}
       >
         <div
+          className="relative"
           style={{ width }}
           onPointerDown={(e) =>
             unitWindowHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
@@ -60,19 +93,6 @@ const WindowFrameView = ({
             }
           >
             <div className={cz("flex-ha gap-2", evacuated && "hidden")}>
-              <button
-                type="button"
-                className="cursor-pointer"
-                onPointerDown={(e) => {
-                  unitWindowHandlers.handleResizingAnchorPointerDown(
-                    e,
-                    windowCoordVm,
-                  );
-                  e.stopPropagation();
-                }}
-              >
-                sz
-              </button>
               <button
                 type="button"
                 className="cursor-pointer"
@@ -109,6 +129,14 @@ const WindowFrameView = ({
             {children}
           </div>
         </div>
+        {!evacuated && (
+          <>
+            <ResizeAnchor anchor="tl" windowCoordVm={windowCoordVm} />
+            <ResizeAnchor anchor="tr" windowCoordVm={windowCoordVm} />
+            <ResizeAnchor anchor="bl" windowCoordVm={windowCoordVm} />
+            <ResizeAnchor anchor="br" windowCoordVm={windowCoordVm} />
+          </>
+        )}
       </div>
     </>
   );
