@@ -28,7 +28,7 @@ export const ScrollBarH = ({
       horizontal
       dragRange={1200}
     >
-      <div className={cz("w-full h-40px relative")} style={colorStyles.base}>
+      <div className={cz("w-full h-24px relative")} style={colorStyles.base}>
         <div
           className={cz("w-200px h-full absolute top-0")}
           style={{
@@ -59,7 +59,7 @@ export const ScrollBarV = ({
       dragRange={800}
       invert
     >
-      <div className={cz("h-full w-40px relative")} style={colorStyles.base}>
+      <div className={cz("h-full w-24px relative")} style={colorStyles.base}>
         <div
           className={cz("h-200px w-full absolute left-0")}
           style={{

@@ -14,8 +14,8 @@ export function useDisplaySpec({
   sight: Sight;
   mainDivSize: Size | undefined;
 }): DisplaySpec {
-  const cellW = mapUnaryTo(sight.xZoom, 20, 80);
-  const cellH = mapUnaryTo(sight.yZoom, 20, 60);
+  const cellW = mapUnaryTo(sight.xZoom, 10, 60);
+  const cellH = mapUnaryTo(sight.yZoom, 10, 50);
 
   const viewW = mainDivSize?.width ?? 100;
   const viewH = mainDivSize?.height ?? 100;

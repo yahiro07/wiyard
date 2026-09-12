@@ -18,16 +18,16 @@ export const EditorCommonLayout = ({
   const { sight } = store.useSnapshot();
   return (
     <div
-      className={cz("overflow-hidden relative", "w-full grow")}
+      className={cz("overflow-hidden relative -mt-4", "w-full grow")}
       style={{
         display: "grid",
-        gridTemplateColumns: `${sideContentWidth}px 1fr 40px`,
-        gridTemplateRows: "20px 1fr 40px",
+        gridTemplateColumns: `${sideContentWidth}px 1fr 24px`,
+        gridTemplateRows: "20px 1fr 24px",
       }}
     >
-      <div>cc</div>
-      <div>dd</div>
-      <div>ee</div>
+      <div></div>
+      <div></div>
+      <div></div>
       <div className="overflow-hidden">{sideContent}</div>
       <div className="overflow-hidden relative" ref={measuredDivRef}>
         {mainContent}
@@ -40,7 +40,7 @@ export const EditorCommonLayout = ({
           }}
         />
       </div>
-      <div>ff</div>
+      <div></div>
       <div>
         <ScrollBarH
           position={sight.xPosition}
@@ -49,7 +49,7 @@ export const EditorCommonLayout = ({
           }}
         />
       </div>
-      <div>gg</div>
+      <div></div>
     </div>
   );
 };

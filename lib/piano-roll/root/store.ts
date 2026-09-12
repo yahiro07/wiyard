@@ -38,7 +38,7 @@ const defaultStoreState: StoreState = {
   inputNotes: [],
   previewNotePitch: null,
   stateLoadRevision: 0,
-  sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.5, yZoom: 0.5 },
+  sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.7, yZoom: 0.7 },
   patternNotes: [],
   isPatternView: false,
   patternBars: 0.25,
@@ -49,7 +49,7 @@ const defaultStoreState: StoreState = {
   diatonicLanesEnabled: false,
   diatonicLanesAllowSemitoneInput: false,
 };
-if (import.meta.env.DEV) {
+if (import.meta.env.DEV && 0) {
   const base = 24;
   defaultStoreState.inputNotes = [
     { id: 0, position: 0, duration: 8, pitch: base + 0 },
