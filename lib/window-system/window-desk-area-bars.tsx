@@ -12,7 +12,7 @@ export const WindowDock = ({ children }: { children: ReactNode }) => {
   }
   return (
     <>
-      <div className="absolute-left-center z-100">
+      <div className="absolute-left-center z-1">
         <div
           className={cz(
             "w-55px min-h-140px m-2 flex-vc gap-2 py-6",
