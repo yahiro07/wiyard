@@ -1,4 +1,3 @@
-import { uiColors } from "@/common/theme";
 import { deskAreaHandlers } from "@/presenter/desk-area-handlers";
 import { CoordDebugLayer } from "@/realms/desk/coord-debug-layer";
 import { UnitPicker_AddingItem } from "@/realms/desk/unit-picker";
@@ -17,7 +16,14 @@ export const DeskArea = ({
     <div
       id="domDeskArea"
       className="grow relative"
-      style={{ background: uiColors.deskAreaBg }}
+      style={{
+        // background: uiColors.deskAreaBg,
+        background: "#36383a",
+        backgroundImage: `url(https://i.imgur.com/tfiVPzS.png)`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "280px",
+      }}
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       <WiringLayer />
