@@ -85,7 +85,8 @@ const WindowFrameView = ({
         >
           <div
             className={cz(
-              "bg-gray-600/70 flex-c cursor-pointer relative justify-end px-2",
+              "flex-c cursor-pointer relative justify-end px-2",
+              !evacuated && isCurrent ? "bg-#68c/96" : "bg-gray-600/70",
               !evacuated ? "h-34px" : "h-28px",
             )}
             onPointerDown={(e) =>
