@@ -126,7 +126,9 @@ const TopBar = ({
           </button>
         </div>
 
-        <div className="absolute-full flex-c pointer-events-none">{title}</div>
+        <div className="absolute-full flex-c pointer-events-none font-500">
+          {title}
+        </div>
       </div>
     </div>
   );
