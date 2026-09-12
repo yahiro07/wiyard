@@ -4,6 +4,14 @@ export function clampValue(value: number, lo: number, hi: number) {
   return value;
 }
 
+export function bottomLimit(value: number, limit: number) {
+  return Math.max(value, limit);
+}
+
+export function topLimit(value: number, limit: number) {
+  return Math.min(value, limit);
+}
+
 export function checkArrayItemEquals<T>(a: T[], b: T[]) {
   if (a.length !== b.length) return false;
   return a.every((item, index) => item === b[index]);
