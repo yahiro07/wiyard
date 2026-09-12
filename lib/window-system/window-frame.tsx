@@ -95,7 +95,7 @@ const TopBar = ({
     <div className="absolute top-[-34px] w-full">
       <div
         className={cz(
-          "flex-c cursor-pointer relative justify-end px-2",
+          "flex-c relative justify-end px-2",
           isCurrent ? "bg-#68c/96" : "bg-gray-600/70",
           "h-34px",
         )}

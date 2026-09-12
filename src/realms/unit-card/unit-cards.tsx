@@ -107,6 +107,7 @@ const EdgeUnitCardView = ({
   label: string;
   handlePointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
 }) => {
+  const isNoteInputPort = unitItem.internalUnitKey === "noteInputPort";
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   return (
     <div
@@ -123,8 +124,9 @@ const EdgeUnitCardView = ({
         )}
         <div
           className={cz(
-            "w-100px h-100px bg-white/50 flex-c cursor-pointer relative",
+            "w-100px h-100px bg-white/50 flex-c relative",
             "border-l border-l-6 border-l-transparent",
+            isNoteInputPort && "cursor-pointer",
             highlighted && "!border-l-#8ae",
           )}
           onPointerDown={handlePointerDown}
