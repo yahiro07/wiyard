@@ -46,7 +46,9 @@ export const WindowDockItem = ({
   if (windowSpec?.status === "minimized") {
     return (
       <div
-        className={cz("w-40px h-40px rounded-8px overflow-hidden")}
+        className={cz(
+          "w-40px h-40px rounded-8px overflow-hidden cursor-pointer",
+        )}
         style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
         onClick={() => {
           actions.setWindowsEvacuated(false);
