@@ -1,6 +1,6 @@
 import { startDragSessionEx } from "../utils/drag-session";
 import { vectorOp } from "../utils/geometry-helper";
-import { actions } from "./store";
+import { actions, storeSlice } from "./store";
 import { WindowCoordViewModel } from "./window-view-models";
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;
@@ -13,17 +13,27 @@ export const unitWindowHandlers = {
     e0: IPointerEvent,
     windowCoordVm: WindowCoordViewModel,
   ) {
-    const unitOriginalPos = windowCoordVm.position;
-    startDragSessionEx(e0, {
-      onMove(_, delta) {
-        const newPos = vectorOp.add(unitOriginalPos, delta);
-        windowCoordVm.setPosition(newPos);
-      },
-      onTap() {
-        actions.setWindowsEvacuated(false);
-        actions.setCurrentWindowId(windowCoordVm.windowId);
-      },
-    });
+    const isEvacuated = storeSlice.get().windowsEvacuated;
+    if (isEvacuated) {
+      startDragSessionEx(e0, {
+        onTap() {
+          actions.setWindowsEvacuated(false);
+        },
+      });
+    } else {
+      actions.setCurrentWindowId(windowCoordVm.windowId);
+      const unitOriginalPos = windowCoordVm.position;
+      startDragSessionEx(e0, {
+        onMove(_, delta) {
+          const newPos = vectorOp.add(unitOriginalPos, delta);
+          windowCoordVm.setPosition(newPos);
+        },
+        onTap() {
+          actions.toggleWindowMinimized(windowCoordVm.windowId);
+        },
+      });
+    }
+
     e0.stopPropagation();
   },
   handleResizingAnchorPointerDown(

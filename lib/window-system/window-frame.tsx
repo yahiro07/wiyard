@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { cz } from "../utils/cz";
 import { unitWindowHandlers } from "./handlers";
 import { Icons } from "./icons";
 import { actions, storeSlice } from "./store";
@@ -50,12 +51,15 @@ const WindowFrameView = ({
           }
         >
           <div
-            className="bg-gray-600/70 flex-c h-34px cursor-pointer relative justify-end px-2"
+            className={cz(
+              "bg-gray-600/70 flex-c cursor-pointer relative justify-end px-2",
+              !evacuated ? "h-34px" : "h-28px",
+            )}
             onPointerDown={(e) =>
               unitWindowHandlers.handleTitleBarPointerDown(e, windowCoordVm)
             }
           >
-            <div className="flex-ha gap-2">
+            <div className={cz("flex-ha gap-2", evacuated && "hidden")}>
               <button
                 type="button"
                 className="cursor-pointer"

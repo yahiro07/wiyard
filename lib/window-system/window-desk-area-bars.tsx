@@ -14,7 +14,10 @@ export const WindowDock = ({ children }: { children: ReactNode }) => {
     <>
       <div className="absolute-left-center z-100">
         <div
-          className={cz("w-55px min-h-140px m-2 flex-vc gap-2 py-6")}
+          className={cz(
+            "w-55px min-h-140px m-2 flex-vc gap-2 py-6",
+            // "h-55px min-w-140px m-2 flex-c gap-2 px-6",
+          )}
           style={{
             background: "#fff1",
             backdropFilter: "blur(3px)",
@@ -46,6 +49,7 @@ export const WindowDockItem = ({
         className={cz("w-40px h-40px rounded-8px overflow-hidden")}
         style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
         onClick={() => {
+          actions.setWindowsEvacuated(false);
           actions.setWindowStatus(id, "visible");
           actions.setCurrentWindowId(id);
         }}
