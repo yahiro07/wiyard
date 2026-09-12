@@ -1,24 +1,10 @@
-import { useEffect, useRef } from "react";
-import { uiColors } from "../definitions/ui-theme";
-
-export type PianoRollGridDisplaySpec = {
-  contentW: number;
-  contentH: number;
-  viewW: number;
-  viewH: number;
-  contentX0: number;
-  contentX1: number;
-  contentY0: number;
-  contentY1: number;
-  cellW: number;
-  cellH: number;
-  numStepsFull: number;
-  numKeysFull: number;
-};
+import { uiColors } from "../../definitions/ui-theme";
+import { GridDisplaySpec } from "../common/editor-types";
+import { GridCanvas } from "../common/grid-canvas";
 
 const blackKeys = [1, 3, 6, 8, 10];
 
-function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
+function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   ctx.save();
@@ -35,7 +21,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
     ds.contentY1 - ds.contentY0,
   );
 
-  for (let i = 0; i < ds.numKeysFull; i++) {
+  for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
       const isBlackKey = blackKeys.includes(i % 12);
@@ -49,7 +35,13 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
   for (let i = 0; i < ds.numStepsFull; i++) {
     const x = i * ds.cellW;
     if (ds.contentX0 <= x && x < ds.contentX1) {
-      ctx.strokeStyle = i % 16 === 0 ? "#0006" : "#0002";
+      let color = "#0002";
+      if (i % 16 === 0) {
+        color = "#0008";
+      } else if (i % 4 === 0) {
+        color = "#0004";
+      }
+      ctx.strokeStyle = color;
       ctx.beginPath();
       ctx.moveTo(x, ds.contentY0);
       ctx.lineTo(x, ds.contentY1);
@@ -57,8 +49,8 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
     }
   }
 
-  for (let i = 0; i < ds.numKeysFull; i++) {
-    const y = (ds.numKeysFull - i) * ds.cellH;
+  for (let i = 0; i < ds.numPitchesFull; i++) {
+    const y = (ds.numPitchesFull - i) * ds.cellH;
     if (ds.contentY0 <= y && y < ds.contentY1) {
       ctx.strokeStyle = "#0002";
       ctx.beginPath();
@@ -73,26 +65,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: PianoRollGridDisplaySpec) {
 export const PianoRollGrid = ({
   displaySpec: ds,
 }: {
-  displaySpec: PianoRollGridDisplaySpec;
+  displaySpec: GridDisplaySpec;
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      renderGrid(canvas, ds);
-    }
-  }, [ds]);
-
-  const width = Math.round(ds.viewW);
-  const height = Math.round(ds.viewH);
-  return (
-    <canvas
-      className="bg-#888"
-      ref={canvasRef}
-      width={width}
-      height={height}
-      style={{ width, height }}
-    />
-  );
+  return <GridCanvas displaySpec={ds} renderGrid={renderGrid} />;
 };

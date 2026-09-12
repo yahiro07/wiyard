@@ -18,7 +18,7 @@ export const Button = ({
     <div
       className={cz(
         "flex-c w-40px h-30px bg-#888 font-bold text-white cursor-pointer",
-        active && "bg-#48c",
+        active && "!bg-#48c",
         disabled && "opacity-40 pointer-events-none",
       )}
       onClick={onClick}

@@ -5,11 +5,13 @@ import { Icons } from "../components/icons";
 import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
-import { LoopBarLength, Sight } from "../definitions/types";
+import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
 import { uiColorsCssVarsStyle } from "../definitions/ui-theme";
-import { PianoRollEditorView } from "../editor/piano-roll-editor-view";
+import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
+import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
 import { createSelectorOptions } from "../utils/selector-option";
-import { useAppContext } from "./app-context";
+import { useAppContext, useStoreAccess } from "./app-context";
+import { useControlActions } from "./control-actions";
 
 const DutyKnobContainer = () => {
   const { store } = useAppContext();
@@ -37,8 +39,15 @@ const OctaveKnobContainer = () => {
   );
 };
 
-export const loopBarsOptions = createSelectorOptions<LoopBarLength>(
+const loopBarsOptions = createSelectorOptions<LoopBarLength>(
   ([0.25, 0.5, 1, 2, 4, 8, 16] satisfies LoopBarLength[]).map((v) => [
+    v,
+    `${v < 1 ? `1/${1 / v}` : v}`,
+  ]),
+);
+
+const patternBarsOptions = createSelectorOptions<PatternBarLength>(
+  ([0.25, 0.5, 1, 2] satisfies LoopBarLength[]).map((v) => [
     v,
     `${v < 1 ? `1/${1 / v}` : v}`,
   ]),
@@ -46,20 +55,23 @@ export const loopBarsOptions = createSelectorOptions<LoopBarLength>(
 
 const LoopBarsSelectorContainer = () => {
   const { store } = useAppContext();
-  const st = store.useSnapshot();
+  const { loopBars, patternBars, isPatternView } = store.useSnapshot();
+  const [options, value, onChange] = isPatternView
+    ? [patternBarsOptions, patternBars, store.setPatternBars]
+    : [loopBarsOptions, loopBars, store.setLoopBars];
   return (
     <LabeledBox label="loop bars">
       <ShiftSelector
         minWidth={50}
-        value={st.loopBars}
-        options={loopBarsOptions}
-        onChange={store.setLoopBars}
+        value={value}
+        options={options}
+        onChange={onChange as (value: LoopBarLength | PatternBarLength) => void}
       />
     </LabeledBox>
   );
 };
 
-const PagerContainer = () => {
+const _PagerContainer = () => {
   const { store } = useAppContext();
   const st = store.useSnapshot();
   const totalPages = Math.max(1, st.loopBars / 2);
@@ -88,9 +100,14 @@ const PagerContainer = () => {
 
 const TrashButtonContainer = () => {
   const { store } = useAppContext();
-  const hasNote = store.useSnapshot().notes.length > 0;
+  const controlActions = useControlActions();
+  const { inputNotes, patternNotes, isPatternView } = store.useSnapshot();
+  const hasData = inputNotes.length > 0 || patternNotes.length > 0;
   return (
-    <IconButton disabled={!hasNote} onClick={() => store.setNotes([])}>
+    <IconButton
+      disabled={!hasData || isPatternView}
+      onClick={controlActions.clearEditData}
+    >
       <Icons.Trash size={20} />
     </IconButton>
   );
@@ -114,6 +131,67 @@ const SightControlKnobs = () => {
   );
 };
 
+const ViewModeSelector = () => {
+  const { store } = useAppContext();
+  const { isPatternView } = store.useSnapshot();
+  return (
+    <Button
+      active={isPatternView}
+      onClick={store.toggleIsPatternView}
+      text="pattern"
+    />
+  );
+};
+
+const PatternToggleButton = () => {
+  const [{ patternEnabled, patternNotes, realized, isPatternView }, mt] =
+    useStoreAccess();
+  const hasPatternNotes = patternNotes.length > 0;
+  return (
+    <IconButton
+      active={patternEnabled}
+      disabled={realized || !hasPatternNotes || isPatternView}
+      onClick={mt.togglePatternEnabled}
+    >
+      <div className="w-28px h-28px relative">
+        <Icons.Fish size={13} className="absolute top-0 left-0 m-2px" />
+        <Icons.Fish size={13} className="absolute bottom-0 right-0 m-2px" />
+      </div>
+    </IconButton>
+  );
+};
+
+const RealizeButton = () => {
+  const [
+    { realized, patternEnabled, inputNotes, patternNotes, isPatternView },
+  ] = useStoreAccess();
+  const controlActions = useControlActions();
+  const canRealize =
+    patternEnabled &&
+    inputNotes.length > 0 &&
+    patternNotes.length > 0 &&
+    !isPatternView;
+  return (
+    <div className="-ml-1">
+      {realized ? (
+        <IconButton
+          disabled={isPatternView}
+          onClick={controlActions.undoRealize}
+        >
+          <Icons.Restore size={20} />
+        </IconButton>
+      ) : (
+        <IconButton
+          disabled={!canRealize}
+          onClick={controlActions.realizeNotes}
+        >
+          <Icons.Check size={20} />
+        </IconButton>
+      )}
+    </div>
+  );
+};
+
 const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
@@ -121,12 +199,17 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
+            <div className="flex-ha">
+              <ViewModeSelector />
+              <PatternToggleButton />
+              <RealizeButton />
+            </div>
             <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
             <LoopBarsSelectorContainer />
           </div>
-          <PagerContainer />
+          {/* <PagerContainer /> */}
           <SightControlKnobs />
         </div>
       </div>
@@ -135,11 +218,12 @@ const TopBar = () => {
 };
 
 export const PageRoot = () => {
+  const { isPatternView } = useAppContext().store.useSnapshot();
   return (
     <div className="w-full h-full" style={uiColorsCssVarsStyle}>
       <EffectorBody className="w-full h-full flex-vc gap-2">
         <TopBar />
-        <PianoRollEditorView />
+        {isPatternView ? <PatternEditorView /> : <PianoRollEditorView />}
       </EffectorBody>
     </div>
   );
