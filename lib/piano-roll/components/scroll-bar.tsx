@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import { colorMod } from "../utils/color-mod";
 import { colorStyle } from "../utils/color-style";
 import { cz } from "../utils/cz";
+import { useDomElementSize } from "../utils/use-dom-element-size";
 import { KnobFrame } from "./headless/knob-frame";
 
 const colorStyles = {
@@ -18,6 +20,9 @@ export const ScrollBarH = ({
   position: number;
   onChange: (position: number) => void;
 }) => {
+  const baseDivRef = useRef<HTMLDivElement>(null);
+  const size = useDomElementSize(baseDivRef);
+  const dragRange = size?.width ? size.width - 200 : undefined;
   return (
     <KnobFrame
       value={position}
@@ -26,9 +31,14 @@ export const ScrollBarH = ({
       max={1}
       step={0.01}
       horizontal
-      dragRange={1200}
+      dragRange={dragRange}
+      cursor="auto"
     >
-      <div className={cz("w-full h-24px relative")} style={colorStyles.base}>
+      <div
+        ref={baseDivRef}
+        className={cz("w-full h-24px relative")}
+        style={colorStyles.base}
+      >
         <div
           className={cz("w-200px h-full absolute top-0")}
           style={{
@@ -48,6 +58,9 @@ export const ScrollBarV = ({
   position: number;
   onChange: (position: number) => void;
 }) => {
+  const baseDivRef = useRef<HTMLDivElement>(null);
+  const size = useDomElementSize(baseDivRef);
+  const dragRange = size?.height ? size.height - 200 : undefined;
   return (
     <KnobFrame
       className="h-full"
@@ -56,10 +69,15 @@ export const ScrollBarV = ({
       min={0}
       max={1}
       step={0.01}
-      dragRange={800}
+      dragRange={dragRange}
       invert
+      cursor="auto"
     >
-      <div className={cz("h-full w-24px relative")} style={colorStyles.base}>
+      <div
+        ref={baseDivRef}
+        className={cz("h-full w-24px relative")}
+        style={colorStyles.base}
+      >
         <div
           className={cz("h-200px w-full absolute left-0")}
           style={{
