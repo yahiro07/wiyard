@@ -73,7 +73,6 @@ const WindowFrameView = ({
               >
                 sz
               </button>
-
               <button
                 type="button"
                 className="cursor-pointer"
@@ -84,7 +83,6 @@ const WindowFrameView = ({
               >
                 <Icons.Minimize />
               </button>
-
               <button
                 type="button"
                 className="cursor-pointer"

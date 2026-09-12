@@ -23,13 +23,30 @@ export const unitWindowHandlers = {
     } else {
       actions.setCurrentWindowId(windowCoordVm.windowId);
       const unitOriginalPos = windowCoordVm.position;
+
+      let latestDist = 0;
+
+      let timerId: NodeJS.Timeout | undefined = setTimeout(() => {
+        if (latestDist < 4) {
+          actions.toggleWindowMinimized(windowCoordVm.windowId);
+        }
+      }, 250);
+
+      const cancelTimer = () => {
+        if (timerId) {
+          clearTimeout(timerId);
+          timerId = undefined;
+        }
+      };
+
       startDragSessionEx(e0, {
         onMove(_, delta) {
           const newPos = vectorOp.add(unitOriginalPos, delta);
           windowCoordVm.setPosition(newPos);
+          latestDist = Math.hypot(delta.x, delta.y);
         },
-        onTap() {
-          actions.toggleWindowMinimized(windowCoordVm.windowId);
+        onEnd() {
+          cancelTimer();
         },
       });
     }
