@@ -58,7 +58,7 @@ export const unitCardHandlers = {
             windowSystem.setEvacuate(false);
           } else {
             actions.setCurrentNoteChannelId(unitItem.noteChannelId);
-            windowSystem.setCurrentWindow(unitItem.unitId);
+            windowSystem.setCurrentWindow(kSequencerWindowId);
           }
         }
       },

@@ -1,3 +1,4 @@
+import { Point } from "../utils/common-types";
 import { createDragSessionEx, startDragSessionEx } from "../utils/drag-session";
 import { sizeOp, vectorOp } from "../utils/geometry-helper";
 import { actions, storeSlice } from "./store";
@@ -6,6 +7,7 @@ import { WindowCoordViewModel } from "./window-view-models";
 type IPointerEvent = React.PointerEvent<HTMLElement>;
 
 function getDeskAreaElement() {
+  //todo: pass desk area element from app to window system
   return document.getElementById("domDeskArea") as HTMLElement;
 }
 
@@ -60,28 +62,47 @@ export const windowFrameHandlers = {
   handleResizingAnchorPointerDown(
     e0: IPointerEvent,
     windowCoordVm: WindowCoordViewModel,
+    anchorInputYOffset: number = 0,
   ) {
+    const wrapInputPoint = (p: Point) => {
+      return { x: p.x, y: p.y + anchorInputYOffset };
+    };
+
     const deskAreaElement = getDeskAreaElement();
-    const originalSize = windowCoordVm.size;
+    const originalSize = windowCoordVm.contentSize;
     const dragSession = createDragSessionEx(e0, {
       coordinateBaseElement: deskAreaElement,
     });
     const centerP = windowCoordVm.position;
-    const p0 = dragSession.startPosition;
+    const p0 = wrapInputPoint(dragSession.startPosition);
     const baseDelta = vectorOp.subtract(p0, centerP);
     const oppositeP = vectorOp.subtract(centerP, baseDelta);
 
+    //todo: pass per-window-id handling options from app to window system
+    const keepAspectRatio = windowCoordVm.windowId !== "sequencerWindow";
+
     dragSession.run({
-      onMove(p1) {
-        const scale =
-          vectorOp.distance(p1, oppositeP) / vectorOp.distance(p0, oppositeP);
-        const newSize = sizeOp.rounded(sizeOp.scale(originalSize, scale));
-        const newPos = vectorOp.add(
-          oppositeP,
-          vectorOp.scale(baseDelta, scale),
-        );
-        windowCoordVm.setPosition(newPos);
-        windowCoordVm.setSize(newSize);
+      onMove(_p1) {
+        const p1 = wrapInputPoint(_p1);
+        if (keepAspectRatio) {
+          const scale =
+            vectorOp.distance(p1, oppositeP) / vectorOp.distance(p0, oppositeP);
+          const newSize = sizeOp.rounded(sizeOp.scale(originalSize, scale));
+          const newPos = vectorOp.add(
+            oppositeP,
+            vectorOp.scale(baseDelta, scale),
+          );
+          windowCoordVm.setPosition(newPos);
+          windowCoordVm.setContentSize(newSize);
+        } else {
+          const newPos = vectorOp.middle(oppositeP, p1);
+          const newSize = sizeOp.rounded({
+            width: Math.abs(p1.x - oppositeP.x),
+            height: Math.abs(p1.y - oppositeP.y),
+          });
+          windowCoordVm.setPosition(newPos);
+          windowCoordVm.setContentSize(newSize);
+        }
       },
     });
     e0.stopPropagation();

@@ -44,10 +44,10 @@ export const actions = {
 
       const isSequencer = windowId === kSequencerWindowId;
       let position = { x: 0, y: 0 };
-      let size = { width: 300, height: 200 };
+      let contentSize = { width: 300, height: 200 };
       if (isSequencer) {
         position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-        size = { width: 1000, height: 600 };
+        contentSize = { width: 1000, height: 600 };
       } else {
         const unitItem = store.state.unitItems.find(
           (item) => item.unitId === windowId,
@@ -57,14 +57,14 @@ export const actions = {
         }
         const viewSize = store.state.unitStuffs[windowId]?.viewSize;
         if (viewSize) {
-          size.width = viewSize.width;
-          size.height = viewSize.height;
+          contentSize.width = viewSize.width;
+          contentSize.height = viewSize.height;
         }
       }
-      position.y = bottomLimit(position.y, (size.height + 24) / 2);
+      position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
       const newWindowSpec: WindowSpec = {
         position,
-        size,
+        contentSize,
         status,
       };
       windowSystem.add(windowId, newWindowSpec);

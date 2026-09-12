@@ -5,7 +5,7 @@ export type WindowStatus = "visible" | "minimized" | "none";
 export type WindowSpec = {
   position: Point;
   status: WindowStatus;
-  size: Size;
+  contentSize: Size;
 };
 
 export type WindowSystem = {
