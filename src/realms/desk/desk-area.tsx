@@ -17,7 +17,7 @@ export const DeskArea = ({
     <div
       id="domDeskArea"
       className="grow relative"
-      style={{ background: uiColors.destAreaBg }}
+      style={{ background: uiColors.deskAreaBg }}
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       <WiringLayer />
