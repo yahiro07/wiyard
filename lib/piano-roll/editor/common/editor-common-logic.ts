@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { LoopBarLength, Note } from "../../definitions/types";
+import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { useAppContext } from "../../root/app-context";
 import { bottomLimit } from "../../utils/helpers";
 import { DisplaySpec, SectionRange } from "./editor-types";
@@ -78,19 +78,25 @@ export function hitTestNote(
   notes: Note[],
   sectionRange: SectionRange,
   xiFloat: number,
-  yi: number,
+  yiFloat: number,
+  editorKind: EditorKind,
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
-  for (const note of notes) {
-    if (note.pitch === yi) {
-      const relPos = note.position - sectionRange.offset;
-      const dur = note.duration;
-      const noteTailPos = relPos + dur;
-      if (note.duration >= 2 && xi === noteTailPos - 1) {
-        return { note, part: "tail" };
-      } else if (relPos <= xi && xi < relPos + dur) {
-        return { note, part: "body" };
-      }
+  const isDiatonic = editorKind === "mainD";
+  for (let i = notes.length - 1; i >= 0; i--) {
+    const note = notes[i];
+    const noteYi = isDiatonic
+      ? diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch)
+      : note.pitch;
+    const yHit = noteYi <= yiFloat && yiFloat < noteYi + 1;
+    if (!yHit) continue;
+    const relPos = note.position - sectionRange.offset;
+    const dur = note.duration;
+    const noteTailPos = relPos + dur;
+    if (note.duration >= 2 && xi === noteTailPos - 1) {
+      return { note, part: "tail" };
+    } else if (relPos <= xi && xi < relPos + dur) {
+      return { note, part: "body" };
     }
   }
 }
@@ -98,3 +104,31 @@ export function hitTestNote(
 export function getPatternPitchLabel(pitch: number) {
   return pitch - 7 >= 0 ? pitch - 7 + 1 : pitch - 7 - 1;
 }
+
+const subMapD = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+const subMapP = [0, 2, 4, 5, 7, 9, 11];
+
+export const diatonicLanesPitchHelper = {
+  mapPitchToDisplayYIndex(pitch: number) {
+    const oct = Math.floor(pitch / 12);
+    const sub = pitch % 12;
+    return oct * 7 + subMapD[sub];
+  },
+  mapYIndexToPitch(yi: number) {
+    const oct = Math.floor(yi / 7);
+    const sub = yi % 7;
+    return oct * 12 + subMapP[sub];
+  },
+  checkPitchOnScale(pitch: number) {
+    const sub = pitch % 12;
+    return subMapP.includes(sub);
+  },
+  shiftPitch(originalPitch: number, deltaYi: number, snapToScaleNote: boolean) {
+    const yi =
+      this.mapPitchToDisplayYIndex(originalPitch) + Math.round(deltaYi);
+    if (snapToScaleNote) {
+      return this.mapYIndexToPitch(Math.round(yi));
+    }
+    return Math.round(originalPitch + (deltaYi * 12) / 7);
+  },
+};

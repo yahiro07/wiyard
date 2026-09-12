@@ -6,7 +6,11 @@ import { colorStyle } from "../../utils/color-style";
 import { cz } from "../../utils/cz";
 import { mapUnaryTo, seqNumbers } from "../../utils/helpers";
 import { EditInputLayer } from "./edit-input-layer";
-import { getPatternPitchLabel, getSectionStride } from "./editor-common-logic";
+import {
+  diatonicLanesPitchHelper,
+  getPatternPitchLabel,
+  getSectionStride,
+} from "./editor-common-logic";
 import { DisplaySpec, SectionRange } from "./editor-types";
 import { getNoteNameLabel } from "./note-name-helper";
 
@@ -35,7 +39,11 @@ const NoteView = ({
 }) => {
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
-  const yi = note.pitch;
+  const yi0 = note.pitch;
+  let yi = note.pitch;
+  if (editorKind === "mainD") {
+    yi = diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch);
+  }
   const isPattern = editorKind === "pattern";
   let noteKind: NoteKind = "input";
   if (isPattern) {
@@ -82,8 +90,8 @@ const NoteView = ({
         }}
       >
         {isPattern
-          ? getPatternPitchLabel(yi)
-          : getNoteNameLabel(yi, octaveShift)}
+          ? getPatternPitchLabel(yi0)
+          : getNoteNameLabel(yi0, octaveShift)}
         {cutoutPercent > 0 && (
           <div
             className={cz(styleNoteView.cutout)}
@@ -150,9 +158,12 @@ const NoteLayerStrip = ({
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
 }) => {
-  const isPattern = editorKind === "pattern";
   const { cellW, cellH } = displaySpec;
-  const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
+  const numPitches = {
+    main: uiConfig.numKeys,
+    mainD: uiConfig.numDiatonicLanes,
+    pattern: uiConfig.numPatternPitches,
+  }[editorKind];
   const editorH = cellH * numPitches;
   const editorW = cellW * sectionRange.duration;
   return (
@@ -183,14 +194,8 @@ export const RepeatingNoteLayers = ({
   editorKind: EditorKind;
 }) => {
   const { store } = useAppContext();
-  const {
-    loopBars,
-    pageIndex,
-    inputNotes,
-    mappedNotes,
-    patternNotes,
-    patternEnabled,
-  } = store.useSnapshot();
+  const { loopBars, pageIndex, inputNotes, mappedNotes, patternNotes } =
+    store.useSnapshot();
   const { nx, sectionOffset, sectionStride } = getSectionStride(
     loopBars,
     pageIndex,
@@ -200,12 +205,14 @@ export const RepeatingNoteLayers = ({
     [sectionOffset, sectionStride],
   );
   const notes = useMemo(() => {
-    if (editorKind === "main") {
-      return patternEnabled ? [...inputNotes, ...mappedNotes] : inputNotes;
+    let tmpNotes: Note[];
+    if (editorKind === "main" || editorKind === "mainD") {
+      tmpNotes = mappedNotes ? [...inputNotes, ...mappedNotes] : inputNotes;
     } else {
-      return patternNotes;
+      tmpNotes = patternNotes;
     }
-  }, [inputNotes, mappedNotes, patternNotes, editorKind, patternEnabled]);
+    return tmpNotes.sort((a, b) => a.pitch - b.pitch);
+  }, [inputNotes, mappedNotes, patternNotes, editorKind]);
   return (
     <div className={cz("absolute-full flex-h")}>
       {seqNumbers(nx).map((i) => {

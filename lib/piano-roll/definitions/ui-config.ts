@@ -1,10 +1,18 @@
-const octaveStart = 2;
+export const appConfig = {
+  isDevelopment: import.meta.env.DEV,
+};
+
 const octaveCount = 5;
-const numKeys = octaveCount * 12 + 1;
 
 export const uiConfig = {
-  octaveStart,
-  octaveCount,
-  numKeys,
-  numPatternPitches: 22,
+  numKeys: octaveCount * 12 + 1,
+  numDiatonicLanes: octaveCount * 7 + 1,
+  numPatternPitches: 7 * 3 + 1,
 };
+
+export const debugConfig = {
+  keyAm: false,
+};
+if (appConfig.isDevelopment) {
+  debugConfig.keyAm = true;
+}

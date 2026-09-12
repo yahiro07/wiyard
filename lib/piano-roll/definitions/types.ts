@@ -32,6 +32,6 @@ export type Sight = {
 //   yPitchRange: number; //0~61
 // };
 
-export type EditorKind = "main" | "pattern";
+export type EditorKind = "main" | "pattern" | "mainD";
 
 export type NoteKind = "input" | "pattern" | "mapped";

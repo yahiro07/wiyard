@@ -36,7 +36,7 @@ export const actions = {
     if (!exists) {
       let size = { width: 300, height: 200 };
       if (windowId === kSequencerWindowId) {
-        size = { width: 570, height: 300 };
+        size = { width: 800, height: 500 };
       } else {
         const viewSize = store.state.unitStuffs[windowId]?.viewSize;
         if (viewSize) {

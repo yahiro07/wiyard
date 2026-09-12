@@ -20,9 +20,11 @@ type StoreState = {
   isPatternView: boolean;
   patternBars: PatternBarLength;
   patternEnabled: boolean;
-  mappedNotes: Note[];
+  mappedNotes: Note[] | null;
   realized: boolean;
   backupInputNotes: Note[] | null;
+  diatonicLanesEnabled: boolean;
+  diatonicLanesAllowSemitoneInput: boolean;
 };
 
 export type AppStore = Store<StoreState>;
@@ -41,15 +43,17 @@ const defaultStoreState: StoreState = {
   isPatternView: false,
   patternBars: 0.25,
   patternEnabled: false,
-  mappedNotes: [],
+  mappedNotes: null,
   realized: false,
   backupInputNotes: null,
+  diatonicLanesEnabled: false,
+  diatonicLanesAllowSemitoneInput: false,
 };
 if (import.meta.env.DEV) {
   const base = 24;
   defaultStoreState.inputNotes = [
     { id: 0, position: 0, duration: 8, pitch: base + 0 },
-    // { id: 1, position: 2, duration: 2, pitch: base + 2 },
+    { id: 1, position: 2, duration: 2, pitch: base + 2 },
     // { id: 2, position: 4, duration: 2, pitch: base + 4 },
     // { id: 3, position: 6, duration: 2, pitch: base + 5 },
     // { id: 4, position: 8, duration: 2, pitch: base + 7 },
@@ -62,7 +66,7 @@ if (import.meta.env.DEV) {
     { id: 2, position: 4, duration: 2, pitch: 11 },
   ];
   // defaultStoreState.isPatternView = true;
-  defaultStoreState.patternEnabled = true;
+  // defaultStoreState.patternEnabled = true;
 }
 
 export function createAppStore(): AppStore {
