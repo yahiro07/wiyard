@@ -11,7 +11,8 @@
     "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@lib/window-system": ["./lib/window-system/index.ts"]
+      "@lib/window-system": ["./lib/window-system/index.ts"],
+      "@lib/piano-roll": ["./lib/piano-roll/index.tsx"]
     }
   },
   "include": ["src"]

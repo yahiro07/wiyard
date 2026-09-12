@@ -1,0 +1,55 @@
+export function seqNumbers(n: number): number[] {
+  return new Array(n).fill(0).map((_, i) => i);
+}
+
+export function iife<T>(fn: () => T): T {
+  return fn();
+}
+
+export function clampValue(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+export function linearInterpolate(
+  value: number,
+  s0: number,
+  s1: number,
+  d0: number,
+  d1: number,
+  clamp?: boolean,
+) {
+  if (s1 === s0) return d0;
+  const v = ((value - s0) / (s1 - s0)) * (d1 - d0) + d0;
+  if (clamp) {
+    const lo = Math.min(d0, d1);
+    const hi = Math.max(d0, d1);
+    return clampValue(v, lo, hi);
+  }
+  return v;
+}
+
+export function mapUnaryTo(value: number, d0: number, d1: number) {
+  return d0 + (d1 - d0) * value;
+}
+
+export function mapUnaryFrom(
+  val: number,
+  lo: number,
+  hi: number,
+  clamp?: boolean,
+) {
+  if (hi === lo) return lo;
+  const v = (val - lo) / (hi - lo);
+  if (clamp) {
+    return clampValue(v, 0, 1);
+  }
+  return v;
+}
+
+export function bottomLimit(value: number, lo: number) {
+  return Math.max(value, lo);
+}
+
+export function topLimit(value: number, hi: number) {
+  return Math.min(value, hi);
+}

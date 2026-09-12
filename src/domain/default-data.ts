@@ -43,7 +43,7 @@ function createDefaultScene() {
     {
       unitId: "sequencer1",
       noteChannelId: "nc1",
-      catalogKey: "fluoritePianoRoll",
+      unitClassKey: "pianoRoll",
     },
   ];
 
@@ -59,7 +59,7 @@ function createDefaultScene() {
     offStageUnitItems.push({
       unitId: "sequencer2",
       noteChannelId: "nc2",
-      catalogKey: "fluoritePianoRoll",
+      unitClassKey: "fluoritePianoRoll",
     });
     unitItems.push({
       type: "edge",
