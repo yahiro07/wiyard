@@ -1,5 +1,7 @@
 import { WindowSpec } from "@lib/window-system";
+import { dequal } from "dequal";
 import { HsUnitStateData } from "wafer-host/core";
+import { appConfig } from "@/domain/app-config";
 import { hostSystem } from "@/domain/host-system-instance";
 import { OffStageUnitItem, UnitItem, WindowId } from "@/domain/types";
 import { store } from "@/store/store";
@@ -20,9 +22,9 @@ type PersistenceData = {
 };
 
 export const persistence = {
-  save() {
+  emitPersistenceData(): PersistenceData {
     const unitStates = hostSystem.getAllUnitStates();
-    const data: PersistenceData = {
+    return {
       ...pickObjectMembers(store.state, {
         unitItems: 1,
         offStageUnitItems: 1,
@@ -37,6 +39,8 @@ export const persistence = {
       }),
       unitStates,
     };
+  },
+  save(data: PersistenceData) {
     localStorage.setItem("wireboard-states", JSON.stringify(data));
     console.log("saved");
     // console.log(JSON.stringify(data, null, 2));
@@ -58,3 +62,27 @@ export const persistence = {
     }
   },
 };
+if (appConfig.isDevelopment && 0) {
+  //bypass persistence for debug
+  Object.assign(persistence, {
+    load() {},
+    save() {},
+  });
+}
+
+export function setupAutoPersistenceTask() {
+  let latestData = persistence.emitPersistenceData();
+  const internal = {
+    ensureLatestSaved() {
+      const data = persistence.emitPersistenceData();
+      if (!dequal(data, latestData)) {
+        persistence.save(data);
+        latestData = data;
+      }
+    },
+  };
+  const timerId = setInterval(() => {
+    internal.ensureLatestSaved();
+  }, 5 * 1000);
+  return () => clearInterval(timerId);
+}

@@ -14,7 +14,6 @@ import {
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
 import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
-import { persistence } from "@/store/persistence";
 import { store, windowSystem } from "@/store/store";
 import {
   AddOrRemoveArrayItem,
@@ -152,8 +151,5 @@ export const actions = {
   },
   togglePlayback() {
     store.togglePlaying();
-  },
-  savePersistentState() {
-    persistence.save();
   },
 };
