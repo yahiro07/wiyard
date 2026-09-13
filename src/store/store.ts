@@ -136,9 +136,11 @@ if (import.meta.hot) {
     setTimeout(() => {
       void (async () => {
         console.log("restore unit states");
+        store.setProjectLoading(true);
         store.assign({ ...backupState, unitStuffs: {}, portStuffs: {} });
         await hostSystem.waitUnitsLoaded();
         hostSystem.setAllUnitStates(unitStates);
+        store.setProjectLoading(false);
       })();
     }, 100);
   }
