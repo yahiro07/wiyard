@@ -121,7 +121,7 @@ const EdgeUnitCardView = ({
         )}
         <div
           className={cz(
-            "w-85px h-85px bg-white/5 flex-c relative shadow-md",
+            "w-90px h-90px bg-white/5 flex-c relative shadow-md",
             isNoteInputPort &&
               "border-l border-l-6 border-l-transparent cursor-pointer",
             highlighted && "!border-l-#8ae",
