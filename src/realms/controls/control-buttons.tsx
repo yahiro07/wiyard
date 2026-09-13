@@ -107,6 +107,21 @@ export const SecondBarButton = () => {
   );
 };
 
+export const SightZoomInput = () => {
+  const { sight } = store.useSnapshot();
+  return (
+    <NumberSlider
+      label="zoom"
+      value={sight.eyeScaling}
+      onChange={(v) => store.patchSight({ eyeScaling: v })}
+      min={0.1}
+      max={2}
+      step={0.01}
+      fracDigits={2}
+    />
+  );
+};
+
 export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-4")}>
@@ -118,6 +133,7 @@ export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
       <MasterVolumeInput />
       <PickerLaunchButton />
       <SecondBarButton />
+      <SightZoomInput />
       {/* <WindowEvacuationButton /> */}
     </div>
   );
