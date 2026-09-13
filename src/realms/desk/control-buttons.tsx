@@ -8,11 +8,13 @@ const ControlButton = ({
   text,
   children,
   onClick,
+  active,
   disabled,
 }: {
   text?: string;
   children?: React.ReactNode;
   onClick?: () => void;
+  active?: boolean;
   disabled?: boolean;
 }) => {
   return (
@@ -21,6 +23,7 @@ const ControlButton = ({
       className={cz(
         "flex-c text-2xl w-40px h-30px cursor-pointer",
         disabled && "opacity-30 pointer-events-none",
+        active && "text-#0cf",
       )}
       onClick={onClick}
     >
@@ -31,7 +34,12 @@ const ControlButton = ({
 };
 
 export const PickerLaunchButton = () => {
-  return <ControlButton text="+" onClick={actions.toggleUnitPickerVisible} />;
+  return (
+    <ControlButton
+      onClick={actions.toggleUnitPickerVisible}
+      children={<Icons.Add size={30} />}
+    />
+  );
 };
 
 export const WindowEvacuationButton = () => {
@@ -49,8 +57,13 @@ export const WindowEvacuationButton = () => {
 };
 
 export const PlaybackButton = () => {
+  const { playing } = store.useSnapshot();
   return (
-    <ControlButton onClick={actions.togglePlayback} children={<Icons.Play />} />
+    <ControlButton
+      active={playing}
+      onClick={actions.togglePlayback}
+      children={<Icons.Play />}
+    />
   );
 };
 
@@ -84,7 +97,7 @@ export const MasterVolumeInput = () => {
 
 export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
-    <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
+    <div className={cz(vertical ? "flex-v" : "flex-h", "gap-4")}>
       <PlaybackButton />
       <BpmInput />
       <MasterVolumeInput />
