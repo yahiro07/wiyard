@@ -48,6 +48,13 @@ const FrontWindowsPlane = () => {
   );
 };
 
+function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
+  return (
+    e.target === e.currentTarget ||
+    (e.target as HTMLElement).id === domIds.graphEditPlane
+  );
+}
+
 export const DeskArea = () => {
   const { projectLoadedIndex } = store.useSnapshot();
   return (
@@ -55,18 +62,17 @@ export const DeskArea = () => {
       // if a new project loaded, refresh all dom elements related to units
       key={projectLoadedIndex}
       id={domIds.deskArea}
-      className="grow relative bg-#aca"
+      className="grow relative bg-#808488"
       onPointerDown={(e) => {
-        if ((e.target as HTMLElement).id === domIds.graphEditPlane) {
+        if (checkSightTarget(e)) {
           sightHandlers.onPointerDown(e.nativeEvent);
           actions.setMenuTargetUnit(null);
         }
       }}
       onWheel={(e) => {
-        //temporal wheel scaling support for development
-        if ((e.target as HTMLElement).id === domIds.graphEditPlane) {
-          sightHandlers.onWheel(e.nativeEvent);
-        }
+        // if (checkSightTarget(e)) {
+        // sightHandlers.onWheel(e.nativeEvent);
+        // }
       }}
     >
       <GraphEditPlane />

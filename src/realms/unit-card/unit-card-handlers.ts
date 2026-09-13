@@ -1,5 +1,6 @@
 import { startDragSessionEx } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
+import { getGraphEditPlaneElement } from "@/common/constants";
 import { kSequencerWindowId, UnitItem } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
@@ -24,39 +25,45 @@ export const unitCardHandlers = {
       }
     };
 
-    startDragSessionEx(e0, {
-      onMove(_, delta) {
-        const newPos = vectorOp.snapped(
-          vectorOp.add(unitOriginalPos, delta),
-          10,
-        );
-        if (!vectorOp.equals(prevPos, newPos)) {
-          actions.setUnitCardPosition(unitItem.unitId, newPos);
-          prevPos = newPos;
-          cancelTimer();
-          actions.setMenuTargetUnit(null);
-        }
-      },
-      onTap() {
-        if (unitItem.type === "board") {
-          windowSystem.setEvacuate(false);
-          actions.setWindowStatus(unitItem.unitId, "visible");
-          windowSystem.setCurrentWindow(unitItem.unitId);
-        } else if (unitItem.type === "noteInput") {
-          const isCurrentNoteCh =
-            store.state.currentNoteChannelId === unitItem.unitId;
-          if (isCurrentNoteCh) {
-            windowSystem.setEvacuate(false);
-            actions.setWindowStatus(kSequencerWindowId, "visible");
-            windowSystem.setCurrentWindow(kSequencerWindowId);
-          } else {
-            actions.setCurrentNoteChannelId(unitItem.unitId);
+    const baseEl = getGraphEditPlaneElement();
+
+    startDragSessionEx(
+      e0,
+      {
+        onMove(_, delta) {
+          const newPos = vectorOp.snapped(
+            vectorOp.add(unitOriginalPos, delta),
+            10,
+          );
+          if (!vectorOp.equals(prevPos, newPos)) {
+            actions.setUnitCardPosition(unitItem.unitId, newPos);
+            prevPos = newPos;
+            cancelTimer();
+            actions.setMenuTargetUnit(null);
           }
-        }
+        },
+        onTap() {
+          if (unitItem.type === "board") {
+            windowSystem.setEvacuate(false);
+            actions.setWindowStatus(unitItem.unitId, "visible");
+            windowSystem.setCurrentWindow(unitItem.unitId);
+          } else if (unitItem.type === "noteInput") {
+            const isCurrentNoteCh =
+              store.state.currentNoteChannelId === unitItem.unitId;
+            if (isCurrentNoteCh) {
+              windowSystem.setEvacuate(false);
+              actions.setWindowStatus(kSequencerWindowId, "visible");
+              windowSystem.setCurrentWindow(kSequencerWindowId);
+            } else {
+              actions.setCurrentNoteChannelId(unitItem.unitId);
+            }
+          }
+        },
+        onEnd() {
+          cancelTimer();
+        },
       },
-      onEnd() {
-        cancelTimer();
-      },
-    });
+      { coordinateBaseElement: baseEl },
+    );
   },
 };

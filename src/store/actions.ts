@@ -4,7 +4,7 @@ import {
 } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
-import { getDeskAreaElement } from "@/common/constants";
+import { boardSize, getDeskAreaElement } from "@/common/constants";
 import {
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
@@ -148,7 +148,7 @@ export const actions = {
       sequencerClassKey: lastPort?.sequencerClassKey ?? "pianoRoll",
       cardPosition: lastPort
         ? { x: lastPort.cardPosition.x, y: lastPort.cardPosition.y + 100 }
-        : { x: 100, y: 400 },
+        : { x: boardSize.width / 2, y: boardSize.height / 2 },
     };
     store.setUnitItems((prev) => [...prev, newPort]);
     store.setCurrentNoteChannelId(unitId);
