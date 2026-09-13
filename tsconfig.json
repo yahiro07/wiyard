@@ -12,7 +12,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@lib/window-system": ["./lib/window-system/index.ts"],
-      "@lib/piano-roll": ["./lib/piano-roll/index.tsx"]
+      "@lib/piano-roll": ["./lib/piano-roll/index.tsx"],
+      "@lib/utils/*": ["./lib/utils/*"]
     }
   },
   "include": ["src"]

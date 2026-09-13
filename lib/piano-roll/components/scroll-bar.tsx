@@ -1,8 +1,8 @@
 import { useRef } from "react";
+import { useDomElementSize } from "../../utils/use-dom-element-size";
 import { colorMod } from "../utils/color-mod";
 import { colorStyle } from "../utils/color-style";
 import { cz } from "../utils/cz";
-import { useDomElementSize } from "../utils/use-dom-element-size";
 import { KnobFrame } from "./headless/knob-frame";
 
 const colorStyles = {
