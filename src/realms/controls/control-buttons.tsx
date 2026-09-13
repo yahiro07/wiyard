@@ -1,6 +1,7 @@
 import { cz } from "@lib/utils/cz";
 import { Icons } from "@/common/icons";
 import { NumberSlider } from "@/components/number-slider";
+import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 
@@ -131,10 +132,18 @@ export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
       <PlaybackButton />
       <BpmInput />
       <MasterVolumeInput />
+      <MidiInButtonContainer />
       <PickerLaunchButton />
       <SecondBarButton />
-      <SightZoomInput />
       {/* <WindowEvacuationButton /> */}
+    </div>
+  );
+};
+
+export const ControlButtonsRight = () => {
+  return (
+    <div className="flex-h gap-2">
+      <SightZoomInput />
     </div>
   );
 };

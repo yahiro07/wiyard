@@ -1,5 +1,7 @@
-import { ControlButtons } from "@/realms/controls/control-buttons";
-import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
+import {
+  ControlButtons,
+  ControlButtonsRight,
+} from "@/realms/controls/control-buttons";
 import { ProjectButtons } from "@/realms/controls/project-buttons";
 import { store, windowSystem } from "@/store/store";
 
@@ -11,15 +13,16 @@ export const TopBar = () => {
   };
   return (
     <div
-      className="h-50px bg-gray-600 elative flex-ha px-2 justify-between"
+      className="h-50px bg-gray-600 relative flex-ha px-2 justify-between"
       onClick={handleClick}
     >
-      <div className="w-40px" />
-      {/* <PickerLaunchButton /> */}
+      <div className="invisible">
+        <ControlButtonsRight />
+      </div>
       <ControlButtons />
-      <MidiInButtonContainer />
-      <div className="absolute-full pointer-events-none text-lg">
-        under development...
+      <ControlButtonsRight />
+      <div className="absolute-full pointer-events-none text-lg flex-ha pl-2">
+        wafer wireboard (under development)
       </div>
     </div>
   );
