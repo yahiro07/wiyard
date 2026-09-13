@@ -3,7 +3,7 @@ import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
 import { BoardUnitItem, UnitItem, UnitPortSpec } from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
-import { unitCardHandlers } from "@/presenter/desk-area-handlers";
+import { unitCardHandlers } from "@/realms/unit-card/unit-card-handlers";
 import { useUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
 import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
 import { actions } from "@/store/actions";
