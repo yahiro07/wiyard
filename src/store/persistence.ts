@@ -37,6 +37,7 @@ export const persistence = {
         bpm: 1,
         masterVolume: 1,
         sight: 1,
+        uiScaling: 1,
       }),
       unitStates,
     };

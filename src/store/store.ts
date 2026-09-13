@@ -25,9 +25,10 @@ export type StoreState = {
   currentNoteChannelId: string;
   bpm: number;
   sight: FieldSight;
-  //included in auto persistent data
+  //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
+  uiScaling: number;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
@@ -68,6 +69,7 @@ const blankStoreState: StoreState = {
   projectLoadedIndex: 0,
   projectLoading: false,
   secondBarVisible: false,
+  uiScaling: 1,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -96,10 +98,11 @@ const defaultStoreState: StoreState = {
   ...defaultScene,
 };
 
-if (0) {
+if (1) {
   // store.setSequencerWindowVisible(true);
   Object.assign(defaultStoreState, {
-    unitPickerVisible: true,
+    // unitPickerVisible: true,
+    uiScaling: 0.9,
   });
 }
 
