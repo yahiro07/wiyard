@@ -1,10 +1,10 @@
 import { appConfig } from "@/domain/app-config";
 import { UnitItem } from "@/domain/types";
 
-function createDefaultScene() {
-  const ox = 100;
-  const oy = 200;
+const ox = 2000 - 500;
+const oy = 1400 - 350;
 
+function createDefaultScene() {
   const unitItems: UnitItem[] = [
     {
       type: "noteInput",
@@ -63,8 +63,6 @@ function createDefaultScene() {
 export const defaultScene = createDefaultScene();
 
 function createBlankScene() {
-  const ox = 100;
-  const oy = 200;
   const unitItems: UnitItem[] = [
     {
       type: "noteInput",

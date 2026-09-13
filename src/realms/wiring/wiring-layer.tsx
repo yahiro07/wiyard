@@ -1,7 +1,7 @@
 import { Point } from "@lib/utils/common-types";
 import { cz } from "@lib/utils/cz";
-import { useMemo } from "react";
 import { HsPortSubtype } from "wafer-host/core";
+import { boardSize } from "@/common/constants";
 import { uiConstants, wireColors } from "@/common/theme";
 import {
   getForwardDirectionWireConnectionKey,
@@ -134,14 +134,12 @@ const DragPreviewWire2 = () => {
 };
 
 export const WiringLayer = () => {
-  const [winW, winH] = useMemo(
-    () => [window.innerWidth, window.innerHeight],
-    [],
-  );
-  const viewBox = `0 0 ${winW} ${winH}`;
+  const width = boardSize.width;
+  const height = boardSize.height;
+  const viewBox = `0 0 ${width} ${height}`;
   return (
     <div className={cz("absolute-full overflow-hidden pointer-events-none")}>
-      <svg viewBox={viewBox} style={{ width: winW, height: winH }}>
+      <svg viewBox={viewBox} style={{ width, height }}>
         <WiresRoot />
         <DragPreviewWire />
         <DragPreviewWire2 />

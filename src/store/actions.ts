@@ -3,8 +3,8 @@ import {
   setOrDeleteValue,
 } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
-import { bottomLimit } from "@lib/utils/number-helper";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
+import { getDeskAreaElement } from "@/common/constants";
 import {
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
@@ -22,7 +22,6 @@ import {
   getNextNoteInputPortUnitId,
   getNextUnitId,
 } from "@/domain/unit-id-helper";
-import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
 
@@ -43,8 +42,8 @@ export const actions = {
   setWindowStatus(windowId: string, status: WindowStatus) {
     const exists = windowSystem.has(windowId);
     if (!exists) {
-      const deskAreaElement = getDeskAreaElement();
-      const deskAreaRect = deskAreaElement.getBoundingClientRect();
+      const deskArea = getDeskAreaElement();
+      const deskAreaRect = deskArea.getBoundingClientRect();
 
       const isSequencer = windowId === kSequencerWindowId;
       let position = { x: 0, y: 0 };
@@ -53,19 +52,21 @@ export const actions = {
         position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
         contentSize = { width: 1000, height: 600 };
       } else {
-        const unitItem = store.state.unitItems.find(
-          (item) => item.unitId === windowId,
-        );
-        if (unitItem) {
-          position = unitItem.cardPosition;
-        }
+        position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+
+        // const unitItem = store.state.unitItems.find(
+        //   (item) => item.unitId === windowId,
+        // );
+        // if (unitItem) {
+        //   position = unitItem.cardPosition;
+        // }
         const viewSize = store.state.unitStuffs[windowId]?.viewSize;
         if (viewSize) {
           contentSize.width = viewSize.width;
           contentSize.height = viewSize.height;
         }
       }
-      position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
+      // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
       const newWindowSpec: WindowSpec = {
         position,
         contentSize,

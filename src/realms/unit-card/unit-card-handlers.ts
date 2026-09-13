@@ -1,13 +1,8 @@
 import { startDragSessionEx } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
-import { appConfig } from "@/domain/app-config";
 import { kSequencerWindowId, UnitItem } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
-
-export function getDeskAreaElement() {
-  return document.getElementById("domDeskArea") as HTMLElement;
-}
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;
 
@@ -63,20 +58,5 @@ export const unitCardHandlers = {
         cancelTimer();
       },
     });
-  },
-};
-
-export const deskAreaHandlers = {
-  handlePointerDown(e0: IPointerEvent) {
-    if (e0.currentTarget === e0.target) {
-      startDragSessionEx(e0, {
-        onTap() {
-          if (appConfig.evacuateWindowsOnTapDesk) {
-            windowSystem.toggleEvacuate();
-          }
-        },
-      });
-    }
-    actions.setMenuTargetUnit(null);
   },
 };

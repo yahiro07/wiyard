@@ -3,6 +3,7 @@ import { Point } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
+import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
   PortStuff,
@@ -12,6 +13,7 @@ import {
   WindowId,
 } from "@/domain/types";
 import { defaultScene } from "@/project/default-data";
+import { createFieldSightHandlers } from "@/components/field-sight-handlers";
 
 export type StoreState = {
   //included in project data
@@ -22,6 +24,7 @@ export type StoreState = {
   wireConnectionKeys: string[];
   currentNoteChannelId: string;
   bpm: number;
+  sight: FieldSight;
   //included in auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
@@ -47,8 +50,10 @@ const blankStoreState: StoreState = {
   currentWindowId: null,
   windowsEvacuated: false,
   currentNoteChannelId: "",
-  midiInEnabled: false,
   bpm: 120,
+  sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
+  //
+  midiInEnabled: false,
   masterVolume: 0.5,
   //
   unitStuffs: {},
@@ -112,6 +117,12 @@ export const windowSystem = createWindowSystem({
     useSnapshot: () => pickObjectMembers(store.useSnapshot(), windowSliceKeys),
   },
 });
+
+export const sightHandlers = createFieldSightHandlers(
+  () => store.state.sight,
+  (attrs) => store.patchSight(attrs),
+  { minScaling: 0.125, maxScaling: 4 },
+);
 
 if (import.meta.hot) {
   function applyStateEvacuationWorkaround() {
