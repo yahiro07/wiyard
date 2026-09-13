@@ -71,7 +71,7 @@ export const BpmInput = () => {
   const { bpm } = store.useSnapshot();
   return (
     <NumberSlider
-      label="BPM"
+      label="tempo"
       value={bpm}
       min={60}
       max={180}
