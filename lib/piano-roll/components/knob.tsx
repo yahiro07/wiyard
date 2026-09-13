@@ -1,4 +1,4 @@
-import { linearInterpolate } from "../utils/helpers";
+import { linearInterpolate } from "@lib/utils/number-helper";
 import { KnobFrame } from "./headless/knob-frame";
 
 export const Knob = ({

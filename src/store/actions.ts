@@ -1,5 +1,10 @@
+import {
+  AddOrRemoveArrayItem,
+  setOrDeleteValue,
+} from "@lib/utils/array-object-helper";
+import { Point } from "@lib/utils/common-types";
+import { bottomLimit } from "@lib/utils/number-helper";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
-import { Point } from "@/domain/common-types";
 import {
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
@@ -20,11 +25,6 @@ import {
 import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
-import {
-  AddOrRemoveArrayItem,
-  bottomLimit,
-  setOrDeleteValue,
-} from "@/utils/helpers";
 
 export const actionsInternal = {
   patchUnitAttrs(unitId: string, attrs: Partial<{ cardPosition: Point }>) {

@@ -1,6 +1,6 @@
 import { startDragSession } from "@lib/utils/drag-session";
+import { clampValue } from "@lib/utils/number-helper";
 import { FieldSight } from "@/components/field-sight-plane";
-import { clampValue } from "@/utils/helpers";
 
 export type FieldSightHandlers = {
   onWheel: (e: WheelEvent) => void;

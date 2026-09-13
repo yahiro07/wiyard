@@ -1,6 +1,6 @@
+import { safeParseInt } from "@lib/utils/number-helper";
 import { UnitItem } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
-import { safeParseInt } from "@/utils/helpers";
 
 export function getNextUnitId(
   existingUnits: UnitItem[],

@@ -1,5 +1,5 @@
+import { Point, Size } from "@lib/utils/common-types";
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
-import { Point, Size } from "@/domain/common-types";
 import { CatalogKey, UnitClassKey } from "@/domain/unit-entries";
 
 export type BoardUnitItem = {

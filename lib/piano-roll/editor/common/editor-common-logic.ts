@@ -1,7 +1,7 @@
+import { bottomLimit } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { useAppContext } from "../../root/app-context";
-import { bottomLimit } from "../../utils/helpers";
 import { DisplaySpec, SectionRange } from "./editor-types";
 
 export function useGridDisplaySpec(

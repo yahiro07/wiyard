@@ -1,6 +1,6 @@
+import { startDragSessionEx } from "@lib/utils/drag-session";
+import { clampValue } from "@lib/utils/number-helper";
 import { ReactNode } from "react";
-import { startDragSessionEx } from "@/utils/drag-session";
-import { clampValue } from "@/utils/helpers";
 
 type Props = {
   value: number;

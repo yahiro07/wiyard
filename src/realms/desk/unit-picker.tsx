@@ -1,3 +1,4 @@
+import { createDragSessionEx } from "@lib/utils/drag-session";
 import { useState } from "react";
 import { showcaseEntries } from "@/domain/showcase-entries";
 import { UnitAddingItem } from "@/domain/types";
@@ -5,7 +6,6 @@ import { CatalogKey, catalog } from "@/domain/unit-entries";
 import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
-import { createDragSessionEx } from "@/utils/drag-session";
 
 const pickerItemHandlers = {
   handlePointerDown(

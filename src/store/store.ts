@@ -1,7 +1,8 @@
+import { pickObjectMembers } from "@lib/utils/array-object-helper";
+import { Point } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
-import { Point } from "@/domain/common-types";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
   PortStuff,
@@ -11,7 +12,6 @@ import {
   WindowId,
 } from "@/domain/types";
 import { defaultScene } from "@/project/default-data";
-import { pickObjectMembers } from "@/utils/helpers";
 
 export type StoreState = {
   //included in project data

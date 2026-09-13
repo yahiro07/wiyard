@@ -1,6 +1,6 @@
+import { cz } from "@lib/utils/cz";
+import { SelectorOption } from "@lib/utils/selector-option";
 import { ReactNode } from "react";
-import { cz } from "../utils/cz";
-import { SelectorOption } from "../utils/selector-option";
 import { Icons } from "./icons";
 
 export const ShifterFrame = ({

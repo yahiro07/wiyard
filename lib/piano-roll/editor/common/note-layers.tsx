@@ -1,10 +1,10 @@
+import { colorStyle } from "@lib/utils/color-style";
+import { cz } from "@lib/utils/cz";
+import { mapUnaryTo, seqNumbers } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext, useStoreAccess } from "../../root/app-context";
-import { colorStyle } from "../../utils/color-style";
-import { cz } from "../../utils/cz";
-import { mapUnaryTo, seqNumbers } from "../../utils/helpers";
 import { EditInputLayer } from "./edit-input-layer";
 import {
   diatonicLanesPitchHelper,

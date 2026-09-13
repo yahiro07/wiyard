@@ -1,3 +1,4 @@
+import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { WindowSpec } from "@lib/window-system";
 import { dequal } from "dequal";
 import { HsUnitStateData } from "wafer-host/core";
@@ -5,7 +6,6 @@ import { appConfig } from "@/domain/app-config";
 import { hostSystem } from "@/domain/host-system-instance";
 import { UnitItem, WindowId } from "@/domain/types";
 import { store } from "@/store/store";
-import { pickObjectMembers } from "@/utils/helpers";
 
 type PersistenceData = {
   unitItems: UnitItem[];

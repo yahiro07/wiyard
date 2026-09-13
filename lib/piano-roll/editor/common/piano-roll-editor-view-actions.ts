@@ -1,7 +1,7 @@
+import { startDragSessionV0 } from "@lib/utils/drag-session-v0";
 import { EditorKind, Note } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
 import { AppStore } from "../../root/store";
-import { startDragSession } from "../../utils/drag-session-v0";
 import {
   diatonicLanesPitchHelper,
   getSectionStride,
@@ -140,7 +140,7 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
       setCursor("move");
 
       const tapChecker = createTapChecker();
-      startDragSession(
+      startDragSessionV0(
         e0.nativeEvent,
         {
           onMove(e) {
@@ -191,7 +191,7 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
       setCursor(isNewNote ? "pointer" : "e-resize");
 
       const tapChecker = createTapChecker();
-      startDragSession(
+      startDragSessionV0(
         e0.nativeEvent,
         {
           onMove(e) {

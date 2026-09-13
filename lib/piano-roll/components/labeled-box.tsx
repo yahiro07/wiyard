@@ -1,5 +1,5 @@
+import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
-import { cz } from "../utils/cz";
 
 export const LabeledBox = ({
   className,

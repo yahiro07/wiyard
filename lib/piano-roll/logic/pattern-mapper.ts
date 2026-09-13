@@ -1,5 +1,5 @@
+import { clampValue, seqNumbers } from "@lib/utils/number-helper";
 import { LoopBarLength, Note, PatternBarLength } from "../definitions/types";
-import { clampValue, seqNumbers } from "../utils/helpers";
 
 type NotesMapperFn = (args: {
   inputNotes: Note[];

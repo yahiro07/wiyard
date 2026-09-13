@@ -1,9 +1,9 @@
+import { startDragSessionEx } from "@lib/utils/drag-session";
+import { vectorOp } from "@lib/utils/geometry-helper";
 import { appConfig } from "@/domain/app-config";
 import { kSequencerWindowId, UnitItem } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
-import { startDragSessionEx } from "@/utils/drag-session";
-import { vectorOp } from "@/utils/geometry-helper";
 
 export function getDeskAreaElement() {
   return document.getElementById("domDeskArea") as HTMLElement;

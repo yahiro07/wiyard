@@ -1,12 +1,12 @@
+import { Point } from "@lib/utils/common-types";
+import { createDragSessionEx } from "@lib/utils/drag-session";
+import { vectorOp } from "@lib/utils/geometry-helper";
 import { uiConfigs } from "@/common/theme";
-import { Point } from "@/domain/common-types";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
 import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { createDragSessionEx } from "@/utils/drag-session";
-import { vectorOp } from "@/utils/geometry-helper";
 
 const helpers = {
   findNearestPort(portStuffsArray: PortStuff[], pos: Point) {

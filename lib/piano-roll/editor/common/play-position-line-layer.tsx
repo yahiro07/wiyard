@@ -1,5 +1,5 @@
+import { cz } from "@lib/utils/cz";
 import { useAppContext } from "../../root/app-context";
-import { cz } from "../../utils/cz";
 import { DisplaySpec } from "./editor-types";
 
 export const PlayPositionLineLayer = ({

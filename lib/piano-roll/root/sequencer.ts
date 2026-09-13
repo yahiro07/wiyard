@@ -1,6 +1,6 @@
+import { clampValue, linearInterpolate } from "@lib/utils/number-helper";
 import { UnitInterface } from "wafer-host/unit-types";
 import { LoopBarLength, Note, SequencerEditState } from "../definitions/types";
-import { clampValue, linearInterpolate } from "../utils/helpers";
 
 export type SequencerEngine = {
   setNotes(notes: Note[]): void;

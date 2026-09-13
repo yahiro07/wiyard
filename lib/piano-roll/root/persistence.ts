@@ -1,6 +1,6 @@
+import { clampValue } from "@lib/utils/number-helper";
 import { Persistence } from "wafer-host/unit-types";
 import { LoopBarLength } from "../definitions/types";
-import { clampValue } from "../utils/helpers";
 import { AppStore } from "./store";
 
 function unaryToByte(value: number): number {

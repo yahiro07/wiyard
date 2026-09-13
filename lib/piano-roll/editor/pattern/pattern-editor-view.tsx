@@ -1,9 +1,9 @@
+import { cz } from "@lib/utils/cz";
+import { seqNumbers } from "@lib/utils/number-helper";
 import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { cz } from "../../utils/cz";
-import { seqNumbers } from "../../utils/helpers";
 import { EditorCommonLayout } from "../common/editor-common-layout";
 import {
   getPatternPitchLabel,

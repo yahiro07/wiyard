@@ -1,8 +1,8 @@
+import { colorMod } from "@lib/utils/color-mod";
+import { colorStyle } from "@lib/utils/color-style";
+import { cz } from "@lib/utils/cz";
+import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { useRef } from "react";
-import { useDomElementSize } from "../../utils/use-dom-element-size";
-import { colorMod } from "../utils/color-mod";
-import { colorStyle } from "../utils/color-style";
-import { cz } from "../utils/cz";
 import { KnobFrame } from "./headless/knob-frame";
 
 const colorStyles = {

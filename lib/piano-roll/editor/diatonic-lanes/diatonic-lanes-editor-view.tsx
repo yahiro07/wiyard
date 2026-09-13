@@ -1,9 +1,9 @@
+import { cz } from "@lib/utils/cz";
+import { bottomLimit, seqNumbers } from "@lib/utils/number-helper";
+import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { useRef } from "react";
-import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { appConfig, debugConfig, uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { cz } from "../../utils/cz";
-import { bottomLimit, seqNumbers } from "../../utils/helpers";
 import { EditorCommonLayout } from "../common/editor-common-layout";
 import {
   diatonicLanesPitchHelper,

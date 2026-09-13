@@ -1,10 +1,10 @@
-type Point = { x: number; y: number };
+export type Point = { x: number; y: number };
 
-type DragHandlerEvent = {
+export type DragHandlerEvent = {
   position: Point;
   originalPosition: Point;
 };
-function _startDragSessionV0_deprecated(
+export function startDragSessionV0(
   e0: PointerEvent,
   callbacks: {
     onDown?(e: DragHandlerEvent): void;
@@ -12,12 +12,9 @@ function _startDragSessionV0_deprecated(
     onUp?(e: DragHandlerEvent): void;
     onCancel?(e: DragHandlerEvent): void;
     onUpOrCancel?(e: DragHandlerEvent): void;
-    onTap?(): void;
   },
   options?: {
     coordinate?: "relative" | "page" | "screen";
-    tapDurationTh?: number;
-    tapDistanceTh?: number;
   },
 ) {
   const el = e0.currentTarget as HTMLDivElement;
@@ -44,10 +41,6 @@ function _startDragSessionV0_deprecated(
 
   const originalPosition = getPointerPosition(e0);
 
-  const startTime = Date.now();
-  let lastPosition = originalPosition;
-  let trackDistance = 0;
-
   const onDown = (e: PointerEvent) => {
     const position = getPointerPosition(e);
     callbacks.onDown?.({
@@ -56,17 +49,11 @@ function _startDragSessionV0_deprecated(
     });
   };
   const onMove = (e: PointerEvent) => {
-    if (e.pointerId !== e0.pointerId) return;
     const position = getPointerPosition(e);
     callbacks.onMove?.({
       position,
       originalPosition,
     });
-    trackDistance += Math.hypot(
-      position.x - lastPosition.x,
-      position.y - lastPosition.y,
-    );
-    lastPosition = position;
   };
   const cleanup = () => {
     try {
@@ -90,13 +77,6 @@ function _startDragSessionV0_deprecated(
       position: getPointerPosition(e),
       originalPosition,
     });
-    const endTime = Date.now();
-    const duration = endTime - startTime;
-    const durationTh = options?.tapDurationTh ?? 200;
-    const distanceTh = options?.tapDistanceTh ?? 6;
-    if (duration < durationTh && trackDistance < distanceTh) {
-      callbacks.onTap?.();
-    }
     cleanup();
   };
   const onPointerCancel = (e: PointerEvent) => {

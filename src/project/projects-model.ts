@@ -1,3 +1,4 @@
+import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
 import { hostSystem } from "@/domain/host-system-instance";
@@ -8,7 +9,6 @@ import {
   loadLocalFileText,
 } from "@/project/projects-model-helper";
 import { projectResetterStates, StoreState, store } from "@/store/store";
-import { pickObjectMembers } from "@/utils/helpers";
 
 export type ProjectsModel = {
   exportProject(): void;

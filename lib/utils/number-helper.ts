@@ -2,10 +2,6 @@ export function seqNumbers(n: number): number[] {
   return new Array(n).fill(0).map((_, i) => i);
 }
 
-export function iife<T>(fn: () => T): T {
-  return fn();
-}
-
 export function clampValue(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
@@ -46,10 +42,15 @@ export function mapUnaryFrom(
   return v;
 }
 
-export function bottomLimit(value: number, lo: number) {
-  return Math.max(value, lo);
+export function bottomLimit(value: number, limit: number) {
+  return Math.max(value, limit);
 }
 
-export function topLimit(value: number, hi: number) {
-  return Math.min(value, hi);
+export function topLimit(value: number, limit: number) {
+  return Math.min(value, limit);
+}
+
+export function safeParseInt(text: string, defaultValue: number) {
+  const res = parseInt(text, 10);
+  return Number.isFinite(res) ? res : defaultValue;
 }

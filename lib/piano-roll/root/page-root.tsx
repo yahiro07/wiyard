@@ -1,3 +1,5 @@
+import { colorStyle } from "@lib/utils/color-style";
+import { createSelectorOptions } from "@lib/utils/selector-option";
 import { Button } from "../components/button";
 import { IconButton } from "../components/icon-button";
 import { Icons } from "../components/icons";
@@ -9,8 +11,6 @@ import { uiColors } from "../definitions/ui-theme";
 import { DiatonicLanesEditorView } from "../editor/diatonic-lanes/diatonic-lanes-editor-view";
 import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
-import { colorStyle } from "../utils/color-style";
-import { createSelectorOptions } from "../utils/selector-option";
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
 

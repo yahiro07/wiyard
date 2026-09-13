@@ -1,7 +1,7 @@
+import { cz } from "@lib/utils/cz";
 import { Icons } from "@/common/icons";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { cz } from "@/utils/cz";
 
 const MidiInButton = ({
   active,

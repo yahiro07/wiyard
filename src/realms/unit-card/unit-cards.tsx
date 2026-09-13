@@ -1,3 +1,4 @@
+import { cz } from "@lib/utils/cz";
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
 import { BoardUnitItem, UnitItem, UnitPortSpec } from "@/domain/types";
@@ -8,7 +9,6 @@ import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
-import { cz } from "@/utils/cz";
 
 function useUnitStuff(unitId: string) {
   const { unitStuffs } = store.useSnapshot();

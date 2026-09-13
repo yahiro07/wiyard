@@ -1,8 +1,8 @@
+import { cz } from "@lib/utils/cz";
 import { Icons } from "@/common/icons";
 import { NumberSlider } from "@/components/number-slider";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
-import { cz } from "@/utils/cz";
 
 const ControlButton = ({
   text,

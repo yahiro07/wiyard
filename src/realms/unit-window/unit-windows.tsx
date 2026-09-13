@@ -1,3 +1,4 @@
+import { useInstance } from "@lib/utils/hooks";
 import { WindowFrame } from "@lib/window-system";
 import { useLayoutEffect } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
@@ -9,7 +10,6 @@ import {
 } from "@/domain/unit-entries";
 import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
 import { store, windowSystem } from "@/store/store";
-import { useInstance } from "@/utils/hooks";
 
 function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
   return {

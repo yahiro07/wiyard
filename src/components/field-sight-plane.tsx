@@ -1,7 +1,7 @@
+import { Size } from "@lib/utils/common-types";
 import { cz } from "@lib/utils/cz";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import React, { useMemo, useRef } from "react";
-import { Size } from "@/domain/common-types";
 
 export type FieldSight = {
   eyeScaling: number;
