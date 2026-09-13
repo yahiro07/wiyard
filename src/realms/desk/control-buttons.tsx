@@ -82,10 +82,6 @@ export const MasterVolumeInput = () => {
   );
 };
 
-export const PersistenceSaveButton = () => {
-  return <ControlButton text="save" onClick={actions.savePersistentState} />;
-};
-
 export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-2")}>
@@ -93,7 +89,6 @@ export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
       <BpmInput />
       <MasterVolumeInput />
       <PickerLaunchButton />
-      <PersistenceSaveButton />
       {/* <WindowEvacuationButton /> */}
     </div>
   );
