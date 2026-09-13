@@ -1,8 +1,8 @@
 import { createPianoRollUnit } from "@lib/piano-roll";
 import { ReactUnitFrame } from "wafer-host/react";
 import { appConfig } from "@/domain/app-config";
+import { TopBar } from "@/realms/controls/top-control-bars";
 import { DeskArea } from "@/realms/desk/desk-area";
-import { TopBar } from "@/realms/desk/top-control-bars";
 import { UnitPickerRoot } from "@/realms/desk/unit-picker";
 
 const PageRootMain = () => {

@@ -1,7 +1,7 @@
+import { setupMidiKeyboardInput } from "@lib/utils/midi-keyboard-input";
 import { useEffect } from "react";
 import { hostSystem } from "@/domain/host-system-instance";
 import { store } from "@/store/store";
-import { setupMidiKeyboardInput } from "@/utils/midi-keyboard-input";
 
 export function useMidiInputHandling() {
   const { midiInEnabled } = store.useSnapshot();

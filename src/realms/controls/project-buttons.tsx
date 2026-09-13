@@ -1,6 +1,6 @@
+import { cz } from "@lib/utils/cz";
 import { projectsModel } from "@/project/projects-model";
 import { store } from "@/store/store";
-import { cz } from "@/utils/cz";
 
 const ProjectButton = ({
   text,

@@ -1,9 +1,9 @@
+import { cz } from "@lib/utils/cz";
+import { bottomLimit } from "@lib/utils/number-helper";
 import { useRef } from "react";
+import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { cz } from "../../utils/cz";
-import { bottomLimit } from "../../utils/helpers";
-import { useDomElementSize } from "../../utils/use-dom-element-size";
 import { EditorCommonLayout } from "../common/editor-common-layout";
 import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { DisplaySpec } from "../common/editor-types";

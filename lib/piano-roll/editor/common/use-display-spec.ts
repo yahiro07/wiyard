@@ -1,6 +1,6 @@
+import { bottomLimit, mapUnaryTo } from "@lib/utils/number-helper";
 import { Size } from "../../../utils/common-types";
 import { Sight } from "../../definitions/types";
-import { bottomLimit, mapUnaryTo } from "../../utils/helpers";
 import { DisplaySpec } from "./editor-types";
 
 export function useDisplaySpec({

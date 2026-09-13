@@ -1,14 +1,59 @@
-import { deskAreaHandlers } from "@/presenter/desk-area-handlers";
+import { boardSize, domIds } from "@/common/constants";
+import { FieldSightPlane } from "@/components/field-sight-plane";
+import { SecondBar } from "@/realms/controls/top-control-bars";
 import { CoordDebugLayer } from "@/realms/desk/coord-debug-layer";
 import { DockRoot } from "@/realms/desk/dock-root";
-import { SecondBar } from "@/realms/desk/top-control-bars";
 import { UnitPicker_AddingItem } from "@/realms/desk/unit-picker";
 import { SequencerWindow } from "@/realms/sequencer/sequencer-window";
 import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
-import { UnitConnectionsRoot } from "@/realms/unit-connection/unit-connections";
 import { UnitWindowsRoot } from "@/realms/unit-window/unit-windows";
+import { UnitConnectionsRoot } from "@/realms/wiring/connections";
 import { WiringLayer } from "@/realms/wiring/wiring-layer";
-import { store } from "@/store/store";
+import { actions } from "@/store/actions";
+import { sightHandlers, store } from "@/store/store";
+
+const GraphEditPlane = () => {
+  const { sight } = store.useSnapshot();
+  return (
+    <FieldSightPlane sight={sight} boardSize={boardSize}>
+      <div
+        id={domIds.graphEditPlane}
+        className="h-full"
+        style={{
+          // background: uiColors.deskAreaBg,
+          background: "#36383a",
+          backgroundImage: `url(https://i.imgur.com/tfiVPzS.png)`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "280px",
+        }}
+      >
+        <WiringLayer />
+        <UnitCardsRoot />
+        <UnitPicker_AddingItem />
+        {false && <CoordDebugLayer />}
+      </div>
+    </FieldSightPlane>
+  );
+};
+
+const FrontWindowsPlane = () => {
+  return (
+    <>
+      <UnitWindowsRoot />
+      <SequencerWindow />
+      <DockRoot />
+      <SecondBar />
+    </>
+  );
+};
+
+function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
+  return (
+    e.target === e.currentTarget ||
+    (e.target as HTMLElement).id === domIds.graphEditPlane
+  );
+}
 
 export const DeskArea = () => {
   const { projectLoadedIndex } = store.useSnapshot();
@@ -16,27 +61,23 @@ export const DeskArea = () => {
     <div
       // if a new project loaded, refresh all dom elements related to units
       key={projectLoadedIndex}
-      id="domDeskArea"
-      className="grow relative"
-      style={{
-        // background: uiColors.deskAreaBg,
-        background: "#36383a",
-        backgroundImage: `url(https://i.imgur.com/tfiVPzS.png)`,
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "280px",
+      id={domIds.deskArea}
+      className="grow relative bg-#808488"
+      onPointerDown={(e) => {
+        if (checkSightTarget(e)) {
+          sightHandlers.onPointerDown(e.nativeEvent);
+          actions.setMenuTargetUnit(null);
+        }
       }}
-      onPointerDown={deskAreaHandlers.handlePointerDown}
+      onWheel={(e) => {
+        // if (checkSightTarget(e)) {
+        // sightHandlers.onWheel(e.nativeEvent);
+        // }
+      }}
     >
-      <WiringLayer />
-      <UnitCardsRoot />
-      <UnitWindowsRoot />
-      <SequencerWindow />
-      <UnitPicker_AddingItem />
+      <GraphEditPlane />
+      <FrontWindowsPlane />
       <UnitConnectionsRoot />
-      {false && <CoordDebugLayer />}
-      <DockRoot />
-      <SecondBar />
     </div>
   );
 };

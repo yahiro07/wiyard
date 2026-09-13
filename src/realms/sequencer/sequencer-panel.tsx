@@ -1,3 +1,4 @@
+import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { NoteInputPortUnitItem } from "@/domain/types";
@@ -10,7 +11,6 @@ import {
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
-import { cz } from "@/utils/cz";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();

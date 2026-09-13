@@ -1,10 +1,10 @@
+import { cz } from "@lib/utils/cz";
+import { seqNumbers } from "@lib/utils/number-helper";
 import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { cz } from "../../utils/cz";
-import { startDragSession } from "../../utils/drag-session-v0";
-import { seqNumbers } from "../../utils/helpers";
 import { getNoteNameLabel } from "../common/note-name-helper";
+import { startDragSessionV0 } from "@lib/utils/drag-session-v0";
 
 const keyTypes = [
   "whiteL",
@@ -78,7 +78,7 @@ const KeyboardKey = ({
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     setPressed(true);
     setPreviewNotePitch(yi);
-    startDragSession(e.nativeEvent, {
+    startDragSessionV0(e.nativeEvent, {
       onUpOrCancel() {
         setPressed(false);
         setPreviewNotePitch(null);

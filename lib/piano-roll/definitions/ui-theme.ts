@@ -1,4 +1,4 @@
-import { colorMod } from "../utils/color-mod";
+import { colorMod } from "@lib/utils/color-mod";
 
 export const uiColors = {
   clPanelBody: colorMod("#445", "h220"),

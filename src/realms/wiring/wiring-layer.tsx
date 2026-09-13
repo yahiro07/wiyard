@@ -1,13 +1,13 @@
-import { useMemo } from "react";
+import { Point } from "@lib/utils/common-types";
+import { cz } from "@lib/utils/cz";
 import { HsPortSubtype } from "wafer-host/core";
+import { boardSize } from "@/common/constants";
 import { uiConstants, wireColors } from "@/common/theme";
-import { Point } from "@/domain/common-types";
 import {
   getForwardDirectionWireConnectionKey,
   getPortDirectionFromPortKey,
 } from "@/domain/port-helpers";
 import { store } from "@/store/store";
-import { cz } from "@/utils/cz";
 
 function createCurveLinePath(p0: Point, p1: Point) {
   // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
@@ -134,14 +134,12 @@ const DragPreviewWire2 = () => {
 };
 
 export const WiringLayer = () => {
-  const [winW, winH] = useMemo(
-    () => [window.innerWidth, window.innerHeight],
-    [],
-  );
-  const viewBox = `0 0 ${winW} ${winH}`;
+  const width = boardSize.width;
+  const height = boardSize.height;
+  const viewBox = `0 0 ${width} ${height}`;
   return (
     <div className={cz("absolute-full overflow-hidden pointer-events-none")}>
-      <svg viewBox={viewBox} style={{ width: winW, height: winH }}>
+      <svg viewBox={viewBox} style={{ width, height }}>
         <WiresRoot />
         <DragPreviewWire />
         <DragPreviewWire2 />

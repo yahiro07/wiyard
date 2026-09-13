@@ -1,12 +1,12 @@
+import { Point } from "@lib/utils/common-types";
+import { createDragSessionEx } from "@lib/utils/drag-session";
+import { vectorOp } from "@lib/utils/geometry-helper";
+import { getGraphEditPlaneElement } from "@/common/constants";
 import { uiConfigs } from "@/common/theme";
-import { Point } from "@/domain/common-types";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
-import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { createDragSessionEx } from "@/utils/drag-session";
-import { vectorOp } from "@/utils/geometry-helper";
 
 const helpers = {
   findNearestPort(portStuffsArray: PortStuff[], pos: Point) {
@@ -68,7 +68,7 @@ export const handlePortPointerDown = (
   e0: React.PointerEvent<HTMLDivElement>,
   portKey: string,
 ) => {
-  const coordinateBaseElement = getDeskAreaElement();
+  const coordinateBaseElement = getGraphEditPlaneElement();
   const { portStuffs } = store.state;
   const selfPort = portStuffs[portKey];
   const targetPorts = Object.values(portStuffs).filter(

@@ -1,17 +1,3 @@
-export function clampValue(value: number, lo: number, hi: number) {
-  if (value < lo) return lo;
-  if (value > hi) return hi;
-  return value;
-}
-
-export function bottomLimit(value: number, limit: number) {
-  return Math.max(value, limit);
-}
-
-export function topLimit(value: number, limit: number) {
-  return Math.min(value, limit);
-}
-
 export function checkArrayItemEquals<T>(a: T[], b: T[]) {
   if (a.length !== b.length) return false;
   return a.every((item, index) => item === b[index]);
@@ -60,9 +46,4 @@ export function mapObjectValues<T, R>(
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => [key, fn(value, key)]),
   );
-}
-
-export function safeParseInt(text: string, defaultValue: number) {
-  const res = parseInt(text, 10);
-  return Number.isFinite(res) ? res : defaultValue;
 }

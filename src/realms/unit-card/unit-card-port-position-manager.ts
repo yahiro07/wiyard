@@ -1,9 +1,9 @@
+import { mapObjectValues } from "@lib/utils/array-object-helper";
+import { domRectOp, vectorOp } from "@lib/utils/geometry-helper";
 import { useLayoutEffect, useState } from "react";
 import { PortStuff, UnitItem, UnitPortSpec } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { domRectOp, vectorOp } from "@/utils/geometry-helper";
-import { mapObjectValues } from "@/utils/helpers";
 
 export type UnitCardPortPositionManager = {
   setBaseElement(baseEl: HTMLDivElement): () => void;
@@ -32,10 +32,15 @@ export function createUnitCardPortPositionManager(
       const baseRect = baseEl.getBoundingClientRect();
       const baseCenter = domRectOp.getCenter(baseRect);
 
+      const actualScaling = baseRect.width / baseEl.offsetWidth;
+
       const attrs = mapObjectValues(portEntries, (portEntry) => {
         const rect = portEntry.element.getBoundingClientRect();
         const portPosition = domRectOp.getCenter(rect);
-        const relativePosition = vectorOp.subtract(portPosition, baseCenter);
+        const relativePosition = vectorOp.scale(
+          vectorOp.subtract(portPosition, baseCenter),
+          1 / actualScaling,
+        );
         const position = vectorOp.add(cardPos, relativePosition);
 
         const { direction, subtype } = portEntry.portSpec;
