@@ -15,6 +15,17 @@ import { cz } from "@/utils/cz";
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
   const noteChannelIds = notePortGetters.useNoteChannelIds();
+  const canAdd = noteChannelIds.length < 4;
+  const canDelete = noteChannelIds.length > 1;
+
+  const handleRemove = () => {
+    const ok = window.confirm(
+      `are you sure to remove the current note channel?`,
+    );
+    if (ok) {
+      actions.removeCurrentNoteChannel();
+    }
+  };
   return (
     <div className="w-50px bg-gray-600/60 flex-v gap-2 py-2">
       {noteChannelIds.map((id, index) => (
@@ -31,6 +42,23 @@ const NoteChannelListColumn = () => {
           {index + 1}
         </button>
       ))}
+      <button
+        type="button"
+        className={cz(!canAdd && "opacity-50")}
+        disabled={!canAdd}
+        onClick={actions.addNoteChannel}
+      >
+        add
+      </button>
+      <div className="grow" />
+      <button
+        type="button"
+        className={cz(!canDelete && "opacity-50")}
+        disabled={!canDelete}
+        onClick={handleRemove}
+      >
+        remove
+      </button>
     </div>
   );
 };
