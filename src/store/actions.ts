@@ -13,9 +13,14 @@ import {
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { getNextUnitId } from "@/domain/unit-id-helper";
+import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
 import { persistence } from "@/store/persistence";
 import { store, windowSystem } from "@/store/store";
-import { AddOrRemoveArrayItem, setOrDeleteValue } from "@/utils/helpers";
+import {
+  AddOrRemoveArrayItem,
+  bottomLimit,
+  setOrDeleteValue,
+} from "@/utils/helpers";
 
 export const actionsInternal = {
   patchUnitAttrs(unitId: string, attrs: Partial<{ cardPosition: Point }>) {
@@ -34,22 +39,36 @@ export const actions = {
   setWindowStatus(windowId: string, status: WindowStatus) {
     const exists = windowSystem.has(windowId);
     if (!exists) {
-      let size = { width: 300, height: 200 };
-      if (windowId === kSequencerWindowId) {
-        size = { width: 800, height: 500 };
+      const deskAreaElement = getDeskAreaElement();
+      const deskAreaRect = deskAreaElement.getBoundingClientRect();
+
+      const isSequencer = windowId === kSequencerWindowId;
+      let position = { x: 0, y: 0 };
+      let contentSize = { width: 300, height: 200 };
+      if (isSequencer) {
+        position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+        contentSize = { width: 1000, height: 600 };
       } else {
+        const unitItem = store.state.unitItems.find(
+          (item) => item.unitId === windowId,
+        );
+        if (unitItem) {
+          position = unitItem.cardPosition;
+        }
         const viewSize = store.state.unitStuffs[windowId]?.viewSize;
         if (viewSize) {
-          size.width = viewSize.width;
-          size.height = viewSize.height;
+          contentSize.width = viewSize.width;
+          contentSize.height = viewSize.height;
         }
       }
+      position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
       const newWindowSpec: WindowSpec = {
-        position: { x: 0, y: 0 },
-        size,
+        position,
+        contentSize,
         status,
       };
       windowSystem.add(windowId, newWindowSpec);
+      windowSystem.setCurrentWindow(windowId);
     }
     windowSystem.setStatus(windowId, status);
   },

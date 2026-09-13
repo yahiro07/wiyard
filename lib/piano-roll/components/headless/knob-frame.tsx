@@ -14,6 +14,7 @@ type Props = {
   onClick?: () => void;
   horizontal?: boolean;
   invert?: boolean;
+  cursor?: string;
 };
 
 export function KnobFrame({
@@ -28,6 +29,7 @@ export function KnobFrame({
   onClick,
   horizontal,
   invert,
+  cursor = "pointer",
 }: Props) {
   const handlePointerDown = (e0: React.PointerEvent) => {
     const originalValue = value;
@@ -56,7 +58,7 @@ export function KnobFrame({
     <div
       onPointerDown={handlePointerDown}
       className={className}
-      style={{ cursor: "pointer" }}
+      style={cursor ? { cursor } : undefined}
     >
       {children}
     </div>

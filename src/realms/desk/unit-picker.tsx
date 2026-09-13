@@ -37,7 +37,10 @@ const UnitPicker = () => {
   const selectedItem = selectedCatalogKey && catalog[selectedCatalogKey];
 
   return (
-    <div className="absolute-full flex-c bg-black/50">
+    <div
+      className="absolute-full flex-c bg-black/50 z-10"
+      onPointerDown={() => actions.setUnitPickerVisible(false)}
+    >
       <div className="flex-vc gap-6">
         <div className="h-20px">{selectedItem?.name}</div>
         <div className="flex-c gap-4 flex-wrap px-6">
@@ -71,7 +74,7 @@ const UnitAddingItemView = ({ item }: { item: UnitAddingItem }) => {
   const catalogItem = catalog[item.catalogKey];
   return (
     <div
-      className="absolute -translate-x-1/2 -translate-y-1/2"
+      className="absolute -translate-x-1/2 -translate-y-1/2 z-2"
       style={{ left: item.position.x, top: item.position.y }}
     >
       <img
@@ -92,9 +95,5 @@ export const UnitPicker_AddingItem = () => {
 export const UnitPickerRoot = () => {
   const { unitPickerVisible } = store.useSnapshot();
   if (!unitPickerVisible) return;
-  return (
-    <div onPointerDown={() => actions.setUnitPickerVisible(false)}>
-      <UnitPicker />
-    </div>
-  );
+  return <UnitPicker />;
 };

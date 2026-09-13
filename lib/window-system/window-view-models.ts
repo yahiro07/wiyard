@@ -6,8 +6,8 @@ export type WindowCoordViewModel = {
   windowId: string;
   position: Point;
   setPosition: (position: Point) => void;
-  size: Size;
-  setSize: (size: Size) => void;
+  contentSize: Size;
+  setContentSize: (size: Size) => void;
 };
 
 const fallbackPosition = { x: 0, y: 0 };
@@ -25,9 +25,9 @@ export function useWindowCoordViewModel(
     setPosition: (position: Point) => {
       actionsInternal.patchWindowSpec(windowId, { position });
     },
-    size: windowSpec?.size ?? fallbackSize,
-    setSize: (size: Size) => {
-      actionsInternal.patchWindowSpec(windowId, { size });
+    contentSize: windowSpec?.contentSize ?? fallbackSize,
+    setContentSize: (contentSize: Size) => {
+      actionsInternal.patchWindowSpec(windowId, { contentSize });
     },
   };
 }

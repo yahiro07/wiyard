@@ -1,14 +1,15 @@
 import { Button } from "../components/button";
-import { EffectorBody } from "../components/effector-body";
 import { IconButton } from "../components/icon-button";
 import { Icons } from "../components/icons";
 import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
+import { uiColors } from "../definitions/ui-theme";
 import { DiatonicLanesEditorView } from "../editor/diatonic-lanes/diatonic-lanes-editor-view";
 import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
+import { colorStyle } from "../utils/color-style";
 import { createSelectorOptions } from "../utils/selector-option";
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
@@ -250,12 +251,15 @@ export const PageRoot = () => {
     useAppContext().store.useSnapshot();
   return (
     <div className="w-full h-full">
-      <EffectorBody className="w-full h-full flex-vc gap-2">
+      <div
+        className="w-full h-full flex-vc gap-2 p-6 text-white"
+        style={colorStyle({ bg: uiColors.clPanelBody })}
+      >
         <TopBar />
         {isPatternView && <PatternEditorView />}
         {!isPatternView && diatonicLanesEnabled && <DiatonicLanesEditorView />}
         {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
-      </EffectorBody>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import { uiColors } from "@/common/theme";
 import { deskAreaHandlers } from "@/presenter/desk-area-handlers";
 import { CoordDebugLayer } from "@/realms/desk/coord-debug-layer";
+import { DockRoot } from "@/realms/desk/dock-root";
 import { UnitPicker_AddingItem } from "@/realms/desk/unit-picker";
 import { SequencerWindow } from "@/realms/sequencer/sequencer-window";
 import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
@@ -17,7 +17,14 @@ export const DeskArea = ({
     <div
       id="domDeskArea"
       className="grow relative"
-      style={{ background: uiColors.destAreaBg }}
+      style={{
+        // background: uiColors.deskAreaBg,
+        background: "#36383a",
+        backgroundImage: `url(https://i.imgur.com/tfiVPzS.png)`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "280px",
+      }}
       onPointerDown={deskAreaHandlers.handlePointerDown}
     >
       <WiringLayer />
@@ -28,6 +35,7 @@ export const DeskArea = ({
       <UnitConnectionsRoot />
       {false && <CoordDebugLayer />}
       {additionalContents}
+      <DockRoot />
     </div>
   );
 };

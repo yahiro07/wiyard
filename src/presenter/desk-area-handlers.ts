@@ -51,14 +51,14 @@ export const unitCardHandlers = {
           unitItem.type === "edge" &&
           unitItem.internalUnitKey === "noteInputPort"
         ) {
-          const isCurrent =
+          const isCurrentNoteCh =
             store.state.currentNoteChannelId === unitItem.noteChannelId;
-          if (isCurrent) {
-            actions.setWindowStatus(kSequencerWindowId, "visible");
+          if (isCurrentNoteCh) {
             windowSystem.setEvacuate(false);
+            actions.setWindowStatus(kSequencerWindowId, "visible");
+            windowSystem.setCurrentWindow(kSequencerWindowId);
           } else {
             actions.setCurrentNoteChannelId(unitItem.noteChannelId);
-            windowSystem.setCurrentWindow(unitItem.unitId);
           }
         }
       },
