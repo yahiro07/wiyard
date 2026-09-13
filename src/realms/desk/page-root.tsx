@@ -1,8 +1,9 @@
 import { createPianoRollUnit } from "@lib/piano-roll";
 import { ReactUnitFrame } from "wafer-host/react";
 import { appConfig } from "@/domain/app-config";
+import { ControlButtons } from "@/realms/controls/control-buttons";
 import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
-import { ControlButtons } from "@/realms/desk/control-buttons";
+import { ProjectButtons } from "@/realms/controls/project-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
 import { UnitPickerRoot } from "@/realms/desk/unit-picker";
 import { windowSystem } from "@/store/store";
@@ -21,6 +22,7 @@ const TopBar = () => {
       <div />
       {/* <PickerLaunchButton /> */}
       <ControlButtons />
+      <ProjectButtons />
       <MidiInButtonContainer />
       <div className="absolute-full pointer-events-none text-lg">
         under development...

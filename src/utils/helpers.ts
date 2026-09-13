@@ -41,11 +41,16 @@ export function AddOrRemoveArrayItem<T>(array: T[], value: T): T[] {
 export function pickObjectMembers<T extends {}, K extends keyof T>(
   obj: T,
   keys: K[] | Record<K, 1 | true>,
+  options?: { skipUndefined?: boolean },
 ): Pick<T, K> {
   const fieldNames = Array.isArray(keys) ? keys : (Object.keys(keys) as K[]);
-  return Object.fromEntries(
-    fieldNames.map((fieldName) => [fieldName, obj[fieldName]]),
-  ) as Pick<T, K>;
+  const destObj: Pick<T, K> = {} as Pick<T, K>;
+  for (const key of fieldNames) {
+    const value = obj[key];
+    if (value === undefined && options?.skipUndefined) continue;
+    destObj[key] = value;
+  }
+  return destObj;
 }
 
 export function mapObjectValues<T, R>(
