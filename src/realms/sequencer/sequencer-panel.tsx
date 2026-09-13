@@ -42,23 +42,17 @@ const NoteChannelListColumn = () => {
           {index + 1}
         </button>
       ))}
-      <button
-        type="button"
-        className={cz(!canAdd && "opacity-50")}
-        disabled={!canAdd}
-        onClick={actions.addNoteChannel}
-      >
-        add
-      </button>
+      {canAdd && (
+        <button type="button" onClick={actions.addNoteChannel}>
+          add
+        </button>
+      )}
       <div className="grow" />
-      <button
-        type="button"
-        className={cz(!canDelete && "opacity-50")}
-        disabled={!canDelete}
-        onClick={handleRemove}
-      >
-        remove
-      </button>
+      {canDelete && (
+        <button type="button" disabled={!canDelete} onClick={handleRemove}>
+          remove
+        </button>
+      )}
     </div>
   );
 };
