@@ -39,3 +39,17 @@ export function filterUnitRelatedWires(
     return sourceUnitId === unitId || destinationUnitId === unitId;
   });
 }
+
+export function decodeWireConnectionKey(wireConnectionKey: string) {
+  const [sourcePortKey, destinationPortKey] = wireConnectionKey.split("-");
+  const [sourceUnitId, sourcePortId] = sourcePortKey.split(".");
+  const [destinationUnitId, destinationPortId] = destinationPortKey.split(".");
+  return {
+    sourcePortKey,
+    destinationPortKey,
+    sourceUnitId,
+    sourcePortId,
+    destinationUnitId,
+    destinationPortId,
+  };
+}

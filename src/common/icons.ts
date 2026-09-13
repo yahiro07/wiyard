@@ -1,3 +1,4 @@
+import { BsArrowRight } from "react-icons/bs";
 import { CgDisplayFullwidth } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
@@ -20,4 +21,5 @@ export const Icons = {
   Minimize: FaWindowMinimize,
   Add: MdAdd,
   Menu: FiMenu,
+  DirectionRight: BsArrowRight,
 };

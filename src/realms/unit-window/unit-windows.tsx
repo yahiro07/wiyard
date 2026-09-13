@@ -1,7 +1,7 @@
-import { useInstance } from "@lib/utils/hooks";
 import { WindowFrame } from "@lib/window-system";
-import { useLayoutEffect } from "react";
+import { useCallback, useLayoutEffect } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
+import { Icons } from "@/common/icons";
 import { BoardUnitItem, UnitItem } from "@/domain/types";
 import {
   catalog,
@@ -9,11 +9,12 @@ import {
   internalUnitSpecs,
 } from "@/domain/unit-entries";
 import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
+import { sourceNoteChannelGetters } from "@/store/source-note-channel-getters";
 import { store, windowSystem } from "@/store/store";
 
-function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
-  return {
-    onIframeMounted(iframe: HTMLIFrameElement) {
+const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
+  return useCallback(
+    (iframe: HTMLIFrameElement) => {
       const win = iframe.contentWindow;
       if (win) {
         const onPointerDown = () => {
@@ -26,21 +27,37 @@ function createBoardUnitWindowViewModel(unitItem: BoardUnitItem) {
           });
       }
     },
-  };
-}
+    [unitItem.unitId],
+  );
+};
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const catalogItem = catalog[unitItem.catalogKey];
   const reporter = useUnitStuffReporter(unitItem.unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
-  const vm = useInstance(() => createBoardUnitWindowViewModel(unitItem));
+  const onIframeMounted = useUnitIframeMountedCallback(unitItem);
+  const sourceNoteChannelIndex =
+    sourceNoteChannelGetters.useUnitSourceActiveNoteChannelIndex(
+      unitItem.unitId,
+    );
 
   return (
-    <WindowFrame id={unitItem.unitId} title={catalogItem.name}>
+    <WindowFrame
+      id={unitItem.unitId}
+      title={catalogItem.name}
+      topBarInnerControls={
+        sourceNoteChannelIndex !== undefined ? (
+          <div className="flex-ha gap-2px">
+            <span className="text-15px">{sourceNoteChannelIndex + 1}</span>
+            <Icons.DirectionRight size={14} />
+          </div>
+        ) : undefined
+      }
+    >
       <UnitFrameScaled
         unitId={unitItem.unitId}
         unitUrl={catalogItem.loaderPageUrl}
-        onIframeMounted={vm.onIframeMounted}
+        onIframeMounted={onIframeMounted}
         onUnitInstanceLoaded={reporter.reportLoaded}
         onLoadFailed={reporter.reportFailure}
       />
