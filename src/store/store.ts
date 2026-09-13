@@ -2,7 +2,6 @@ import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
 import { Point } from "@/domain/common-types";
-import { defaultScene } from "@/domain/default-data";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
   OffStageUnitItem,
@@ -12,10 +11,11 @@ import {
   UnitStuff,
   WindowId,
 } from "@/domain/types";
+import { defaultScene } from "@/project/default-data";
 import { pickObjectMembers } from "@/utils/helpers";
 
-type StoreState = {
-  //will be persisted in project
+export type StoreState = {
+  //included in project data
   unitItems: UnitItem[];
   offStageUnitItems: OffStageUnitItem[];
   windowSpecs: Record<WindowId, WindowSpec>;
@@ -23,8 +23,9 @@ type StoreState = {
   windowsEvacuated: boolean;
   wireConnectionKeys: string[];
   currentNoteChannelId: string;
-  midiInEnabled: boolean;
   bpm: number;
+  //included in auto persistent data
+  midiInEnabled: boolean;
   masterVolume: number;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
@@ -36,6 +37,8 @@ type StoreState = {
   unitAddingItem: UnitAddingItem | null;
   menuTargetUnitId: string | null;
   playing: boolean;
+  projectLoadedIndex: number;
+  projectLoading: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -59,14 +62,34 @@ const blankStoreState: StoreState = {
   unitAddingItem: null,
   menuTargetUnitId: null,
   playing: false,
+  projectLoadedIndex: 0,
+  projectLoading: false,
+};
+
+export const projectResetterStates: Partial<StoreState> = {
+  unitItems: [],
+  offStageUnitItems: [],
+  wireConnectionKeys: [],
+  windowSpecs: {},
+  currentWindowId: null,
+  windowsEvacuated: false,
+  currentNoteChannelId: "",
+  bpm: 120,
+  //
+  unitStuffs: {},
+  portStuffs: {},
+  draggingPortKey: null,
+  previewDestPortKey: null,
+  previewDestPosition: null,
+  unitPickerVisible: false,
+  unitAddingItem: null,
+  menuTargetUnitId: null,
+  playing: false,
 };
 
 const defaultStoreState: StoreState = {
   ...blankStoreState,
-  unitItems: defaultScene.unitItems,
-  offStageUnitItems: defaultScene.offStageUnitItems,
-  wireConnectionKeys: defaultScene.wireConnectionKeys,
-  currentNoteChannelId: defaultScene.initialNoteChannelId,
+  ...defaultScene,
 };
 
 if (0) {

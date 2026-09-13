@@ -7,14 +7,14 @@ import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
 import { UnitConnectionsRoot } from "@/realms/unit-connection/unit-connections";
 import { UnitWindowsRoot } from "@/realms/unit-window/unit-windows";
 import { WiringLayer } from "@/realms/wiring/wiring-layer";
+import { store } from "@/store/store";
 
-export const DeskArea = ({
-  additionalContents,
-}: {
-  additionalContents?: React.ReactNode;
-}) => {
+export const DeskArea = () => {
+  const { projectLoadedIndex } = store.useSnapshot();
   return (
     <div
+      // if a new project loaded, refresh all dom elements related to units
+      key={projectLoadedIndex}
       id="domDeskArea"
       className="grow relative"
       style={{
@@ -34,7 +34,6 @@ export const DeskArea = ({
       <UnitPicker_AddingItem />
       <UnitConnectionsRoot />
       {false && <CoordDebugLayer />}
-      {additionalContents}
       <DockRoot />
     </div>
   );

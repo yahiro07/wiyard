@@ -74,6 +74,7 @@ export function setupAutoPersistenceTask() {
   let latestData = persistence.emitPersistenceData();
   const internal = {
     ensureLatestSaved() {
+      if (store.state.projectLoading) return;
       const data = persistence.emitPersistenceData();
       if (!dequal(data, latestData)) {
         persistence.save(data);

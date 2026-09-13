@@ -24,6 +24,7 @@ export const UnitConnectionsRoot = () => {
           />
         );
       })}
+      <Connection source="speakerPort.audioOutput" destination="$output" />
     </>
   );
 };

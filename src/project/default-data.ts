@@ -49,7 +49,6 @@ function createDefaultScene() {
 
   const wireConnectionKeys = [
     "noteInputPort1.noteOutput-synth1.noteInput",
-    "speakerPort.audioOutput-$output",
     "drum1.audioOutput-speakerPort.audioInput",
     "synth1.audioOutput-effect1.audioInput",
     "effect1.audioOutput-speakerPort.audioInput",
@@ -73,9 +72,43 @@ function createDefaultScene() {
   return {
     offStageUnitItems,
     unitItems,
-    initialNoteChannelId: "nc1",
+    currentNoteChannelId: "nc1",
     wireConnectionKeys,
   };
 }
 
 export const defaultScene = createDefaultScene();
+
+function createBlankScene() {
+  const ox = 100;
+  const oy = 200;
+  const unitItems: UnitItem[] = [
+    {
+      type: "edge",
+      unitId: "noteInputPort1",
+      noteChannelId: "nc1",
+      internalUnitKey: "noteInputPort",
+      cardPosition: { x: ox + 50, y: oy + 200 },
+    },
+    {
+      type: "edge",
+      unitId: "speakerPort",
+      noteChannelId: "",
+      internalUnitKey: "speakerPort",
+      cardPosition: { x: ox + 1000, y: oy + 200 },
+    },
+  ];
+  const offStageUnitItems: OffStageUnitItem[] = [
+    {
+      unitId: "sequencer1",
+      noteChannelId: "nc1",
+      unitClassKey: "pianoRoll",
+    },
+  ];
+  return {
+    offStageUnitItems,
+    unitItems,
+    currentNoteChannelId: "nc1",
+  };
+}
+export const blankScene = createBlankScene();
