@@ -35,7 +35,10 @@ export function createUnitCardPortPositionManager(
       const attrs = mapObjectValues(portEntries, (portEntry) => {
         const rect = portEntry.element.getBoundingClientRect();
         const portPosition = domRectOp.getCenter(rect);
-        const relativePosition = vectorOp.subtract(portPosition, baseCenter);
+        const relativePosition = vectorOp.scale(
+          vectorOp.subtract(portPosition, baseCenter),
+          1 / store.state.sight.eyeScaling,
+        );
         const position = vectorOp.add(cardPos, relativePosition);
 
         const { direction, subtype } = portEntry.portSpec;
