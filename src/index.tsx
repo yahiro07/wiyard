@@ -6,3 +6,4 @@ import { mountAppRoot } from "@/utils/mount-app-root";
 
 persistence.load();
 mountAppRoot(<App />);
+window.addEventListener("contextmenu", (e) => e.preventDefault());
