@@ -34,8 +34,10 @@ const ControlButton = ({
 };
 
 export const PickerLaunchButton = () => {
+  const { projectLoading } = store.useSnapshot();
   return (
     <ControlButton
+      disabled={projectLoading}
       onClick={actions.toggleUnitPickerVisible}
       children={<Icons.Add size={30} />}
     />
@@ -57,10 +59,11 @@ export const WindowEvacuationButton = () => {
 };
 
 export const PlaybackButton = () => {
-  const { playing } = store.useSnapshot();
+  const { playing, projectLoading } = store.useSnapshot();
   return (
     <ControlButton
       active={playing}
+      disabled={projectLoading}
       onClick={actions.togglePlayback}
       children={<Icons.Play />}
     />
@@ -95,13 +98,26 @@ export const MasterVolumeInput = () => {
   );
 };
 
+export const SecondBarButton = () => {
+  return (
+    <ControlButton
+      onClick={store.toggleSecondBarVisible}
+      children={<Icons.Menu size={18} />}
+    />
+  );
+};
+
 export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
   return (
     <div className={cz(vertical ? "flex-v" : "flex-h", "gap-4")}>
+      <div className="invisible">
+        <SecondBarButton />
+      </div>
       <PlaybackButton />
       <BpmInput />
       <MasterVolumeInput />
       <PickerLaunchButton />
+      <SecondBarButton />
       {/* <WindowEvacuationButton /> */}
     </div>
   );

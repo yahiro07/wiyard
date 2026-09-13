@@ -39,6 +39,7 @@ export type StoreState = {
   playing: boolean;
   projectLoadedIndex: number;
   projectLoading: boolean;
+  secondBarVisible: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -64,6 +65,7 @@ const blankStoreState: StoreState = {
   playing: false,
   projectLoadedIndex: 0,
   projectLoading: false,
+  secondBarVisible: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {

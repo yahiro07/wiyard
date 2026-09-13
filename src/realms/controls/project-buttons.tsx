@@ -19,9 +19,11 @@ const ProjectButton = ({
     <button
       type="button"
       className={cz(
-        "flex-c h-30px cursor-pointer px-2",
+        "flex-c h-32px cursor-pointer",
+        "w-66px bg-#6678",
         disabled && "opacity-30 pointer-events-none",
         active && "text-#0cf",
+        "hover:opacity-80",
       )}
       onClick={onClick}
     >
@@ -36,7 +38,7 @@ export const ProjectButtons = () => {
   return (
     <div
       className={cz(
-        "flex-h",
+        "flex-h gap-2",
         projectLoading && "opacity-50 pointer-events-none",
       )}
     >

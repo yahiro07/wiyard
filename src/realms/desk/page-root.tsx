@@ -1,35 +1,9 @@
 import { createPianoRollUnit } from "@lib/piano-roll";
 import { ReactUnitFrame } from "wafer-host/react";
 import { appConfig } from "@/domain/app-config";
-import { ControlButtons } from "@/realms/controls/control-buttons";
-import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
-import { ProjectButtons } from "@/realms/controls/project-buttons";
 import { DeskArea } from "@/realms/desk/desk-area";
+import { TopBar } from "@/realms/desk/top-control-bars";
 import { UnitPickerRoot } from "@/realms/desk/unit-picker";
-import { windowSystem } from "@/store/store";
-
-const TopBar = () => {
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.currentTarget === e.target) {
-      windowSystem.toggleEvacuate();
-    }
-  };
-  return (
-    <div
-      className="h-50px bg-gray-600 elative flex-ha px-2 justify-between"
-      onClick={handleClick}
-    >
-      <div />
-      {/* <PickerLaunchButton /> */}
-      <ControlButtons />
-      <ProjectButtons />
-      <MidiInButtonContainer />
-      <div className="absolute-full pointer-events-none text-lg">
-        under development...
-      </div>
-    </div>
-  );
-};
 
 const PageRootMain = () => {
   return (
