@@ -1,7 +1,7 @@
 import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
 import { hostSystem } from "@/domain/host-system-instance";
-import { OffStageUnitItem, UnitItem, WindowId } from "@/domain/types";
+import { UnitItem, WindowId } from "@/domain/types";
 import { blankScene, defaultScene } from "@/project/default-data";
 import {
   downloadFile,
@@ -20,7 +20,6 @@ export type ProjectsModel = {
 type ProjectData = {
   formatCode: string;
   unitItems: UnitItem[];
-  offStageUnitItems: OffStageUnitItem[];
   windowSpecs: Record<WindowId, WindowSpec>;
   wireConnectionKeys: string[];
   currentNoteChannelId: string;
@@ -37,7 +36,6 @@ const helpers = {
       {
         formatCode: 1,
         unitItems: 1,
-        offStageUnitItems: 1,
         windowSpecs: 1,
         wireConnectionKeys: 1,
         currentNoteChannelId: 1,
@@ -58,7 +56,6 @@ const projectDataIo = {
       formatCode: "WBP1",
       ...pickObjectMembers(store.state, {
         unitItems: 1,
-        offStageUnitItems: 1,
         windowSpecs: 1,
         wireConnectionKeys: 1,
         currentWindowId: 1,

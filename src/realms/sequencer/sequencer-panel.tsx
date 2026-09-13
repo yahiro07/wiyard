@@ -1,19 +1,31 @@
 import { ReactNode } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
-import { OffStageUnitItem } from "@/domain/types";
+import { NoteInputPortUnitItem } from "@/domain/types";
 import {
   CatalogKey,
   catalog,
   InternalUnitKey,
   internalUnitSpecs,
 } from "@/domain/unit-entries";
-import { useNoteChannelListColumnPresenter } from "@/realms/sequencer/sequencer-panel-models";
+import { actions } from "@/store/actions";
+import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
 
 const NoteChannelListColumn = () => {
-  const { noteChannelIds, currentNoteChannelId, selectNoteChannel } =
-    useNoteChannelListColumnPresenter();
+  const { currentNoteChannelId } = store.useSnapshot();
+  const noteChannelIds = notePortGetters.useNoteChannelIds();
+  const canAdd = noteChannelIds.length < 4;
+  const canDelete = noteChannelIds.length > 1;
+
+  const handleRemove = () => {
+    const ok = window.confirm(
+      `are you sure to remove the current note channel?`,
+    );
+    if (ok) {
+      actions.removeCurrentNoteChannel();
+    }
+  };
   return (
     <div className="w-50px bg-gray-600/60 flex-v gap-2 py-2">
       {noteChannelIds.map((id, index) => (
@@ -25,57 +37,68 @@ const NoteChannelListColumn = () => {
             "font-bold text-sm",
             id === currentNoteChannelId && "!bg-#8ae/70",
           )}
-          onClick={() => selectNoteChannel(id)}
+          onClick={() => actions.selectNoteChannel(id)}
         >
           {index + 1}
         </button>
       ))}
+      {canAdd && (
+        <button type="button" onClick={actions.addNoteChannel}>
+          add
+        </button>
+      )}
+      <div className="grow" />
+      {canDelete && (
+        <button type="button" disabled={!canDelete} onClick={handleRemove}>
+          remove
+        </button>
+      )}
     </div>
   );
 };
 
 const SequencerUnitItemView = ({
-  unitItem,
+  notePortUnitItem,
 }: {
-  unitItem: OffStageUnitItem;
+  notePortUnitItem: NoteInputPortUnitItem;
 }) => {
   const { currentNoteChannelId } = store.useSnapshot();
-  const displayed = unitItem.noteChannelId === currentNoteChannelId;
+  const displayed = notePortUnitItem.unitId === currentNoteChannelId;
   const internalUnitSpec =
-    internalUnitSpecs[unitItem.unitClassKey as InternalUnitKey];
-  const catalogItem = catalog[unitItem.unitClassKey as CatalogKey];
+    internalUnitSpecs[notePortUnitItem.sequencerClassKey as InternalUnitKey];
+  const catalogItem = catalog[notePortUnitItem.sequencerClassKey as CatalogKey];
+  const sequencerUnitId = notePortGetters.getSequencerUnitId(
+    notePortUnitItem.unitId,
+  );
   let content: ReactNode;
   if (internalUnitSpec) {
     content = (
       <ReactUnitFrame
-        unitId={unitItem.unitId}
+        unitId={sequencerUnitId}
         unitTemplateFn={internalUnitSpec.factory}
       />
     );
   } else if (catalogItem) {
     content = (
       <UnitFrameScaled
-        unitId={unitItem.unitId}
+        unitId={sequencerUnitId}
         unitUrl={catalogItem.loaderPageUrl}
       />
     );
   }
   return (
-    <div
-      key={unitItem.unitId}
-      className={cz("absolute-full", !displayed && "invisible")}
-    >
+    <div className={cz("absolute-full", !displayed && "invisible")}>
       {content}
     </div>
   );
 };
 
 const SequencerSection = () => {
-  const { offStageUnitItems } = store.useSnapshot();
+  const unitItems = notePortGetters.useNoteInputPortUnitItems();
   return (
     <div className="flex-grow relative">
-      {offStageUnitItems.map((item) => (
-        <SequencerUnitItemView key={item.unitId} unitItem={item} />
+      {unitItems.map((item) => (
+        <SequencerUnitItemView key={item.unitId} notePortUnitItem={item} />
       ))}
     </div>
   );

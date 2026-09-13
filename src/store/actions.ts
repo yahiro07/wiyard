@@ -7,13 +7,18 @@ import {
 import {
   BoardUnitItem,
   kSequencerWindowId,
+  NoteInputPortUnitItem,
   PortStuff,
   UnitAddingItem,
   UnitStuff,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
-import { getNextUnitId } from "@/domain/unit-id-helper";
+import {
+  getNextNoteInputPortUnitId,
+  getNextUnitId,
+} from "@/domain/unit-id-helper";
 import { getDeskAreaElement } from "@/presenter/desk-area-handlers";
+import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
 import {
   AddOrRemoveArrayItem,
@@ -128,6 +133,44 @@ export const actions = {
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
   },
+  addNoteChannel() {
+    const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
+      store.state.unitItems,
+    );
+    if (existingPorts.length >= 4) return;
+
+    const lastPort = existingPorts.at(-1);
+    const unitId = getNextNoteInputPortUnitId(store.state.unitItems);
+    const newPort: NoteInputPortUnitItem = {
+      type: "noteInput",
+      unitId,
+      sequencerClassKey: lastPort?.sequencerClassKey ?? "pianoRoll",
+      cardPosition: lastPort
+        ? { x: lastPort.cardPosition.x, y: lastPort.cardPosition.y + 100 }
+        : { x: 100, y: 400 },
+    };
+    store.setUnitItems((prev) => [...prev, newPort]);
+    store.setCurrentNoteChannelId(unitId);
+  },
+  removeCurrentNoteChannel() {
+    const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
+      store.state.unitItems,
+    );
+    if (existingPorts.length <= 1) return;
+
+    const currentId = store.state.currentNoteChannelId;
+    const currentIndex = existingPorts.findIndex(
+      (item) => item.unitId === currentId,
+    );
+    if (currentIndex < 0) return;
+
+    actions.removeUnit(currentId);
+
+    const remaining = existingPorts.filter((item) => item.unitId !== currentId);
+    const nextPort =
+      remaining[currentIndex] ?? remaining[currentIndex - 1] ?? remaining[0];
+    store.setCurrentNoteChannelId(nextPort.unitId);
+  },
   setMenuTargetUnit(unitId: string | null) {
     store.setMenuTargetUnitId(unitId);
   },
@@ -151,5 +194,8 @@ export const actions = {
   },
   togglePlayback() {
     store.togglePlaying();
+  },
+  selectNoteChannel(noteChannelId: string) {
+    store.setCurrentNoteChannelId(noteChannelId);
   },
 };

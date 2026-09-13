@@ -1,12 +1,7 @@
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 import { Point, Size } from "@/domain/common-types";
-import {
-  CatalogKey,
-  InternalUnitKey,
-  UnitClassKey,
-} from "@/domain/unit-entries";
+import { CatalogKey, UnitClassKey } from "@/domain/unit-entries";
 
-//instrument and effects, placed on board area
 export type BoardUnitItem = {
   type: "board";
   unitId: string;
@@ -14,26 +9,23 @@ export type BoardUnitItem = {
   cardPosition: Point;
 };
 
-//note input port and speaker output port, used for input/output of the board area
-export type EdgeUnitItem = {
-  type: "edge";
+export type NoteInputPortUnitItem = {
+  type: "noteInput";
   unitId: string;
-  noteChannelId: string;
-  internalUnitKey: InternalUnitKey;
+  sequencerClassKey: UnitClassKey;
   cardPosition: Point;
 };
 
-//units placed on board area
-export type StageUnitItem = BoardUnitItem | EdgeUnitItem;
-
-//sequencer units, internally managed and not displayed on the board
-export type OffStageUnitItem = {
+export type SpeakerPortUnitItem = {
+  type: "speaker";
   unitId: string;
-  noteChannelId: string;
-  unitClassKey: UnitClassKey;
+  cardPosition: Point;
 };
 
-export type UnitItem = BoardUnitItem | EdgeUnitItem;
+export type UnitItem =
+  | BoardUnitItem
+  | NoteInputPortUnitItem
+  | SpeakerPortUnitItem;
 
 export type WindowId = string; //unitId | "sequencerWindow"
 export const kSequencerWindowId = "sequencerWindow";

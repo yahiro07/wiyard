@@ -1,5 +1,5 @@
 import { appConfig } from "@/domain/app-config";
-import { kSequencerWindowId, StageUnitItem } from "@/domain/types";
+import { kSequencerWindowId, UnitItem } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 import { startDragSessionEx } from "@/utils/drag-session";
@@ -12,7 +12,7 @@ export function getDeskAreaElement() {
 type IPointerEvent = React.PointerEvent<HTMLElement>;
 
 export const unitCardHandlers = {
-  handlePointerDown(e0: IPointerEvent, unitItem: StageUnitItem) {
+  handlePointerDown(e0: IPointerEvent, unitItem: UnitItem) {
     const unitOriginalPos = unitItem.cardPosition;
     let prevPos = unitOriginalPos;
 
@@ -47,18 +47,15 @@ export const unitCardHandlers = {
           windowSystem.setEvacuate(false);
           actions.setWindowStatus(unitItem.unitId, "visible");
           windowSystem.setCurrentWindow(unitItem.unitId);
-        } else if (
-          unitItem.type === "edge" &&
-          unitItem.internalUnitKey === "noteInputPort"
-        ) {
+        } else if (unitItem.type === "noteInput") {
           const isCurrentNoteCh =
-            store.state.currentNoteChannelId === unitItem.noteChannelId;
+            store.state.currentNoteChannelId === unitItem.unitId;
           if (isCurrentNoteCh) {
             windowSystem.setEvacuate(false);
             actions.setWindowStatus(kSequencerWindowId, "visible");
             windowSystem.setCurrentWindow(kSequencerWindowId);
           } else {
-            actions.setCurrentNoteChannelId(unitItem.noteChannelId);
+            actions.setCurrentNoteChannelId(unitItem.unitId);
           }
         }
       },
