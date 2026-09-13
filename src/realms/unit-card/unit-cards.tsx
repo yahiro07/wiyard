@@ -1,22 +1,19 @@
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
-import {
-  BoardUnitItem,
-  EdgeUnitItem,
-  UnitItem,
-  UnitPortSpec,
-} from "@/domain/types";
+import { BoardUnitItem, UnitItem, UnitPortSpec } from "@/domain/types";
 import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
 import { unitCardHandlers } from "@/presenter/desk-area-handlers";
 import { useUnitCardPortPositionManager } from "@/realms/unit-card/unit-card-port-position-manager";
-import {
-  useNoteInputPortIndex,
-  useUnitStuff,
-} from "@/realms/unit-card/unit-cards-models";
 import { UnitPortsColumn } from "@/realms/unit-card/unit-ports";
 import { actions } from "@/store/actions";
+import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { cz } from "@/utils/cz";
+
+function useUnitStuff(unitId: string) {
+  const { unitStuffs } = store.useSnapshot();
+  return unitStuffs[unitId];
+}
 
 const UnitCardOperationOverlay = ({ unitItem }: { unitItem: UnitItem }) => {
   return (
@@ -99,7 +96,7 @@ const EdgeUnitCardView = ({
   label,
   handlePointerDown,
 }: {
-  unitItem: EdgeUnitItem;
+  unitItem: UnitItem;
   inputPortSpecs?: UnitPortSpec[];
   outputPortSpecs?: UnitPortSpec[];
   highlighted: boolean;
@@ -107,7 +104,7 @@ const EdgeUnitCardView = ({
   label: string;
   handlePointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
 }) => {
-  const isNoteInputPort = unitItem.internalUnitKey === "noteInputPort";
+  const isNoteInputPort = unitItem.type === "noteInput";
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   return (
     <div
@@ -149,16 +146,12 @@ const EdgeUnitCardView = ({
   );
 };
 
-const EdgeUnitCard_NoteInputPort = ({
-  unitItem,
-}: {
-  unitItem: EdgeUnitItem;
-}) => {
+const EdgeUnitCard_NoteInputPort = ({ unitItem }: { unitItem: UnitItem }) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
   const { currentNoteChannelId } = store.useSnapshot();
-  const notePortIndex = useNoteInputPortIndex(unitItem.noteChannelId);
-  const isCurrent = unitItem.noteChannelId === currentNoteChannelId;
-  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  const notePortIndex = notePortGetters.useNoteInputPortIndex(unitItem.unitId);
+  const isCurrent = unitItem.unitId === currentNoteChannelId;
+  const internalUnitSpec = internalUnitSpecs.noteInputPort;
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
@@ -172,9 +165,9 @@ const EdgeUnitCard_NoteInputPort = ({
   );
 };
 
-const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
+const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: UnitItem }) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
-  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
+  const internalUnitSpec = internalUnitSpecs.speakerPort;
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
@@ -191,12 +184,10 @@ const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
 const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
   if (unitItem.type === "board") {
     return <BoardUnitCard unitItem={unitItem} />;
-  } else if (unitItem.type === "edge") {
-    if (unitItem.internalUnitKey === "noteInputPort") {
-      return <EdgeUnitCard_NoteInputPort unitItem={unitItem} />;
-    } else {
-      return <EdgeUnitCard_SpeakerPort unitItem={unitItem} />;
-    }
+  } else if (unitItem.type === "noteInput") {
+    return <EdgeUnitCard_NoteInputPort unitItem={unitItem} />;
+  } else if (unitItem.type === "speaker") {
+    return <EdgeUnitCard_SpeakerPort unitItem={unitItem} />;
   }
 };
 

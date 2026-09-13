@@ -152,4 +152,7 @@ export const actions = {
   togglePlayback() {
     store.togglePlaying();
   },
+  selectNoteChannel(noteChannelId: string) {
+    store.setCurrentNoteChannelId(noteChannelId);
+  },
 };

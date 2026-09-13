@@ -1,5 +1,5 @@
 import { appConfig } from "@/domain/app-config";
-import { OffStageUnitItem, UnitItem } from "@/domain/types";
+import { UnitItem } from "@/domain/types";
 
 function createDefaultScene() {
   const ox = 100;
@@ -7,17 +7,14 @@ function createDefaultScene() {
 
   const unitItems: UnitItem[] = [
     {
-      type: "edge",
+      type: "noteInput",
       unitId: "noteInputPort1",
-      noteChannelId: "nc1",
-      internalUnitKey: "noteInputPort",
+      sequencerClassKey: "pianoRoll",
       cardPosition: { x: ox + 50, y: oy + 200 },
     },
     {
-      type: "edge",
+      type: "speaker",
       unitId: "speakerPort",
-      noteChannelId: "",
-      internalUnitKey: "speakerPort",
       cardPosition: { x: ox + 1000, y: oy + 200 },
     },
     {
@@ -39,13 +36,6 @@ function createDefaultScene() {
       cardPosition: { x: ox + 700, y: oy + 200 },
     },
   ];
-  const offStageUnitItems: OffStageUnitItem[] = [
-    {
-      unitId: "sequencer1",
-      noteChannelId: "nc1",
-      unitClassKey: "pianoRoll",
-    },
-  ];
 
   const wireConnectionKeys = [
     "noteInputPort1.noteOutput-synth1.noteInput",
@@ -55,24 +45,17 @@ function createDefaultScene() {
   ];
 
   if (appConfig.isDevelopment) {
-    offStageUnitItems.push({
-      unitId: "sequencer2",
-      noteChannelId: "nc2",
-      unitClassKey: "pianoRoll",
-    });
     unitItems.push({
-      type: "edge",
+      type: "noteInput",
       unitId: "noteInputPort2",
-      noteChannelId: "nc2",
-      internalUnitKey: "noteInputPort",
+      sequencerClassKey: "pianoRoll",
       cardPosition: { x: ox + 50, y: oy + 350 },
     });
   }
 
   return {
-    offStageUnitItems,
     unitItems,
-    currentNoteChannelId: "nc1",
+    currentNoteChannelId: "noteInputPort1",
     wireConnectionKeys,
   };
 }
@@ -84,31 +67,20 @@ function createBlankScene() {
   const oy = 200;
   const unitItems: UnitItem[] = [
     {
-      type: "edge",
+      type: "noteInput",
       unitId: "noteInputPort1",
-      noteChannelId: "nc1",
-      internalUnitKey: "noteInputPort",
+      sequencerClassKey: "pianoRoll",
       cardPosition: { x: ox + 50, y: oy + 200 },
     },
     {
-      type: "edge",
+      type: "speaker",
       unitId: "speakerPort",
-      noteChannelId: "",
-      internalUnitKey: "speakerPort",
       cardPosition: { x: ox + 1000, y: oy + 200 },
     },
   ];
-  const offStageUnitItems: OffStageUnitItem[] = [
-    {
-      unitId: "sequencer1",
-      noteChannelId: "nc1",
-      unitClassKey: "pianoRoll",
-    },
-  ];
   return {
-    offStageUnitItems,
     unitItems,
-    currentNoteChannelId: "nc1",
+    currentNoteChannelId: "noteInputPort1",
   };
 }
 export const blankScene = createBlankScene();

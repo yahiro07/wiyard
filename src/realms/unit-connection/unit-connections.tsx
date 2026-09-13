@@ -1,17 +1,18 @@
 import { Connection } from "wafer-host/react";
-import { useNoteInputConnectionViewModels } from "@/realms/unit-connection/unit-connections-models";
+import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 
 export const UnitConnectionsRoot = () => {
-  const noteInputConnectionViewModels = useNoteInputConnectionViewModels();
+  const internalSequencerConnectionSpecs =
+    notePortGetters.useInternalSequencerConnectionSpecs();
   const { wireConnectionKeys } = store.useSnapshot();
   return (
     <>
-      {noteInputConnectionViewModels.map((vm) => (
+      {internalSequencerConnectionSpecs.map((spec) => (
         <Connection
-          key={`${vm.source}-${vm.destination}`}
-          source={vm.source}
-          destination={vm.destination}
+          key={`${spec.source}-${spec.destination}`}
+          source={spec.source}
+          destination={spec.destination}
         />
       ))}
       {wireConnectionKeys.map((connectionKey) => {

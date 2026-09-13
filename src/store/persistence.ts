@@ -3,13 +3,12 @@ import { dequal } from "dequal";
 import { HsUnitStateData } from "wafer-host/core";
 import { appConfig } from "@/domain/app-config";
 import { hostSystem } from "@/domain/host-system-instance";
-import { OffStageUnitItem, UnitItem, WindowId } from "@/domain/types";
+import { UnitItem, WindowId } from "@/domain/types";
 import { store } from "@/store/store";
 import { pickObjectMembers } from "@/utils/helpers";
 
 type PersistenceData = {
   unitItems: UnitItem[];
-  offStageUnitItems: OffStageUnitItem[];
   windowSpecs: Record<WindowId, WindowSpec>;
   wireConnectionKeys: string[];
   currentWindowId: string | null;
@@ -27,7 +26,6 @@ export const persistence = {
     return {
       ...pickObjectMembers(store.state, {
         unitItems: 1,
-        offStageUnitItems: 1,
         windowSpecs: 1,
         wireConnectionKeys: 1,
         currentWindowId: 1,

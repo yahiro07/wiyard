@@ -4,7 +4,6 @@ import { UpdatePayload } from "vite";
 import { Point } from "@/domain/common-types";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
-  OffStageUnitItem,
   PortStuff,
   UnitAddingItem,
   UnitItem,
@@ -17,7 +16,6 @@ import { pickObjectMembers } from "@/utils/helpers";
 export type StoreState = {
   //included in project data
   unitItems: UnitItem[];
-  offStageUnitItems: OffStageUnitItem[];
   windowSpecs: Record<WindowId, WindowSpec>;
   currentWindowId: string | null;
   windowsEvacuated: boolean;
@@ -44,7 +42,6 @@ export type StoreState = {
 
 const blankStoreState: StoreState = {
   unitItems: [],
-  offStageUnitItems: [],
   wireConnectionKeys: [],
   windowSpecs: {},
   currentWindowId: null,
@@ -70,7 +67,6 @@ const blankStoreState: StoreState = {
 
 export const projectResetterStates: Partial<StoreState> = {
   unitItems: [],
-  offStageUnitItems: [],
   wireConnectionKeys: [],
   windowSpecs: {},
   currentWindowId: null,

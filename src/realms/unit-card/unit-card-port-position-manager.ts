@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { PortStuff, StageUnitItem, UnitPortSpec } from "@/domain/types";
+import { PortStuff, UnitItem, UnitPortSpec } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { domRectOp, vectorOp } from "@/utils/geometry-helper";
@@ -80,7 +80,7 @@ export function createUnitCardPortPositionManager(
 }
 
 export function useUnitCardPortPositionManager(
-  unitItem: StageUnitItem,
+  unitItem: UnitItem,
 ): UnitCardPortPositionManager {
   const [portPositionManager] = useState(() =>
     createUnitCardPortPositionManager(unitItem.unitId),

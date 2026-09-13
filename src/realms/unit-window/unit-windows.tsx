@@ -1,8 +1,12 @@
 import { WindowFrame } from "@lib/window-system";
 import { useLayoutEffect } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
-import { BoardUnitItem, EdgeUnitItem, UnitItem } from "@/domain/types";
-import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
+import { BoardUnitItem, UnitItem } from "@/domain/types";
+import {
+  catalog,
+  InternalUnitKey,
+  internalUnitSpecs,
+} from "@/domain/unit-entries";
 import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
 import { store, windowSystem } from "@/store/store";
 import { useInstance } from "@/utils/hooks";
@@ -44,14 +48,20 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   );
 };
 
-const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
-  const internalUnitSpec = internalUnitSpecs[unitItem.internalUnitKey];
-  const reporter = useUnitStuffReporter(unitItem.unitId);
+const EdgeUnitWindow = ({
+  unitId,
+  internalUnitKey,
+}: {
+  unitId: string;
+  internalUnitKey: InternalUnitKey;
+}) => {
+  const internalUnitSpec = internalUnitSpecs[internalUnitKey];
+  const reporter = useUnitStuffReporter(unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
 
   return (
     <ReactUnitFrame
-      unitId={unitItem.unitId}
+      unitId={unitId}
       unitTemplateFn={internalUnitSpec.factory}
       onUnitInstanceLoaded={reporter.reportLoaded}
     />
@@ -61,8 +71,22 @@ const EdgeUnitWindow = ({ unitItem }: { unitItem: EdgeUnitItem }) => {
 const UnitWindowRoot = ({ unitItem }: { unitItem: UnitItem }) => {
   if (unitItem.type === "board") {
     return <BoardUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
-  } else if (unitItem.type === "edge") {
-    return <EdgeUnitWindow key={unitItem.unitId} unitItem={unitItem} />;
+  } else if (unitItem.type === "noteInput") {
+    return (
+      <EdgeUnitWindow
+        key={unitItem.unitId}
+        unitId={unitItem.unitId}
+        internalUnitKey="noteInputPort"
+      />
+    );
+  } else if (unitItem.type === "speaker") {
+    return (
+      <EdgeUnitWindow
+        key={unitItem.unitId}
+        unitId={unitItem.unitId}
+        internalUnitKey="speakerPort"
+      />
+    );
   }
 };
 
