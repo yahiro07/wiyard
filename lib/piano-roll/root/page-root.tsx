@@ -252,7 +252,7 @@ export const PageRoot = () => {
   return (
     <div className="w-full h-full">
       <div
-        className="w-full h-full flex-vc gap-2 p-6 text-white"
+        className="w-full h-full flex-vc gap-2 p-2 text-white"
         style={colorStyle({ bg: uiColors.clPanelBody })}
       >
         <TopBar />
