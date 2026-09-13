@@ -5,7 +5,7 @@ import {
   FaWindowMinimize,
 } from "react-icons/fa6";
 import { IoPlaySharp } from "react-icons/io5";
-import { MdClose } from "react-icons/md";
+import { MdAdd, MdClose } from "react-icons/md";
 import { PiPianoKeysFill, PiTrash } from "react-icons/pi";
 
 export const Icons = {
@@ -17,4 +17,5 @@ export const Icons = {
   Piano: PiPianoKeysFill,
   Play: IoPlaySharp,
   Minimize: FaWindowMinimize,
+  Add: MdAdd,
 };

@@ -66,7 +66,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
         <div
-          className="h-100px bg-white cursor-pointer relative"
+          className="h-100px bg-white cursor-pointer relative shadow-md"
           onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
         >
           <img
@@ -124,16 +124,16 @@ const EdgeUnitCardView = ({
         )}
         <div
           className={cz(
-            "w-100px h-100px bg-white/50 flex-c relative",
-            "border-l border-l-6 border-l-transparent",
-            isNoteInputPort && "cursor-pointer",
+            "w-85px h-85px bg-white/5 flex-c relative shadow-md",
+            isNoteInputPort &&
+              "border-l border-l-6 border-l-transparent cursor-pointer",
             highlighted && "!border-l-#8ae",
           )}
           onPointerDown={handlePointerDown}
         >
-          <IconComponent size={55} className="mb-3" />
+          <IconComponent size={50} className="mb-3" />
           {label && (
-            <div className="absolute-full flex-va justify-end text-sm font-bold pb-1">
+            <div className="absolute-full flex-va justify-end text-[13px] font-500 pb-1">
               {label}
             </div>
           )}
