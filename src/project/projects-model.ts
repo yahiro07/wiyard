@@ -1,6 +1,7 @@
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
+import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import { UnitItem, WindowId } from "@/domain/types";
 import { blankScene, defaultScene } from "@/project/default-data";
@@ -27,6 +28,7 @@ type ProjectData = {
   windowsEvacuated: boolean;
   bpm: number;
   unitStates: HsUnitStateData[];
+  sight: FieldSight;
 };
 
 const helpers = {
@@ -43,6 +45,7 @@ const helpers = {
         windowsEvacuated: 1,
         bpm: 1,
         unitStates: 1,
+        sight: 1,
       },
       { skipUndefined: true },
     );
@@ -62,6 +65,7 @@ const projectDataIo = {
         currentNoteChannelId: 1,
         windowsEvacuated: 1,
         bpm: 1,
+        sight: 1,
       }),
       unitStates,
     };

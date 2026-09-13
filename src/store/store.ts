@@ -3,6 +3,7 @@ import { Point } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
+import { createFieldSightHandlers } from "@/components/field-sight-handlers";
 import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
@@ -13,7 +14,6 @@ import {
   WindowId,
 } from "@/domain/types";
 import { defaultScene } from "@/project/default-data";
-import { createFieldSightHandlers } from "@/components/field-sight-handlers";
 
 export type StoreState = {
   //included in project data
@@ -78,6 +78,7 @@ export const projectResetterStates: Partial<StoreState> = {
   windowsEvacuated: false,
   currentNoteChannelId: "",
   bpm: 120,
+  sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   //
   unitStuffs: {},
   portStuffs: {},

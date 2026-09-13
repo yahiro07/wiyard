@@ -1,14 +1,14 @@
 import { boardSize, domIds } from "@/common/constants";
 import { FieldSightPlane } from "@/components/field-sight-plane";
 import { SecondBar } from "@/realms/controls/top-control-bars";
+import { CoordDebugLayer } from "@/realms/desk/coord-debug-layer";
 import { DockRoot } from "@/realms/desk/dock-root";
 import { UnitPicker_AddingItem } from "@/realms/desk/unit-picker";
 import { SequencerWindow } from "@/realms/sequencer/sequencer-window";
-import { UnitConnectionsRoot } from "@/realms/unit-card/connections";
-import { CoordDebugLayer } from "@/realms/unit-card/coord-debug-layer";
 import { UnitCardsRoot } from "@/realms/unit-card/unit-cards";
-import { WiringLayer } from "@/realms/unit-card/wiring-layer";
 import { UnitWindowsRoot } from "@/realms/unit-window/unit-windows";
+import { UnitConnectionsRoot } from "@/realms/wiring/connections";
+import { WiringLayer } from "@/realms/wiring/wiring-layer";
 import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
 

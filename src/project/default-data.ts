@@ -57,6 +57,7 @@ function createDefaultScene() {
     unitItems,
     currentNoteChannelId: "noteInputPort1",
     wireConnectionKeys,
+    sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   };
 }
 
@@ -79,6 +80,7 @@ function createBlankScene() {
   return {
     unitItems,
     currentNoteChannelId: "noteInputPort1",
+    sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   };
 }
 export const blankScene = createBlankScene();
