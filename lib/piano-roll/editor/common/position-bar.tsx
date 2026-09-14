@@ -79,21 +79,23 @@ export const PositionBar = ({
   const loopX = loopSteps ?? displaySteps;
   const endX = displaySteps;
   return (
-    <HorizontalScrollPlane displaySpec={displaySpec}>
-      <div
-        className="h-24px bg-#333 text-#888 bd-#0004"
-        onPointerDown={handlePointerDown}
-      >
-        <SectionHighlighters
-          loopX={loopX}
-          endX={endX}
-          cellW={cellW}
-          loopGhostEnabled={loopGhostEnabled}
-        />
-        {seqNumbers(barCount).map((i) => (
-          <BarMarker key={i} index={i} cellW={cellW} />
-        ))}
-      </div>
-    </HorizontalScrollPlane>
+    <div className="bg-#282828">
+      <HorizontalScrollPlane displaySpec={displaySpec}>
+        <div
+          className="h-24px bg-#333 text-#888 bd-#0004"
+          onPointerDown={handlePointerDown}
+        >
+          <SectionHighlighters
+            loopX={loopX}
+            endX={endX}
+            cellW={cellW}
+            loopGhostEnabled={loopGhostEnabled}
+          />
+          {seqNumbers(barCount).map((i) => (
+            <BarMarker key={i} index={i} cellW={cellW} />
+          ))}
+        </div>
+      </HorizontalScrollPlane>
+    </div>
   );
 };
