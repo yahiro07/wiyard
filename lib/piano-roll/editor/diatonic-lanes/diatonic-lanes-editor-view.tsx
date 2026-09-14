@@ -20,16 +20,22 @@ import { NoteLayerRoot } from "../editor-core/note-layer";
 import { DiatonicLanesGrid } from "./diatonic-lanes-grid";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
-  const [{ keySpec }] = useStoreAccess();
+  const [{ keySpec, octave }] = useStoreAccess();
   return (
     <div className="flex-c h-full">
       <div className="flex-v flex-col-reverse">
         {seqNumbers(uiConfig.numDiatonicLanes).map((i) => {
           const pitch = diatonicLanesPitchHelper.mapYIndexToPitch(i, keySpec);
-          const isTonic = pitch % 12 === keySpec.root;
-          let label = getNoteNameLabel(pitch, 0);
+          const isTonic = pitch % 12 === (keySpec.root + 12) % 12;
 
-          if (appConfig.isDevelopment && 1) {
+          let label: string | undefined;
+          if (isTonic) {
+            label = getNoteNameLabel(pitch, octave);
+          }
+          if (1) {
+            label = getNoteNameLabel(pitch, octave);
+          }
+          if (appConfig.isDevelopment && 0) {
             label = `${i} (${pitch}) ${label ?? ""}`;
           }
           return (

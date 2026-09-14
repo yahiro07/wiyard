@@ -85,8 +85,9 @@ if (import.meta.env.DEV && 1) {
   };
   setKeySpec(0, "major"); //C
   // setKeySpec(-3, "minor"); //Am
-  setKeySpec(7, "major"); //G
+  // setKeySpec(7, "major"); //G
   // setKeySpec(2, "major"); //D
+  setKeySpec(6, "major"); //F#
 }
 
 export function createAppStore(): AppStore {

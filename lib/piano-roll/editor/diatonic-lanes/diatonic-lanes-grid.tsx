@@ -26,7 +26,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
       const i2 = i - trDiatonic;
-      const isTonic = i2 % 7 === 0;
+      const isTonic = keySpec.mode === "major" ? i2 % 7 === 0 : i2 % 7 === 5;
       const isDominant = i2 % 7 === 4;
       let color: string | undefined;
       if (isTonic) {

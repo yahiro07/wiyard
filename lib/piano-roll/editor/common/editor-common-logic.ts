@@ -99,7 +99,10 @@ const subMapD = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 const subMapP = [0, 2, 4, 5, 7, 9, 11];
 
 export const diatonicLanesPitchHelper = {
-  mapPitchToDisplayYIndex(pitch: number, keySpec: SongKeySpec) {
+  mapPitchToDisplayYIndex(pitch: number, keySpec: SongKeySpec): number {
+    if (pitch < 12) {
+      return this.mapPitchToDisplayYIndex(pitch + 12, keySpec) - 7;
+    }
     const trChromatic = keySpec.relativeKeyTranspose;
     const trDiatonic = Math.round((keySpec.relativeKeyTranspose * 7) / 12);
     pitch -= trChromatic;
@@ -108,7 +111,10 @@ export const diatonicLanesPitchHelper = {
     const subD = subMapD[sub];
     return oct * 7 + subD + trDiatonic;
   },
-  mapYIndexToPitch(yi: number, keySpec: SongKeySpec) {
+  mapYIndexToPitch(yi: number, keySpec: SongKeySpec): number {
+    if (yi < 7) {
+      return this.mapYIndexToPitch(yi + 7, keySpec) - 12;
+    }
     const trChromatic = keySpec.relativeKeyTranspose;
     const trDiatonic = Math.round((keySpec.relativeKeyTranspose * 7) / 12);
     yi -= trDiatonic;
@@ -129,10 +135,10 @@ export const diatonicLanesPitchHelper = {
     keySpec: SongKeySpec,
   ) {
     const yi =
-      diatonicLanesPitchHelper.mapPitchToDisplayYIndex(originalPitch, keySpec) +
+      this.mapPitchToDisplayYIndex(originalPitch, keySpec) +
       Math.round(deltaYi);
     if (snapToScaleNote) {
-      return diatonicLanesPitchHelper.mapYIndexToPitch(Math.round(yi), keySpec);
+      return this.mapYIndexToPitch(Math.round(yi), keySpec);
     }
     return Math.round(originalPitch + (deltaYi * 12) / 7);
   },
