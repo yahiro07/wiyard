@@ -25,11 +25,13 @@ const NoteView = ({
   patternEnabled,
   octaveShift,
   duty: inputDuty,
+  isGhost,
 }: {
   note: Note;
   patternEnabled: boolean;
   octaveShift: number;
   duty: number;
+  isGhost: boolean;
 }) => {
   const { displaySpec, sectionRange, editorKind } = useNoteLayerContext();
   const { cellW, cellH } = displaySpec;
@@ -53,6 +55,10 @@ const NoteView = ({
       bgColor = "#6cc1";
       borderColor = "#6cc6";
     }
+  }
+  if (isGhost) {
+    bgColor = "#fff2";
+    borderColor = "#fff2";
   }
   const dur = note.duration;
   let duty = 1;
@@ -106,16 +112,32 @@ const styleNoteView = {
   cutout: "absolute top-0 right-0 bg-black/15 h-full",
 };
 
-const NotesDisplayLayer = () => {
-  const { sectionRange, notes } = useNoteLayerContext();
+const NotesBlockView = ({
+  notes,
+  sourceOffset,
+  sourceDuration,
+  displayOffset,
+  cellW,
+  isGhost,
+}: {
+  notes: Note[];
+  sourceOffset: number;
+  sourceDuration: number;
+  displayOffset: number;
+  cellW: number;
+  isGhost: boolean;
+}) => {
   const [{ patternEnabled, octave, duty }] = useStoreAccess();
   return (
-    <div className="absolute-full">
+    <div
+      className="absolute-full"
+      style={{ transform: `translateX(${displayOffset * cellW}px)` }}
+    >
       {notes
         .filter(
           (note) =>
-            sectionRange.offset <= note.position &&
-            note.position < sectionRange.offset + sectionRange.duration,
+            sourceOffset <= note.position &&
+            note.position < sourceOffset + sourceDuration,
         )
         .map((note) => (
           <NoteView
@@ -124,6 +146,7 @@ const NotesDisplayLayer = () => {
             patternEnabled={patternEnabled}
             octaveShift={octave}
             duty={duty}
+            isGhost={isGhost}
           />
         ))}
     </div>
@@ -131,7 +154,14 @@ const NotesDisplayLayer = () => {
 };
 
 const NoteLayerStrip = () => {
-  const { displaySpec, sectionRange, editorKind } = useNoteLayerContext();
+  const {
+    notes,
+    displaySpec,
+    sectionRange,
+    editorKind,
+    loopSteps,
+    loopGhostEnabled,
+  } = useNoteLayerContext();
   const { cellW, cellH } = displaySpec;
   const numPitches = {
     main: uiConfig.numKeys,
@@ -145,7 +175,26 @@ const NoteLayerStrip = () => {
       className="relative overflow-hidden touch-none shrink-0"
       style={{ width: editorW, height: editorH }}
     >
-      <NotesDisplayLayer />
+      <NotesBlockView
+        notes={notes}
+        sourceOffset={sectionRange.offset}
+        sourceDuration={sectionRange.duration}
+        displayOffset={0}
+        cellW={cellW}
+        isGhost={false}
+      />
+      {loopGhostEnabled && (
+        <>
+          <NotesBlockView
+            notes={notes}
+            sourceOffset={sectionRange.offset}
+            sourceDuration={sectionRange.duration}
+            displayOffset={loopSteps}
+            cellW={cellW}
+            isGhost={true}
+          />
+        </>
+      )}
       <EditInputLayer />
     </div>
   );
@@ -163,7 +212,8 @@ export const NoteLayerRoot = ({
   loopSteps: number;
 }) => {
   const { store } = useAppContext();
-  const { inputNotes, mappedNotes, patternNotes } = store.useSnapshot();
+  const { inputNotes, mappedNotes, patternNotes, loopGhostEnabled } =
+    store.useSnapshot();
 
   const sectionRange = useMemo(
     () => ({ offset: 0, duration: displaySteps }),
@@ -187,6 +237,8 @@ export const NoteLayerRoot = ({
           displaySpec,
           editorKind,
           notes,
+          loopSteps,
+          loopGhostEnabled,
         }}
       >
         <NoteLayerStrip />

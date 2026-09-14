@@ -78,7 +78,7 @@ export const PatternEditorView = () => {
                 displaySpec={displaySpec}
                 editorKind="pattern"
                 displaySteps={sectionDuration}
-                loopSteps={-1}
+                loopSteps={sectionDuration}
               />
             </PianoRollEditPartPlane>
           </div>

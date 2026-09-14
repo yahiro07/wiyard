@@ -7,6 +7,8 @@ export type NoteLayerContextValue = {
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
   notes: Note[];
+  loopSteps: number;
+  loopGhostEnabled: boolean;
 };
 
 export const noteLayerContext = createContext<NoteLayerContextValue>({} as any);
