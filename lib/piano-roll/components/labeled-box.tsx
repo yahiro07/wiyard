@@ -22,7 +22,7 @@ export const LabeledBox = ({
       style={width ? { width } : undefined}
     >
       <div
-        className="text-11px font-bold h-13px"
+        className="text-11px font-500 h-13px"
         style={{ textAlign: labelAlign }}
       >
         {label}

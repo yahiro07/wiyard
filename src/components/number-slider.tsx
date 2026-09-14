@@ -35,7 +35,9 @@ export function NumberSlider({
 }) {
   return (
     <div className="flex-ha gap-1 relative" style={{ width }}>
-      {label && <div className="absolute text-10px -top-2 left-0">{label}</div>}
+      {label && (
+        <div className="absolute text-10px -top-2 left-0 font-500">{label}</div>
+      )}
       <KnobFrame
         value={value}
         min={min}
