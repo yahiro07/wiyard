@@ -1,61 +1,19 @@
-import { cz } from "@lib/utils/cz";
-import { seqNumbers, topLimit } from "@lib/utils/number-helper";
+import { topLimit } from "@lib/utils/number-helper";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { useRef } from "react";
-import { appConfig, uiConfig } from "../../definitions/ui-config";
-import { useAppContext, useStoreAccess } from "../../root/app-context";
+import { uiConfig } from "../../definitions/ui-config";
+import { useAppContext } from "../../root/app-context";
 import {
   EditorCommonLayout,
   PianoRollEditPartPlane,
 } from "../common/editor-common-layout";
-import {
-  diatonicLanesPitchHelper,
-  useGridDisplaySpec,
-} from "../common/editor-common-logic";
-import { getNoteNameLabel } from "../common/note-name-helper";
+import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { PositionBar } from "../common/position-bar";
 import { useDisplaySpec } from "../common/use-display-spec";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { DiatonicLanesGrid } from "./diatonic-lanes-grid";
-
-const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
-  const [{ keySpec, octave }] = useStoreAccess();
-  return (
-    <div className="flex-c h-full">
-      <div className="flex-v flex-col-reverse">
-        {seqNumbers(uiConfig.numDiatonicLanes).map((i) => {
-          const pitch = diatonicLanesPitchHelper.mapYIndexToPitch(i, keySpec);
-          const isTonic = pitch % 12 === (keySpec.root + 12) % 12;
-
-          let label: string | undefined;
-          if (isTonic) {
-            label = getNoteNameLabel(pitch, octave);
-          }
-          if (1) {
-            label = getNoteNameLabel(pitch, octave);
-          }
-          if (appConfig.isDevelopment && 0) {
-            label = `${i} (${pitch}) ${label ?? ""}`;
-          }
-          return (
-            <div
-              key={i}
-              className={cz(
-                "w-100px flex-c",
-                "bd-#333",
-                isTonic ? "bg-#568" : "bg-#444",
-              )}
-              style={{ height: cellH }}
-            >
-              {label}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+import { DiatonicPitchIndexColumn } from "./diatonic-pitch-index-column";
 
 export const DiatonicLanesEditorView = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -86,7 +44,7 @@ export const DiatonicLanesEditorView = () => {
       mainDivRef={mainDivRef}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
-          <PitchIndexColumn cellH={displaySpec.cellH} />
+          <DiatonicPitchIndexColumn cellH={displaySpec.cellH} />
         </div>
       }
       sideContentWidth={keysWidth}
