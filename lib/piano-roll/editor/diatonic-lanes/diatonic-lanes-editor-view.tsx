@@ -17,6 +17,7 @@ import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { useDisplaySpec } from "../common/use-display-spec";
 import { DiatonicLanesGrid } from "./diatonic-lanes-grid";
 import { NoteLayerRoot } from "../editor-core/note-layer";
+import { PositionBar } from "../common/position-bar";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   return (
@@ -104,6 +105,13 @@ export const DiatonicLanesEditorView = () => {
             </PianoRollEditPartPlane>
           </div>
         </>
+      }
+      positionBarContent={
+        <PositionBar
+          displaySpec={displaySpec}
+          displaySteps={displaySteps}
+          loopSteps={loopSteps}
+        />
       }
     />
   );
