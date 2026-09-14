@@ -12,6 +12,7 @@ import {
   getPatternPitchLabel,
   useGridDisplaySpec,
 } from "../common/editor-common-logic";
+import { PositionBar } from "../common/position-bar";
 import { useDisplaySpec } from "../common/use-display-spec";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PatternGrid } from "./pattern-grid";
@@ -43,6 +44,7 @@ export const PatternEditorView = () => {
   const mainDivSize = useDomElementSize(mainDivRef);
   const keysWidth = 100;
   const sectionDuration = 2 * 16; //fixed for pattern
+  const displaySteps = sectionDuration;
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
 
@@ -85,6 +87,9 @@ export const PatternEditorView = () => {
             </PianoRollEditPartPlane>
           </div>
         </>
+      }
+      positionBarContent={
+        <PositionBar displaySpec={displaySpec} displaySteps={sectionDuration} />
       }
     />
   );

@@ -102,12 +102,14 @@ export const PositionBar = ({
           className="h-24px bg-#333 text-#888 bd-#0004"
           onPointerDown={handlePointerDown}
         >
-          <SectionHighlighters
-            loopX={loopX}
-            endX={endX}
-            cellW={cellW}
-            loopGhostEnabled={loopGhostEnabled}
-          />
+          {loopSteps && (
+            <SectionHighlighters
+              loopX={loopX}
+              endX={endX}
+              cellW={cellW}
+              loopGhostEnabled={loopGhostEnabled}
+            />
+          )}
           {seqNumbers(barCount).map((i) => (
             <BarMarker key={i} index={i} cellW={cellW} />
           ))}
