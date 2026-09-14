@@ -3,7 +3,7 @@ import {
   HsPortInfoPrimaryInner,
   HsUnitInstance,
 } from "wafer-host/core";
-import { appConfig } from "@/domain/app-config";
+import { appConfig } from "@/common/app-config";
 import { UnitStuff } from "@/domain/types";
 
 const subtypeOrder = ["audio", "note", "automation"];

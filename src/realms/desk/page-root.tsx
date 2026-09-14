@@ -1,7 +1,7 @@
 import { createPianoRollUnit } from "@lib/piano-roll";
 import { ReactUnitFrame } from "wafer-host/react";
+import { appConfig } from "@/common/app-config";
 import { ScreenScaler } from "@/components/screen-scaler";
-import { appConfig } from "@/domain/app-config";
 import { TopBar } from "@/realms/controls/top-control-bars";
 import { DeskArea } from "@/realms/desk/desk-area";
 import { UnitPickerRoot } from "@/realms/desk/unit-picker";

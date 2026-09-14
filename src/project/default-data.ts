@@ -1,4 +1,4 @@
-import { appConfig } from "@/domain/app-config";
+import { appConfig } from "@/common/app-config";
 import { UnitItem } from "@/domain/types";
 
 const ox = 2000 - 500;
