@@ -4,15 +4,15 @@ import { mapUnaryTo, seqNumbers } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext } from "../../root/app-context";
-import { EditInputLayer } from "./edit-input-layer";
+import { useAppContext, useStoreAccess } from "../../root/app-context";
 import {
   diatonicLanesPitchHelper,
   getPatternPitchLabel,
 } from "../common/editor-common-logic";
 import { DisplaySpec } from "../common/editor-types";
 import { getNoteNameLabel } from "../common/note-name-helper";
-import { useNoteLayerContext, noteLayerContext } from "./note-layer-context";
+import { EditInputLayer } from "./edit-input-layer";
+import { noteLayerContext, useNoteLayerContext } from "./note-layer-context";
 
 const noteColors = {
   input: "#6cc",
@@ -29,12 +29,13 @@ const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
     octaveShift,
     noteDuty,
   } = useNoteLayerContext();
+  const [{ keySpec }] = useStoreAccess();
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi0 = note.pitch;
   let yi = note.pitch;
   if (editorKind === "mainD") {
-    yi = diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch);
+    yi = diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch, keySpec);
   }
   const isPattern = editorKind === "pattern";
   let noteKind: NoteKind = "input";

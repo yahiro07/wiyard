@@ -1,5 +1,6 @@
 import { bottomLimit } from "@lib/utils/number-helper";
 import { useMemo } from "react";
+import { SongKeySpec } from "wafer-host/unit-types";
 import { EditorKind, Note } from "../../definitions/types";
 import { useAppContext } from "../../root/app-context";
 import { DisplaySpec, SectionRange } from "./editor-types";
@@ -8,6 +9,7 @@ export function useGridDisplaySpec(
   displaySpec: DisplaySpec,
   sectionDuration: number,
   numPitches: number,
+  keySpec?: SongKeySpec,
 ) {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
@@ -39,6 +41,7 @@ export function useGridDisplaySpec(
       cellH,
       numStepsFull: nx,
       numPitchesFull: numPitches,
+      keySpec,
     }),
     [
       contentW,
@@ -53,6 +56,7 @@ export function useGridDisplaySpec(
       cellH,
       nx,
       numPitches,
+      keySpec,
     ],
   );
 }
@@ -65,13 +69,14 @@ export function hitTestNote(
   xiFloat: number,
   yiFloat: number,
   editorKind: EditorKind,
+  keySpec: SongKeySpec,
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
   const isDiatonic = editorKind === "mainD";
   for (let i = notes.length - 1; i >= 0; i--) {
     const note = notes[i];
     const noteYi = isDiatonic
-      ? diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch)
+      ? diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch, keySpec)
       : note.pitch;
     const yHit = noteYi <= yiFloat && yiFloat < noteYi + 1;
     if (!yHit) continue;
@@ -94,25 +99,40 @@ const subMapD = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 const subMapP = [0, 2, 4, 5, 7, 9, 11];
 
 export const diatonicLanesPitchHelper = {
-  mapPitchToDisplayYIndex(pitch: number) {
+  mapPitchToDisplayYIndex(pitch: number, keySpec: SongKeySpec) {
+    const trChromatic = keySpec.relativeKeyTranspose;
+    const trDiatonic = Math.round((keySpec.relativeKeyTranspose * 7) / 12);
+    pitch -= trChromatic;
     const oct = Math.floor(pitch / 12);
     const sub = pitch % 12;
-    return oct * 7 + subMapD[sub];
+    const subD = subMapD[sub];
+    return oct * 7 + subD + trDiatonic;
   },
-  mapYIndexToPitch(yi: number) {
+  mapYIndexToPitch(yi: number, keySpec: SongKeySpec) {
+    const trChromatic = keySpec.relativeKeyTranspose;
+    const trDiatonic = Math.round((keySpec.relativeKeyTranspose * 7) / 12);
+    yi -= trDiatonic;
     const oct = Math.floor(yi / 7);
     const sub = yi % 7;
-    return oct * 12 + subMapP[sub];
+    let subP = subMapP[sub];
+    subP += trChromatic;
+    return oct * 12 + subP;
   },
   checkPitchOnScale(pitch: number) {
     const sub = pitch % 12;
     return subMapP.includes(sub);
   },
-  shiftPitch(originalPitch: number, deltaYi: number, snapToScaleNote: boolean) {
+  shiftPitch(
+    originalPitch: number,
+    deltaYi: number,
+    snapToScaleNote: boolean,
+    keySpec: SongKeySpec,
+  ) {
     const yi =
-      this.mapPitchToDisplayYIndex(originalPitch) + Math.round(deltaYi);
+      diatonicLanesPitchHelper.mapPitchToDisplayYIndex(originalPitch, keySpec) +
+      Math.round(deltaYi);
     if (snapToScaleNote) {
-      return this.mapYIndexToPitch(Math.round(yi));
+      return diatonicLanesPitchHelper.mapYIndexToPitch(Math.round(yi), keySpec);
     }
     return Math.round(originalPitch + (deltaYi * 12) / 7);
   },

@@ -4,15 +4,17 @@ import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { EditorCommonLayout } from "../common/editor-common-layout";
+import {
+  EditorCommonLayout,
+  PianoRollEditPartPlane,
+} from "../common/editor-common-layout";
 import {
   getPatternPitchLabel,
   useGridDisplaySpec,
 } from "../common/editor-common-logic";
 import { useDisplaySpec } from "../common/use-display-spec";
-import { PatternGrid } from "./pattern-grid";
 import { NoteLayerRoot } from "../editor-core/note-layer";
-import { PianoRollEditPartPlane } from "../common/editor-common-layout";
+import { PatternGrid } from "./pattern-grid";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   return (

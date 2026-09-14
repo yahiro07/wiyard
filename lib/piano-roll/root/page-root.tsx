@@ -1,4 +1,5 @@
 import { colorStyle } from "@lib/utils/color-style";
+import { mapKeySpecToKeysName } from "@lib/utils/keys-name-helper";
 import { createSelectorOptions } from "@lib/utils/selector-option";
 import { Button } from "../components/button";
 import { IconButton } from "../components/icon-button";
@@ -254,6 +255,12 @@ const DuplicateNotes2XButton = () => {
   );
 };
 
+const KeyDisplay = () => {
+  const [{ keySpec }] = useStoreAccess();
+  const keyName = keySpec ? mapKeySpecToKeysName(keySpec) : "";
+  return <div>key: {keyName}</div>;
+};
+
 const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
@@ -261,6 +268,8 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
+            <KeyDisplay />
+
             <div className="flex-ha gap-2">
               <DiatonicLanesToggleButton />
               <DiatonicLanesAllowSemitoneInputToggleButton />

@@ -42,7 +42,10 @@ export function createNoteEditActions(
   const core = {
     mapYIndexToPitch(yi: number) {
       if (editorKind === "mainD") {
-        return diatonicLanesPitchHelper.mapYIndexToPitch(yi);
+        return diatonicLanesPitchHelper.mapYIndexToPitch(
+          yi,
+          store.state.keySpec,
+        );
       }
       return yi;
     },
@@ -53,6 +56,7 @@ export function createNoteEditActions(
           originalPitch,
           deltaYi,
           snapToScale,
+          store.state.keySpec,
         );
       }
       return originalPitch + Math.round(deltaYi);

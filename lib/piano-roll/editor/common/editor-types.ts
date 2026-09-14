@@ -1,3 +1,5 @@
+import { SongKeySpec } from "wafer-host/unit-types";
+
 export type DisplaySpec = {
   viewW: number;
   viewH: number;
@@ -22,6 +24,7 @@ export type GridDisplaySpec = {
   cellH: number;
   numStepsFull: number;
   numPitchesFull: number;
+  keySpec?: SongKeySpec;
 };
 
 export type SectionRange = {

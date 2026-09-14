@@ -1,10 +1,12 @@
 import { createStore, Store } from "snap-store";
+import { SongKeySpec } from "wafer-host/unit-types";
 import {
   LoopBarLength,
   Note,
   PatternBarLength,
   Sight,
 } from "../definitions/types";
+import { fallbackKeySpec } from "../definitions/ui-config";
 
 type StoreState = {
   octave: number;
@@ -27,6 +29,7 @@ type StoreState = {
   // pageIndex: number;
   previewNotePitch: number | null;
   stateLoadRevision: number;
+  keySpec: SongKeySpec;
 };
 
 export type AppStore = Store<StoreState>;
@@ -52,6 +55,7 @@ const defaultStoreState: StoreState = {
   // pageIndex: 0,
   previewNotePitch: null,
   stateLoadRevision: 0,
+  keySpec: fallbackKeySpec,
 };
 if (import.meta.env.DEV && 1) {
   const base = 24;
@@ -73,6 +77,16 @@ if (import.meta.env.DEV && 1) {
   // defaultStoreState.patternEnabled = true;
   defaultStoreState.loopBars = 1;
   defaultStoreState.loopGhostEnabled = true;
+
+  defaultStoreState.diatonicLanesEnabled = true;
+  const setKeySpec = (root: number, mode: "major" | "minor") => {
+    const relativeKeyTranspose = root + (mode === "minor" ? 3 : 0);
+    defaultStoreState.keySpec = { root, mode, relativeKeyTranspose };
+  };
+  setKeySpec(0, "major"); //C
+  // setKeySpec(-3, "minor"); //Am
+  setKeySpec(7, "major"); //G
+  // setKeySpec(2, "major"); //D
 }
 
 export function createAppStore(): AppStore {

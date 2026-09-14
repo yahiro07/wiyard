@@ -1,3 +1,4 @@
+import { clampValue } from "@lib/utils/number-helper";
 import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
@@ -8,12 +9,11 @@ import {
 } from "../common/editor-common-layout";
 import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
+import { PositionBar } from "../common/position-bar";
 import { useDisplaySpec } from "../common/use-display-spec";
+import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
-import { NoteLayerRoot } from "../editor-core/note-layer";
-import { clampValue } from "@lib/utils/number-helper";
-import { PositionBar } from "../common/position-bar";
 
 export const PianoRollEditorView = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);

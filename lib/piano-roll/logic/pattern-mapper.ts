@@ -1,4 +1,5 @@
 import { clampValue, seqNumbers } from "@lib/utils/number-helper";
+import { SongKeySpec } from "wafer-host/unit-types";
 import { LoopBarLength, Note, PatternBarLength } from "../definitions/types";
 
 type NotesMapperFn = (args: {
@@ -6,6 +7,7 @@ type NotesMapperFn = (args: {
   patternNotes: Note[];
   loopBars: LoopBarLength;
   patternBars: PatternBarLength;
+  keySpec: SongKeySpec;
 }) => Note[];
 
 function createNotesMapperFn(fn: NotesMapperFn): NotesMapperFn {
@@ -66,13 +68,15 @@ export function generateMappedNotes(
   configs: {
     loopBars: LoopBarLength;
     patternBars: PatternBarLength;
+    keySpec: SongKeySpec;
   },
 ): Note[] {
-  const { loopBars, patternBars } = configs;
+  const { loopBars, patternBars, keySpec } = configs;
   return notesMappers.basic1({
     inputNotes,
     patternNotes,
     loopBars,
     patternBars,
+    keySpec,
   });
 }

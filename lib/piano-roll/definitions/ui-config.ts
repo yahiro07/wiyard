@@ -1,3 +1,5 @@
+import { SongKeySpec } from "wafer-host/unit-types";
+
 export const appConfig = {
   isDevelopment: import.meta.env.DEV,
 };
@@ -10,9 +12,8 @@ export const uiConfig = {
   numPatternPitches: 7 * 3 + 1,
 };
 
-export const debugConfig = {
-  keyAm: false,
+export const fallbackKeySpec: SongKeySpec = {
+  root: 0,
+  mode: "major",
+  relativeKeyTranspose: 0,
 };
-if (appConfig.isDevelopment) {
-  debugConfig.keyAm = true;
-}

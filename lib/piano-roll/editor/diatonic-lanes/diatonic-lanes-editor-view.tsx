@@ -2,8 +2,8 @@ import { cz } from "@lib/utils/cz";
 import { seqNumbers, topLimit } from "@lib/utils/number-helper";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { useRef } from "react";
-import { appConfig, debugConfig, uiConfig } from "../../definitions/ui-config";
-import { useAppContext } from "../../root/app-context";
+import { appConfig, uiConfig } from "../../definitions/ui-config";
+import { useAppContext, useStoreAccess } from "../../root/app-context";
 import {
   EditorCommonLayout,
   PianoRollEditPartPlane,
@@ -14,27 +14,23 @@ import {
 } from "../common/editor-common-logic";
 import { getNoteNameLabel } from "../common/note-name-helper";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
-import { useDisplaySpec } from "../common/use-display-spec";
-import { DiatonicLanesGrid } from "./diatonic-lanes-grid";
-import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PositionBar } from "../common/position-bar";
+import { useDisplaySpec } from "../common/use-display-spec";
+import { NoteLayerRoot } from "../editor-core/note-layer";
+import { DiatonicLanesGrid } from "./diatonic-lanes-grid";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
+  const [{ keySpec }] = useStoreAccess();
   return (
     <div className="flex-c h-full">
       <div className="flex-v flex-col-reverse">
         {seqNumbers(uiConfig.numDiatonicLanes).map((i) => {
-          const pitch = diatonicLanesPitchHelper.mapYIndexToPitch(i);
-          let i2 = i; //C
-          if (debugConfig.keyAm) {
-            i2 = i + 2; //Am
-          }
-          const isTonic = i2 % 7 === 0;
-          let label: string | undefined;
-          if (appConfig.isDevelopment) {
-            label = `${i} (${pitch})`;
-          } else {
-            label = isTonic ? getNoteNameLabel(pitch, 0) : undefined;
+          const pitch = diatonicLanesPitchHelper.mapYIndexToPitch(i, keySpec);
+          const isTonic = pitch % 12 === keySpec.root;
+          let label = getNoteNameLabel(pitch, 0);
+
+          if (appConfig.isDevelopment && 1) {
+            label = `${i} (${pitch}) ${label ?? ""}`;
           }
           return (
             <div
@@ -61,7 +57,7 @@ export const DiatonicLanesEditorView = () => {
   const keysWidth = 100;
 
   const { store } = useAppContext();
-  const { sight, loopBars } = store.useSnapshot();
+  const { sight, loopBars, keySpec } = store.useSnapshot();
   const loopSteps = loopBars * 16;
   const displaySteps = topLimit(loopSteps * 2, 16 * 16);
   const numPitches = uiConfig.numDiatonicLanes;
@@ -77,6 +73,7 @@ export const DiatonicLanesEditorView = () => {
     displaySpec,
     displaySteps,
     numPitches,
+    keySpec,
   );
   return (
     <EditorCommonLayout

@@ -57,6 +57,11 @@ export function setupUnit(
         engine.processStep(stepIndex, time, unitDuration);
       },
     },
+    hostCallbacks: {
+      setKey(keySpec) {
+        store.setKeySpec(keySpec);
+      },
+    },
     persistence: createPersistence(store),
     cleanup: unsubscribeStore,
   });
