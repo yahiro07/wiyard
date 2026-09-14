@@ -1,45 +1,18 @@
-import { cz } from "@lib/utils/cz";
 import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { EditorCommonLayout } from "../common/editor-common-layout";
+import {
+  EditorCommonLayout,
+  PianoRollEditPartPlane,
+} from "../common/editor-common-layout";
 import { useGridDisplaySpec } from "../common/editor-common-logic";
-import { DisplaySpec } from "../common/editor-types";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { useDisplaySpec } from "../common/use-display-spec";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 import { NoteLayerRoot } from "../editor-core/note-layer";
-
-const PianoRollEditPart = ({
-  displaySpec,
-  sectionDuration,
-}: {
-  displaySpec: DisplaySpec;
-  sectionDuration: number;
-}) => {
-  const { contentW, contentH, tx } = displaySpec;
-  return (
-    <div className={cz("overflow-hidden")}>
-      <div
-        className="relative flex-h"
-        style={{
-          width: contentW,
-          height: contentH,
-          transform: `translateX(${tx}px)`,
-        }}
-      >
-        <NoteLayerRoot
-          displaySpec={displaySpec}
-          editorKind="main"
-          sectionDuration={sectionDuration}
-        />
-        <PlayPositionLineLayer displaySpec={displaySpec} />
-      </div>
-    </div>
-  );
-};
+import { topLimit } from "@lib/utils/number-helper";
 
 export const PianoRollEditorView = () => {
   const measuredDivRef = useRef<HTMLDivElement>(null);
@@ -48,10 +21,11 @@ export const PianoRollEditorView = () => {
 
   const { store } = useAppContext();
   const { sight, loopBars } = store.useSnapshot();
-  const sectionDuration = loopBars * 16;
+  const loopSteps = loopBars * 16;
+  const displaySteps = topLimit(loopSteps * 2, 32 * 16);
 
   const displaySpec = useDisplaySpec({
-    sectionDuration,
+    nx: displaySteps,
     numPitches: uiConfig.numKeys,
     sight,
     mainDivSize,
@@ -59,7 +33,7 @@ export const PianoRollEditorView = () => {
 
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
-    sectionDuration,
+    displaySteps,
     uiConfig.numKeys,
   );
   return (
@@ -78,10 +52,15 @@ export const PianoRollEditorView = () => {
             className="absolute-full"
             style={{ transform: `translateY(${displaySpec.ty}px)` }}
           >
-            <PianoRollEditPart
-              displaySpec={displaySpec}
-              sectionDuration={sectionDuration}
-            />
+            <PianoRollEditPartPlane displaySpec={displaySpec}>
+              <NoteLayerRoot
+                displaySpec={displaySpec}
+                editorKind="main"
+                displaySteps={displaySteps}
+                loopSteps={loopSteps}
+              />
+              <PlayPositionLineLayer displaySpec={displaySpec} />
+            </PianoRollEditPartPlane>
           </div>
         </>
       }

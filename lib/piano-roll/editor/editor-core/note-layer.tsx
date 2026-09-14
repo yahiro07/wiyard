@@ -154,18 +154,20 @@ const NoteLayerStrip = () => {
 export const NoteLayerRoot = ({
   displaySpec,
   editorKind,
-  sectionDuration,
+  displaySteps,
+  loopSteps,
 }: {
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
-  sectionDuration: number;
+  displaySteps: number;
+  loopSteps: number;
 }) => {
   const { store } = useAppContext();
   const { inputNotes, mappedNotes, patternNotes } = store.useSnapshot();
 
   const sectionRange = useMemo(
-    () => ({ offset: 0, duration: sectionDuration }),
-    [sectionDuration],
+    () => ({ offset: 0, duration: displaySteps }),
+    [displaySteps],
   );
   const notes = useMemo(() => {
     let tmpNotes: Note[];

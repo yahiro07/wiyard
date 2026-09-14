@@ -1,15 +1,17 @@
 import { cz } from "@lib/utils/cz";
-import { seqNumbers } from "@lib/utils/number-helper";
+import { seqNumbers, topLimit } from "@lib/utils/number-helper";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { useRef } from "react";
 import { appConfig, debugConfig, uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { EditorCommonLayout } from "../common/editor-common-layout";
+import {
+  EditorCommonLayout,
+  PianoRollEditPartPlane,
+} from "../common/editor-common-layout";
 import {
   diatonicLanesPitchHelper,
   useGridDisplaySpec,
 } from "../common/editor-common-logic";
-import { DisplaySpec } from "../common/editor-types";
 import { getNoteNameLabel } from "../common/note-name-helper";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { useDisplaySpec } from "../common/use-display-spec";
@@ -52,35 +54,6 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   );
 };
 
-const PianoRollEditPart = ({
-  displaySpec,
-  sectionDuration,
-}: {
-  displaySpec: DisplaySpec;
-  sectionDuration: number;
-}) => {
-  const { contentW, contentH, tx } = displaySpec;
-  return (
-    <div className={cz("overflow-hidden")}>
-      <div
-        className="relative flex-h"
-        style={{
-          width: contentW,
-          height: contentH,
-          transform: `translateX(${tx}px)`,
-        }}
-      >
-        <NoteLayerRoot
-          displaySpec={displaySpec}
-          editorKind="mainD"
-          sectionDuration={sectionDuration}
-        />
-        <PlayPositionLineLayer displaySpec={displaySpec} />
-      </div>
-    </div>
-  );
-};
-
 export const DiatonicLanesEditorView = () => {
   const measuredDivRef = useRef<HTMLDivElement>(null);
   const mainDivSize = useDomElementSize(measuredDivRef);
@@ -88,11 +61,12 @@ export const DiatonicLanesEditorView = () => {
 
   const { store } = useAppContext();
   const { sight, loopBars } = store.useSnapshot();
-  const sectionDuration = loopBars * 16;
+  const loopSteps = loopBars * 16;
+  const displaySteps = topLimit(loopSteps * 2, 32 * 16);
   const numPitches = uiConfig.numDiatonicLanes;
 
   const displaySpec = useDisplaySpec({
-    sectionDuration,
+    nx: displaySteps,
     numPitches,
     sight,
     mainDivSize,
@@ -100,7 +74,7 @@ export const DiatonicLanesEditorView = () => {
 
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
-    sectionDuration,
+    displaySteps,
     numPitches,
   );
   return (
@@ -119,10 +93,15 @@ export const DiatonicLanesEditorView = () => {
             className="absolute-full"
             style={{ transform: `translateY(${displaySpec.ty}px)` }}
           >
-            <PianoRollEditPart
-              displaySpec={displaySpec}
-              sectionDuration={sectionDuration}
-            />
+            <PianoRollEditPartPlane displaySpec={displaySpec}>
+              <NoteLayerRoot
+                displaySpec={displaySpec}
+                editorKind="mainD"
+                displaySteps={displaySteps}
+                loopSteps={loopSteps}
+              />
+              <PlayPositionLineLayer displaySpec={displaySpec} />
+            </PianoRollEditPartPlane>
           </div>
         </>
       }

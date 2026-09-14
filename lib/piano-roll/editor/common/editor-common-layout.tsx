@@ -2,6 +2,7 @@ import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { ScrollBarH, ScrollBarV } from "../../components/scroll-bar";
 import { useAppContext } from "../../root/app-context";
+import { DisplaySpec } from "./editor-types";
 
 export const EditorCommonLayout = ({
   sideContent,
@@ -50,6 +51,30 @@ export const EditorCommonLayout = ({
         />
       </div>
       <div></div>
+    </div>
+  );
+};
+
+export const PianoRollEditPartPlane = ({
+  displaySpec,
+  children,
+}: {
+  displaySpec: DisplaySpec;
+  children: ReactNode;
+}) => {
+  const { contentW, contentH, tx } = displaySpec;
+  return (
+    <div className={cz("overflow-hidden")}>
+      <div
+        className="relative flex-h"
+        style={{
+          width: contentW,
+          height: contentH,
+          transform: `translateX(${tx}px)`,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 };
