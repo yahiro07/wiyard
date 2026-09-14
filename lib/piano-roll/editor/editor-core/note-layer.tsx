@@ -159,7 +159,7 @@ const NoteLayerStrip = () => {
   const editorW = cellW * sectionRange.duration;
   const loopOffset = sectionRange.offset;
   const displaySteps = sectionRange.duration;
-  const ghostNum = displaySteps / loopSteps - 1;
+  const numGhostCycles = displaySteps / loopSteps - 1;
   const visibleRangeSteps = loopGhostEnabled ? loopSteps : displaySteps;
   return (
     <div
@@ -175,8 +175,8 @@ const NoteLayerStrip = () => {
         isGhost={false}
       />
       {loopGhostEnabled &&
-        ghostNum > 0 &&
-        seqNumbers(ghostNum).map((i) => (
+        numGhostCycles > 0 &&
+        seqNumbers(numGhostCycles).map((i) => (
           <NotesBlockView
             key={i}
             notes={notes}
@@ -187,6 +187,15 @@ const NoteLayerStrip = () => {
             isGhost={true}
           />
         ))}
+      {loopSteps !== displaySteps && (
+        <div
+          className="absolute top-0 h-full bg-black/10"
+          style={{
+            left: loopSteps * cellW,
+            width: (displaySteps - loopSteps) * cellW,
+          }}
+        />
+      )}
       <EditInputLayer />
     </div>
   );
