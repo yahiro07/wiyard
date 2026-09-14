@@ -160,6 +160,7 @@ const NoteLayerStrip = () => {
   const loopOffset = sectionRange.offset;
   const displaySteps = sectionRange.duration;
   const ghostNum = displaySteps / loopSteps - 1;
+  const visibleRangeSteps = loopGhostEnabled ? loopSteps : displaySteps;
   return (
     <div
       className="relative overflow-hidden touch-none shrink-0"
@@ -168,7 +169,7 @@ const NoteLayerStrip = () => {
       <NotesBlockView
         notes={notes}
         sourceOffset={loopOffset}
-        sourceDuration={loopSteps}
+        sourceDuration={visibleRangeSteps}
         displayOffset={0}
         cellW={cellW}
         isGhost={false}
@@ -180,8 +181,8 @@ const NoteLayerStrip = () => {
             key={i}
             notes={notes}
             sourceOffset={loopOffset}
-            sourceDuration={loopSteps}
-            displayOffset={(i + 1) * loopSteps}
+            sourceDuration={visibleRangeSteps}
+            displayOffset={(i + 1) * visibleRangeSteps}
             cellW={cellW}
             isGhost={true}
           />
