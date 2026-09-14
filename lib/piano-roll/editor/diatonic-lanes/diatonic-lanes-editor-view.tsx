@@ -55,8 +55,8 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
 };
 
 export const DiatonicLanesEditorView = () => {
-  const measuredDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(measuredDivRef);
+  const mainDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(mainDivRef);
   const keysWidth = 100;
 
   const { store } = useAppContext();
@@ -79,7 +79,7 @@ export const DiatonicLanesEditorView = () => {
   );
   return (
     <EditorCommonLayout
-      measuredDivRef={measuredDivRef}
+      mainDivRef={mainDivRef}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <PitchIndexColumn cellH={displaySpec.cellH} />

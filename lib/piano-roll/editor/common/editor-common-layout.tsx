@@ -7,12 +7,12 @@ import { DisplaySpec } from "./editor-types";
 export const EditorCommonLayout = ({
   sideContent,
   mainContent,
-  measuredDivRef,
+  mainDivRef,
   sideContentWidth,
 }: {
   sideContent: ReactNode;
   mainContent: ReactNode;
-  measuredDivRef: React.RefObject<HTMLDivElement | null>;
+  mainDivRef: React.RefObject<HTMLDivElement | null>;
   sideContentWidth: number;
 }) => {
   const { store } = useAppContext();
@@ -27,10 +27,10 @@ export const EditorCommonLayout = ({
       }}
     >
       <div></div>
-      <div></div>
+      <div>aa</div>
       <div></div>
       <div className="overflow-hidden">{sideContent}</div>
-      <div className="overflow-hidden relative" ref={measuredDivRef}>
+      <div className="overflow-hidden relative" ref={mainDivRef}>
         {mainContent}
       </div>
       <div>

@@ -37,8 +37,8 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
 };
 
 export const PatternEditorView = () => {
-  const measuredDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(measuredDivRef);
+  const mainDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(mainDivRef);
   const keysWidth = 100;
   const sectionDuration = 32; //fixed for pattern
   const { store } = useAppContext();
@@ -59,7 +59,7 @@ export const PatternEditorView = () => {
 
   return (
     <EditorCommonLayout
-      measuredDivRef={measuredDivRef}
+      mainDivRef={mainDivRef}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <PitchIndexColumn cellH={displaySpec.cellH} />

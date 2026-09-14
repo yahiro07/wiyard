@@ -15,8 +15,8 @@ import { NoteLayerRoot } from "../editor-core/note-layer";
 import { clampValue } from "@lib/utils/number-helper";
 
 export const PianoRollEditorView = () => {
-  const measuredDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(measuredDivRef);
+  const mainDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(mainDivRef);
   const keysWidth = 100;
 
   const { store } = useAppContext();
@@ -39,7 +39,7 @@ export const PianoRollEditorView = () => {
   );
   return (
     <EditorCommonLayout
-      measuredDivRef={measuredDivRef}
+      mainDivRef={mainDivRef}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
