@@ -13,7 +13,8 @@
       "@/*": ["./src/*"],
       "@lib/window-system": ["./lib/window-system/index.ts"],
       "@lib/piano-roll": ["./lib/piano-roll/index.tsx"],
-      "@lib/utils/*": ["./lib/utils/*"]
+      "@lib/utils/*": ["./lib/utils/*"],
+      "@lib/port-units": ["./lib/port-units/index.ts"]
     }
   },
   "include": ["src"]
