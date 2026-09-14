@@ -3,9 +3,6 @@ import { useAppContext } from "./app-context";
 import { AppStore } from "./store";
 import { Note, LoopBarLength } from "../definitions/types";
 
-function overlapsRange(note: Note, start: number, end: number): boolean {
-  return note.position < end && note.position + note.duration > start;
-}
 function nextNoteId(notes: Note[]): number {
   return notes.length > 0 ? Math.max(...notes.map((n) => n.id)) + 1 : 0;
 }
@@ -47,17 +44,12 @@ function createControlActions(store: AppStore) {
     },
     duplicateNotes2X() {
       const st = store.state;
-      const { loopBars, inputNotes, realized } = st;
-      if (realized) return;
+      const { loopBars, inputNotes } = st;
       if (loopBars >= 16 || inputNotes.length === 0) return;
       const loopSteps = loopBars * 16;
       const destStart = loopSteps;
-      const destEnd = loopSteps * 2;
       const sourceNotes = inputNotes.filter((n) => n.position < destStart);
-      const keptNotes = inputNotes.filter(
-        (n) => !overlapsRange(n, destStart, destEnd),
-      );
-      let nextId = nextNoteId(keptNotes);
+      let nextId = nextNoteId(sourceNotes);
       const copies = sourceNotes.map((note) => ({
         id: nextId++,
         pitch: note.pitch,
@@ -65,7 +57,7 @@ function createControlActions(store: AppStore) {
         duration: note.duration,
       }));
       store.assign({
-        inputNotes: [...keptNotes, ...copies],
+        inputNotes: [...sourceNotes, ...copies],
         loopBars: (loopBars * 2) as LoopBarLength,
       });
     },
