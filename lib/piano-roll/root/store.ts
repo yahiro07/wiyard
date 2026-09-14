@@ -9,22 +9,23 @@ import {
 type StoreState = {
   octave: number;
   duty: number;
-  playPos: number | null;
   loopBars: LoopBarLength;
-  pageIndex: number;
   inputNotes: Note[];
-  previewNotePitch: number | null;
-  stateLoadRevision: number;
-  sight: Sight;
-  patternNotes: Note[];
-  isPatternView: boolean;
   patternBars: PatternBarLength;
+  patternNotes: Note[];
+  sight: Sight;
+  isPatternView: boolean;
   patternEnabled: boolean;
-  mappedNotes: Note[] | null;
   realized: boolean;
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
   diatonicLanesAllowSemitoneInput: boolean;
+  //
+  mappedNotes: Note[] | null;
+  playPos: number | null;
+  pageIndex: number;
+  previewNotePitch: number | null;
+  stateLoadRevision: number;
 };
 
 export type AppStore = Store<StoreState>;
@@ -32,22 +33,23 @@ export type AppStore = Store<StoreState>;
 const defaultStoreState: StoreState = {
   octave: 0,
   duty: 1,
-  playPos: null,
   loopBars: 2,
-  pageIndex: 0,
   inputNotes: [],
-  previewNotePitch: null,
-  stateLoadRevision: 0,
-  sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.45, yZoom: 0.6 },
-  patternNotes: [],
-  isPatternView: false,
   patternBars: 0.25,
+  patternNotes: [],
+  sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.45, yZoom: 0.6 },
+  isPatternView: false,
   patternEnabled: false,
-  mappedNotes: null,
   realized: false,
   backupInputNotes: null,
   diatonicLanesEnabled: false,
   diatonicLanesAllowSemitoneInput: false,
+  //
+  mappedNotes: null,
+  playPos: null,
+  pageIndex: 0,
+  previewNotePitch: null,
+  stateLoadRevision: 0,
 };
 if (import.meta.env.DEV && 0) {
   const base = 24;
