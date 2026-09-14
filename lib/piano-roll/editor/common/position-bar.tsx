@@ -1,9 +1,9 @@
 import { clampValue, seqNumbers } from "@lib/utils/number-helper";
-import { HorizontalScrollPlane } from "./editor-common-layout";
-import { DisplaySpec } from "./editor-types";
-import { useAppContext, useStoreAccess } from "../../root/app-context";
 import { useCallback } from "react";
 import { LoopBarLength } from "../../definitions/types";
+import { useAppContext, useStoreAccess } from "../../root/app-context";
+import { HorizontalScrollPlane } from "./editor-common-layout";
+import { DisplaySpec } from "./editor-types";
 
 type PositionBarProps = {
   displaySpec: DisplaySpec;
@@ -13,6 +13,8 @@ type PositionBarProps = {
 
 function usePositionBarPointerHandler(displaySteps: number) {
   const { store } = useAppContext();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: manual management
   return useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       const el = e.currentTarget as HTMLElement;
