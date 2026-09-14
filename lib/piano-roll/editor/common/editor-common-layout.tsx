@@ -29,7 +29,7 @@ export const EditorCommonLayout = ({
       style={{
         display: "grid",
         gridTemplateColumns: `${sideContentWidth}px 1fr 24px`,
-        gridTemplateRows: "20px 1fr 24px",
+        gridTemplateRows: "24px 1fr 24px",
       }}
     >
       <div></div>

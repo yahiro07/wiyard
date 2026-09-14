@@ -81,7 +81,7 @@ export const PositionBar = ({
   return (
     <HorizontalScrollPlane displaySpec={displaySpec}>
       <div
-        className="h-20px bg-#333 text-#888 bd-#0004"
+        className="h-24px bg-#333 text-#888 bd-#0004"
         onPointerDown={handlePointerDown}
       >
         <SectionHighlighters
