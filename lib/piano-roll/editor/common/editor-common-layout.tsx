@@ -21,7 +21,11 @@ export const EditorCommonLayout = ({
   const { sight } = store.useSnapshot();
   return (
     <div
-      className={cz("overflow-hidden relative", "w-full grow")}
+      className={cz(
+        "overflow-hidden relative",
+        "w-full grow",
+        "[&>div]:overflow-hidden",
+      )}
       style={{
         display: "grid",
         gridTemplateColumns: `${sideContentWidth}px 1fr 24px`,
@@ -31,8 +35,8 @@ export const EditorCommonLayout = ({
       <div></div>
       <div>{positionBarContent}</div>
       <div></div>
-      <div className="overflow-hidden">{sideContent}</div>
-      <div className="overflow-hidden relative" ref={mainDivRef}>
+      <div>{sideContent}</div>
+      <div className="relative" ref={mainDivRef}>
         {mainContent}
       </div>
       <div>
@@ -68,13 +72,11 @@ export const HorizontalScrollPlane = ({
 }) => {
   const { contentW, tx } = displaySpec;
   return (
-    <div className="overflow-hidden h-full">
-      <div
-        className="relative h-full"
-        style={{ width: contentW, height, transform: `translateX(${tx}px)` }}
-      >
-        {children}
-      </div>
+    <div
+      className="relative"
+      style={{ width: contentW, height, transform: `translateX(${tx}px)` }}
+    >
+      {children}
     </div>
   );
 };

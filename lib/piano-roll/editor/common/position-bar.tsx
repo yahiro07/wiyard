@@ -18,25 +18,33 @@ export const PositionBar = ({
   const barCount = displaySteps / stepsPerBar;
   return (
     <HorizontalScrollPlane displaySpec={displaySpec}>
-      <div className="bg-#555 h-full text-#222">
+      <div
+        className="h-20px"
+        style={{
+          background: "#333",
+          color: "#888",
+          border: "solid 1px #0002",
+        }}
+      >
         {seqNumbers(barCount).map((i) => (
           <div
             key={i}
-            className="absolute top-0 h-full border-l border-#222"
+            className="absolute top-0 h-full flex-ha pl-5px"
             style={{
               left: i * stepsPerBar * cellW,
               width: stepsPerBar * cellW,
+              borderLeft: `solid 1px #0008`,
             }}
           >
-            <span className="pl-1 text-10px">{i + 1}</span>
+            <span className="text-12px">{i + 1}</span>
           </div>
         ))}
-        {/* {loopSteps !== undefined && loopSteps < displaySteps && (
+        {loopSteps !== undefined && loopSteps < displaySteps && (
           <div
-            className="absolute top-0 h-full border-l border-#888"
-            style={{ left: loopSteps * cellW }}
+            className="absolute top-0 h-full"
+            style={{ left: loopSteps * cellW, borderLeft: `solid 1px #ddd` }}
           />
-        )} */}
+        )}
       </div>
     </HorizontalScrollPlane>
   );
