@@ -4,7 +4,7 @@ import { mapUnaryTo } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext, useStoreAccess } from "../../root/app-context";
+import { useAppContext } from "../../root/app-context";
 import { EditInputLayer } from "./edit-input-layer";
 import {
   diatonicLanesPitchHelper,
@@ -20,20 +20,15 @@ const noteColors = {
   mapped: "#6cc",
 };
 
-const NoteView = ({
-  note,
-  patternEnabled,
-  octaveShift,
-  duty: inputDuty,
-  isGhost,
-}: {
-  note: Note;
-  patternEnabled: boolean;
-  octaveShift: number;
-  duty: number;
-  isGhost: boolean;
-}) => {
-  const { displaySpec, sectionRange, editorKind } = useNoteLayerContext();
+const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
+  const {
+    displaySpec,
+    sectionRange,
+    editorKind,
+    patternEnabled,
+    octaveShift,
+    noteDuty,
+  } = useNoteLayerContext();
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi0 = note.pitch;
@@ -67,7 +62,7 @@ const NoteView = ({
       (!patternEnabled && noteKind === "input") ||
       (patternEnabled && noteKind === "mapped")
     ) {
-      duty = inputDuty;
+      duty = noteDuty;
     }
   }
   const dutyM = mapUnaryTo(duty, 0.2, 1);
@@ -127,7 +122,6 @@ const NotesBlockView = ({
   cellW: number;
   isGhost: boolean;
 }) => {
-  const [{ patternEnabled, octave, duty }] = useStoreAccess();
   return (
     <div
       className="absolute-full"
@@ -140,14 +134,7 @@ const NotesBlockView = ({
             note.position < sourceOffset + sourceDuration,
         )
         .map((note) => (
-          <NoteView
-            key={note.id}
-            note={note}
-            patternEnabled={patternEnabled}
-            octaveShift={octave}
-            duty={duty}
-            isGhost={isGhost}
-          />
+          <NoteView key={note.id} note={note} isGhost={isGhost} />
         ))}
     </div>
   );
@@ -212,8 +199,15 @@ export const NoteLayerRoot = ({
   loopSteps: number;
 }) => {
   const { store } = useAppContext();
-  const { inputNotes, mappedNotes, patternNotes, loopGhostEnabled } =
-    store.useSnapshot();
+  const {
+    inputNotes,
+    mappedNotes,
+    patternNotes,
+    loopGhostEnabled,
+    patternEnabled,
+    octave: octaveShift,
+    duty: noteDuty,
+  } = store.useSnapshot();
 
   const sectionRange = useMemo(
     () => ({ offset: 0, duration: displaySteps }),
@@ -229,18 +223,34 @@ export const NoteLayerRoot = ({
     return tmpNotes.sort((a, b) => a.pitch - b.pitch);
   }, [inputNotes, mappedNotes, patternNotes, editorKind]);
 
+  const contextValue = useMemo(
+    () => ({
+      sectionRange,
+      displaySpec,
+      editorKind,
+      notes,
+      loopSteps,
+      loopGhostEnabled,
+      patternEnabled,
+      octaveShift,
+      noteDuty,
+    }),
+    [
+      sectionRange,
+      displaySpec,
+      editorKind,
+      notes,
+      loopSteps,
+      loopGhostEnabled,
+      patternEnabled,
+      octaveShift,
+      noteDuty,
+    ],
+  );
+
   return (
     <div className={cz("absolute-full")}>
-      <noteLayerContext.Provider
-        value={{
-          sectionRange,
-          displaySpec,
-          editorKind,
-          notes,
-          loopSteps,
-          loopGhostEnabled,
-        }}
-      >
+      <noteLayerContext.Provider value={contextValue}>
         <NoteLayerStrip />
       </noteLayerContext.Provider>
     </div>

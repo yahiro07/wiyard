@@ -9,6 +9,9 @@ export type NoteLayerContextValue = {
   notes: Note[];
   loopSteps: number;
   loopGhostEnabled: boolean;
+  patternEnabled: boolean;
+  octaveShift: number;
+  noteDuty: number;
 };
 
 export const noteLayerContext = createContext<NoteLayerContextValue>({} as any);
