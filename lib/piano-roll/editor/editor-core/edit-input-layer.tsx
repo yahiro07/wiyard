@@ -6,7 +6,8 @@ import { createNoteEditActions } from "./edit-input-layer-actions";
 import { useNoteLayerContext } from "./note-layer-context";
 
 export const EditInputLayer = () => {
-  const { sectionRange, editorKind, notes } = useNoteLayerContext();
+  const { sectionRange, editorKind, notes, loopSteps, loopGhostEnabled } =
+    useNoteLayerContext();
   const { store } = useAppContext();
   const noteEditActions = useMemo(
     () => createNoteEditActions(store, editorKind, sectionRange.duration),
@@ -21,6 +22,10 @@ export const EditInputLayer = () => {
       e.clientX,
       e.clientY,
     );
+    if (xiFloat > loopSteps) {
+      noteEditActions.extendLoopBars();
+      return;
+    }
     const hitNoteInfo = hitTestNote(
       notes,
       sectionRange,

@@ -1,5 +1,5 @@
 import { startDragSessionV0 } from "@lib/utils/drag-session-v0";
-import { EditorKind, Note } from "../../definitions/types";
+import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
 import { AppStore } from "../../root/store";
 import { diatonicLanesPitchHelper } from "../common/editor-common-logic";
@@ -233,6 +233,12 @@ export function createNoteEditActions(
         },
         { coordinate: "page" },
       );
+    },
+    extendLoopBars() {
+      const { loopBars } = store.state;
+      if (loopBars < 32) {
+        store.setLoopBars((loopBars * 2) as LoopBarLength);
+      }
     },
   };
   return self;
