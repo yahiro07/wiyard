@@ -1,6 +1,7 @@
 import { seqNumbers } from "@lib/utils/number-helper";
 import { HorizontalScrollPlane } from "./editor-common-layout";
 import { DisplaySpec } from "./editor-types";
+import { useStoreAccess } from "../../root/app-context";
 
 type PositionBarProps = {
   displaySpec: DisplaySpec;
@@ -13,9 +14,14 @@ export const PositionBar = ({
   displaySteps,
   loopSteps,
 }: PositionBarProps) => {
+  const [{ loopGhostEnabled }] = useStoreAccess();
+
   const { cellW } = displaySpec;
   const stepsPerBar = 16;
   const barCount = displaySteps / stepsPerBar;
+
+  const loopX = loopSteps ?? displaySteps;
+  const endX = displaySteps;
   return (
     <HorizontalScrollPlane displaySpec={displaySpec}>
       <div
@@ -26,6 +32,20 @@ export const PositionBar = ({
           border: "solid 1px #0002",
         }}
       >
+        <div
+          className="absolute top-0 h-4px"
+          style={{ width: loopX * cellW, background: "#0cf6" }}
+        />
+        {loopGhostEnabled && (
+          <div
+            className="absolute top-0 h-4px"
+            style={{
+              left: loopX * cellW,
+              width: (endX - loopX) * cellW,
+              background: "#8886",
+            }}
+          />
+        )}
         {seqNumbers(barCount).map((i) => (
           <div
             key={i}
@@ -36,15 +56,9 @@ export const PositionBar = ({
               borderLeft: `solid 1px #0008`,
             }}
           >
-            <span className="text-12px">{i + 1}</span>
+            <span className="text-12px mt-4px">{i + 1}</span>
           </div>
         ))}
-        {loopSteps !== undefined && loopSteps < displaySteps && (
-          <div
-            className="absolute top-0 h-full"
-            style={{ left: loopSteps * cellW, borderLeft: `solid 1px #ddd` }}
-          />
-        )}
       </div>
     </HorizontalScrollPlane>
   );
