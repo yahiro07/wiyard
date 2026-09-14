@@ -34,7 +34,7 @@ export const windowFrameHandlers = {
 
       let timerId: NodeJS.Timeout | undefined = setTimeout(() => {
         if (latestDist < 4) {
-          actions.toggleWindowMinimized(windowCoordVm.windowId);
+          // actions.toggleWindowMinimized(windowCoordVm.windowId);
         }
       }, 250);
 
