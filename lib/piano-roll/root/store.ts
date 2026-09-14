@@ -57,7 +57,7 @@ const defaultStoreState: StoreState = {
   stateLoadRevision: 0,
   keySpec: fallbackKeySpec,
 };
-if (import.meta.env.DEV && 1) {
+if (import.meta.env.DEV && 0) {
   const base = 24;
   defaultStoreState.inputNotes = [
     { id: 0, position: 0, duration: 2, pitch: base + 0 },
@@ -87,7 +87,8 @@ if (import.meta.env.DEV && 1) {
   // setKeySpec(-3, "minor"); //Am
   // setKeySpec(7, "major"); //G
   // setKeySpec(2, "major"); //D
-  setKeySpec(6, "major"); //F#
+  // setKeySpec(6, "major"); //F#
+  // setKeySpec(4, "minor"); //Em
 }
 
 export function createAppStore(): AppStore {
