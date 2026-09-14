@@ -44,7 +44,6 @@ export const PatternEditorView = () => {
   const mainDivSize = useDomElementSize(mainDivRef);
   const keysWidth = 100;
   const sectionDuration = 2 * 16; //fixed for pattern
-  const displaySteps = sectionDuration;
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
 
