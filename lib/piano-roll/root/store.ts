@@ -1,10 +1,12 @@
 import { createStore, Store } from "snap-store";
+import { SongKeySpec } from "wafer-host/unit-types";
 import {
   LoopBarLength,
   Note,
   PatternBarLength,
   Sight,
 } from "../definitions/types";
+import { fallbackKeySpec } from "../definitions/ui-config";
 
 type StoreState = {
   octave: number;
@@ -20,12 +22,14 @@ type StoreState = {
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
   diatonicLanesAllowSemitoneInput: boolean;
+  loopGhostEnabled: boolean;
   //
   mappedNotes: Note[] | null;
   playPos: number | null;
-  pageIndex: number;
+  // pageIndex: number;
   previewNotePitch: number | null;
   stateLoadRevision: number;
+  keySpec: SongKeySpec;
 };
 
 export type AppStore = Store<StoreState>;
@@ -44,17 +48,19 @@ const defaultStoreState: StoreState = {
   backupInputNotes: null,
   diatonicLanesEnabled: false,
   diatonicLanesAllowSemitoneInput: false,
+  loopGhostEnabled: false,
   //
   mappedNotes: null,
   playPos: null,
-  pageIndex: 0,
+  // pageIndex: 0,
   previewNotePitch: null,
   stateLoadRevision: 0,
+  keySpec: fallbackKeySpec,
 };
 if (import.meta.env.DEV && 0) {
   const base = 24;
   defaultStoreState.inputNotes = [
-    { id: 0, position: 0, duration: 8, pitch: base + 0 },
+    { id: 0, position: 0, duration: 2, pitch: base + 0 },
     { id: 1, position: 2, duration: 2, pitch: base + 2 },
     // { id: 2, position: 4, duration: 2, pitch: base + 4 },
     // { id: 3, position: 6, duration: 2, pitch: base + 5 },
@@ -69,6 +75,20 @@ if (import.meta.env.DEV && 0) {
   ];
   // defaultStoreState.isPatternView = true;
   // defaultStoreState.patternEnabled = true;
+  defaultStoreState.loopBars = 1;
+  defaultStoreState.loopGhostEnabled = true;
+
+  defaultStoreState.diatonicLanesEnabled = true;
+  const setKeySpec = (root: number, mode: "major" | "minor") => {
+    const relativeKeyTranspose = root + (mode === "minor" ? 3 : 0);
+    defaultStoreState.keySpec = { root, mode, relativeKeyTranspose };
+  };
+  setKeySpec(0, "major"); //C
+  // setKeySpec(-3, "minor"); //Am
+  // setKeySpec(7, "major"); //G
+  // setKeySpec(2, "major"); //D
+  // setKeySpec(6, "major"); //F#
+  // setKeySpec(4, "minor"); //Em
 }
 
 export function createAppStore(): AppStore {

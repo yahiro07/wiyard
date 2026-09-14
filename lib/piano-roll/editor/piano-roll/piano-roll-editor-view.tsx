@@ -1,48 +1,33 @@
-import { cz } from "@lib/utils/cz";
-import { bottomLimit } from "@lib/utils/number-helper";
+import { clampValue } from "@lib/utils/number-helper";
 import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { EditorCommonLayout } from "../common/editor-common-layout";
+import {
+  EditorCommonLayout,
+  PianoRollEditPartPlane,
+} from "../common/editor-common-layout";
 import { useGridDisplaySpec } from "../common/editor-common-logic";
-import { DisplaySpec } from "../common/editor-types";
-import { RepeatingNoteLayers } from "../common/note-layers";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
+import { PositionBar } from "../common/position-bar";
 import { useDisplaySpec } from "../common/use-display-spec";
+import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 
-const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
-  const { contentW, contentH, tx } = displaySpec;
-  return (
-    <div className={cz("overflow-hidden")}>
-      <div
-        className="relative flex-h"
-        style={{
-          width: contentW,
-          height: contentH,
-          transform: `translateX(${tx}px)`,
-        }}
-      >
-        <RepeatingNoteLayers displaySpec={displaySpec} editorKind="main" />
-        <PlayPositionLineLayer displaySpec={displaySpec} />
-      </div>
-    </div>
-  );
-};
-
 export const PianoRollEditorView = () => {
-  const measuredDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(measuredDivRef);
+  const mainDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(mainDivRef);
   const keysWidth = 100;
 
   const { store } = useAppContext();
-  const { loopBars, sight } = store.useSnapshot();
-  const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
+  const { sight, loopBars } = store.useSnapshot();
+  const loopSteps = loopBars * 16;
+  const displayBars = clampValue(loopBars * 2, 2, 16);
+  const displaySteps = displayBars * 16;
 
   const displaySpec = useDisplaySpec({
-    contentBars,
+    nx: displaySteps,
     numPitches: uiConfig.numKeys,
     sight,
     mainDivSize,
@@ -50,12 +35,12 @@ export const PianoRollEditorView = () => {
 
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
-    contentBars,
+    displaySteps,
     uiConfig.numKeys,
   );
   return (
     <EditorCommonLayout
-      measuredDivRef={measuredDivRef}
+      mainDivRef={mainDivRef}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />
@@ -69,9 +54,24 @@ export const PianoRollEditorView = () => {
             className="absolute-full"
             style={{ transform: `translateY(${displaySpec.ty}px)` }}
           >
-            <PianoRollEditPart displaySpec={displaySpec} />
+            <PianoRollEditPartPlane displaySpec={displaySpec}>
+              <NoteLayerRoot
+                displaySpec={displaySpec}
+                editorKind="main"
+                displaySteps={displaySteps}
+                loopSteps={loopSteps}
+              />
+              <PlayPositionLineLayer displaySpec={displaySpec} />
+            </PianoRollEditPartPlane>
           </div>
         </>
+      }
+      positionBarContent={
+        <PositionBar
+          displaySpec={displaySpec}
+          displaySteps={displaySteps}
+          loopSteps={loopSteps}
+        />
       }
     />
   );

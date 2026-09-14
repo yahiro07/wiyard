@@ -1,10 +1,19 @@
+import { KeyName, MessageFromUnit } from "@lib/contract";
 import { colorStyle } from "@lib/utils/color-style";
-import { createSelectorOptions } from "@lib/utils/selector-option";
+import {
+  createPlainSelectorOptions,
+  createSelectorOptions,
+} from "@lib/utils/selector-option";
+import {
+  allKeyNames,
+  mapSongKeySpecToKeyName,
+} from "@lib/utils/song-key-helper";
 import { Button } from "../components/button";
 import { IconButton } from "../components/icon-button";
 import { Icons } from "../components/icons";
 import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
+import { Selector } from "../components/selector";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
 import { uiColors } from "../definitions/ui-theme";
@@ -13,6 +22,32 @@ import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
+
+const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
+
+const SongKeySelector = () => {
+  const { store, unitInterface } = useAppContext();
+  const { keySpec } = store.useSnapshot();
+  const currentKeyName = mapSongKeySpecToKeyName(keySpec);
+
+  const handleChange = (keyName: KeyName) => {
+    const message: MessageFromUnit = {
+      type: "setKeyName",
+      keyName,
+    };
+    unitInterface.sendMessageToHost(message);
+  };
+
+  return (
+    <LabeledBox label="key">
+      <Selector
+        value={currentKeyName}
+        options={keyNameOptions}
+        onChange={handleChange}
+      />
+    </LabeledBox>
+  );
+};
 
 const DutyKnobContainer = () => {
   const { store } = useAppContext();
@@ -55,6 +90,20 @@ const patternBarsOptions = createSelectorOptions<PatternBarLength>(
 );
 
 const LoopBarsSelectorContainer = () => {
+  const [{ loopBars }, mt] = useStoreAccess();
+  return (
+    <LabeledBox label="loop bars">
+      <ShiftSelector
+        minWidth={50}
+        value={loopBars}
+        options={loopBarsOptions}
+        onChange={mt.setLoopBars}
+      />
+    </LabeledBox>
+  );
+};
+
+const _LoopBarsSelectorContainerEx = () => {
   const { store } = useAppContext();
   const { loopBars, patternBars, isPatternView } = store.useSnapshot();
   const [options, value, onChange] = isPatternView
@@ -72,32 +121,32 @@ const LoopBarsSelectorContainer = () => {
   );
 };
 
-const _PagerContainer = () => {
-  const { store } = useAppContext();
-  const st = store.useSnapshot();
-  const totalPages = Math.max(1, st.loopBars / 2);
-  const canShiftLeft = st.pageIndex > 0;
-  const canShiftRight = st.pageIndex < totalPages - 1;
+// const _PagerContainer = () => {
+//   const { store } = useAppContext();
+//   const st = store.useSnapshot();
+//   const totalPages = Math.max(1, st.loopBars / 2);
+//   const canShiftLeft = st.pageIndex > 0;
+//   const canShiftRight = st.pageIndex < totalPages - 1;
 
-  const shiftPage = (dir: -1 | 1) => {
-    store.setPageIndex(st.pageIndex + dir);
-  };
-  return (
-    <LabeledBox label="">
-      <div className="flex-ha gap-2">
-        <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
-          <Icons.CaretLeft size={20} />
-        </Button>
-        <div className="w-50px flex-c">
-          {st.pageIndex + 1} / {totalPages}
-        </div>
-        <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
-          <Icons.CaretRight size={20} />
-        </Button>
-      </div>
-    </LabeledBox>
-  );
-};
+//   const shiftPage = (dir: -1 | 1) => {
+//     store.setPageIndex(st.pageIndex + dir);
+//   };
+//   return (
+//     <LabeledBox label="">
+//       <div className="flex-ha gap-2">
+//         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
+//           <Icons.CaretLeft size={20} />
+//         </Button>
+//         <div className="w-50px flex-c">
+//           {st.pageIndex + 1} / {totalPages}
+//         </div>
+//         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
+//           <Icons.CaretRight size={20} />
+//         </Button>
+//       </div>
+//     </LabeledBox>
+//   );
+// };
 
 const TrashButtonContainer = () => {
   const { store } = useAppContext();
@@ -168,9 +217,19 @@ const DiatonicLanesToggleButton = () => {
     <Button
       active={diatonicLanesEnabled}
       onClick={mt.toggleDiatonicLanesEnabled}
-    >
-      D
-    </Button>
+      text="diatonic"
+    />
+  );
+};
+
+const LoopGhostToggleButton = () => {
+  const [{ loopGhostEnabled }, mt] = useStoreAccess();
+  return (
+    <Button
+      active={loopGhostEnabled}
+      onClick={mt.toggleLoopGhostEnabled}
+      text="ghost"
+    />
   );
 };
 
@@ -216,6 +275,25 @@ const RealizeButton = () => {
   );
 };
 
+const DuplicateNotes2XButton = () => {
+  const [{ inputNotes, loopBars }] = useStoreAccess();
+  const controlActions = useControlActions();
+  const enabled = inputNotes.length > 0 && loopBars < 16;
+  return (
+    <Button
+      disabled={!enabled}
+      onClick={controlActions.duplicateNotes2X}
+      text="copy 2x"
+    />
+  );
+};
+
+const _KeyDisplay = () => {
+  const [{ keySpec }] = useStoreAccess();
+  const keyName = keySpec ? mapSongKeySpecToKeyName(keySpec) : "";
+  return <div>key: {keyName}</div>;
+};
+
 const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
@@ -223,6 +301,9 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
+            <SongKeySelector />
+            {/* <KeyDisplay /> */}
+
             <div className="flex-ha gap-2">
               <DiatonicLanesToggleButton />
               <DiatonicLanesAllowSemitoneInputToggleButton />
@@ -233,6 +314,9 @@ const TopBar = () => {
               <PatternToggleButton />
               <RealizeButton />
             </div>
+            <LoopGhostToggleButton />
+            <DuplicateNotes2XButton />
+
             <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
@@ -252,7 +336,7 @@ export const PageRoot = () => {
   return (
     <div className="w-full h-full">
       <div
-        className="w-full h-full flex-vc gap-2 p-2 text-white"
+        className="w-full h-full flex-vc gap-1 p-2 text-white"
         style={colorStyle({ bg: uiColors.clPanelBody })}
       >
         <TopBar />

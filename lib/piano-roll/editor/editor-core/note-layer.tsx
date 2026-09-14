@@ -5,14 +5,14 @@ import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext, useStoreAccess } from "../../root/app-context";
-import { EditInputLayer } from "./edit-input-layer";
 import {
   diatonicLanesPitchHelper,
   getPatternPitchLabel,
-  getSectionStride,
-} from "./editor-common-logic";
-import { DisplaySpec, SectionRange } from "./editor-types";
-import { getNoteNameLabel } from "./note-name-helper";
+} from "../common/editor-common-logic";
+import { DisplaySpec } from "../common/editor-types";
+import { getNoteNameLabel } from "../common/note-name-helper";
+import { EditInputLayer } from "./edit-input-layer";
+import { noteLayerContext, useNoteLayerContext } from "./note-layer-context";
 
 const noteColors = {
   input: "#6cc",
@@ -20,29 +20,22 @@ const noteColors = {
   mapped: "#6cc",
 };
 
-const NoteView = ({
-  note,
-  sectionRange,
-  displaySpec,
-  editorKind,
-  patternEnabled,
-  octaveShift,
-  duty: inputDuty,
-}: {
-  note: Note;
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-  editorKind: EditorKind;
-  patternEnabled: boolean;
-  octaveShift: number;
-  duty: number;
-}) => {
+const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
+  const {
+    displaySpec,
+    sectionRange,
+    editorKind,
+    patternEnabled,
+    octaveShift,
+    noteDuty,
+  } = useNoteLayerContext();
+  const [{ keySpec }] = useStoreAccess();
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi0 = note.pitch;
   let yi = note.pitch;
   if (editorKind === "mainD") {
-    yi = diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch);
+    yi = diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch, keySpec);
   }
   const isPattern = editorKind === "pattern";
   let noteKind: NoteKind = "input";
@@ -59,6 +52,10 @@ const NoteView = ({
       borderColor = "#6cc6";
     }
   }
+  if (isGhost) {
+    bgColor = "#fff2";
+    borderColor = "#fff2";
+  }
   const dur = note.duration;
   let duty = 1;
   if (0) {
@@ -66,7 +63,7 @@ const NoteView = ({
       (!patternEnabled && noteKind === "input") ||
       (patternEnabled && noteKind === "mapped")
     ) {
-      duty = inputDuty;
+      duty = noteDuty;
     }
   }
   const dutyM = mapUnaryTo(duty, 0.2, 1);
@@ -111,53 +108,48 @@ const styleNoteView = {
   cutout: "absolute top-0 right-0 bg-black/15 h-full",
 };
 
-const NotesDisplayLayer = ({
+const NotesBlockView = ({
   notes,
-  sectionRange,
-  displaySpec,
-  editorKind,
+  sourceOffset,
+  sourceDuration,
+  displayOffset,
+  cellW,
+  isGhost,
 }: {
   notes: Note[];
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-  editorKind: EditorKind;
+  sourceOffset: number;
+  sourceDuration: number;
+  displayOffset: number;
+  cellW: number;
+  isGhost: boolean;
 }) => {
-  const [{ patternEnabled, octave, duty }] = useStoreAccess();
   return (
-    <div className="absolute-full">
+    <div
+      className="absolute-full"
+      style={{ transform: `translateX(${displayOffset * cellW}px)` }}
+    >
       {notes
         .filter(
           (note) =>
-            sectionRange.offset <= note.position &&
-            note.position < sectionRange.offset + sectionRange.duration,
+            sourceOffset <= note.position &&
+            note.position < sourceOffset + sourceDuration,
         )
         .map((note) => (
-          <NoteView
-            key={note.id}
-            note={note}
-            sectionRange={sectionRange}
-            displaySpec={displaySpec}
-            editorKind={editorKind}
-            patternEnabled={patternEnabled}
-            octaveShift={octave}
-            duty={duty}
-          />
+          <NoteView key={note.id} note={note} isGhost={isGhost} />
         ))}
     </div>
   );
 };
 
-const NoteLayerStrip = ({
-  notes,
-  sectionRange,
-  displaySpec,
-  editorKind,
-}: {
-  notes: Note[];
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-  editorKind: EditorKind;
-}) => {
+const NoteLayerStrip = () => {
+  const {
+    notes,
+    displaySpec,
+    sectionRange,
+    editorKind,
+    loopSteps,
+    loopGhostEnabled,
+  } = useNoteLayerContext();
   const { cellW, cellH } = displaySpec;
   const numPitches = {
     main: uiConfig.numKeys,
@@ -166,66 +158,116 @@ const NoteLayerStrip = ({
   }[editorKind];
   const editorH = cellH * numPitches;
   const editorW = cellW * sectionRange.duration;
+  const loopOffset = sectionRange.offset;
+  const displaySteps = sectionRange.duration;
+  const numGhostCycles = displaySteps / loopSteps - 1;
+  const visibleRangeSteps = loopGhostEnabled ? loopSteps : displaySteps;
   return (
     <div
       className="relative overflow-hidden touch-none shrink-0"
       style={{ width: editorW, height: editorH }}
     >
-      <NotesDisplayLayer
+      <NotesBlockView
         notes={notes}
-        sectionRange={sectionRange}
-        displaySpec={displaySpec}
-        editorKind={editorKind}
+        sourceOffset={loopOffset}
+        sourceDuration={visibleRangeSteps}
+        displayOffset={0}
+        cellW={cellW}
+        isGhost={false}
       />
-      <EditInputLayer
-        notes={notes}
-        sectionRange={sectionRange}
-        editorKind={editorKind}
-      />
+      {loopGhostEnabled &&
+        numGhostCycles > 0 &&
+        seqNumbers(numGhostCycles).map((i) => (
+          <NotesBlockView
+            key={i}
+            notes={notes}
+            sourceOffset={loopOffset}
+            sourceDuration={visibleRangeSteps}
+            displayOffset={(i + 1) * visibleRangeSteps}
+            cellW={cellW}
+            isGhost={true}
+          />
+        ))}
+      {loopSteps !== displaySteps && (
+        <div
+          className="absolute top-0 h-full bg-black/10"
+          style={{
+            left: loopSteps * cellW,
+            width: (displaySteps - loopSteps) * cellW,
+          }}
+        />
+      )}
+      <EditInputLayer />
     </div>
   );
 };
 
-export const RepeatingNoteLayers = ({
+export const NoteLayerRoot = ({
   displaySpec,
   editorKind,
+  displaySteps,
+  loopSteps,
 }: {
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
+  displaySteps: number;
+  loopSteps: number;
 }) => {
   const { store } = useAppContext();
-  const { loopBars, pageIndex, inputNotes, mappedNotes, patternNotes } =
-    store.useSnapshot();
-  const { nx, sectionOffset, sectionStride } = getSectionStride(
-    editorKind === "pattern" ? 2 : loopBars,
-    pageIndex,
-  );
+  const {
+    inputNotes,
+    mappedNotes,
+    patternNotes,
+    loopGhostEnabled,
+    patternEnabled,
+    octave: octaveShift,
+    duty: noteDuty,
+  } = store.useSnapshot();
+
   const sectionRange = useMemo(
-    () => ({ offset: sectionOffset, duration: sectionStride }),
-    [sectionOffset, sectionStride],
+    () => ({ offset: 0, duration: displaySteps }),
+    [displaySteps],
   );
   const notes = useMemo(() => {
     let tmpNotes: Note[];
     if (editorKind === "main" || editorKind === "mainD") {
       tmpNotes = mappedNotes ? [...inputNotes, ...mappedNotes] : inputNotes;
     } else {
-      tmpNotes = patternNotes;
+      tmpNotes = [...patternNotes];
     }
     return tmpNotes.sort((a, b) => a.pitch - b.pitch);
   }, [inputNotes, mappedNotes, patternNotes, editorKind]);
+
+  const contextValue = useMemo(
+    () => ({
+      sectionRange,
+      displaySpec,
+      editorKind,
+      notes,
+      loopSteps,
+      loopGhostEnabled,
+      patternEnabled,
+      octaveShift,
+      noteDuty,
+    }),
+    [
+      sectionRange,
+      displaySpec,
+      editorKind,
+      notes,
+      loopSteps,
+      loopGhostEnabled,
+      patternEnabled,
+      octaveShift,
+      noteDuty,
+    ],
+  );
+
   return (
-    <div className={cz("absolute-full flex-h")}>
-      {seqNumbers(nx).map((i) => {
-        return (
-          <NoteLayerStrip
-            key={i}
-            notes={notes}
-            sectionRange={sectionRange}
-            displaySpec={displaySpec}
-            editorKind={editorKind}
-          />
-        );
-      })}
+    <div className={cz("absolute-full")}>
+      <noteLayerContext.Provider value={contextValue}>
+        <NoteLayerStrip />
+      </noteLayerContext.Provider>
     </div>
   );
 };

@@ -12,7 +12,7 @@ export const PlayPositionLineLayer = ({
   const { playPos } = store.useSnapshot();
   if (playPos === null) return;
   const barW = cellW * 1.5;
-  const localPos = playPos % 32;
+  const localPos = playPos;
 
   return (
     <div

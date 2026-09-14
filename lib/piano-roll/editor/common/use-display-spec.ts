@@ -4,12 +4,12 @@ import { Sight } from "../../definitions/types";
 import { DisplaySpec } from "./editor-types";
 
 export function useDisplaySpec({
-  contentBars,
+  nx,
   numPitches,
   sight,
   mainDivSize,
 }: {
-  contentBars: number;
+  nx: number;
   numPitches: number;
   sight: Sight;
   mainDivSize: Size | undefined;
@@ -19,7 +19,6 @@ export function useDisplaySpec({
 
   const viewW = mainDivSize?.width ?? 100;
   const viewH = mainDivSize?.height ?? 100;
-  const nx = contentBars * 16;
   const contentW = cellW * nx;
   const contentH = cellH * numPitches;
 

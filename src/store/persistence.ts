@@ -2,11 +2,12 @@ import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { WindowSpec } from "@lib/window-system";
 import { dequal } from "dequal";
 import { HsUnitStateData } from "wafer-host/core";
+import { appConfig } from "@/common/app-config";
 import { FieldSight } from "@/components/field-sight-plane";
-import { appConfig } from "@/domain/app-config";
 import { hostSystem } from "@/domain/host-system-instance";
 import { UnitItem, WindowId } from "@/domain/types";
 import { store } from "@/store/store";
+import { KeyName } from "@lib/contract";
 
 type PersistenceData = {
   unitItems: UnitItem[];
@@ -20,6 +21,7 @@ type PersistenceData = {
   masterVolume: number;
   unitStates: HsUnitStateData[];
   sight: FieldSight;
+  keyName: KeyName;
 };
 
 export const persistence = {
@@ -38,6 +40,7 @@ export const persistence = {
         masterVolume: 1,
         sight: 1,
         uiScaling: 1,
+        keyName: 1,
       }),
       unitStates,
     };
@@ -64,7 +67,7 @@ export const persistence = {
     }
   },
 };
-if (appConfig.isDevelopment && 0) {
+if (appConfig.isDevelopment && 1) {
   //bypass persistence for debug
   Object.assign(persistence, {
     load() {},

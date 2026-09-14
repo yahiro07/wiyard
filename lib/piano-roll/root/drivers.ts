@@ -45,16 +45,21 @@ export function setupUnit(
       },
       processScheduling(_timeFrom, barFrom, _barTo, _bpm) {
         const stepPos = barFrom * 16;
-        const playPosTotalSteps = Math.max(store.state.loopBars * 16, 32);
+        const playPosTotalSteps = store.state.loopBars * 16;
         const playPos = stepPos % playPosTotalSteps;
         store.setPlayPos(playPos);
-        const expectedPage = Math.floor(playPos / 32);
-        if (store.state.pageIndex !== expectedPage) {
-          store.setPageIndex(expectedPage);
-        }
+        // const expectedPage = Math.floor(playPos / 32);
+        // if (store.state.pageIndex !== expectedPage) {
+        //   store.setPageIndex(expectedPage);
+        // }
       },
       processStep(stepIndex, time, unitDuration) {
         engine.processStep(stepIndex, time, unitDuration);
+      },
+    },
+    hostCallbacks: {
+      setKey(keySpec) {
+        store.setKeySpec(keySpec);
       },
     },
     persistence: createPersistence(store),

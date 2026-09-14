@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { LoopBarLength, Note } from "../definitions/types";
 import { useAppContext } from "./app-context";
 import { AppStore } from "./store";
+
+function nextNoteId(notes: Note[]): number {
+  return notes.length > 0 ? Math.max(...notes.map((n) => n.id)) + 1 : 0;
+}
 
 function createControlActions(store: AppStore) {
   return {
@@ -35,6 +40,25 @@ function createControlActions(store: AppStore) {
         backupInputNotes: null,
         patternEnabled: true,
         realized: false,
+      });
+    },
+    duplicateNotes2X() {
+      const st = store.state;
+      const { loopBars, inputNotes } = st;
+      if (loopBars >= 16 || inputNotes.length === 0) return;
+      const loopSteps = loopBars * 16;
+      const destStart = loopSteps;
+      const sourceNotes = inputNotes.filter((n) => n.position < destStart);
+      let nextId = nextNoteId(sourceNotes);
+      const copies = sourceNotes.map((note) => ({
+        id: nextId++,
+        pitch: note.pitch,
+        position: note.position + destStart,
+        duration: note.duration,
+      }));
+      store.assign({
+        inputNotes: [...sourceNotes, ...copies],
+        loopBars: (loopBars * 2) as LoopBarLength,
       });
     },
   };

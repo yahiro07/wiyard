@@ -1,12 +1,9 @@
 import { startDragSessionV0 } from "@lib/utils/drag-session-v0";
-import { EditorKind, Note } from "../../definitions/types";
+import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
 import { AppStore } from "../../root/store";
-import {
-  diatonicLanesPitchHelper,
-  getSectionStride,
-} from "./editor-common-logic";
-import { IPointerEvent, SectionRange } from "./editor-types";
+import { diatonicLanesPitchHelper } from "../common/editor-common-logic";
+import { IPointerEvent, SectionRange } from "../common/editor-types";
 
 function createTapChecker() {
   const startTime = Date.now();
@@ -21,7 +18,11 @@ function createTapChecker() {
 
 type setCursorFn = (cursor: string) => void;
 
-export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
+export function createNoteEditActions(
+  store: AppStore,
+  editorKind: EditorKind,
+  sectionDuration: number,
+) {
   const isPattern = editorKind === "pattern";
   // const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
   const numPitches = {
@@ -41,7 +42,10 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
   const core = {
     mapYIndexToPitch(yi: number) {
       if (editorKind === "mainD") {
-        return diatonicLanesPitchHelper.mapYIndexToPitch(yi);
+        return diatonicLanesPitchHelper.mapYIndexToPitch(
+          yi,
+          store.state.keySpec,
+        );
       }
       return yi;
     },
@@ -52,16 +56,10 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
           originalPitch,
           deltaYi,
           snapToScale,
+          store.state.keySpec,
         );
       }
       return originalPitch + Math.round(deltaYi);
-    },
-    getSectionDuration() {
-      const { sectionStride } = getSectionStride(
-        editorKind === "pattern" ? 2 : store.state.loopBars,
-        store.state.pageIndex,
-      );
-      return sectionStride;
     },
   };
 
@@ -72,7 +70,6 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
       y: number,
     ): { xi: number; xiFloat: number; yi: number; yiFloat: number } {
       const rect = el.getBoundingClientRect();
-      const sectionDuration = core.getSectionDuration();
       const xiFloat = ((x - rect.left) / rect.width) * sectionDuration;
       const xi = Math.floor(xiFloat);
       const yiFloat = (1 - (y - rect.top) / rect.height) * numPitches;
@@ -240,6 +237,12 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
         },
         { coordinate: "page" },
       );
+    },
+    extendLoopBars() {
+      const { loopBars } = store.state;
+      if (loopBars < 16) {
+        store.setLoopBars((loopBars * 2) as LoopBarLength);
+      }
     },
   };
   return self;

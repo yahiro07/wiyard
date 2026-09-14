@@ -4,14 +4,17 @@ import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
-import { EditorCommonLayout } from "../common/editor-common-layout";
+import {
+  EditorCommonLayout,
+  PianoRollEditPartPlane,
+} from "../common/editor-common-layout";
 import {
   getPatternPitchLabel,
   useGridDisplaySpec,
 } from "../common/editor-common-logic";
-import { DisplaySpec } from "../common/editor-types";
-import { RepeatingNoteLayers } from "../common/note-layers";
+import { PositionBar } from "../common/position-bar";
 import { useDisplaySpec } from "../common/use-display-spec";
+import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PatternGrid } from "./pattern-grid";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
@@ -36,38 +39,17 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   );
 };
 
-const PatternPianoRollEditPart = ({
-  displaySpec,
-}: {
-  displaySpec: DisplaySpec;
-}) => {
-  const { contentW, contentH, tx } = displaySpec;
-  return (
-    <div className={cz("overflow-hidden")}>
-      <div
-        className="relative flex-h"
-        style={{
-          width: contentW,
-          height: contentH,
-          transform: `translateX(${tx}px)`,
-        }}
-      >
-        <RepeatingNoteLayers displaySpec={displaySpec} editorKind="pattern" />
-      </div>
-    </div>
-  );
-};
-
 export const PatternEditorView = () => {
-  const measuredDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(measuredDivRef);
+  const mainDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(mainDivRef);
   const keysWidth = 100;
-  const contentBars = 2; //fixed for pattern
+  const sectionDuration = 2 * 16; //fixed for pattern
+  const displaySteps = sectionDuration;
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
 
   const displaySpec = useDisplaySpec({
-    contentBars,
+    nx: sectionDuration,
     numPitches: uiConfig.numPatternPitches,
     sight,
     mainDivSize,
@@ -75,13 +57,13 @@ export const PatternEditorView = () => {
 
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
-    contentBars,
+    sectionDuration,
     uiConfig.numPatternPitches,
   );
 
   return (
     <EditorCommonLayout
-      measuredDivRef={measuredDivRef}
+      mainDivRef={mainDivRef}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <PitchIndexColumn cellH={displaySpec.cellH} />
@@ -95,9 +77,19 @@ export const PatternEditorView = () => {
             className="absolute-full"
             style={{ transform: `translateY(${displaySpec.ty}px)` }}
           >
-            <PatternPianoRollEditPart displaySpec={displaySpec} />
+            <PianoRollEditPartPlane displaySpec={displaySpec}>
+              <NoteLayerRoot
+                displaySpec={displaySpec}
+                editorKind="pattern"
+                displaySteps={sectionDuration}
+                loopSteps={sectionDuration}
+              />
+            </PianoRollEditPartPlane>
           </div>
         </>
+      }
+      positionBarContent={
+        <PositionBar displaySpec={displaySpec} displaySteps={sectionDuration} />
       }
     />
   );

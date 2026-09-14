@@ -1,4 +1,4 @@
-import { debugConfig } from "../../definitions/ui-config";
+import { fallbackKeySpec } from "../../definitions/ui-config";
 import { uiColors } from "../../definitions/ui-theme";
 import { GridDisplaySpec } from "../common/editor-types";
 import { GridCanvas } from "../common/grid-canvas";
@@ -12,31 +12,32 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   ctx.translate(-ds.contentX0, -ds.contentY0);
 
   const rightX = Math.min(ds.contentX1, ds.numStepsFull * ds.cellW);
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = uiColors.clDiatonicLanesGridBg;
   ctx.fillRect(
     ds.contentX0,
     ds.contentY0,
     rightX - ds.contentX0,
     ds.contentY1 - ds.contentY0,
   );
+  const keySpec = ds.keySpec ?? fallbackKeySpec;
+  const trDiatonic = Math.round((keySpec.relativeKeyTranspose * 7) / 12);
 
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
-      let i2 = i; //C
-      if (debugConfig.keyAm) {
-        i2 = i + 2; //Am
-      }
-      const isTonic = i2 % 7 === 0;
+      const i2 = i - trDiatonic;
+      const isTonic = keySpec.mode === "major" ? i2 % 7 === 0 : i2 % 7 === 5;
       const isDominant = i2 % 7 === 4;
-      let color = uiColors.clDiatonicLanesGridBg;
+      let color: string | undefined;
       if (isTonic) {
         color = uiColors.clDiatonicLanesGridBgTonic;
       } else if (isDominant) {
         // color = uiColors.clDiatonicLanesGridBgDominant;
       }
-      ctx.fillStyle = color;
-      ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      if (color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      }
     }
   }
 
@@ -60,7 +61,8 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = (ds.numPitchesFull - i) * ds.cellH;
     if (ds.contentY0 <= y && y < ds.contentY1) {
-      const strong = i % 7 === 0 || i % 7 === 3;
+      const i2 = i - trDiatonic;
+      const strong = i2 % 7 === 0 || i2 % 7 === 3;
       ctx.strokeStyle = strong ? "#0004" : "#0001";
       ctx.beginPath();
       ctx.moveTo(ds.contentX0, y);

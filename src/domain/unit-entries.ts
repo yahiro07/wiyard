@@ -1,10 +1,12 @@
 import { createPianoRollUnit } from "@lib/piano-roll";
+import {
+  createNoteInputPortUnit,
+  createSpeakerPortUnit,
+} from "@lib/port-units";
 import { IconType } from "react-icons";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { UnitInventorySpec } from "wafer-host/vite-plugin";
 import { Icons } from "@/common/icons";
-import { createNoteInputPortUnit } from "@/units/note-input-port";
-import { createSpeakerPortUnit } from "@/units/speaker-port";
 import unitInventories from "../unit-inventories.json";
 
 export type CatalogKey = keyof typeof unitInventories;

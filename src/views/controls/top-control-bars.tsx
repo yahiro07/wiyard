@@ -1,9 +1,9 @@
+import { store, windowSystem } from "@/store/store";
 import {
   ControlButtons,
   ControlButtonsRight,
-} from "@/realms/controls/control-buttons";
-import { ProjectButtons } from "@/realms/controls/project-buttons";
-import { store, windowSystem } from "@/store/store";
+} from "@/views/controls/control-buttons";
+import { ProjectButtons } from "@/views/controls/project-buttons";
 
 export const TopBar = () => {
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {

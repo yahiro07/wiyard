@@ -98,7 +98,7 @@ const TopBar = ({
       <div
         className={cz(
           "flex-c relative justify-between px-2",
-          isCurrent ? "bg-#68c/96" : "bg-gray-600/70",
+          isCurrent ? "bg-#68c/96" : "bg-gray-600/92",
           "h-34px",
         )}
         onPointerDown={(e) =>

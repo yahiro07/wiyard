@@ -11,7 +11,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   ctx.translate(-ds.contentX0, -ds.contentY0);
 
   const rightX = Math.min(ds.contentX1, ds.numStepsFull * ds.cellW);
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = uiColors.clPatternGridBg;
   ctx.fillRect(
     ds.contentX0,
     ds.contentY0,
@@ -19,14 +19,14 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     ds.contentY1 - ds.contentY0,
   );
 
+  ctx.fillStyle = uiColors.clPatternGridBgPrimary;
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
       const isPrimary = i % 7 === 0;
-      ctx.fillStyle = isPrimary
-        ? uiColors.clPatternGridBgPrimary
-        : uiColors.clPatternGridBg;
-      ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      if (isPrimary) {
+        ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      }
     }
   }
 
@@ -47,10 +47,10 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     }
   }
 
+  ctx.strokeStyle = "#0002";
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = (ds.numPitchesFull - i) * ds.cellH;
     if (ds.contentY0 <= y && y < ds.contentY1) {
-      ctx.strokeStyle = "#0002";
       ctx.beginPath();
       ctx.moveTo(ds.contentX0, y);
       ctx.lineTo(rightX, y);

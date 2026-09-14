@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import { HostAppProvider } from "wafer-host/react";
 import { hostSystem } from "@/domain/host-system-instance";
 import { useMidiInputHandling } from "@/periphery/midi-input-handling";
-import { PageRoot } from "@/realms/desk/page-root";
+import { useSetupSongKeySupport } from "@/periphery/song-key-support";
 import { setupAutoPersistenceTask } from "@/store/persistence";
 import { store } from "@/store/store";
+import { PageRoot } from "@/views/desk/page-root";
 
 const EffectsHookBox = () => {
   useMidiInputHandling();
   useEffect(setupAutoPersistenceTask, []);
+  useSetupSongKeySupport();
   return null;
 };
 

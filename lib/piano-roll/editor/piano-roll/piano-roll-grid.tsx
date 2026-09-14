@@ -13,7 +13,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   ctx.translate(-ds.contentX0, -ds.contentY0);
 
   const rightX = Math.min(ds.contentX1, ds.numStepsFull * ds.cellW);
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = uiColors.clPianoRollBg;
   ctx.fillRect(
     ds.contentX0,
     ds.contentY0,
@@ -21,14 +21,14 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     ds.contentY1 - ds.contentY0,
   );
 
+  ctx.fillStyle = uiColors.clPianoRollBgBlackKey;
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
     if (ds.contentY0 - ds.cellH <= y && y < ds.contentY1) {
       const isBlackKey = blackKeys.includes(i % 12);
-      ctx.fillStyle = isBlackKey
-        ? uiColors.clPianoRollBgBlackKey
-        : uiColors.clPianoRollBg;
-      ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      if (isBlackKey) {
+        ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      }
     }
   }
 
@@ -52,7 +52,8 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = (ds.numPitchesFull - i) * ds.cellH;
     if (ds.contentY0 <= y && y < ds.contentY1) {
-      ctx.strokeStyle = "#0002";
+      const isStrong = i % 12 === 0 || i % 12 === 5;
+      ctx.strokeStyle = isStrong ? "#0003" : "#0001";
       ctx.beginPath();
       ctx.moveTo(ds.contentX0, y);
       ctx.lineTo(rightX, y);
