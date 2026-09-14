@@ -29,7 +29,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       }
       const isTonic = i2 % 7 === 0;
       const isDominant = i2 % 7 === 4;
-      let color;
+      let color: string | undefined;
       if (isTonic) {
         color = uiColors.clDiatonicLanesGridBgTonic;
       } else if (isDominant) {
