@@ -20,6 +20,7 @@ type StoreState = {
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
   diatonicLanesAllowSemitoneInput: boolean;
+  loopGhostEnabled: boolean;
   //
   mappedNotes: Note[] | null;
   playPos: number | null;
@@ -44,6 +45,7 @@ const defaultStoreState: StoreState = {
   backupInputNotes: null,
   diatonicLanesEnabled: false,
   diatonicLanesAllowSemitoneInput: false,
+  loopGhostEnabled: false,
   //
   mappedNotes: null,
   playPos: null,

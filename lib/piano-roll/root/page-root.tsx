@@ -174,6 +174,17 @@ const DiatonicLanesToggleButton = () => {
   );
 };
 
+const LoopGhostToggleButton = () => {
+  const [{ loopGhostEnabled }, mt] = useStoreAccess();
+  return (
+    <Button
+      active={loopGhostEnabled}
+      onClick={mt.toggleLoopGhostEnabled}
+      text="ghost"
+    />
+  );
+};
+
 const DiatonicLanesAllowSemitoneInputToggleButton = () => {
   const [{ diatonicLanesAllowSemitoneInput }, mt] = useStoreAccess();
   return (
@@ -233,6 +244,7 @@ const TopBar = () => {
               <PatternToggleButton />
               <RealizeButton />
             </div>
+            <LoopGhostToggleButton />
             <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
