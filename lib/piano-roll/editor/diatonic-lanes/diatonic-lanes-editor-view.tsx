@@ -62,7 +62,7 @@ export const DiatonicLanesEditorView = () => {
   const { store } = useAppContext();
   const { sight, loopBars } = store.useSnapshot();
   const loopSteps = loopBars * 16;
-  const displaySteps = topLimit(loopSteps * 2, 32 * 16);
+  const displaySteps = topLimit(loopSteps * 2, 16 * 16);
   const numPitches = uiConfig.numDiatonicLanes;
 
   const displaySpec = useDisplaySpec({

@@ -23,7 +23,7 @@ export const PianoRollEditorView = () => {
   const { store } = useAppContext();
   const { sight, loopBars } = store.useSnapshot();
   const loopSteps = loopBars * 16;
-  const displayBars = clampValue(loopBars * 2, 2, 32);
+  const displayBars = clampValue(loopBars * 2, 2, 16);
   const displaySteps = displayBars * 16;
 
   const displaySpec = useDisplaySpec({

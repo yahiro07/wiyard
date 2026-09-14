@@ -236,7 +236,7 @@ export function createNoteEditActions(
     },
     extendLoopBars() {
       const { loopBars } = store.state;
-      if (loopBars < 32) {
+      if (loopBars < 16) {
         store.setLoopBars((loopBars * 2) as LoopBarLength);
       }
     },
