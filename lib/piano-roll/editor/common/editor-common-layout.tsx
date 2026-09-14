@@ -9,17 +9,19 @@ export const EditorCommonLayout = ({
   mainContent,
   mainDivRef,
   sideContentWidth,
+  positionBarContent,
 }: {
   sideContent: ReactNode;
   mainContent: ReactNode;
   mainDivRef: React.RefObject<HTMLDivElement | null>;
   sideContentWidth: number;
+  positionBarContent?: ReactNode;
 }) => {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
   return (
     <div
-      className={cz("overflow-hidden relative -mt-4", "w-full grow")}
+      className={cz("overflow-hidden relative", "w-full grow")}
       style={{
         display: "grid",
         gridTemplateColumns: `${sideContentWidth}px 1fr 24px`,
@@ -27,7 +29,7 @@ export const EditorCommonLayout = ({
       }}
     >
       <div></div>
-      <div>aa</div>
+      <div>{positionBarContent}</div>
       <div></div>
       <div className="overflow-hidden">{sideContent}</div>
       <div className="overflow-hidden relative" ref={mainDivRef}>
@@ -55,6 +57,28 @@ export const EditorCommonLayout = ({
   );
 };
 
+export const HorizontalScrollPlane = ({
+  displaySpec,
+  height,
+  children,
+}: {
+  displaySpec: DisplaySpec;
+  height?: number | string;
+  children: React.ReactNode;
+}) => {
+  const { contentW, tx } = displaySpec;
+  return (
+    <div className="overflow-hidden h-full">
+      <div
+        className="relative h-full"
+        style={{ width: contentW, height, transform: `translateX(${tx}px)` }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
 export const PianoRollEditPartPlane = ({
   displaySpec,
   children,
@@ -62,19 +86,10 @@ export const PianoRollEditPartPlane = ({
   displaySpec: DisplaySpec;
   children: ReactNode;
 }) => {
-  const { contentW, contentH, tx } = displaySpec;
+  const { contentH } = displaySpec;
   return (
-    <div className={cz("overflow-hidden")}>
-      <div
-        className="relative flex-h"
-        style={{
-          width: contentW,
-          height: contentH,
-          transform: `translateX(${tx}px)`,
-        }}
-      >
-        {children}
-      </div>
-    </div>
+    <HorizontalScrollPlane displaySpec={displaySpec} height={contentH}>
+      {children}
+    </HorizontalScrollPlane>
   );
 };

@@ -13,6 +13,7 @@ import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { clampValue } from "@lib/utils/number-helper";
+import { PositionBar } from "../common/position-bar";
 
 export const PianoRollEditorView = () => {
   const mainDivRef = useRef<HTMLDivElement>(null);
@@ -64,6 +65,13 @@ export const PianoRollEditorView = () => {
             </PianoRollEditPartPlane>
           </div>
         </>
+      }
+      positionBarContent={
+        <PositionBar
+          displaySpec={displaySpec}
+          displaySteps={displaySteps}
+          loopSteps={loopSteps}
+        />
       }
     />
   );
