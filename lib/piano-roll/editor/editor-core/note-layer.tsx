@@ -1,6 +1,6 @@
 import { colorStyle } from "@lib/utils/color-style";
 import { cz } from "@lib/utils/cz";
-import { mapUnaryTo } from "@lib/utils/number-helper";
+import { mapUnaryTo, seqNumbers } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
@@ -157,6 +157,9 @@ const NoteLayerStrip = () => {
   }[editorKind];
   const editorH = cellH * numPitches;
   const editorW = cellW * sectionRange.duration;
+  const loopOffset = sectionRange.offset;
+  const displaySteps = sectionRange.duration;
+  const ghostNum = displaySteps / loopSteps - 1;
   return (
     <div
       className="relative overflow-hidden touch-none shrink-0"
@@ -164,24 +167,25 @@ const NoteLayerStrip = () => {
     >
       <NotesBlockView
         notes={notes}
-        sourceOffset={sectionRange.offset}
-        sourceDuration={sectionRange.duration}
+        sourceOffset={loopOffset}
+        sourceDuration={loopSteps}
         displayOffset={0}
         cellW={cellW}
         isGhost={false}
       />
-      {loopGhostEnabled && (
-        <>
+      {loopGhostEnabled &&
+        ghostNum > 0 &&
+        seqNumbers(ghostNum).map((i) => (
           <NotesBlockView
+            key={i}
             notes={notes}
-            sourceOffset={sectionRange.offset}
-            sourceDuration={sectionRange.duration}
-            displayOffset={loopSteps}
+            sourceOffset={loopOffset}
+            sourceDuration={loopSteps}
+            displayOffset={(i + 1) * loopSteps}
             cellW={cellW}
             isGhost={true}
           />
-        </>
-      )}
+        ))}
       <EditInputLayer />
     </div>
   );

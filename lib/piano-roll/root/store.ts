@@ -56,7 +56,7 @@ const defaultStoreState: StoreState = {
 if (import.meta.env.DEV && 1) {
   const base = 24;
   defaultStoreState.inputNotes = [
-    { id: 0, position: 0, duration: 8, pitch: base + 0 },
+    { id: 0, position: 0, duration: 2, pitch: base + 0 },
     { id: 1, position: 2, duration: 2, pitch: base + 2 },
     // { id: 2, position: 4, duration: 2, pitch: base + 4 },
     // { id: 3, position: 6, duration: 2, pitch: base + 5 },
@@ -72,6 +72,7 @@ if (import.meta.env.DEV && 1) {
   // defaultStoreState.isPatternView = true;
   // defaultStoreState.patternEnabled = true;
   defaultStoreState.loopBars = 1;
+  defaultStoreState.loopGhostEnabled = true;
 }
 
 export function createAppStore(): AppStore {

@@ -12,7 +12,7 @@ import { useDisplaySpec } from "../common/use-display-spec";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
 import { NoteLayerRoot } from "../editor-core/note-layer";
-import { topLimit } from "@lib/utils/number-helper";
+import { clampValue } from "@lib/utils/number-helper";
 
 export const PianoRollEditorView = () => {
   const measuredDivRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,8 @@ export const PianoRollEditorView = () => {
   const { store } = useAppContext();
   const { sight, loopBars } = store.useSnapshot();
   const loopSteps = loopBars * 16;
-  const displaySteps = topLimit(loopSteps * 2, 32 * 16);
+  const displayBars = clampValue(loopBars * 2, 2, 32);
+  const displaySteps = displayBars * 16;
 
   const displaySpec = useDisplaySpec({
     nx: displaySteps,
