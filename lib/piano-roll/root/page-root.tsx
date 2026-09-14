@@ -61,7 +61,7 @@ const LoopBarsSelectorContainer = () => {
     ? [patternBarsOptions, patternBars, store.setPatternBars]
     : [loopBarsOptions, loopBars, store.setLoopBars];
   return (
-    <LabeledBox label="loop bars">
+    <LabeledBox label={isPatternView ? "pt bars" : "loop bars"}>
       <ShiftSelector
         minWidth={50}
         value={value}

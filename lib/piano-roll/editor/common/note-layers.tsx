@@ -168,7 +168,7 @@ const NoteLayerStrip = ({
   const editorW = cellW * sectionRange.duration;
   return (
     <div
-      className="relative overflow-hidden touch-none"
+      className="relative overflow-hidden touch-none shrink-0"
       style={{ width: editorW, height: editorH }}
     >
       <NotesDisplayLayer
@@ -197,7 +197,7 @@ export const RepeatingNoteLayers = ({
   const { loopBars, pageIndex, inputNotes, mappedNotes, patternNotes } =
     store.useSnapshot();
   const { nx, sectionOffset, sectionStride } = getSectionStride(
-    loopBars,
+    editorKind === "pattern" ? 2 : loopBars,
     pageIndex,
   );
   const sectionRange = useMemo(

@@ -56,6 +56,13 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
       }
       return originalPitch + Math.round(deltaYi);
     },
+    getSectionDuration() {
+      const { sectionStride } = getSectionStride(
+        editorKind === "pattern" ? 2 : store.state.loopBars,
+        store.state.pageIndex,
+      );
+      return sectionStride;
+    },
   };
 
   const self = {
@@ -64,10 +71,9 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
       x: number,
       y: number,
     ): { xi: number; xiFloat: number; yi: number; yiFloat: number } {
-      const st = store.state;
-      const { sectionStride } = getSectionStride(st.loopBars, st.pageIndex);
       const rect = el.getBoundingClientRect();
-      const xiFloat = ((x - rect.left) / rect.width) * sectionStride;
+      const sectionDuration = core.getSectionDuration();
+      const xiFloat = ((x - rect.left) / rect.width) * sectionDuration;
       const xi = Math.floor(xiFloat);
       const yiFloat = (1 - (y - rect.top) / rect.height) * numPitches;
       const yi = Math.floor(yiFloat);
