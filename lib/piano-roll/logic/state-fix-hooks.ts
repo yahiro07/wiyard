@@ -1,6 +1,6 @@
+import { usePrevious } from "@lib/utils/hooks";
 import { useEffect } from "react";
 import { useAppContext } from "../root/app-context";
-import { usePrevious } from "@lib/utils/hooks";
 
 export function useFixStates() {
   const { store } = useAppContext();

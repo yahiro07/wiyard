@@ -1,11 +1,19 @@
+import { KeyName, MessageFromUnit } from "@lib/contract";
 import { colorStyle } from "@lib/utils/color-style";
-import { mapKeySpecToKeysName } from "@lib/utils/keys-name-helper";
-import { createSelectorOptions } from "@lib/utils/selector-option";
+import {
+  createPlainSelectorOptions,
+  createSelectorOptions,
+} from "@lib/utils/selector-option";
+import {
+  allKeyNames,
+  mapSongKeySpecToKeyName,
+} from "@lib/utils/song-key-helper";
 import { Button } from "../components/button";
 import { IconButton } from "../components/icon-button";
 import { Icons } from "../components/icons";
 import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
+import { Selector } from "../components/selector";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
 import { uiColors } from "../definitions/ui-theme";
@@ -14,6 +22,32 @@ import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
+
+const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
+
+const SongKeySelector = () => {
+  const { store, unitInterface } = useAppContext();
+  const { keySpec } = store.useSnapshot();
+  const currentKeyName = mapSongKeySpecToKeyName(keySpec);
+
+  const handleChange = (keyName: KeyName) => {
+    const message: MessageFromUnit = {
+      type: "setKeyName",
+      keyName,
+    };
+    unitInterface.sendMessageToHost(message);
+  };
+
+  return (
+    <LabeledBox label="key">
+      <Selector
+        value={currentKeyName}
+        options={keyNameOptions}
+        onChange={handleChange}
+      />
+    </LabeledBox>
+  );
+};
 
 const DutyKnobContainer = () => {
   const { store } = useAppContext();
@@ -254,9 +288,9 @@ const DuplicateNotes2XButton = () => {
   );
 };
 
-const KeyDisplay = () => {
+const _KeyDisplay = () => {
   const [{ keySpec }] = useStoreAccess();
-  const keyName = keySpec ? mapKeySpecToKeysName(keySpec) : "";
+  const keyName = keySpec ? mapSongKeySpecToKeyName(keySpec) : "";
   return <div>key: {keyName}</div>;
 };
 
@@ -267,7 +301,8 @@ const TopBar = () => {
         <div className="font-bold text-24px">Piano Roll</div>
         <div className="flex-ha gap-7">
           <div className="flex-ha gap-6">
-            <KeyDisplay />
+            <SongKeySelector />
+            {/* <KeyDisplay /> */}
 
             <div className="flex-ha gap-2">
               <DiatonicLanesToggleButton />

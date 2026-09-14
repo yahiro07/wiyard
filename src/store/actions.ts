@@ -1,3 +1,4 @@
+import { KeyName } from "@lib/contract";
 import {
   AddOrRemoveArrayItem,
   setOrDeleteValue,
@@ -198,5 +199,8 @@ export const actions = {
   },
   selectNoteChannel(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
+  },
+  setKeyName(keyName: KeyName) {
+    store.setKeyName(keyName);
   },
 };

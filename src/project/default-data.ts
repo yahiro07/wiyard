@@ -1,3 +1,4 @@
+import { KeyName } from "@lib/contract";
 import { appConfig } from "@/common/app-config";
 import { UnitItem } from "@/domain/types";
 
@@ -58,6 +59,7 @@ function createDefaultScene() {
     currentNoteChannelId: "noteInputPort1",
     wireConnectionKeys,
     sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
+    keyName: "C" as KeyName,
   };
 }
 
@@ -81,6 +83,7 @@ function createBlankScene() {
     unitItems,
     currentNoteChannelId: "noteInputPort1",
     sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
+    keyName: "C" as KeyName,
   };
 }
 export const blankScene = createBlankScene();

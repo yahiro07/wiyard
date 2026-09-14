@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { LoopBarLength, Note } from "../definitions/types";
 import { useAppContext } from "./app-context";
 import { AppStore } from "./store";
-import { Note, LoopBarLength } from "../definitions/types";
 
 function nextNoteId(notes: Note[]): number {
   return notes.length > 0 ? Math.max(...notes.map((n) => n.id)) + 1 : 0;

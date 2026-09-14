@@ -1,18 +1,26 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useMemo } from "react";
+import { UnitInterface } from "wafer-host/unit-types";
 import { AppStore } from "./store";
 
-export const AppContext = createContext<{ store: AppStore }>(null as any);
+export const AppContext = createContext<{
+  store: AppStore;
+  unitInterface: UnitInterface;
+}>(null as any);
 
 export const AppProvider = ({
   children,
   store,
+  unitInterface,
 }: {
   children: ReactNode;
   store: AppStore;
+  unitInterface: UnitInterface;
 }) => {
-  return (
-    <AppContext.Provider value={{ store }}>{children}</AppContext.Provider>
+  const value = useMemo(
+    () => ({ store, unitInterface }),
+    [store, unitInterface],
   );
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 export function useAppContext() {

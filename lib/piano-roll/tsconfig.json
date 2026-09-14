@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@lib/utils/*": ["../utils/*"]
+      "@lib/utils/*": ["../utils/*"],
+      "@lib/contract": ["../contract/index.ts"]
     }
   },
   "include": ["."]

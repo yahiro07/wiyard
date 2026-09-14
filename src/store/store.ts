@@ -1,3 +1,4 @@
+import { KeyName } from "@lib/contract";
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
@@ -25,6 +26,7 @@ export type StoreState = {
   currentNoteChannelId: string;
   bpm: number;
   sight: FieldSight;
+  keyName: KeyName;
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
@@ -53,6 +55,7 @@ const blankStoreState: StoreState = {
   currentNoteChannelId: "",
   bpm: 120,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
+  keyName: "C",
   //
   midiInEnabled: false,
   masterVolume: 0.5,
@@ -81,6 +84,7 @@ export const projectResetterStates: Partial<StoreState> = {
   currentNoteChannelId: "",
   bpm: 120,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
+  keyName: "C",
   //
   unitStuffs: {},
   portStuffs: {},

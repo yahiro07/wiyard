@@ -7,6 +7,7 @@ import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import { UnitItem, WindowId } from "@/domain/types";
 import { store } from "@/store/store";
+import { KeyName } from "@lib/contract";
 
 type PersistenceData = {
   unitItems: UnitItem[];
@@ -20,6 +21,7 @@ type PersistenceData = {
   masterVolume: number;
   unitStates: HsUnitStateData[];
   sight: FieldSight;
+  keyName: KeyName;
 };
 
 export const persistence = {
@@ -38,6 +40,7 @@ export const persistence = {
         masterVolume: 1,
         sight: 1,
         uiScaling: 1,
+        keyName: 1,
       }),
       unitStates,
     };

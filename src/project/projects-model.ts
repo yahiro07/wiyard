@@ -1,3 +1,4 @@
+import { KeyName } from "@lib/contract";
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
@@ -29,6 +30,7 @@ type ProjectData = {
   bpm: number;
   unitStates: HsUnitStateData[];
   sight: FieldSight;
+  keyName: KeyName;
 };
 
 const helpers = {
@@ -46,6 +48,7 @@ const helpers = {
         bpm: 1,
         unitStates: 1,
         sight: 1,
+        keyName: 1,
       },
       { skipUndefined: true },
     );
@@ -66,6 +69,7 @@ const projectDataIo = {
         windowsEvacuated: 1,
         bpm: 1,
         sight: 1,
+        keyName: 1,
       }),
       unitStates,
     };

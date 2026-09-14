@@ -20,7 +20,7 @@ export const createPianoRollUnit: ReactUnitTemplateFn = (unitInterface) => {
   return {
     RenderUi() {
       return (
-        <AppProvider store={store}>
+        <AppProvider store={store} unitInterface={unitInterface}>
           <EffectsHookBox engine={engine} />
           <PageRoot />
         </AppProvider>
