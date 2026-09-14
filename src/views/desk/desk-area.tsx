@@ -69,11 +69,11 @@ export const DeskArea = () => {
           actions.setMenuTargetUnit(null);
         }
       }}
-      onWheel={(e) => {
-        // if (checkSightTarget(e)) {
-        // sightHandlers.onWheel(e.nativeEvent);
-        // }
-      }}
+      // onWheel={(e) => {
+      // if (checkSightTarget(e)) {
+      // sightHandlers.onWheel(e.nativeEvent);
+      // }
+      // }}
     >
       <GraphEditPlane />
       <FrontWindowsPlane />
