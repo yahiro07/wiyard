@@ -241,6 +241,19 @@ const RealizeButton = () => {
   );
 };
 
+const DuplicateNotes2XButton = () => {
+  const [{ inputNotes, loopBars }] = useStoreAccess();
+  const controlActions = useControlActions();
+  const enabled = inputNotes.length > 0 && loopBars < 16;
+  return (
+    <Button
+      disabled={!enabled}
+      onClick={controlActions.duplicateNotes2X}
+      text="copy 2x"
+    />
+  );
+};
+
 const TopBar = () => {
   return (
     <div className="w-full flex-v gap-4">
@@ -259,6 +272,8 @@ const TopBar = () => {
               <RealizeButton />
             </div>
             <LoopGhostToggleButton />
+            <DuplicateNotes2XButton />
+
             <TrashButtonContainer />
             <OctaveKnobContainer />
             <DutyKnobContainer />
