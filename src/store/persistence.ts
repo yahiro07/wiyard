@@ -64,7 +64,7 @@ export const persistence = {
     }
   },
 };
-if (appConfig.isDevelopment && 0) {
+if (appConfig.isDevelopment && 1) {
   //bypass persistence for debug
   Object.assign(persistence, {
     load() {},
