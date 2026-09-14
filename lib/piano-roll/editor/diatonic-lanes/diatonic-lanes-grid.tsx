@@ -12,7 +12,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   ctx.translate(-ds.contentX0, -ds.contentY0);
 
   const rightX = Math.min(ds.contentX1, ds.numStepsFull * ds.cellW);
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = uiColors.clDiatonicLanesGridBg;
   ctx.fillRect(
     ds.contentX0,
     ds.contentY0,
@@ -29,14 +29,16 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       }
       const isTonic = i2 % 7 === 0;
       const isDominant = i2 % 7 === 4;
-      let color = uiColors.clDiatonicLanesGridBg;
+      let color;
       if (isTonic) {
         color = uiColors.clDiatonicLanesGridBgTonic;
       } else if (isDominant) {
         // color = uiColors.clDiatonicLanesGridBgDominant;
       }
-      ctx.fillStyle = color;
-      ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      if (color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(ds.contentX0, y, rightX - ds.contentX0, ds.cellH);
+      }
     }
   }
 

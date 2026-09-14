@@ -9,5 +9,5 @@ export const uiColors = {
   //
   clDiatonicLanesGridBg: colorMod("#334", "h220"),
   clDiatonicLanesGridBgTonic: colorMod("#334", "h220 v-2"),
-  clDiatonicLanesGridBgDominant: colorMod("#334", "h220 v-1"),
+  clDiatonicLanesGridBgDominant: colorMod("#334", "h220 v-2 a40"),
 };
