@@ -34,7 +34,11 @@ export const PositionBar = ({
       >
         <div
           className="absolute top-0 h-4px"
-          style={{ width: loopX * cellW, background: "#0cf6" }}
+          style={{ width: loopX * cellW - 0.5, background: "#0cf6" }}
+        />
+        <div
+          className="absolute top-0 h-full"
+          style={{ left: loopX * cellW - 0.5, width: 1, background: "#0004" }}
         />
         {loopGhostEnabled && (
           <div
