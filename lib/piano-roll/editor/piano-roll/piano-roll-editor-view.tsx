@@ -1,5 +1,4 @@
 import { cz } from "@lib/utils/cz";
-import { bottomLimit } from "@lib/utils/number-helper";
 import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
@@ -7,13 +6,19 @@ import { useAppContext } from "../../root/app-context";
 import { EditorCommonLayout } from "../common/editor-common-layout";
 import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { DisplaySpec } from "../common/editor-types";
-import { RepeatingNoteLayers } from "../common/note-layers";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { useDisplaySpec } from "../common/use-display-spec";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
+import { NoteLayerRoot } from "../editor-core/note-layer";
 
-const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
+const PianoRollEditPart = ({
+  displaySpec,
+  sectionDuration,
+}: {
+  displaySpec: DisplaySpec;
+  sectionDuration: number;
+}) => {
   const { contentW, contentH, tx } = displaySpec;
   return (
     <div className={cz("overflow-hidden")}>
@@ -25,7 +30,11 @@ const PianoRollEditPart = ({ displaySpec }: { displaySpec: DisplaySpec }) => {
           transform: `translateX(${tx}px)`,
         }}
       >
-        <RepeatingNoteLayers displaySpec={displaySpec} editorKind="main" />
+        <NoteLayerRoot
+          displaySpec={displaySpec}
+          editorKind="main"
+          sectionDuration={sectionDuration}
+        />
         <PlayPositionLineLayer displaySpec={displaySpec} />
       </div>
     </div>
@@ -38,11 +47,11 @@ export const PianoRollEditorView = () => {
   const keysWidth = 100;
 
   const { store } = useAppContext();
-  const { loopBars, sight } = store.useSnapshot();
-  const contentBars = bottomLimit(loopBars, 2); //repeat contents for short loop
+  const { sight, loopBars } = store.useSnapshot();
+  const sectionDuration = loopBars * 16;
 
   const displaySpec = useDisplaySpec({
-    contentBars,
+    sectionDuration,
     numPitches: uiConfig.numKeys,
     sight,
     mainDivSize,
@@ -50,7 +59,7 @@ export const PianoRollEditorView = () => {
 
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
-    contentBars,
+    sectionDuration,
     uiConfig.numKeys,
   );
   return (
@@ -69,7 +78,10 @@ export const PianoRollEditorView = () => {
             className="absolute-full"
             style={{ transform: `translateY(${displaySpec.ty}px)` }}
           >
-            <PianoRollEditPart displaySpec={displaySpec} />
+            <PianoRollEditPart
+              displaySpec={displaySpec}
+              sectionDuration={sectionDuration}
+            />
           </div>
         </>
       }

@@ -1,22 +1,16 @@
-import { useEffect, useState } from "react";
-import { EditorKind, Note } from "../../definitions/types";
+import { useEffect, useMemo, useState } from "react";
 import { useAppContext } from "../../root/app-context";
-import { hitTestNote } from "./editor-common-logic";
-import { IPointerEvent, SectionRange } from "./editor-types";
-import { createNoteEditActions } from "./piano-roll-editor-view-actions";
+import { hitTestNote } from "../common/editor-common-logic";
+import { IPointerEvent } from "../common/editor-types";
+import { createNoteEditActions } from "./edit-input-layer-actions";
+import { useNoteLayerContext } from "./note-layer-context";
 
-export const EditInputLayer = ({
-  notes,
-  sectionRange,
-  editorKind,
-}: {
-  notes: Note[];
-  sectionRange: SectionRange;
-  editorKind: EditorKind;
-}) => {
+export const EditInputLayer = () => {
+  const { sectionRange, editorKind, notes } = useNoteLayerContext();
   const { store } = useAppContext();
-  const [noteEditActions] = useState(() =>
-    createNoteEditActions(store, editorKind),
+  const noteEditActions = useMemo(
+    () => createNoteEditActions(store, editorKind, sectionRange.duration),
+    [store, sectionRange, editorKind],
   );
 
   const [cursor, setCursor] = useState<string>("auto");

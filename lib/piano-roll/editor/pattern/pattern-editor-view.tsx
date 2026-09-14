@@ -10,9 +10,9 @@ import {
   useGridDisplaySpec,
 } from "../common/editor-common-logic";
 import { DisplaySpec } from "../common/editor-types";
-import { RepeatingNoteLayers } from "../common/note-layers";
 import { useDisplaySpec } from "../common/use-display-spec";
 import { PatternGrid } from "./pattern-grid";
+import { NoteLayerRoot } from "../editor-core/note-layer";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   return (
@@ -38,8 +38,10 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
 
 const PatternPianoRollEditPart = ({
   displaySpec,
+  sectionDuration,
 }: {
   displaySpec: DisplaySpec;
+  sectionDuration: number;
 }) => {
   const { contentW, contentH, tx } = displaySpec;
   return (
@@ -52,7 +54,11 @@ const PatternPianoRollEditPart = ({
           transform: `translateX(${tx}px)`,
         }}
       >
-        <RepeatingNoteLayers displaySpec={displaySpec} editorKind="pattern" />
+        <NoteLayerRoot
+          displaySpec={displaySpec}
+          editorKind="pattern"
+          sectionDuration={sectionDuration}
+        />
       </div>
     </div>
   );
@@ -62,12 +68,12 @@ export const PatternEditorView = () => {
   const measuredDivRef = useRef<HTMLDivElement>(null);
   const mainDivSize = useDomElementSize(measuredDivRef);
   const keysWidth = 100;
-  const contentBars = 2; //fixed for pattern
+  const sectionDuration = 32; //fixed for pattern
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
 
   const displaySpec = useDisplaySpec({
-    contentBars,
+    sectionDuration,
     numPitches: uiConfig.numPatternPitches,
     sight,
     mainDivSize,
@@ -75,7 +81,7 @@ export const PatternEditorView = () => {
 
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
-    contentBars,
+    sectionDuration,
     uiConfig.numPatternPitches,
   );
 
@@ -95,7 +101,10 @@ export const PatternEditorView = () => {
             className="absolute-full"
             style={{ transform: `translateY(${displaySpec.ty}px)` }}
           >
-            <PatternPianoRollEditPart displaySpec={displaySpec} />
+            <PatternPianoRollEditPart
+              displaySpec={displaySpec}
+              sectionDuration={sectionDuration}
+            />
           </div>
         </>
       }

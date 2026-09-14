@@ -1,6 +1,6 @@
 import { colorStyle } from "@lib/utils/color-style";
 import { cz } from "@lib/utils/cz";
-import { mapUnaryTo, seqNumbers } from "@lib/utils/number-helper";
+import { mapUnaryTo } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
@@ -9,10 +9,10 @@ import { EditInputLayer } from "./edit-input-layer";
 import {
   diatonicLanesPitchHelper,
   getPatternPitchLabel,
-  getSectionStride,
-} from "./editor-common-logic";
-import { DisplaySpec, SectionRange } from "./editor-types";
-import { getNoteNameLabel } from "./note-name-helper";
+} from "../common/editor-common-logic";
+import { DisplaySpec } from "../common/editor-types";
+import { getNoteNameLabel } from "../common/note-name-helper";
+import { useNoteLayerContext, noteLayerContext } from "./note-layer-context";
 
 const noteColors = {
   input: "#6cc",
@@ -22,21 +22,16 @@ const noteColors = {
 
 const NoteView = ({
   note,
-  sectionRange,
-  displaySpec,
-  editorKind,
   patternEnabled,
   octaveShift,
   duty: inputDuty,
 }: {
   note: Note;
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-  editorKind: EditorKind;
   patternEnabled: boolean;
   octaveShift: number;
   duty: number;
 }) => {
+  const { displaySpec, sectionRange, editorKind } = useNoteLayerContext();
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi0 = note.pitch;
@@ -111,17 +106,8 @@ const styleNoteView = {
   cutout: "absolute top-0 right-0 bg-black/15 h-full",
 };
 
-const NotesDisplayLayer = ({
-  notes,
-  sectionRange,
-  displaySpec,
-  editorKind,
-}: {
-  notes: Note[];
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-  editorKind: EditorKind;
-}) => {
+const NotesDisplayLayer = () => {
+  const { sectionRange, notes } = useNoteLayerContext();
   const [{ patternEnabled, octave, duty }] = useStoreAccess();
   return (
     <div className="absolute-full">
@@ -135,9 +121,6 @@ const NotesDisplayLayer = ({
           <NoteView
             key={note.id}
             note={note}
-            sectionRange={sectionRange}
-            displaySpec={displaySpec}
-            editorKind={editorKind}
             patternEnabled={patternEnabled}
             octaveShift={octave}
             duty={duty}
@@ -147,17 +130,8 @@ const NotesDisplayLayer = ({
   );
 };
 
-const NoteLayerStrip = ({
-  notes,
-  sectionRange,
-  displaySpec,
-  editorKind,
-}: {
-  notes: Note[];
-  sectionRange: SectionRange;
-  displaySpec: DisplaySpec;
-  editorKind: EditorKind;
-}) => {
+const NoteLayerStrip = () => {
+  const { displaySpec, sectionRange, editorKind } = useNoteLayerContext();
   const { cellW, cellH } = displaySpec;
   const numPitches = {
     main: uiConfig.numKeys,
@@ -171,60 +145,50 @@ const NoteLayerStrip = ({
       className="relative overflow-hidden touch-none shrink-0"
       style={{ width: editorW, height: editorH }}
     >
-      <NotesDisplayLayer
-        notes={notes}
-        sectionRange={sectionRange}
-        displaySpec={displaySpec}
-        editorKind={editorKind}
-      />
-      <EditInputLayer
-        notes={notes}
-        sectionRange={sectionRange}
-        editorKind={editorKind}
-      />
+      <NotesDisplayLayer />
+      <EditInputLayer />
     </div>
   );
 };
 
-export const RepeatingNoteLayers = ({
+export const NoteLayerRoot = ({
   displaySpec,
   editorKind,
+  sectionDuration,
 }: {
   displaySpec: DisplaySpec;
   editorKind: EditorKind;
+  sectionDuration: number;
 }) => {
   const { store } = useAppContext();
-  const { loopBars, inputNotes, mappedNotes, patternNotes } =
-    store.useSnapshot();
-  const { nx, sectionOffset, sectionStride } = getSectionStride(
-    editorKind === "pattern" ? 2 : loopBars,
-  );
+  const { inputNotes, mappedNotes, patternNotes } = store.useSnapshot();
+
   const sectionRange = useMemo(
-    () => ({ offset: sectionOffset, duration: sectionStride }),
-    [sectionOffset, sectionStride],
+    () => ({ offset: 0, duration: sectionDuration }),
+    [sectionDuration],
   );
   const notes = useMemo(() => {
     let tmpNotes: Note[];
     if (editorKind === "main" || editorKind === "mainD") {
       tmpNotes = mappedNotes ? [...inputNotes, ...mappedNotes] : inputNotes;
     } else {
-      tmpNotes = patternNotes;
+      tmpNotes = [...patternNotes];
     }
     return tmpNotes.sort((a, b) => a.pitch - b.pitch);
   }, [inputNotes, mappedNotes, patternNotes, editorKind]);
+
   return (
-    <div className={cz("absolute-full flex-h")}>
-      {seqNumbers(nx).map((i) => {
-        return (
-          <NoteLayerStrip
-            key={i}
-            notes={notes}
-            sectionRange={sectionRange}
-            displaySpec={displaySpec}
-            editorKind={editorKind}
-          />
-        );
-      })}
+    <div className={cz("absolute-full")}>
+      <noteLayerContext.Provider
+        value={{
+          sectionRange,
+          displaySpec,
+          editorKind,
+          notes,
+        }}
+      >
+        <NoteLayerStrip />
+      </noteLayerContext.Provider>
     </div>
   );
 };

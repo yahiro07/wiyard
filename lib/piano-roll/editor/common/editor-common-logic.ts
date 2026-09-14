@@ -1,19 +1,19 @@
 import { bottomLimit } from "@lib/utils/number-helper";
 import { useMemo } from "react";
-import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
+import { EditorKind, Note } from "../../definitions/types";
 import { useAppContext } from "../../root/app-context";
 import { DisplaySpec, SectionRange } from "./editor-types";
 
 export function useGridDisplaySpec(
   displaySpec: DisplaySpec,
-  contentBars: number,
+  sectionDuration: number,
   numPitches: number,
 ) {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
   const { viewW, viewH, cellW, cellH } = displaySpec;
 
-  const nx = contentBars * 16;
+  const nx = sectionDuration;
   const contentW = cellW * nx;
   const contentH = cellH * numPitches;
 
@@ -55,21 +55,6 @@ export function useGridDisplaySpec(
       numPitches,
     ],
   );
-}
-
-export function getSectionStride(loopBars: LoopBarLength) {
-  if (loopBars < 2) {
-    const nx = 2 / loopBars;
-    const sectionStride = 32 / nx;
-    return { nx, sectionOffset: 0, sectionStride };
-  } else {
-    const nx = 1;
-    // const sectionStride = 32;
-    // const sectionOffset = pageIndex * sectionStride;
-    const sectionOffset = 0;
-    const sectionStride = loopBars * 16;
-    return { nx, sectionOffset, sectionStride };
-  }
 }
 
 type HitNoteInfo = { note: Note; part: "body" | "tail" };
