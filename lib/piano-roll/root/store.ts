@@ -23,7 +23,7 @@ type StoreState = {
   //
   mappedNotes: Note[] | null;
   playPos: number | null;
-  pageIndex: number;
+  // pageIndex: number;
   previewNotePitch: number | null;
   stateLoadRevision: number;
 };
@@ -47,7 +47,7 @@ const defaultStoreState: StoreState = {
   //
   mappedNotes: null,
   playPos: null,
-  pageIndex: 0,
+  // pageIndex: 0,
   previewNotePitch: null,
   stateLoadRevision: 0,
 };

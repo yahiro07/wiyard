@@ -194,11 +194,10 @@ export const RepeatingNoteLayers = ({
   editorKind: EditorKind;
 }) => {
   const { store } = useAppContext();
-  const { loopBars, pageIndex, inputNotes, mappedNotes, patternNotes } =
+  const { loopBars, inputNotes, mappedNotes, patternNotes } =
     store.useSnapshot();
   const { nx, sectionOffset, sectionStride } = getSectionStride(
     editorKind === "pattern" ? 2 : loopBars,
-    pageIndex,
   );
   const sectionRange = useMemo(
     () => ({ offset: sectionOffset, duration: sectionStride }),

@@ -72,32 +72,32 @@ const LoopBarsSelectorContainer = () => {
   );
 };
 
-const _PagerContainer = () => {
-  const { store } = useAppContext();
-  const st = store.useSnapshot();
-  const totalPages = Math.max(1, st.loopBars / 2);
-  const canShiftLeft = st.pageIndex > 0;
-  const canShiftRight = st.pageIndex < totalPages - 1;
+// const _PagerContainer = () => {
+//   const { store } = useAppContext();
+//   const st = store.useSnapshot();
+//   const totalPages = Math.max(1, st.loopBars / 2);
+//   const canShiftLeft = st.pageIndex > 0;
+//   const canShiftRight = st.pageIndex < totalPages - 1;
 
-  const shiftPage = (dir: -1 | 1) => {
-    store.setPageIndex(st.pageIndex + dir);
-  };
-  return (
-    <LabeledBox label="">
-      <div className="flex-ha gap-2">
-        <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
-          <Icons.CaretLeft size={20} />
-        </Button>
-        <div className="w-50px flex-c">
-          {st.pageIndex + 1} / {totalPages}
-        </div>
-        <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
-          <Icons.CaretRight size={20} />
-        </Button>
-      </div>
-    </LabeledBox>
-  );
-};
+//   const shiftPage = (dir: -1 | 1) => {
+//     store.setPageIndex(st.pageIndex + dir);
+//   };
+//   return (
+//     <LabeledBox label="">
+//       <div className="flex-ha gap-2">
+//         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
+//           <Icons.CaretLeft size={20} />
+//         </Button>
+//         <div className="w-50px flex-c">
+//           {st.pageIndex + 1} / {totalPages}
+//         </div>
+//         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
+//           <Icons.CaretRight size={20} />
+//         </Button>
+//       </div>
+//     </LabeledBox>
+//   );
+// };
 
 const TrashButtonContainer = () => {
   const { store } = useAppContext();

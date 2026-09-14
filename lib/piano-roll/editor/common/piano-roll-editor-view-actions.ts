@@ -59,7 +59,6 @@ export function createNoteEditActions(store: AppStore, editorKind: EditorKind) {
     getSectionDuration() {
       const { sectionStride } = getSectionStride(
         editorKind === "pattern" ? 2 : store.state.loopBars,
-        store.state.pageIndex,
       );
       return sectionStride;
     },

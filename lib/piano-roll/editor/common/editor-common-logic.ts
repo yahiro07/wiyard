@@ -57,7 +57,7 @@ export function useGridDisplaySpec(
   );
 }
 
-export function getSectionStride(loopBars: LoopBarLength, _pageIndex: number) {
+export function getSectionStride(loopBars: LoopBarLength) {
   if (loopBars < 2) {
     const nx = 2 / loopBars;
     const sectionStride = 32 / nx;
