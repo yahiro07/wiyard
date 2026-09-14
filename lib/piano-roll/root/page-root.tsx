@@ -55,6 +55,20 @@ const patternBarsOptions = createSelectorOptions<PatternBarLength>(
 );
 
 const LoopBarsSelectorContainer = () => {
+  const [{ loopBars }, mt] = useStoreAccess();
+  return (
+    <LabeledBox label="loop bars">
+      <ShiftSelector
+        minWidth={50}
+        value={loopBars}
+        options={loopBarsOptions}
+        onChange={mt.setLoopBars}
+      />
+    </LabeledBox>
+  );
+};
+
+const _LoopBarsSelectorContainerEx = () => {
   const { store } = useAppContext();
   const { loopBars, patternBars, isPatternView } = store.useSnapshot();
   const [options, value, onChange] = isPatternView
