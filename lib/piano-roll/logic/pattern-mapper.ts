@@ -14,9 +14,10 @@ function createNotesMapperFn(fn: NotesMapperFn): NotesMapperFn {
   return fn;
 }
 
-function buildScalePitches() {
+function buildScalePitches(keySpec: SongKeySpec) {
   const subIndices = [0, 2, 4, 5, 7, 9, 11];
-  return seqNumbers(6).flatMap((i) => subIndices.map((si) => i * 12 + si));
+  const tr = keySpec.relativeKeyTranspose;
+  return seqNumbers(6).flatMap((i) => subIndices.map((si) => i * 12 + si + tr));
 }
 
 function shiftNotePitch(
@@ -35,8 +36,8 @@ function shiftNotePitch(
 }
 
 const notesMapperBasic1 = createNotesMapperFn(
-  ({ inputNotes, patternNotes }) => {
-    const scalePitches = buildScalePitches();
+  ({ inputNotes, patternNotes, keySpec }) => {
+    const scalePitches = buildScalePitches(keySpec);
 
     let seqNoteIndex = 0;
     return inputNotes.flatMap((inputNote) => {
