@@ -183,9 +183,8 @@ const DiatonicLanesToggleButton = () => {
     <Button
       active={diatonicLanesEnabled}
       onClick={mt.toggleDiatonicLanesEnabled}
-    >
-      D
-    </Button>
+      text="diatonic"
+    />
   );
 };
 
