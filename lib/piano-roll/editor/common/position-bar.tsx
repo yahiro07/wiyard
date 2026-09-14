@@ -1,12 +1,67 @@
 import { seqNumbers } from "@lib/utils/number-helper";
 import { HorizontalScrollPlane } from "./editor-common-layout";
 import { DisplaySpec } from "./editor-types";
-import { useStoreAccess } from "../../root/app-context";
+import { useAppContext, useStoreAccess } from "../../root/app-context";
+import { useCallback } from "react";
 
 type PositionBarProps = {
   displaySpec: DisplaySpec;
   displaySteps: number;
   loopSteps?: number;
+};
+
+function usePositionBarPointerHandler() {
+  const { store } = useAppContext();
+  return useCallback((e: React.PointerEvent<HTMLDivElement>) => {}, []);
+}
+
+const BarMarker = ({ index, cellW }: { index: number; cellW: number }) => {
+  return (
+    <div
+      className="absolute top-0 h-full flex-ha pl-5px"
+      style={{
+        left: index * 16 * cellW,
+        width: 16 * cellW,
+        borderLeft: index !== 0 ? `solid 1px #0008` : undefined,
+      }}
+    >
+      <span className="text-12px mt-4px">{index + 1}</span>
+    </div>
+  );
+};
+
+const SectionHighlighters = ({
+  loopX,
+  endX,
+  cellW,
+  loopGhostEnabled,
+}: {
+  loopX: number;
+  endX: number;
+  cellW: number;
+  loopGhostEnabled: boolean;
+}) => {
+  return (
+    <>
+      <div
+        className="absolute top-0 h-4px bg-#0cf6"
+        style={{ width: loopX * cellW - 0.5 }}
+      />
+      <div
+        className="absolute top-0 h-full bg-#0004"
+        style={{ left: loopX * cellW - 0.5, width: 1 }}
+      />
+      {loopGhostEnabled && (
+        <div
+          className="absolute top-0 h-4px bg-#8886"
+          style={{
+            left: loopX * cellW,
+            width: (endX - loopX) * cellW,
+          }}
+        />
+      )}
+    </>
+  );
 };
 
 export const PositionBar = ({
@@ -15,6 +70,7 @@ export const PositionBar = ({
   loopSteps,
 }: PositionBarProps) => {
   const [{ loopGhostEnabled }] = useStoreAccess();
+  const handlePointerDown = usePositionBarPointerHandler();
 
   const { cellW } = displaySpec;
   const stepsPerBar = 16;
@@ -25,43 +81,17 @@ export const PositionBar = ({
   return (
     <HorizontalScrollPlane displaySpec={displaySpec}>
       <div
-        className="h-20px"
-        style={{
-          background: "#333",
-          color: "#888",
-          border: "solid 1px #0002",
-        }}
+        className="h-20px bg-#333 text-#888 bd-#0004"
+        onPointerDown={handlePointerDown}
       >
-        <div
-          className="absolute top-0 h-4px"
-          style={{ width: loopX * cellW - 0.5, background: "#0cf6" }}
+        <SectionHighlighters
+          loopX={loopX}
+          endX={endX}
+          cellW={cellW}
+          loopGhostEnabled={loopGhostEnabled}
         />
-        <div
-          className="absolute top-0 h-full"
-          style={{ left: loopX * cellW - 0.5, width: 1, background: "#0004" }}
-        />
-        {loopGhostEnabled && (
-          <div
-            className="absolute top-0 h-4px"
-            style={{
-              left: loopX * cellW,
-              width: (endX - loopX) * cellW,
-              background: "#8886",
-            }}
-          />
-        )}
         {seqNumbers(barCount).map((i) => (
-          <div
-            key={i}
-            className="absolute top-0 h-full flex-ha pl-5px"
-            style={{
-              left: i * stepsPerBar * cellW,
-              width: stepsPerBar * cellW,
-              borderLeft: `solid 1px #0008`,
-            }}
-          >
-            <span className="text-12px mt-4px">{i + 1}</span>
-          </div>
+          <BarMarker key={i} index={i} cellW={cellW} />
         ))}
       </div>
     </HorizontalScrollPlane>
