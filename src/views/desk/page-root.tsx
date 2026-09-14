@@ -2,10 +2,10 @@ import { createPianoRollUnit } from "@lib/piano-roll";
 import { ReactUnitFrame } from "wafer-host/react";
 import { appConfig } from "@/common/app-config";
 import { ScreenScaler } from "@/components/screen-scaler";
-import { TopBar } from "@/realms/controls/top-control-bars";
-import { DeskArea } from "@/realms/desk/desk-area";
-import { UnitPickerRoot } from "@/realms/desk/unit-picker";
 import { store } from "@/store/store";
+import { TopBar } from "@/views/controls/top-control-bars";
+import { DeskArea } from "@/views/desk/desk-area";
+import { UnitPickerRoot } from "@/views/desk/unit-picker";
 
 const PageRootMain = () => {
   const { uiScaling } = store.useSnapshot();

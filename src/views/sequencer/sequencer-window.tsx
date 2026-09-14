@@ -1,6 +1,6 @@
 import { WindowFrame } from "@lib/window-system";
 import { kSequencerWindowId } from "@/domain/types";
-import { SequencerPanel } from "@/realms/sequencer/sequencer-panel";
+import { SequencerPanel } from "@/views/sequencer/sequencer-panel";
 
 export const SequencerWindow = () => {
   return (

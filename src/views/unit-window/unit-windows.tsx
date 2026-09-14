@@ -8,9 +8,9 @@ import {
   InternalUnitKey,
   internalUnitSpecs,
 } from "@/domain/unit-entries";
-import { useUnitStuffReporter } from "@/realms/unit-window/unit-stuff-reporter";
 import { sourceNoteChannelGetters } from "@/store/source-note-channel-getters";
 import { store, windowSystem } from "@/store/store";
+import { useUnitStuffReporter } from "@/views/unit-window/unit-stuff-reporter";
 
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(

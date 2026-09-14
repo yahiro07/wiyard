@@ -1,9 +1,9 @@
 import { cz } from "@lib/utils/cz";
 import { Icons } from "@/common/icons";
 import { NumberSlider } from "@/components/number-slider";
-import { MidiInButtonContainer } from "@/realms/controls/midi-in-button";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
+import { MidiInButtonContainer } from "@/views/controls/midi-in-button";
 
 const ControlButton = ({
   text,
