@@ -1,6 +1,7 @@
 import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
+import { Icons } from "@/common/icons";
 import { NoteInputPortUnitItem } from "@/domain/types";
 import {
   CatalogKey,
@@ -27,7 +28,7 @@ const NoteChannelListColumn = () => {
     }
   };
   return (
-    <div className="w-50px bg-gray-600/60 flex-v gap-2 py-2">
+    <div className="w-50px bg-gray-700/60 flex-v gap-2 py-2 text-white pb-3">
       {noteChannelIds.map((id, index) => (
         <button
           key={id}
@@ -43,14 +44,23 @@ const NoteChannelListColumn = () => {
         </button>
       ))}
       {canAdd && (
-        <button type="button" onClick={actions.addNoteChannel}>
-          add
+        <button
+          className="w-40px flex-c mt-1 cursor-pointer hover:opacity-80"
+          type="button"
+          onClick={actions.addNoteChannel}
+        >
+          <Icons.Add size={20} />
         </button>
       )}
       <div className="grow" />
       {canDelete && (
-        <button type="button" disabled={!canDelete} onClick={handleRemove}>
-          remove
+        <button
+          className="w-40px flex-c cursor-pointer hover:opacity-80"
+          type="button"
+          disabled={!canDelete}
+          onClick={handleRemove}
+        >
+          <Icons.Trash size={18} />
         </button>
       )}
     </div>
