@@ -9,8 +9,8 @@ import {
 import { fallbackKeySpec } from "../definitions/ui-config";
 
 type StoreState = {
-  octave: number;
-  duty: number;
+  octaveShift: number;
+  noteDuty: number;
   loopBars: LoopBarLength;
   inputNotes: Note[];
   patternBars: PatternBarLength;
@@ -35,8 +35,8 @@ type StoreState = {
 export type AppStore = Store<StoreState>;
 
 const defaultStoreState: StoreState = {
-  octave: 0,
-  duty: 1,
+  octaveShift: 0,
+  noteDuty: 1,
   loopBars: 2,
   inputNotes: [],
   patternBars: 0.25,
@@ -84,11 +84,6 @@ if (import.meta.env.DEV && 0) {
     defaultStoreState.keySpec = { root, mode, relativeKeyTranspose };
   };
   setKeySpec(0, "major"); //C
-  // setKeySpec(-3, "minor"); //Am
-  // setKeySpec(7, "major"); //G
-  // setKeySpec(2, "major"); //D
-  // setKeySpec(6, "major"); //F#
-  // setKeySpec(4, "minor"); //Em
 }
 
 export function createAppStore(): AppStore {

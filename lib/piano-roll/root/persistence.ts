@@ -10,8 +10,8 @@ import { AppStore } from "./store";
 
 namespace _persistenceSpecTypes {
   type _StoreState = {
-    octave: number; //+100
-    duty: number; //*255
+    octaveShift: number; //+100
+    noteDuty: number; //*255
     playPos: number | null;
     loopBars: LoopBarLength; //*4
     pageIndex: number;
@@ -111,8 +111,8 @@ export function createPersistence(store: AppStore): Persistence {
       return new Uint8Array([
         magics.first,
         magics.second,
-        st.octave + 100,
-        unaryToByte(st.duty),
+        st.octaveShift + 100,
+        unaryToByte(st.noteDuty),
         Math.floor(st.loopBars * 4),
         ...encodeNotes(st.inputNotes),
         unaryToByte(st.sight.xPosition),
@@ -131,8 +131,8 @@ export function createPersistence(store: AppStore): Persistence {
     applyStateBytes(bytes) {
       if (!(bytes[0] === magics.first && bytes[1] === magics.second)) return;
       const reader = createByteReader(bytes, 2, true);
-      const octave = reader.readByte() - 100;
-      const duty = unaryFromByte(reader.readByte());
+      const octaveShift = reader.readByte() - 100;
+      const noteDuty = unaryFromByte(reader.readByte());
       const loopBars = reader.readByte() / 4;
       const inputNotes = reader.readNotes();
       const sight: Sight = {
@@ -152,8 +152,8 @@ export function createPersistence(store: AppStore): Persistence {
       const valid = [
         reader.ok,
         reader.offset === bytes.length,
-        -2 <= octave && octave <= 2,
-        0 <= duty && duty <= 1,
+        -2 <= octaveShift && octaveShift <= 2,
+        0 <= noteDuty && noteDuty <= 1,
         loopBarLengths.includes(loopBars as LoopBarLength),
         0 <= sight.xPosition && sight.xPosition <= 1,
         0 <= sight.yPosition && sight.yPosition <= 1,
@@ -163,8 +163,8 @@ export function createPersistence(store: AppStore): Persistence {
       ].every(Boolean);
       if (!valid) return;
       store.assign({
-        octave,
-        duty,
+        octaveShift,
+        noteDuty,
         loopBars: loopBars as LoopBarLength,
         inputNotes,
         sight,

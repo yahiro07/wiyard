@@ -12,8 +12,8 @@ export type Note = {
 
 export type SequencerEditState = {
   notes: Note[];
-  octave: number;
-  duty: number;
+  octaveShift: number;
+  noteDuty: number;
   loopBars: LoopBarLength;
 };
 

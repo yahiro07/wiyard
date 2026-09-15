@@ -66,7 +66,7 @@ const PitchCell = ({
 };
 
 export const DiatonicPitchIndexColumn = ({ cellH }: { cellH: number }) => {
-  const [{ keySpec, octave }, mt] = useStoreAccess();
+  const [{ keySpec, octaveShift }, mt] = useStoreAccess();
   return (
     <div className="flex-c h-full">
       <div className="flex-v flex-col-reverse">
@@ -76,7 +76,7 @@ export const DiatonicPitchIndexColumn = ({ cellH }: { cellH: number }) => {
             i={i}
             cellH={cellH}
             keySpec={keySpec}
-            octaveShift={octave}
+            octaveShift={octaveShift}
             setPreviewNotePitch={mt.setPreviewNotePitch}
           />
         ))}

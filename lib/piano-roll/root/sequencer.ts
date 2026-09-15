@@ -4,8 +4,8 @@ import { LoopBarLength, Note, SequencerEditState } from "../definitions/types";
 
 export type SequencerEngine = {
   setNotes(notes: Note[]): void;
-  setOctave(octave: number): void;
-  setDuty(duty: number): void;
+  setOctaveShift(octave: number): void;
+  setNoteDuty(duty: number): void;
   setLoopBars(loopBars: LoopBarLength): void;
   start(): void;
   processStep(stepIndex: number, time: number, unitDuration: number): void;
@@ -23,8 +23,8 @@ export function createSequencerEngine(
 ): SequencerEngine {
   const editState: SequencerEditState = {
     notes: [],
-    octave: 0,
-    duty: 1,
+    octaveShift: 0,
+    noteDuty: 1,
     loopBars: 1,
   };
   const noteOutputPort = unitInterface?.createNoteOutputPort();
@@ -37,8 +37,8 @@ export function createSequencerEngine(
       const pos = stepIndex % totalSteps;
       for (const note of editState.notes) {
         if (note.position === pos) {
-          const dutyRate = linearInterpolate(editState.duty, 0, 1, 0.2, 1);
-          const noteNumber = getNoteShifted(note.pitch, editState.octave);
+          const dutyRate = linearInterpolate(editState.noteDuty, 0, 1, 0.2, 1);
+          const noteNumber = getNoteShifted(note.pitch, editState.octaveShift);
           noteOutputPort?.noteOn(noteNumber, time);
           noteOutputPort?.noteOff(
             noteNumber,
@@ -60,11 +60,11 @@ export function createSequencerEngine(
     setNotes(notes: Note[]) {
       editState.notes = notes;
     },
-    setOctave(octave: number) {
-      editState.octave = octave;
+    setOctaveShift(octaveShift: number) {
+      editState.octaveShift = octaveShift;
     },
-    setDuty(duty: number) {
-      editState.duty = duty;
+    setNoteDuty(noteDuty: number) {
+      editState.noteDuty = noteDuty;
     },
     setLoopBars(loopBars: LoopBarLength) {
       editState.loopBars = loopBars;
@@ -81,7 +81,7 @@ export function createSequencerEngine(
         noteOutputPort?.noteOff(previewNoteNumber);
         previewNoteNumber = null;
       }
-      const noteNumber = getNoteShifted(pitch, editState.octave);
+      const noteNumber = getNoteShifted(pitch, editState.octaveShift);
       noteOutputPort?.noteOn(noteNumber);
       previewNoteNumber = noteNumber;
     },

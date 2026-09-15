@@ -9,7 +9,7 @@ export function setupUnit(
   engine: SequencerEngine,
 ) {
   const unsubscribeStore = store.subscribe(
-    ({ previewNotePitch, octave, duty, loopBars }) => {
+    ({ previewNotePitch, octaveShift, noteDuty, loopBars }) => {
       if (loopBars !== undefined) {
         engine.setLoopBars(loopBars);
       }
@@ -20,11 +20,11 @@ export function setupUnit(
           engine.previewNoteOff();
         }
       }
-      if (octave !== undefined) {
-        engine.setOctave(octave);
+      if (octaveShift !== undefined) {
+        engine.setOctaveShift(octaveShift);
       }
-      if (duty !== undefined) {
-        engine.setDuty(duty);
+      if (noteDuty !== undefined) {
+        engine.setNoteDuty(noteDuty);
       }
     },
     true,

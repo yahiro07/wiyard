@@ -50,26 +50,24 @@ const SongKeySelector = () => {
 };
 
 const DutyKnobContainer = () => {
-  const { store } = useAppContext();
-  const st = store.useSnapshot();
+  const [{ noteDuty }, mt] = useStoreAccess();
   return (
     <LabeledBox label="duty">
-      <Knob value={st.duty} onChange={store.setDuty} />
+      <Knob value={noteDuty} onChange={mt.setNoteDuty} />
     </LabeledBox>
   );
 };
 
 const OctaveKnobContainer = () => {
-  const { store } = useAppContext();
-  const st = store.useSnapshot();
+  const [{ octaveShift }, mt] = useStoreAccess();
   return (
     <LabeledBox label="octave">
       <Knob
-        value={st.octave}
+        value={octaveShift}
         min={-2}
         max={2}
         step={1}
-        onChange={store.setOctave}
+        onChange={mt.setOctaveShift}
       />
     </LabeledBox>
   );

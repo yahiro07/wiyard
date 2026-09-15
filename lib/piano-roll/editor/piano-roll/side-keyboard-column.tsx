@@ -118,7 +118,7 @@ export const SideKeyboardColumn = ({
   cellH: number;
 }) => {
   const { store } = useAppContext();
-  const { octave } = store.useSnapshot();
+  const { octaveShift } = store.useSnapshot();
   const { numKeys } = uiConfig;
   return (
     <div className="shrink-0" style={{ width }}>
@@ -128,7 +128,7 @@ export const SideKeyboardColumn = ({
           yi={numKeys - i - 1}
           cellH={cellH}
           setPreviewNotePitch={store.setPreviewNotePitch}
-          octaveShift={octave}
+          octaveShift={octaveShift}
         />
       ))}
     </div>

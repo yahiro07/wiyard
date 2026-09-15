@@ -220,8 +220,8 @@ export const NoteLayerRoot = ({
     patternNotes,
     loopGhostEnabled,
     patternEnabled,
-    octave: octaveShift,
-    duty: noteDuty,
+    octaveShift,
+    noteDuty,
   } = store.useSnapshot();
 
   const sectionRange = useMemo(
