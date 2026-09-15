@@ -25,6 +25,29 @@ export const WindowDock = ({ children }: { children: ReactNode }) => {
   );
 };
 
+export const WindowDockItemView = ({
+  title,
+  children,
+  onClick,
+}: {
+  title: string;
+  children?: ReactNode;
+  onClick?: () => void;
+}) => {
+  return (
+    <div
+      className={cz(
+        "w-40px h-40px rounded-8px overflow-hidden",
+        "cursor-pointer hover:opacity-80",
+      )}
+      style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
+      onClick={onClick}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const WindowDockItem = ({
   id,
   title,
@@ -36,22 +59,24 @@ export const WindowDockItem = ({
   imageUrl?: string;
   children?: ReactNode;
 }) => {
-  const { windowSpecs } = storeSlice.useSnapshot();
+  const { windowSpecs, windowsEvacuated } = storeSlice.useSnapshot();
   const windowSpec = windowSpecs[id];
+  const closed = windowSpec?.status === "none";
   const minimized = windowSpec?.status === "minimized";
   const pinned = windowSpec?.pinned;
   if (minimized || pinned) {
     return (
-      <div
-        className={cz(
-          "w-40px h-40px rounded-8px overflow-hidden",
-          "cursor-pointer hover:opacity-80",
-        )}
-        style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
+      <WindowDockItemView
+        title={title}
         onClick={() => {
           if (pinned) {
-            actions.toggleWindowMinimized(id);
-            actions.setCurrentWindowId(id);
+            if (closed || minimized || windowsEvacuated) {
+              actions.setWindowsEvacuated(false);
+              actions.setWindowStatus(id, "visible");
+              actions.setCurrentWindowId(id);
+            } else {
+              actions.setWindowStatus(id, "minimized");
+            }
           } else {
             actions.setWindowsEvacuated(false);
             actions.setWindowStatus(id, "visible");
@@ -72,7 +97,7 @@ export const WindowDockItem = ({
           </div>
         )}
         {children}
-      </div>
+      </WindowDockItemView>
     );
   }
 };

@@ -130,7 +130,7 @@ export const ControlButtons = () => {
       <BpmInput />
       <MasterVolumeInput />
       <MidiInButtonContainer />
-      <PickerLaunchButton />
+      {/* <PickerLaunchButton /> */}
       <SecondBarButton />
       {/* <WindowEvacuationButton /> */}
     </div>

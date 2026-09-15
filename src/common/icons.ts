@@ -9,6 +9,7 @@ import { FiMenu } from "react-icons/fi";
 import { IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
 import { PiPianoKeysFill, PiTrash } from "react-icons/pi";
+import { TbAppsFilled } from "react-icons/tb";
 
 export const Icons = {
   ArrowRightFromBracket: FaArrowRightFromBracket,
@@ -24,4 +25,5 @@ export const Icons = {
   Menu: FiMenu,
   DirectionRight: BsArrowRight,
   Timeline: MdOutlineViewTimeline,
+  Apps: TbAppsFilled,
 };
