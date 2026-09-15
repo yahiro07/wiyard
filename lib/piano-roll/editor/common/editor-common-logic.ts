@@ -1,7 +1,7 @@
-import { bottomLimit } from "@lib/utils/number-helper";
+import { bottomLimit, clampValue } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { SongKeySpec } from "wafer-host/unit-types";
-import { EditorKind, Note } from "../../definitions/types";
+import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { useAppContext } from "../../root/app-context";
 import { DisplaySpec, SectionRange } from "./editor-types";
 
@@ -143,3 +143,11 @@ export const diatonicLanesPitchHelper = {
     return Math.round(originalPitch + (deltaYi * 12) / 7);
   },
 };
+
+export function getLoopBarLengthForStep(xiFloat: number): LoopBarLength {
+  return clampValue(
+    (1 << Math.ceil(Math.log2(Math.floor(xiFloat / 4) + 1))) * 0.25,
+    0.25,
+    16,
+  ) as LoopBarLength;
+}

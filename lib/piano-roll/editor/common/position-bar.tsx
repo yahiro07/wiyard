@@ -1,8 +1,8 @@
-import { clampValue, seqNumbers } from "@lib/utils/number-helper";
+import { seqNumbers } from "@lib/utils/number-helper";
 import { useCallback } from "react";
-import { LoopBarLength } from "../../definitions/types";
 import { useAppContext, useStoreAccess } from "../../root/app-context";
 import { HorizontalScrollPlane } from "./editor-common-layout";
+import { getLoopBarLengthForStep } from "./editor-common-logic";
 import { DisplaySpec } from "./editor-types";
 
 type PositionBarProps = {
@@ -20,11 +20,7 @@ function usePositionBarPointerHandler(displaySteps: number) {
       const el = e.currentTarget as HTMLElement;
       const rect = el.getBoundingClientRect();
       const xiFloat = ((e.clientX - rect.left) / rect.width) * displaySteps;
-      const nextLoopBars = clampValue(
-        (1 << Math.ceil(Math.log2(Math.floor(xiFloat / 4) + 1))) * 0.25,
-        0.25,
-        16,
-      ) as LoopBarLength;
+      const nextLoopBars = getLoopBarLengthForStep(xiFloat);
       if (nextLoopBars !== store.state.loopBars) {
         store.setLoopBars(nextLoopBars);
       }

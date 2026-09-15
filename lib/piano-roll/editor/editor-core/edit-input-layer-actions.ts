@@ -2,7 +2,10 @@ import { startDragSessionV0 } from "@lib/utils/drag-session-v0";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
 import { AppStore } from "../../root/store";
-import { diatonicLanesPitchHelper } from "../common/editor-common-logic";
+import {
+  diatonicLanesPitchHelper,
+  getLoopBarLengthForStep,
+} from "../common/editor-common-logic";
 import { IPointerEvent, SectionRange } from "../common/editor-types";
 
 function createTapChecker() {
@@ -230,6 +233,12 @@ export function createNoteEditActions(
               self.removeNote(noteLatest.id);
             }
             storeAccess.setPreviewNotePitch(null);
+
+            if (isNewNote && editorKind !== "pattern") {
+              self.autoExtendEnsureLoopBarsForTail(
+                noteLatest.position + noteLatest.duration,
+              );
+            }
           },
           onUpOrCancel() {
             setCursor("auto");
@@ -237,6 +246,12 @@ export function createNoteEditActions(
         },
         { coordinate: "page" },
       );
+    },
+    autoExtendEnsureLoopBarsForTail(tail: number) {
+      const idealLoopBar = getLoopBarLengthForStep(tail - 0.01);
+      if (store.state.loopBars < idealLoopBar) {
+        store.setLoopBars(idealLoopBar);
+      }
     },
     extendLoopBars() {
       const { loopBars } = store.state;

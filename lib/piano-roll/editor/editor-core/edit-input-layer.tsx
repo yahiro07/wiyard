@@ -23,8 +23,10 @@ export const EditInputLayer = () => {
       e.clientY,
     );
     if (xiFloat > loopSteps) {
-      noteEditActions.extendLoopBars();
-      return;
+      if (store.state.loopGhostEnabled) {
+        noteEditActions.autoExtendEnsureLoopBarsForTail(xiFloat);
+        return;
+      }
     }
     const hitNoteInfo = hitTestNote(
       notes,

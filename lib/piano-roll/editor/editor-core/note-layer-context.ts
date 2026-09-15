@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { EditorKind, Note } from "../../definitions/types";
-import { SectionRange, DisplaySpec } from "../common/editor-types";
+import { DisplaySpec, SectionRange } from "../common/editor-types";
 
 export type NoteLayerContextValue = {
   sectionRange: SectionRange;
