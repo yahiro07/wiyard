@@ -44,6 +44,7 @@ export type StoreState = {
   projectLoadedIndex: number;
   projectLoading: boolean;
   secondBarVisible: boolean;
+  userSelfProjectActive: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -73,6 +74,7 @@ const blankStoreState: StoreState = {
   projectLoading: false,
   secondBarVisible: false,
   uiScaling: 1,
+  userSelfProjectActive: true,
 };
 
 export const projectResetterStates: Partial<StoreState> = {

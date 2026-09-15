@@ -3,6 +3,7 @@ import { dequal } from "dequal";
 import { appConfig } from "@/common/app-config";
 import { projectDataIo } from "@/project/project-data-io";
 import { ProjectData } from "@/project/project-types";
+import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
 
 type AppSessionStates = {
@@ -31,17 +32,25 @@ export const appPersistence = {
     console.log("saved");
     // console.log(JSON.stringify(data, null, 2));
   },
-  load() {
-    const text = localStorage.getItem("wireboard-states");
-    if (!text) return;
+  async load() {
     try {
-      void (async () => {
-        const { projectData, sessionStates } = JSON.parse(
-          text,
-        ) as PersistenceData;
-        store.assign(sessionStates);
-        await projectDataIo.applyProjectData(projectData);
-      })();
+      const text = localStorage.getItem("wireboard-states");
+      let userSelfProject: ProjectData | undefined;
+      if (text) {
+        const data = JSON.parse(text) as PersistenceData;
+        store.assign(data.sessionStates);
+        userSelfProject = data.projectData;
+      }
+      const sharedUrlProject = sharedUrlSupport.loadSharedUrlDataIfExists();
+      if (sharedUrlProject) {
+        store.setUserSelfProjectActive(false);
+        await projectDataIo.applyProjectData(sharedUrlProject);
+      } else {
+        store.setUserSelfProjectActive(true);
+        if (userSelfProject) {
+          await projectDataIo.applyProjectData(userSelfProject);
+        }
+      }
     } catch (error) {
       console.error(error);
     }
@@ -50,12 +59,14 @@ export const appPersistence = {
 if (appConfig.isDevelopment && 1) {
   //bypass persistence for debug
   typedAssign(appPersistence, {
-    load() {},
+    async load() {},
     save() {},
   });
 }
 
 export function setupAutoPersistenceTask() {
+  if (!store.state.userSelfProjectActive) return;
+
   let latestData = appPersistence.emitPersistenceData();
   const internal = {
     ensureLatestSaved() {
