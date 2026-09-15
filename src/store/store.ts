@@ -106,7 +106,7 @@ if (1) {
   // store.setSequencerWindowVisible(true);
   Object.assign(defaultStoreState, {
     // unitPickerVisible: true,
-    uiScaling: 0.9,
+    // uiScaling: 0.9,
   });
 }
 

@@ -1,6 +1,8 @@
 import { cz } from "@lib/utils/cz";
 import { Icons } from "@/common/icons";
+import { Knob } from "@/components/knob";
 import { NumberSlider } from "@/components/number-slider";
+import { UpperLabel } from "@/components/upper-label";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 import { MidiInButtonContainer } from "@/views/controls/midi-in-button";
@@ -74,28 +76,24 @@ export const PlaybackButton = () => {
 export const BpmInput = () => {
   const { bpm } = store.useSnapshot();
   return (
-    <NumberSlider
-      label="tempo"
-      value={bpm}
-      min={60}
-      max={180}
-      step={1}
-      onChange={store.setBpm}
-    />
+    <UpperLabel label="tempo">
+      <NumberSlider
+        value={bpm}
+        min={60}
+        max={180}
+        step={1}
+        onChange={store.setBpm}
+      />
+    </UpperLabel>
   );
 };
 
 export const MasterVolumeInput = () => {
   const { masterVolume } = store.useSnapshot();
   return (
-    <NumberSlider
-      label="master"
-      value={masterVolume}
-      onChange={store.setMasterVolume}
-      max={1}
-      step={0.01}
-      fracDigits={2}
-    />
+    <UpperLabel label="master">
+      <Knob value={masterVolume} onChange={store.setMasterVolume} />
+    </UpperLabel>
   );
 };
 
@@ -111,21 +109,20 @@ export const SecondBarButton = () => {
 export const SightZoomInput = () => {
   const { sight } = store.useSnapshot();
   return (
-    <NumberSlider
-      label="zoom"
-      value={sight.eyeScaling}
-      onChange={(v) => store.patchSight({ eyeScaling: v })}
-      min={0.1}
-      max={2}
-      step={0.01}
-      fracDigits={2}
-    />
+    <UpperLabel label="zoom">
+      <Knob
+        value={sight.eyeScaling}
+        onChange={(v) => store.patchSight({ eyeScaling: v })}
+        min={0.1}
+        max={2}
+      />
+    </UpperLabel>
   );
 };
 
-export const ControlButtons = ({ vertical }: { vertical?: boolean }) => {
+export const ControlButtons = () => {
   return (
-    <div className={cz(vertical ? "flex-v" : "flex-h", "gap-4")}>
+    <div className="flex-ha gap-4">
       <div className="invisible">
         <SecondBarButton />
       </div>

@@ -19,10 +19,14 @@ export const TopBar = () => {
       <div className="invisible">
         <ControlButtonsRight />
       </div>
-      <ControlButtons />
-      <ControlButtonsRight />
-      <div className="absolute-full pointer-events-none text-lg flex-ha pl-2">
-        wafer wireboard (under development)
+      <div className="pt-2">
+        <ControlButtons />
+      </div>
+      <div className="pt-2">
+        <ControlButtonsRight />
+      </div>
+      <div className="absolute-full pointer-events-none text-xl font-500 flex-ha pl-2">
+        Wireboard
       </div>
     </div>
   );
