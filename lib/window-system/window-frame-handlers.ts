@@ -23,35 +23,22 @@ export const windowFrameHandlers = {
     } else {
       actions.setCurrentWindowId(windowCoordVm.windowId);
       const originalWindowBounds = windowCoordVm.windowBounds;
-      let latestDist = 0;
-
-      let timerId: NodeJS.Timeout | undefined = setTimeout(() => {
-        if (latestDist < 4) {
-          // actions.toggleWindowMinimized(windowCoordVm.windowId);
-        }
-      }, 250);
-
-      const cancelTimer = () => {
-        if (timerId) {
-          clearTimeout(timerId);
-          timerId = undefined;
-        }
-      };
-
-      startDragSessionEx(e0, {
-        onMove(_, delta) {
-          const bounds = windowPlacementHelper.updatePosition(
-            originalWindowBounds,
-            delta,
-          );
-          windowCoordVm.setWindowBounds(bounds);
-
-          latestDist = Math.hypot(delta.x, delta.y);
+      startDragSessionEx(
+        e0,
+        {
+          onMove(_, delta) {
+            const bounds = windowPlacementHelper.updatePosition(
+              originalWindowBounds,
+              delta,
+            );
+            windowCoordVm.setWindowBounds(bounds);
+          },
+          onHold() {
+            // actions.toggleWindowMinimized(windowCoordVm.windowId);
+          },
         },
-        onEnd() {
-          cancelTimer();
-        },
-      });
+        { holdDurationTh: 300 },
+      );
     }
 
     e0.stopPropagation();
