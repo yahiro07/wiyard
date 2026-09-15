@@ -38,7 +38,7 @@ const ControlButton = ({
   );
 };
 
-const PickerLaunchButton = () => {
+const _PickerLaunchButton = () => {
   const { projectLoading } = store.useSnapshot();
   return (
     <ControlButton
@@ -49,7 +49,7 @@ const PickerLaunchButton = () => {
   );
 };
 
-const WindowEvacuationButton = () => {
+const _WindowEvacuationButton = () => {
   // const { windowSpecs } = store.useSnapshot();
   // const hasWindow = Object.values(windowSpecs).some(
   //   (spec) => spec.status === "visible",
