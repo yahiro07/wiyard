@@ -46,7 +46,10 @@ export const projectDataIo = {
   checkCompatibility(data: ProjectData) {
     return data.formatCode === projectsConstants.formatCode;
   },
-  async applyProjectData(data: ProjectDataCore) {
+  async applyProjectData(
+    data: ProjectDataCore,
+    importedProjectFileName?: string,
+  ) {
     const { storeStates, unitStates } = data;
     store.setProjectLoading(true);
     try {
@@ -54,6 +57,7 @@ export const projectDataIo = {
         ...projectResetterStates,
         ...helpers.filterStoreStateFields(storeStates),
         projectLoadedIndex: store.state.projectLoadedIndex + 1,
+        importedProjectFileName: importedProjectFileName ?? null,
       });
       await hostSystem.waitUnitsLoaded();
       if (unitStates) {

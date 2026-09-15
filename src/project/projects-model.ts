@@ -5,6 +5,7 @@ import {
   downloadFile,
   loadLocalFileText,
 } from "@/project/projects-model-helper";
+import { store } from "@/store/store";
 
 export type ProjectsModel = {
   exportProject(): void;
@@ -19,18 +20,18 @@ function createProjectsModel(): ProjectsModel {
       const projectData = projectDataIo.emitProjectData();
       const text = JSON.stringify(projectData, null, 2);
       const uri = `data:application/json;charset=utf-8,${encodeURIComponent(text)}`;
-      const fileName = "project.json";
+      const fileName = store.state.importedProjectFileName ?? "project.json";
       downloadFile(uri, fileName);
     },
     async importProject() {
       try {
-        const text = await loadLocalFileText();
-        if (!text) return;
-        const data = JSON.parse(text) as ProjectData;
-        if (projectDataIo.checkCompatibility(data)) {
-          await projectDataIo.applyProjectData(data);
+        const res = await loadLocalFileText();
+        if (!res) return;
+        const projectData = JSON.parse(res.content) as ProjectData;
+        if (projectDataIo.checkCompatibility(projectData)) {
+          await projectDataIo.applyProjectData(projectData, res.fileName);
         } else {
-          alert(`incompatible project format: ${data.formatCode}`);
+          alert(`incompatible project format: ${projectData.formatCode}`);
         }
       } catch (error) {
         console.warn("error importing project", error);

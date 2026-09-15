@@ -45,6 +45,7 @@ export type StoreState = {
   projectLoading: boolean;
   secondBarVisible: boolean;
   userSelfProjectActive: boolean;
+  importedProjectFileName: string | null;
 };
 
 const blankStoreState: StoreState = {
@@ -75,6 +76,7 @@ const blankStoreState: StoreState = {
   secondBarVisible: false,
   uiScaling: 1,
   userSelfProjectActive: true,
+  importedProjectFileName: null,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
