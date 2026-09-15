@@ -35,15 +35,27 @@ export const WindowDockItemView = ({
   onClick?: () => void;
 }) => {
   return (
-    <div
-      className={cz(
-        "w-40px h-40px rounded-8px overflow-hidden",
-        "cursor-pointer hover:opacity-80",
-      )}
-      style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
-      onClick={onClick}
-    >
-      {children}
+    <div className="relative group">
+      <div
+        className={cz(
+          "w-40px h-40px rounded-8px overflow-hidden",
+          "cursor-pointer hover:opacity-80",
+        )}
+        style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
+        onClick={onClick}
+      >
+        {children}
+        <div
+          className={cz(
+            "absolute-left-center w-auto whitespace-nowrap ml-44px py-0.5",
+            "bg-#606068cc rounded-6px px-2 text-15px",
+            "invisible opacity-0 group-hover:visible group-hover:opacity-100",
+            "transition-opacity duration-200",
+          )}
+        >
+          {title}
+        </div>
+      </div>
     </div>
   );
 };
