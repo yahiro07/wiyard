@@ -8,7 +8,7 @@ export const WindowDock = ({ children }: { children: ReactNode }) => {
       <div className="absolute-left-center z-1">
         <div
           className={cz(
-            "w-55px min-h-140px m-2 flex-vc gap-2 py-6",
+            "w-60px min-h-140px m-2 flex-vc gap-2 py-6",
             // "h-55px min-w-140px m-2 flex-c gap-2 px-6",
           )}
           style={{
