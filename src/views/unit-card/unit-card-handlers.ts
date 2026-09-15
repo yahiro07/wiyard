@@ -1,9 +1,9 @@
 import { startDragSessionEx } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
 import { getGraphEditPlaneElement } from "@/common/constants";
-import { kSequencerWindowId, UnitItem } from "@/domain/types";
+import { UnitItem } from "@/domain/types";
 import { actions } from "@/store/actions";
-import { store, windowSystem } from "@/store/store";
+import { windowSystem } from "@/store/store";
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;
 
@@ -33,15 +33,7 @@ export const unitCardHandlers = {
             actions.setWindowStatus(unitItem.unitId, "visible");
             windowSystem.setCurrentWindow(unitItem.unitId);
           } else if (unitItem.type === "noteInput") {
-            const isCurrentNoteCh =
-              store.state.currentNoteChannelId === unitItem.unitId;
-            if (isCurrentNoteCh) {
-              windowSystem.setEvacuate(false);
-              actions.setWindowStatus(kSequencerWindowId, "visible");
-              windowSystem.setCurrentWindow(kSequencerWindowId);
-            } else {
-              actions.setCurrentNoteChannelId(unitItem.unitId);
-            }
+            actions.setCurrentNoteChannelId(unitItem.unitId);
           }
         },
         onHold() {
