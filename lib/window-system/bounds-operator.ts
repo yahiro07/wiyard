@@ -1,4 +1,4 @@
-import { Point, Rect, Size } from "@lib/utils/common-types";
+import { Point, Rect, Size, Vector } from "@lib/utils/common-types";
 
 type BoundsCornerSpec = "tl" | "tr" | "bl" | "br";
 
@@ -144,10 +144,41 @@ export class BoundsOperator {
     }
     return { x: this.left, y: this.top };
   }
-  normalize(): void {
+  normalize() {
     if (this.left > this.right)
       [this.left, this.right] = [this.right, this.left];
     if (this.top > this.bottom)
       [this.top, this.bottom] = [this.bottom, this.top];
+    return this;
+  }
+  clampInAreaKeepingSize(outer: Rect) {
+    if (this.left < outer.x) {
+      const d = outer.x - this.left;
+      this.left += d;
+      this.right += d;
+    }
+    if (this.right > outer.x + outer.width) {
+      const d = this.right - (outer.x + outer.width);
+      this.left -= d;
+      this.right -= d;
+    }
+    if (this.top < outer.y) {
+      const d = outer.y - this.top;
+      this.top += d;
+      this.bottom += d;
+    }
+    if (this.bottom > outer.y + outer.height) {
+      const d = this.bottom - (outer.y + outer.height);
+      this.top -= d;
+      this.bottom -= d;
+    }
+    return this;
+  }
+  move(moveAmount: Vector) {
+    this.left += moveAmount.x;
+    this.right += moveAmount.x;
+    this.top += moveAmount.y;
+    this.bottom += moveAmount.y;
+    return this;
   }
 }

@@ -6,7 +6,7 @@ import { windowBoundsConverter } from "./window-placement-logic";
 export type WindowCoordViewModel = {
   windowId: string;
   position: Point;
-  setPosition: (position: Point) => void;
+  // setPosition: (position: Point) => void;
   contentSize: Size;
   setContentSize: (size: Size) => void;
   windowBounds: Rect;
@@ -31,15 +31,17 @@ export function useWindowCoordViewModel(
   return {
     windowId,
     position: windowSpec.position,
-    setPosition(position: Point) {
-      actionsInternal.patchWindowSpec(windowId, { position });
-    },
+    // setPosition(position: Point) {
+    //   // if (!windowPlacementHelper.canAcceptWindowBounds(bounds)) return;
+    //   actionsInternal.patchWindowSpec(windowId, { position });
+    // },
     contentSize: windowSpec.contentSize,
     setContentSize(contentSize: Size) {
       actionsInternal.patchWindowSpec(windowId, { contentSize });
     },
     windowBounds,
     setWindowBounds(bounds: Rect) {
+      // if (!windowPlacementHelper.canAcceptWindowBounds(bounds)) return;
       const { position, contentSize } =
         windowBoundsConverter.toWindowSpecCoords(bounds);
       actionsInternal.patchWindowSpec(windowId, {

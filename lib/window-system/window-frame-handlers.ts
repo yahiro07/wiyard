@@ -1,15 +1,9 @@
 import { startDragSessionEx } from "@lib/utils/drag-session";
-import { vectorOp } from "@lib/utils/geometry-helper";
 import { actions, storeSlice } from "./store";
-import { BoundsAnchor, updateWindowBounds } from "./window-placement-logic";
+import { BoundsAnchor, windowPlacementHelper } from "./window-placement-logic";
 import { WindowCoordViewModel } from "./window-view-models";
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;
-
-function getDeskAreaElement() {
-  //todo: pass desk area element from app to window system
-  return document.getElementById("domDeskArea") as HTMLElement;
-}
 
 export const windowFrameHandlers = {
   handleBasePointerDown(_: IPointerEvent, windowId: string) {
@@ -28,7 +22,8 @@ export const windowFrameHandlers = {
       });
     } else {
       actions.setCurrentWindowId(windowCoordVm.windowId);
-      const unitOriginalPos = windowCoordVm.position;
+      const originalWindowBounds = windowCoordVm.windowBounds;
+      // const unitOriginalPos = windowCoordVm.position;
 
       let latestDist = 0;
 
@@ -47,8 +42,12 @@ export const windowFrameHandlers = {
 
       startDragSessionEx(e0, {
         onMove(_, delta) {
-          const newPos = vectorOp.add(unitOriginalPos, delta);
-          windowCoordVm.setPosition(newPos);
+          const bounds = windowPlacementHelper.updatePosition(
+            originalWindowBounds,
+            delta,
+          );
+          windowCoordVm.setWindowBounds(bounds);
+
           latestDist = Math.hypot(delta.x, delta.y);
         },
         onEnd() {
@@ -65,25 +64,20 @@ export const windowFrameHandlers = {
     anchor: BoundsAnchor,
   ) {
     const originalWindowBounds = windowCoordVm.windowBounds;
-    const coordinateBaseElement = getDeskAreaElement();
-    startDragSessionEx(
-      e0,
-      {
-        onMove(_, delta) {
-          const bounds = updateWindowBounds(
-            originalWindowBounds,
-            anchor,
-            delta,
-            {
-              contentAspectRatioSpec: windowCoordVm.contentAspectRatioSpec,
-              minContentSize: { width: 100, height: 75 },
-            },
-          );
-          windowCoordVm.setWindowBounds(bounds);
-        },
+    const contentAspectRatioSpec = windowCoordVm.contentAspectRatioSpec;
+    const minContentSize = { width: 100, height: 75 };
+
+    startDragSessionEx(e0, {
+      onMove(_, delta) {
+        const bounds = windowPlacementHelper.updateWindowBounds(
+          originalWindowBounds,
+          anchor,
+          delta,
+          { contentAspectRatioSpec, minContentSize },
+        );
+        windowCoordVm.setWindowBounds(bounds);
       },
-      { coordinateBaseElement },
-    );
+    });
     e0.stopPropagation();
   },
 };

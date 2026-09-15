@@ -54,3 +54,7 @@ export function safeParseInt(text: string, defaultValue: number) {
   const res = parseInt(text, 10);
   return Number.isFinite(res) ? res : defaultValue;
 }
+
+export function inBetween(value: number, min: number, max: number) {
+  return min <= value && value <= max;
+}

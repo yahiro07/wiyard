@@ -1,3 +1,4 @@
+import { inBetween } from "@lib/utils/number-helper";
 import { Point, Rect, Size, Vector } from "./common-types";
 
 export const vectorOp = {
@@ -47,6 +48,20 @@ export const rectOp = {
     if (corner === "br")
       return { x: rect.x + rect.width, y: rect.y + rect.height };
     return { x: rect.x, y: rect.y };
+  },
+  containsRect(outer: Rect, inner: Rect) {
+    return (
+      inner.x >= outer.x &&
+      inner.y >= outer.y &&
+      inner.x + inner.width <= outer.x + outer.width &&
+      inner.y + inner.height <= outer.y + outer.height
+    );
+  },
+  containsPoint(rect: Rect, po: Point) {
+    return (
+      inBetween(po.x, rect.x, rect.x + rect.width) &&
+      inBetween(po.y, rect.y, rect.y + rect.height)
+    );
   },
 };
 
