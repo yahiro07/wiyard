@@ -30,7 +30,7 @@ export const WindowDockItemView = ({
   children,
   onClick,
 }: {
-  title: string;
+  title?: string;
   children?: ReactNode;
   onClick?: () => void;
 }) => {
@@ -45,16 +45,18 @@ export const WindowDockItemView = ({
         onClick={onClick}
       >
         {children}
-        <div
-          className={cz(
-            "absolute-left-center w-auto whitespace-nowrap ml-44px py-0.5",
-            "bg-#606068cc rounded-6px px-2 text-15px",
-            "invisible opacity-0 group-hover:visible group-hover:opacity-100",
-            "transition-opacity duration-200",
-          )}
-        >
-          {title}
-        </div>
+        {title && (
+          <div
+            className={cz(
+              "absolute-left-center w-auto whitespace-nowrap ml-44px py-0.5",
+              "bg-#606068cc rounded-6px px-2 text-15px",
+              "invisible opacity-0 group-hover:visible group-hover:opacity-100",
+              "transition-opacity duration-200",
+            )}
+          >
+            {title}
+          </div>
+        )}
       </div>
     </div>
   );

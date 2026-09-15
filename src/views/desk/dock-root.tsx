@@ -1,13 +1,39 @@
+import { cz } from "@lib/utils/cz";
 import {
   WindowDock,
   WindowDockItem,
   WindowDockItemView,
 } from "@lib/window-system";
+import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
 import { kSequencerWindowId } from "@/domain/types";
 import { catalog } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
+
+const DockIcon = ({
+  icon: IconComponent,
+  bgColor,
+  textColor,
+  fontSize,
+}: {
+  icon: IconType;
+  bgColor: string;
+  textColor: string;
+  fontSize: number;
+}) => {
+  return (
+    <div
+      className={cz("flex-c h-full")}
+      style={{
+        background: bgColor,
+        color: textColor,
+      }}
+    >
+      <IconComponent size={fontSize} />
+    </div>
+  );
+};
 
 export const DockRoot = () => {
   const { unitItems } = store.useSnapshot();
@@ -17,9 +43,23 @@ export const DockRoot = () => {
         title="plugin picker"
         onClick={actions.toggleUnitPickerVisible}
         children={
-          <div className="flex-c h-full bg-#fff text-#ccd text-28px">
-            <Icons.Apps />
-          </div>
+          <DockIcon
+            icon={Icons.Apps}
+            bgColor="#fff"
+            textColor="#ccd"
+            fontSize={28}
+          />
+        }
+      />
+      <WindowDockItemView
+        onClick={windowSystem.toggleEvacuate}
+        children={
+          <DockIcon
+            icon={Icons.DisplayFullWidth}
+            bgColor="#909098"
+            textColor="#fff"
+            fontSize={24}
+          />
         }
       />
       <>
@@ -41,9 +81,12 @@ export const DockRoot = () => {
         id={kSequencerWindowId}
         title="piano roll"
         children={
-          <div className="flex-c h-full bg-#46a text-24px">
-            <Icons.Timeline />
-          </div>
+          <DockIcon
+            icon={Icons.Timeline}
+            bgColor="#46a"
+            textColor="#fff"
+            fontSize={24}
+          />
         }
       />
     </WindowDock>
