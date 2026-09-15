@@ -21,7 +21,7 @@ const keyTypes = [
   "whiteH",
 ];
 
-function getKeyStyle(subIndex: number, cellH: number) {
+function getKeyStyle(subIndex: number, cellH: number, pressed: boolean) {
   const keyType = keyTypes[subIndex];
   const keyStyle: Record<string, any> = {
     width: "100%",
@@ -55,6 +55,9 @@ function getKeyStyle(subIndex: number, cellH: number) {
   if (subIndex === 0) {
     keyStyle.background = "#e4e4e4";
   }
+  if (pressed) {
+    keyStyle.background = "#4dd";
+  }
   return keyStyle;
 }
 
@@ -73,7 +76,7 @@ const KeyboardKey = ({
   const label = subIndex === 0 && getNoteNameLabel(yi, octaveShift);
   const [pressed, setPressed] = useState(false);
 
-  const keyStyle = getKeyStyle(subIndex, cellH);
+  const keyStyle = getKeyStyle(subIndex, cellH, pressed);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     setPressed(true);
@@ -90,7 +93,7 @@ const KeyboardKey = ({
   return (
     <div className={styles.base} style={{ height: cellH }}>
       <div
-        className={cz(styles.inner, pressed && styles.innerPressed)}
+        className={cz(styles.inner)}
         style={keyStyle}
         onPointerDown={handlePointerDown}
       >
@@ -102,7 +105,6 @@ const KeyboardKey = ({
 const keyboardKeyStyles = {
   base: cz("relative pointer-events-none"),
   inner: cz("absolute pointer-events-auto cursor-pointer"),
-  innerPressed: "bg-#4dd!",
   label: cz(
     "flex-ha h-full justify-end p-1",
     "text-#666 text-12px",
