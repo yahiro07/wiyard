@@ -1,4 +1,4 @@
-import { Size, Vector } from "./common-types";
+import { Point, Rect, Size, Vector } from "./common-types";
 
 export const vectorOp = {
   equals(a: Vector, b: Vector) {
@@ -33,6 +33,20 @@ export const sizeOp = {
   },
   rounded(size: Size) {
     return { width: Math.round(size.width), height: Math.round(size.height) };
+  },
+};
+
+export const rectOp = {
+  center(rect: Rect) {
+    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+  },
+  corner(rect: Rect, corner: "tl" | "tr" | "bl" | "br"): Point {
+    if (corner === "tl") return { x: rect.x, y: rect.y };
+    if (corner === "tr") return { x: rect.x + rect.width, y: rect.y };
+    if (corner === "bl") return { x: rect.x, y: rect.y + rect.height };
+    if (corner === "br")
+      return { x: rect.x + rect.width, y: rect.y + rect.height };
+    return { x: rect.x, y: rect.y };
   },
 };
 
