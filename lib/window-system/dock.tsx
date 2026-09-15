@@ -47,7 +47,8 @@ export const WindowDockItem = ({
     return (
       <div
         className={cz(
-          "w-40px h-40px rounded-8px overflow-hidden cursor-pointer",
+          "w-40px h-40px rounded-8px overflow-hidden",
+          "cursor-pointer hover:opacity-80",
         )}
         style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
         onClick={() => {
