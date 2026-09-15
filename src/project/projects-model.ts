@@ -2,6 +2,7 @@ import { KeyName } from "@lib/contract";
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
+import { appConfig } from "@/common/app-config";
 import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import { UnitItem, WindowId } from "@/domain/types";
@@ -12,6 +13,10 @@ import {
 } from "@/project/projects-model-helper";
 import { projectResetterStates, StoreState, store } from "@/store/store";
 
+const projectsConstants = {
+  formatCode: "WBP1",
+};
+
 export type ProjectsModel = {
   exportProject(): void;
   importProject(): void;
@@ -20,6 +25,8 @@ export type ProjectsModel = {
 };
 
 type ProjectData = {
+  appVersionCode: string;
+  pageDeployId: string;
   formatCode: string;
   unitItems: UnitItem[];
   windowSpecs: Record<WindowId, WindowSpec>;
@@ -28,9 +35,9 @@ type ProjectData = {
   currentWindowId: string | null;
   windowsEvacuated: boolean;
   bpm: number;
-  unitStates: HsUnitStateData[];
   sight: FieldSight;
   keyName: KeyName;
+  unitStates: HsUnitStateData[];
 };
 
 const helpers = {
@@ -38,6 +45,8 @@ const helpers = {
     return pickObjectMembers(
       data,
       {
+        appVersionCode: 1,
+        pageDeployId: 1,
         formatCode: 1,
         unitItems: 1,
         windowSpecs: 1,
@@ -59,7 +68,9 @@ const projectDataIo = {
   emitProjectData(): ProjectData {
     const unitStates = hostSystem.getAllUnitStates();
     return {
-      formatCode: "WBP1",
+      appVersionCode: appConfig.appVersionCode,
+      pageDeployId: appConfig.cfPageDeployId,
+      formatCode: projectsConstants.formatCode,
       ...pickObjectMembers(store.state, {
         unitItems: 1,
         windowSpecs: 1,
@@ -94,7 +105,13 @@ const projectDataIo = {
     }
   },
   async applyProjectData(data: ProjectData) {
-    const { formatCode, unitStates, ...storeAttrs } = data;
+    const {
+      appVersionCode,
+      pageDeployId,
+      formatCode,
+      unitStates,
+      ...storeAttrs
+    } = data;
     await projectDataIo.applyProjectStoreStates(storeAttrs, unitStates);
   },
 };
@@ -113,7 +130,7 @@ function createProjectsModel(): ProjectsModel {
         const text = await loadLocalFileText();
         if (!text) return;
         const data = JSON.parse(text) as ProjectData;
-        if (data.formatCode === "WBP1") {
+        if (data.formatCode === projectsConstants.formatCode) {
           const data1 = helpers.filterLoadedProjectDataFields(data);
           await projectDataIo.applyProjectData(data1);
         } else {

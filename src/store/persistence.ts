@@ -1,4 +1,5 @@
-import { pickObjectMembers } from "@lib/utils/array-object-helper";
+import { KeyName } from "@lib/contract";
+import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
 import { WindowSpec } from "@lib/window-system";
 import { dequal } from "dequal";
 import { HsUnitStateData } from "wafer-host/core";
@@ -7,7 +8,6 @@ import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import { UnitItem, WindowId } from "@/domain/types";
 import { store } from "@/store/store";
-import { KeyName } from "@lib/contract";
 
 type PersistenceData = {
   unitItems: UnitItem[];
@@ -69,7 +69,7 @@ export const persistence = {
 };
 if (appConfig.isDevelopment && 1) {
   //bypass persistence for debug
-  Object.assign(persistence, {
+  typedAssign(persistence, {
     load() {},
     save() {},
   });

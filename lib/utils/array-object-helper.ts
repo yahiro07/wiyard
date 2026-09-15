@@ -47,3 +47,7 @@ export function mapObjectValues<T, R>(
     Object.entries(obj).map(([key, value]) => [key, fn(value, key)]),
   );
 }
+
+export function typedAssign<T extends object>(target: T, attrs: Partial<T>) {
+  return Object.assign(target, attrs);
+}
