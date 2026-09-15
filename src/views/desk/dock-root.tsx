@@ -52,6 +52,7 @@ export const DockRoot = () => {
         }
       />
       <WindowDockItemView
+        title="desk view"
         onClick={windowSystem.toggleEvacuate}
         children={
           <DockIcon
