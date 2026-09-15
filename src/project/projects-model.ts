@@ -1,17 +1,18 @@
-import { KeyName } from "@lib/contract";
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
-import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
 import { appConfig } from "@/common/app-config";
-import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
-import { UnitItem, WindowId } from "@/domain/types";
 import { blankScene, defaultScene } from "@/project/default-data";
+import {
+  ProjectData,
+  ProjectDataCore,
+  ProjectStoreStates,
+} from "@/project/project-types";
 import {
   downloadFile,
   loadLocalFileText,
 } from "@/project/projects-model-helper";
-import { projectResetterStates, StoreState, store } from "@/store/store";
+import { projectResetterStates, store } from "@/store/store";
 
 const projectsConstants = {
   formatCode: "WBP1",
@@ -24,30 +25,11 @@ export type ProjectsModel = {
   loadDemoProject(): void;
 };
 
-type ProjectData = {
-  appVersionCode: string;
-  pageDeployId: string;
-  formatCode: string;
-  unitItems: UnitItem[];
-  windowSpecs: Record<WindowId, WindowSpec>;
-  wireConnectionKeys: string[];
-  currentNoteChannelId: string;
-  currentWindowId: string | null;
-  windowsEvacuated: boolean;
-  bpm: number;
-  sight: FieldSight;
-  keyName: KeyName;
-  unitStates: HsUnitStateData[];
-};
-
 const helpers = {
-  filterLoadedProjectDataFields(data: ProjectData) {
+  filterProjectStoreStateFields(storeStates: ProjectStoreStates) {
     return pickObjectMembers(
-      data,
+      storeStates,
       {
-        appVersionCode: 1,
-        pageDeployId: 1,
-        formatCode: 1,
         unitItems: 1,
         windowSpecs: 1,
         wireConnectionKeys: 1,
@@ -55,7 +37,6 @@ const helpers = {
         currentWindowId: 1,
         windowsEvacuated: 1,
         bpm: 1,
-        unitStates: 1,
         sight: 1,
         keyName: 1,
       },
@@ -71,7 +52,7 @@ const projectDataIo = {
       appVersionCode: appConfig.appVersionCode,
       pageDeployId: appConfig.cfPageDeployId,
       formatCode: projectsConstants.formatCode,
-      ...pickObjectMembers(store.state, {
+      storeStates: pickObjectMembers(store.state, {
         unitItems: 1,
         windowSpecs: 1,
         wireConnectionKeys: 1,
@@ -86,14 +67,14 @@ const projectDataIo = {
     };
   },
   async applyProjectStoreStates(
-    storeAttrs: Partial<StoreState>,
+    storeStates: ProjectStoreStates,
     unitStates?: HsUnitStateData[],
   ) {
     store.setProjectLoading(true);
     try {
       store.assign({
         ...projectResetterStates,
-        ...storeAttrs,
+        ...helpers.filterProjectStoreStateFields(storeStates),
         projectLoadedIndex: store.state.projectLoadedIndex + 1,
       });
       await hostSystem.waitUnitsLoaded();
@@ -104,15 +85,9 @@ const projectDataIo = {
       store.setProjectLoading(false);
     }
   },
-  async applyProjectData(data: ProjectData) {
-    const {
-      appVersionCode,
-      pageDeployId,
-      formatCode,
-      unitStates,
-      ...storeAttrs
-    } = data;
-    await projectDataIo.applyProjectStoreStates(storeAttrs, unitStates);
+  async applyProjectData(data: ProjectDataCore) {
+    const { storeStates, unitStates } = data;
+    await projectDataIo.applyProjectStoreStates(storeStates, unitStates);
   },
 };
 
@@ -131,8 +106,7 @@ function createProjectsModel(): ProjectsModel {
         if (!text) return;
         const data = JSON.parse(text) as ProjectData;
         if (data.formatCode === projectsConstants.formatCode) {
-          const data1 = helpers.filterLoadedProjectDataFields(data);
-          await projectDataIo.applyProjectData(data1);
+          await projectDataIo.applyProjectData(data);
         } else {
           alert(`incompatible project format: ${data.formatCode}`);
         }
@@ -141,10 +115,10 @@ function createProjectsModel(): ProjectsModel {
       }
     },
     loadBlankProject() {
-      projectDataIo.applyProjectStoreStates(blankScene);
+      projectDataIo.applyProjectData(blankScene);
     },
     loadDemoProject() {
-      projectDataIo.applyProjectStoreStates(defaultScene);
+      projectDataIo.applyProjectData(defaultScene);
     },
   };
 }

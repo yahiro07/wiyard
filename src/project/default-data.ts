@@ -1,11 +1,12 @@
 import { KeyName } from "@lib/contract";
 import { appConfig } from "@/common/app-config";
 import { UnitItem } from "@/domain/types";
+import { ProjectDataCore } from "@/project/project-types";
 
 const ox = 2000 - 500;
 const oy = 1400 - 350;
 
-function createDefaultScene() {
+function createDefaultScene(): ProjectDataCore {
   const unitItems: UnitItem[] = [
     {
       type: "noteInput",
@@ -55,17 +56,24 @@ function createDefaultScene() {
   }
 
   return {
-    unitItems,
-    currentNoteChannelId: "noteInputPort1",
-    wireConnectionKeys,
-    sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
-    keyName: "C" as KeyName,
+    storeStates: {
+      unitItems,
+      currentNoteChannelId: "noteInputPort1",
+      wireConnectionKeys,
+      sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
+      keyName: "C" as KeyName,
+      windowSpecs: {},
+      windowsEvacuated: false,
+      currentWindowId: null,
+      bpm: 120,
+    },
+    unitStates: [],
   };
 }
 
 export const defaultScene = createDefaultScene();
 
-function createBlankScene() {
+function createBlankScene(): ProjectDataCore {
   const unitItems: UnitItem[] = [
     {
       type: "noteInput",
@@ -80,10 +88,18 @@ function createBlankScene() {
     },
   ];
   return {
-    unitItems,
-    currentNoteChannelId: "noteInputPort1",
-    sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
-    keyName: "C" as KeyName,
+    storeStates: {
+      unitItems,
+      wireConnectionKeys: [],
+      currentNoteChannelId: "noteInputPort1",
+      sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
+      keyName: "C" as KeyName,
+      windowSpecs: {},
+      windowsEvacuated: false,
+      currentWindowId: null,
+      bpm: 120,
+    },
+    unitStates: [],
   };
 }
 export const blankScene = createBlankScene();
