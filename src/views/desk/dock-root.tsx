@@ -14,7 +14,7 @@ export const DockRoot = () => {
   return (
     <WindowDock>
       <WindowDockItemView
-        title="apps"
+        title="plugin picker"
         onClick={actions.toggleUnitPickerVisible}
         children={
           <div className="flex-c h-full bg-#fff text-#ccd text-28px">

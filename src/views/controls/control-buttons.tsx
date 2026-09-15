@@ -27,6 +27,7 @@ const ControlButton = ({
         "flex-c text-2xl w-40px h-30px cursor-pointer",
         disabled && "opacity-30 pointer-events-none",
         active && "text-#0cf",
+        "hover:opacity-80",
       )}
       onClick={onClick}
     >

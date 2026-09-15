@@ -20,7 +20,7 @@ const ProjectButton = ({
       type="button"
       className={cz(
         "flex-c h-32px cursor-pointer",
-        "w-66px bg-#6678",
+        "w-66px bg-#667a rounded",
         disabled && "opacity-30 pointer-events-none",
         active && "text-#0cf",
         "hover:opacity-80",
