@@ -6,6 +6,7 @@ export type WindowSpec = {
   position: Point; //center of the content plane, from top left corner of the desk area
   contentSize: Size; //size of content, excluding title bar
   status: WindowStatus;
+  pinned?: boolean;
   freeRatio?: boolean;
 };
 

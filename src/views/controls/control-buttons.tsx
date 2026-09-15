@@ -27,6 +27,7 @@ const ControlButton = ({
         "flex-c text-2xl w-40px h-30px cursor-pointer",
         disabled && "opacity-30 pointer-events-none",
         active && "text-#0cf",
+        "hover:opacity-80",
       )}
       onClick={onClick}
     >
@@ -56,7 +57,7 @@ export const WindowEvacuationButton = () => {
     <ControlButton
       onClick={windowSystem.toggleEvacuate}
       // disabled={!hasWindow}
-      children={<Icons.DisplayFullWidth />}
+      children={<Icons.Desktop />}
     />
   );
 };
@@ -130,7 +131,7 @@ export const ControlButtons = () => {
       <BpmInput />
       <MasterVolumeInput />
       <MidiInButtonContainer />
-      <PickerLaunchButton />
+      {/* <PickerLaunchButton /> */}
       <SecondBarButton />
       {/* <WindowEvacuationButton /> */}
     </div>

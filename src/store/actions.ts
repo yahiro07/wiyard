@@ -72,7 +72,7 @@ export const actions = {
         position,
         contentSize,
         status,
-        ...(isSequencer ? { freeRatio: true } : {}),
+        ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
       };
       windowSystem.add(windowId, newWindowSpec);
       windowSystem.setCurrentWindow(windowId);
