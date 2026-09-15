@@ -3,13 +3,6 @@ import { ReactNode } from "react";
 import { actions, storeSlice } from "./store";
 
 export const WindowDock = ({ children }: { children: ReactNode }) => {
-  const { windowSpecs } = storeSlice.useSnapshot();
-  const minimizedWindows = Object.values(windowSpecs).filter(
-    (window) => window.status === "minimized",
-  );
-  if (minimizedWindows.length === 0) {
-    return null;
-  }
   return (
     <>
       <div className="absolute-left-center z-1">
@@ -36,14 +29,18 @@ export const WindowDockItem = ({
   id,
   title,
   imageUrl,
+  children,
 }: {
   id: string;
   title: string;
   imageUrl?: string;
+  children?: ReactNode;
 }) => {
   const { windowSpecs } = storeSlice.useSnapshot();
   const windowSpec = windowSpecs[id];
-  if (windowSpec?.status === "minimized") {
+  const minimized = windowSpec?.status === "minimized";
+  const pinned = windowSpec?.pinned;
+  if (minimized || pinned) {
     return (
       <div
         className={cz(
@@ -52,22 +49,29 @@ export const WindowDockItem = ({
         )}
         style={{ boxShadow: "0 0px 1px rgba(0, 0, 0, 0.6)" }}
         onClick={() => {
-          actions.setWindowsEvacuated(false);
-          actions.setWindowStatus(id, "visible");
-          actions.setCurrentWindowId(id);
+          if (pinned) {
+            actions.toggleWindowMinimized(id);
+            actions.setCurrentWindowId(id);
+          } else {
+            actions.setWindowsEvacuated(false);
+            actions.setWindowStatus(id, "visible");
+            actions.setCurrentWindowId(id);
+          }
         }}
       >
-        {imageUrl ? (
+        {imageUrl && (
           <img
             src={imageUrl}
             alt={title}
             className="w-full h-full object-cover"
           />
-        ) : (
+        )}
+        {!imageUrl && !children && (
           <div className="h-full flex-c font-bold text-lg bg-#888">
             {title.charAt(0).toUpperCase()}
           </div>
         )}
+        {children}
       </div>
     );
   }

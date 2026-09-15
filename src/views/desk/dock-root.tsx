@@ -1,4 +1,5 @@
 import { WindowDock, WindowDockItem } from "@lib/window-system";
+import { Icons } from "@/common/icons";
 import { kSequencerWindowId } from "@/domain/types";
 import { catalog } from "@/domain/unit-entries";
 import { store } from "@/store/store";
@@ -22,7 +23,15 @@ export const DockRoot = () => {
             );
           })}
       </>
-      <WindowDockItem id={kSequencerWindowId} title="piano roll" />
+      <WindowDockItem
+        id={kSequencerWindowId}
+        title="piano roll"
+        children={
+          <div className="flex-c h-full bg-#46a text-24px">
+            <Icons.Timeline />
+          </div>
+        }
+      />
     </WindowDock>
   );
 };

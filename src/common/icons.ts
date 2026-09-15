@@ -1,5 +1,5 @@
 import { BsArrowRight } from "react-icons/bs";
-import { CgDisplayFullwidth } from "react-icons/cg";
+import { CgDisplayFullwidth, CgPiano } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa6";
 import { FiMenu } from "react-icons/fi";
 import { IoPlaySharp } from "react-icons/io5";
-import { MdAdd, MdClose } from "react-icons/md";
+import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
 import { PiPianoKeysFill, PiTrash } from "react-icons/pi";
 
 export const Icons = {
@@ -17,9 +17,11 @@ export const Icons = {
   Close: MdClose,
   Trash: PiTrash,
   Piano: PiPianoKeysFill,
+  Piano2: CgPiano,
   Play: IoPlaySharp,
   Minimize: FaWindowMinimize,
   Add: MdAdd,
   Menu: FiMenu,
   DirectionRight: BsArrowRight,
+  Timeline: MdOutlineViewTimeline,
 };
