@@ -1,6 +1,6 @@
 import { createPianoRollUnit } from "@lib/piano-roll";
 import { ReactUnitFrame } from "wafer-host/react";
-import { appConfig } from "@/common/app-config";
+import { appEnvs } from "@/common/app-config";
 import { ScreenScaler } from "@/components/screen-scaler";
 import { store } from "@/store/store";
 import { TopBar } from "@/views/controls/top-control-bars";
@@ -34,7 +34,7 @@ const PageRootPianoRollDev = () => {
 };
 
 export const PageRoot = () => {
-  if (appConfig.isDevelopment && location.search.includes("unit-dev")) {
+  if (appEnvs.isDevelopment && location.search.includes("unit-dev")) {
     return <PageRootPianoRollDev />;
   } else {
     return <PageRootMain />;

@@ -1,16 +1,13 @@
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
-import { appConfig } from "@/common/app-config";
+import { appEnvs } from "@/common/app-config";
 import { hostSystem } from "@/domain/host-system-instance";
+import { migrateProjectData } from "@/project/project-data-migrator";
 import {
   ProjectData,
-  ProjectDataCore,
   ProjectStoreStates,
+  projectsConstants,
 } from "@/project/project-types";
 import { projectResetterStates, store } from "@/store/store";
-
-const projectsConstants = {
-  formatCode: "WBP1",
-};
 
 const helpers = {
   filterStoreStateFields(storeStates: ProjectStoreStates) {
@@ -36,8 +33,8 @@ export const projectDataIo = {
   emitProjectData(): ProjectData {
     const unitStates = hostSystem.getAllUnitStates();
     return {
-      appVersionCode: appConfig.appVersionCode,
-      pageDeployId: appConfig.cfPageDeployId,
+      appVersionCode: appEnvs.appVersionCode,
+      pageDeployId: appEnvs.cfPagesDeployId,
       formatCode: projectsConstants.formatCode,
       storeStates: helpers.filterStoreStateFields(store.state),
       unitStates,
@@ -47,10 +44,11 @@ export const projectDataIo = {
     return data.formatCode === projectsConstants.formatCode;
   },
   async applyProjectData(
-    data: ProjectDataCore,
+    inputProjectData: ProjectData,
     importedProjectFileName?: string,
   ) {
-    const { storeStates, unitStates } = data;
+    const projectData = migrateProjectData(inputProjectData);
+    const { storeStates, unitStates } = projectData;
     store.setProjectLoading(true);
     try {
       store.assign({

@@ -16,15 +16,14 @@ export type ProjectStoreStates = {
   keyName: KeyName;
 };
 
-export type ProjectDataCore = {
-  storeStates: ProjectStoreStates;
-  unitStates: HsUnitStateData[];
-};
-
 export type ProjectData = {
   appVersionCode: string;
   pageDeployId: string;
   formatCode: string;
   storeStates: ProjectStoreStates;
   unitStates: HsUnitStateData[];
+};
+
+export const projectsConstants = {
+  formatCode: "WBP1",
 };

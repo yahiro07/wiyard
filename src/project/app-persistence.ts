@@ -1,6 +1,6 @@
 import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
 import { dequal } from "dequal";
-import { appConfig } from "@/common/app-config";
+import { appEnvs } from "@/common/app-config";
 import { projectDataIo } from "@/project/project-data-io";
 import { ProjectData } from "@/project/project-types";
 import { sharedUrlSupport } from "@/project/shared-url-support";
@@ -41,10 +41,17 @@ export const appPersistence = {
         store.assign(data.sessionStates);
         userSelfProject = data.projectData;
       }
-      const sharedUrlProject = sharedUrlSupport.loadSharedUrlDataIfExists();
-      if (sharedUrlProject) {
+      const sharedUrlProjectResult =
+        sharedUrlSupport.loadSharedUrlDataIfExists();
+      if (sharedUrlProjectResult) {
+        const res = sharedUrlProjectResult;
         store.setUserSelfProjectActive(false);
-        await projectDataIo.applyProjectData(sharedUrlProject);
+        if (res.status === "ok") {
+          await projectDataIo.applyProjectData(res.projectData);
+        } else {
+          console.warn(res.message);
+          alert(res.message);
+        }
       } else {
         store.setUserSelfProjectActive(true);
         if (userSelfProject) {
@@ -56,7 +63,7 @@ export const appPersistence = {
     }
   },
 };
-if (appConfig.isDevelopment && 1) {
+if (appEnvs.isDevelopment && 1) {
   //bypass persistence for debug
   typedAssign(appPersistence, {
     async load() {},

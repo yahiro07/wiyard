@@ -6,17 +6,20 @@ function extractPageBuildId(url: string): string {
   return url.replace("https://", "").split(".")[0];
 }
 
-export const appConfig = {
+export const appEnvs = {
   isDevelopment: import.meta.env.DEV,
-  supportAutomationPorts: false,
-  cfPageUrl: __CfPagesUrl,
-  cfPageDeployId: extractPageBuildId(__CfPagesUrl),
+  isProduction: import.meta.env.PROD,
+  cfPagesUrl: __CfPagesUrl,
+  cfPagesDeployId: extractPageBuildId(__CfPagesUrl),
   appVersionCode: "v260916",
 };
-
-if (appConfig.isDevelopment) {
-  typedAssign(appConfig, {
-    cfPageUrl: "https://aaabbb123.wireboard.pages.dev",
-    cfPageDeployId: "aaabbb123",
+if (appEnvs.isDevelopment) {
+  typedAssign(appEnvs, {
+    cfPagesUrl: "https://aaabbb123.wireboard.pages.dev",
+    cfPagesDeployId: "aaabbb123",
   });
 }
+
+export const appConfig = {
+  supportAutomationPorts: false,
+};

@@ -1,12 +1,12 @@
 import { KeyName } from "@lib/contract";
-import { appConfig } from "@/common/app-config";
+import { appEnvs } from "@/common/app-config";
 import { UnitItem } from "@/domain/types";
-import { ProjectDataCore } from "@/project/project-types";
+import { ProjectData, projectsConstants } from "@/project/project-types";
 
 const ox = 2000 - 500;
 const oy = 1400 - 350;
 
-function createDefaultScene(): ProjectDataCore {
+function createDefaultScene(): ProjectData {
   const unitItems: UnitItem[] = [
     {
       type: "noteInput",
@@ -46,7 +46,7 @@ function createDefaultScene(): ProjectDataCore {
     "effect1.audioOutput-speakerPort.audioInput",
   ];
 
-  if (appConfig.isDevelopment) {
+  if (appEnvs.isDevelopment) {
     unitItems.push({
       type: "noteInput",
       unitId: "noteInputPort2",
@@ -56,6 +56,9 @@ function createDefaultScene(): ProjectDataCore {
   }
 
   return {
+    appVersionCode: appEnvs.appVersionCode,
+    pageDeployId: appEnvs.cfPagesDeployId,
+    formatCode: projectsConstants.formatCode,
     storeStates: {
       unitItems,
       currentNoteChannelId: "noteInputPort1",
@@ -73,7 +76,7 @@ function createDefaultScene(): ProjectDataCore {
 
 export const defaultScene = createDefaultScene();
 
-function createBlankScene(): ProjectDataCore {
+function createBlankScene(): ProjectData {
   const unitItems: UnitItem[] = [
     {
       type: "noteInput",
@@ -88,6 +91,9 @@ function createBlankScene(): ProjectDataCore {
     },
   ];
   return {
+    appVersionCode: appEnvs.appVersionCode,
+    pageDeployId: appEnvs.cfPagesDeployId,
+    formatCode: projectsConstants.formatCode,
     storeStates: {
       unitItems,
       wireConnectionKeys: [],

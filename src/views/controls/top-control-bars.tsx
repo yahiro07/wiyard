@@ -1,4 +1,4 @@
-import { appConfig } from "@/common/app-config";
+import { appEnvs } from "@/common/app-config";
 import { store, windowSystem } from "@/store/store";
 import {
   ControlButtons,
@@ -39,7 +39,7 @@ export const SecondBar = () => {
   return (
     <div className="absolute-top-center mt-2 z-4">
       <ProjectButtons />
-      {appConfig.isDevelopment && <div>{importedProjectFileName}</div>}
+      {appEnvs.isDevelopment && <div>{importedProjectFileName}</div>}
     </div>
   );
 };
