@@ -1,5 +1,5 @@
-import { BsArrowRight } from "react-icons/bs";
-import { CgDisplayFullwidth, CgPiano } from "react-icons/cg";
+import { BsArrowRight, BsViewList } from "react-icons/bs";
+import { CgPiano } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
@@ -14,7 +14,7 @@ import { TbAppsFilled } from "react-icons/tb";
 export const Icons = {
   ArrowRightFromBracket: FaArrowRightFromBracket,
   ArrowRightToBracket: FaArrowRightToBracket,
-  DisplayFullWidth: CgDisplayFullwidth,
+  Desktop: BsViewList,
   Close: MdClose,
   Trash: PiTrash,
   Piano: PiPianoKeysFill,

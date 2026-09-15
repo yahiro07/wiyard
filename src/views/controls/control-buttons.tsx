@@ -57,7 +57,7 @@ export const WindowEvacuationButton = () => {
     <ControlButton
       onClick={windowSystem.toggleEvacuate}
       // disabled={!hasWindow}
-      children={<Icons.DisplayFullWidth />}
+      children={<Icons.Desktop />}
     />
   );
 };

@@ -47,7 +47,7 @@ export const DockRoot = () => {
             icon={Icons.Apps}
             bgColor="#fff"
             textColor="#ccd"
-            fontSize={28}
+            fontSize={30}
           />
         }
       />
@@ -56,7 +56,7 @@ export const DockRoot = () => {
         onClick={windowSystem.toggleEvacuate}
         children={
           <DockIcon
-            icon={Icons.DisplayFullWidth}
+            icon={Icons.Desktop}
             bgColor="#909098"
             textColor="#fff"
             fontSize={24}
@@ -86,7 +86,7 @@ export const DockRoot = () => {
             icon={Icons.Timeline}
             bgColor="#46a"
             textColor="#fff"
-            fontSize={24}
+            fontSize={28}
           />
         }
       />
