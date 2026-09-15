@@ -1,4 +1,9 @@
-import { Point, Vector } from "./common-types";
+type Point = { x: number; y: number };
+type Vector = Point;
+
+const getDist = (p1: Point, p2: Point): number => {
+  return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+};
 
 //----------
 
@@ -72,6 +77,7 @@ type DragSessionCallbacksEx = {
   onMove?(pos: Point, relativeMoveAmountFromStart: Vector): void;
   onUp?(pos: Point): void;
   onTap?(): void;
+  onHold?(): void;
   onCancel?(): void;
   onEnd?(pos: Point): void; //called after either up/tap/cancel
 };
@@ -86,7 +92,8 @@ type DragSessionExOptions = {
   //otherwise pos will be relative to currentTarget of the initiated pointer event
   coordinateBaseElement?: HTMLElement;
   tapDurationTh?: number;
-  tapDistanceTh?: number;
+  tapHoldDistanceTh?: number;
+  holdDurationTh?: number;
 };
 
 //onStart is called after either
@@ -97,8 +104,9 @@ export function createDragSessionEx(
   inputEvent: PointerEvent | React.PointerEvent,
   options?: DragSessionExOptions,
 ): DragSessionEx {
+  const tapHoldDistanceTh = options?.tapHoldDistanceTh ?? 8;
   const tapDurationTh = options?.tapDurationTh ?? 200;
-  const tapDistanceTh = options?.tapDistanceTh ?? 10;
+  const holdDurationTh = options?.holdDurationTh ?? 250;
 
   const e0 = "nativeEvent" in inputEvent ? inputEvent.nativeEvent : inputEvent;
 
@@ -117,6 +125,7 @@ export function createDragSessionEx(
   const startPosition = getPos(e0);
 
   let timerId: NodeJS.Timeout | undefined;
+  let timerId2: NodeJS.Timeout | undefined;
   let started = false;
   let latestPosition = startPosition;
 
@@ -137,25 +146,33 @@ export function createDragSessionEx(
           started = true;
         }
       };
-      const cancelTimer = () => {
+      const cancelTimers = () => {
         if (timerId) {
           clearTimeout(timerId);
           timerId = undefined;
         }
+        if (timerId2) {
+          clearTimeout(timerId2);
+          timerId2 = undefined;
+        }
+      };
+      const checkHold = () => {
+        const dist = getDist(latestPosition, startPosition);
+        if (dist < tapHoldDistanceTh) {
+          callbacks.onHold?.();
+        }
       };
       timerId = setTimeout(() => triggerStart(latestPosition), tapDurationTh);
+      timerId2 = setTimeout(checkHold, holdDurationTh);
 
       startPointerCaptureSession(e0, {
         onMove(e) {
           const pos = getPos(e);
           if (!started) {
-            const distFromStart = Math.hypot(
-              pos.x - startPosition.x,
-              pos.y - startPosition.y,
-            );
-            if (distFromStart > tapDistanceTh) {
+            const distFromStart = getDist(pos, startPosition);
+            if (distFromStart > tapHoldDistanceTh) {
               triggerStart(pos);
-              cancelTimer();
+              cancelTimers();
             }
           } else {
             callMove(pos);
@@ -176,7 +193,7 @@ export function createDragSessionEx(
             }
           }
           callbacks.onEnd?.(pos);
-          cancelTimer();
+          cancelTimers();
         },
       });
     },

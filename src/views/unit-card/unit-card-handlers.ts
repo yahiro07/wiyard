@@ -11,20 +11,6 @@ export const unitCardHandlers = {
   handlePointerDown(e0: IPointerEvent, unitItem: UnitItem) {
     const unitOriginalPos = unitItem.cardPosition;
     let prevPos = unitOriginalPos;
-
-    let timerId: NodeJS.Timeout | undefined = setTimeout(() => {
-      if (prevPos === unitOriginalPos) {
-        actions.setMenuTargetUnit(unitItem.unitId);
-      }
-    }, 250);
-
-    const cancelTimer = () => {
-      if (timerId) {
-        clearTimeout(timerId);
-        timerId = undefined;
-      }
-    };
-
     const baseEl = getGraphEditPlaneElement();
 
     startDragSessionEx(
@@ -38,7 +24,6 @@ export const unitCardHandlers = {
           if (!vectorOp.equals(prevPos, newPos)) {
             actions.setUnitCardPosition(unitItem.unitId, newPos);
             prevPos = newPos;
-            cancelTimer();
             actions.setMenuTargetUnit(null);
           }
         },
@@ -59,8 +44,8 @@ export const unitCardHandlers = {
             }
           }
         },
-        onEnd() {
-          cancelTimer();
+        onHold() {
+          actions.setMenuTargetUnit(unitItem.unitId);
         },
       },
       { coordinateBaseElement: baseEl },

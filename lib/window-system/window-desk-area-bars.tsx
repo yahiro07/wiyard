@@ -1,5 +1,5 @@
+import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
-import { cz } from "../utils/cz";
 import { actions, storeSlice } from "./store";
 
 export const WindowDock = ({ children }: { children: ReactNode }) => {

@@ -1,11 +1,12 @@
-import { Point, Size } from "../utils/common-types";
+import { Point, Size } from "@lib/utils/common-types";
 
 export type WindowStatus = "visible" | "minimized" | "none";
 
 export type WindowSpec = {
-  position: Point;
+  position: Point; //center of the content plane, from top left corner of the desk area
+  contentSize: Size; //size of content, excluding title bar
   status: WindowStatus;
-  contentSize: Size;
+  freeRatio?: boolean;
 };
 
 export type WindowSystem = {

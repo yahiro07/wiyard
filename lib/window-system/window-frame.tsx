@@ -1,5 +1,6 @@
+import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
-import { cz } from "../utils/cz";
+import { windowTitleBarHeight } from "./constants";
 import { Icons } from "./icons";
 import { actions, storeSlice } from "./store";
 import { WindowStatus } from "./types";
@@ -16,16 +17,14 @@ const ResizeAnchor = ({
   anchor: "tl" | "tr" | "bl" | "br";
   windowCoordVm: WindowCoordViewModel;
 }) => {
-  const isTopAnchor = anchor === "tl" || anchor === "tr";
   return (
     <div
       className={cz(
-        "absolute",
+        "absolute rounded-full",
         anchor === "tl" && "top-[-12px] left-[-12px] cursor-nwse-resize",
         anchor === "tr" && "top-[-12px] right-[-12px] cursor-nesw-resize",
         anchor === "bl" && "bottom-[-12px] left-[-12px] cursor-nesw-resize",
         anchor === "br" && "bottom-[-12px] right-[-12px] cursor-nwse-resize",
-        isTopAnchor && "translate-y-[-34px]",
       )}
     >
       <div
@@ -34,7 +33,7 @@ const ResizeAnchor = ({
           windowFrameHandlers.handleResizingAnchorPointerDown(
             e,
             windowCoordVm,
-            isTopAnchor ? 34 : 0,
+            anchor,
           );
           e.stopPropagation();
         }}
@@ -67,7 +66,7 @@ const EvacuatedBar = ({
           "bg-gray-600/70",
           "h-28px",
         )}
-        style={{ width: windowCoordVm.contentSize.width }}
+        style={{ width: windowCoordVm.windowBounds.width }}
         onPointerDown={(e) =>
           windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
         }
@@ -94,46 +93,46 @@ const TopBar = ({
   topBarInnerControls?: ReactNode;
 }) => {
   return (
-    <div className="absolute top-[-34px] w-full">
-      <div
-        className={cz(
-          "flex-c relative justify-between px-2",
-          isCurrent ? "bg-#68c/96" : "bg-gray-600/92",
-          "h-34px",
-        )}
-        onPointerDown={(e) =>
-          windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
-        }
-      >
-        {topBarInnerControls ?? <div />}
-        <div className={cz("flex-ha gap-2")}>
-          <button
-            type="button"
-            className="cursor-pointer"
-            onPointerDown={(e) => {
-              toggleMinimized?.();
-              e.stopPropagation();
-            }}
-          >
-            <Icons.Minimize size={18} />
-          </button>
-          <button
-            type="button"
-            className="cursor-pointer"
-            onPointerDown={(e) => {
-              closeWindow();
-              e.stopPropagation();
-            }}
-          >
-            <Icons.Close size={24} />
-          </button>
-        </div>
+    // <div className="absolute w-full" style={{ top: -windowTitleBarHeight }}>
+    <div
+      className={cz(
+        "flex-c relative justify-between px-2",
+        isCurrent ? "bg-#68c/96" : "bg-gray-600/92",
+      )}
+      style={{ height: windowTitleBarHeight }}
+      onPointerDown={(e) =>
+        windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
+      }
+    >
+      {topBarInnerControls ?? <div />}
+      <div className={cz("flex-ha gap-2")}>
+        <button
+          type="button"
+          className="cursor-pointer"
+          onPointerDown={(e) => {
+            toggleMinimized?.();
+            e.stopPropagation();
+          }}
+        >
+          <Icons.Minimize size={18} />
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer"
+          onPointerDown={(e) => {
+            closeWindow();
+            e.stopPropagation();
+          }}
+        >
+          <Icons.Close size={24} />
+        </button>
+      </div>
 
-        <div className="absolute-full flex-c pointer-events-none font-500">
-          {title}
-        </div>
+      <div className="absolute-full flex-c pointer-events-none font-500">
+        {title}
       </div>
     </div>
+    // </div>
   );
 };
 
@@ -158,7 +157,7 @@ const WindowFrameView = ({
   toggleMinimized: () => void;
   topBarInnerControls?: ReactNode;
 }) => {
-  const { contentSize } = windowCoordVm;
+  const { contentSize, windowBounds } = windowCoordVm;
   const displayed = !evacuated && windowStatus === "visible";
   const evacuatedBarVisible = evacuated && windowStatus === "visible";
 
@@ -172,10 +171,10 @@ const WindowFrameView = ({
         />
       )}
       <div
-        className={cz("absolute", "-translate-x-1/2 -translate-y-1/2")}
+        className="absolute"
         style={{
-          left: windowCoordVm.position.x,
-          top: windowCoordVm.position.y,
+          left: windowBounds.x,
+          top: windowBounds.y,
           //windows are always exist in dom, so as to keep units working
           display: displayed ? "block" : "none",
           zIndex: isCurrent ? 1 : undefined,
@@ -183,7 +182,7 @@ const WindowFrameView = ({
       >
         <div
           className="relative"
-          style={{ width: contentSize.width, height: contentSize.height }}
+          style={{ width: windowBounds.width, height: windowBounds.height }}
           onPointerDown={(e) =>
             windowFrameHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
           }
@@ -196,7 +195,12 @@ const WindowFrameView = ({
             toggleMinimized={toggleMinimized}
             topBarInnerControls={topBarInnerControls}
           />
-          <div className="bg-white text-black h-full">{children}</div>
+          <div
+            className="bg-white text-black h-full"
+            style={{ width: contentSize.width, height: contentSize.height }}
+          >
+            {children}
+          </div>
           <>
             <ResizeAnchor anchor="tl" windowCoordVm={windowCoordVm} />
             <ResizeAnchor anchor="tr" windowCoordVm={windowCoordVm} />
