@@ -25,7 +25,6 @@ const ResizeAnchor = ({
         anchor === "tr" && "top-[-12px] right-[-12px] cursor-nesw-resize",
         anchor === "bl" && "bottom-[-12px] left-[-12px] cursor-nesw-resize",
         anchor === "br" && "bottom-[-12px] right-[-12px] cursor-nwse-resize",
-        "bd-red",
       )}
     >
       <div

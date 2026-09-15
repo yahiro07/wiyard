@@ -1,5 +1,6 @@
 import { Point, Rect, Size, Vector } from "@lib/utils/common-types";
 import { rectOp, vectorOp } from "@lib/utils/geometry-helper";
+import { clampValue } from "@lib/utils/number-helper";
 import { BoundsOperator, getOppositeCorner } from "./bounds-operator";
 import { windowTitleBarHeight } from "./constants";
 
@@ -29,36 +30,60 @@ export const windowBoundsConverter = {
   },
 };
 
-export const windowPlacementHelper = {
+const internalHelper = {
   getDeskAreaBounds(): Rect {
     const el = getDeskAreaElement();
     return { x: 0, y: 0, width: el.offsetWidth, height: el.offsetHeight };
   },
-  canAcceptWindowBounds(bounds: Rect): boolean {
-    // const titleBarTopCenter = {
-    //   x: bounds.x + bounds.width / 2,
-    //   y: bounds.y,
-    // };
-    // const titleBarBottomCenter = {
-    //   x: bounds.x + bounds.width / 2,
-    //   y: bounds.y + windowTitleBarHeight,
-    // };
-    const deskAreaBounds = this.getDeskAreaBounds();
-    return (
-      rectOp.containsRect(deskAreaBounds, bounds) &&
-      rectOp.containsPoint(deskAreaBounds, bounds)
-    );
+  computeMaxScaleRatioInDesk(
+    contentBounds: Rect,
+    fixedCorner: BoundsAnchor,
+    desk: Rect,
+  ): number {
+    const W = contentBounds.width;
+    const H = contentBounds.height;
+    const p0 = rectOp.corner(contentBounds, fixedCorner);
+    const deskR = desk.x + desk.width;
+    const deskB = desk.y + desk.height;
+    const TB = windowTitleBarHeight;
+    const limits: number[] = [];
+    switch (fixedCorner) {
+      case "tl":
+        limits.push((deskR - p0.x) / W);
+        limits.push((deskB - p0.y) / H);
+        break;
+      case "tr":
+        limits.push((p0.x - desk.x) / W);
+        limits.push((deskB - p0.y) / H);
+        break;
+      case "bl":
+        limits.push((deskR - p0.x) / W);
+        limits.push((p0.y - TB - desk.y) / H);
+        break;
+      case "br":
+        limits.push((p0.x - desk.x) / W);
+        limits.push((p0.y - TB - desk.y) / H);
+        break;
+    }
+    return Math.min(...limits.filter((v) => v > 0 && Number.isFinite(v)));
   },
-  updateWindowBounds(
+};
+
+export const windowPlacementHelper = {
+  updateSize(
     originalWindowBounds: Rect,
     anchor: BoundsAnchor,
     anchorMoveAmount: Vector,
     options: { contentAspectRatioSpec?: number | null; minContentSize?: Size },
-  ): Rect {
+  ): Rect | null {
+    const deskAreaBounds = internalHelper.getDeskAreaBounds();
     if (!options.contentAspectRatioSpec) {
       const bo = BoundsOperator.fromRect(originalWindowBounds);
       const originalPoint = bo.getCorner(anchor);
-      const movedAnchorPos = vectorOp.add(originalPoint, anchorMoveAmount);
+      const movedAnchorPos = vectorOp.clampInRect(
+        vectorOp.add(originalPoint, anchorMoveAmount),
+        deskAreaBounds,
+      );
       bo.setCorner(anchor, movedAnchorPos);
       if (options.minContentSize) {
         const oppositeAnchor = getOppositeCorner(anchor);
@@ -72,22 +97,41 @@ export const windowPlacementHelper = {
       const bo0 = BoundsOperator.fromRect(originalWindowBounds);
       bo0.shrinkTop(windowTitleBarHeight);
       const originalContentBounds = bo0.toRect();
-      const originalPoint = bo0.getCorner(anchor);
-      const movedAnchorPos = vectorOp.add(originalPoint, anchorMoveAmount);
+      const oppositeAnchor = getOppositeCorner(anchor);
+      const p0 = bo0.getCorner(oppositeAnchor);
+      const p1 = bo0.getCorner(anchor);
+      const originalDistance = vectorOp.distance(p0, p1);
+      const p1a = vectorOp.add(p1, anchorMoveAmount);
+
+      const movedDistance = vectorOp.distance(p0, p1a);
+      let minScaleRatio = 1e-3;
+      if (options.minContentSize) {
+        minScaleRatio =
+          options.minContentSize.width / originalContentBounds.width;
+      }
+      if (!rectOp.containsRect(deskAreaBounds, originalContentBounds)) {
+        minScaleRatio = 1;
+      }
+      const maxScaleRatio = internalHelper.computeMaxScaleRatioInDesk(
+        originalContentBounds,
+        oppositeAnchor,
+        deskAreaBounds,
+      );
+
+      const scaleRatio = clampValue(
+        movedDistance / originalDistance,
+        minScaleRatio,
+        maxScaleRatio,
+      );
       //
       const bo = BoundsOperator.fromRect(originalContentBounds);
-      bo.setCorner(anchor, movedAnchorPos);
-      const oppositeAnchor = getOppositeCorner(anchor);
-      bo.fixAspectRatio(oppositeAnchor, options.contentAspectRatioSpec);
-      if (options.minContentSize) {
-        bo.clampMinSize(oppositeAnchor, options.minContentSize);
-      }
+      bo.scale(oppositeAnchor, scaleRatio);
       bo.extendTop(windowTitleBarHeight);
       return bo.toRect();
     }
   },
   updatePosition(originalWindowBounds: Rect, moveAmount: Vector) {
-    const deskAreaBounds = this.getDeskAreaBounds();
+    const deskAreaBounds = internalHelper.getDeskAreaBounds();
     const checkingBounds = {
       x: deskAreaBounds.x - originalWindowBounds.width * 0.75,
       y: deskAreaBounds.y,

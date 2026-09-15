@@ -89,15 +89,33 @@ export class BoundsOperator {
     this.normalize();
     return this;
   }
-  fixAspectRatio(fixedCorner: BoundsCornerSpec, asrSpec: number) {
-    let width = this.right - this.left;
-    let height = this.bottom - this.top;
-    const currentAsr = width / height;
-    if (currentAsr > asrSpec) {
-      width = height * asrSpec;
-    } else {
-      height = width / asrSpec;
-    }
+  // fixAspectRatio(fixedCorner: BoundsCornerSpec, asrSpec: number) {
+  //   let width = this.right - this.left;
+  //   let height = this.bottom - this.top;
+  //   const currentAsr = width / height;
+  //   if (currentAsr > asrSpec) {
+  //     height = width / asrSpec;
+  //   } else {
+  //     width = height * asrSpec;
+  //   }
+  //   if (fixedCorner === "tl") {
+  //     this.right = this.left + width;
+  //     this.bottom = this.top + height;
+  //   } else if (fixedCorner === "tr") {
+  //     this.left = this.right - width;
+  //     this.bottom = this.top + height;
+  //   } else if (fixedCorner === "bl") {
+  //     this.right = this.left + width;
+  //     this.top = this.bottom - height;
+  //   } else if (fixedCorner === "br") {
+  //     this.left = this.right - width;
+  //     this.top = this.bottom - height;
+  //   }
+  //   return this;
+  // }
+  scale(fixedCorner: BoundsCornerSpec, scaleRatio: number) {
+    const width = (this.right - this.left) * scaleRatio;
+    const height = (this.bottom - this.top) * scaleRatio;
     if (fixedCorner === "tl") {
       this.right = this.left + width;
       this.bottom = this.top + height;

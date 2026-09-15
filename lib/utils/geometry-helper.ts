@@ -1,4 +1,4 @@
-import { inBetween } from "@lib/utils/number-helper";
+import { clampValue, inBetween } from "@lib/utils/number-helper";
 import { Point, Rect, Size, Vector } from "./common-types";
 
 export const vectorOp = {
@@ -26,6 +26,12 @@ export const vectorOp = {
   middle(a: Vector, b: Vector) {
     return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
   },
+  clampInRect(v: Vector, re: Rect) {
+    return {
+      x: clampValue(v.x, re.x, re.x + re.width),
+      y: clampValue(v.y, re.y, re.y + re.height),
+    };
+  },
 };
 
 export const sizeOp = {
@@ -38,16 +44,15 @@ export const sizeOp = {
 };
 
 export const rectOp = {
-  center(rect: Rect) {
-    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+  center(re: Rect) {
+    return { x: re.x + re.width / 2, y: re.y + re.height / 2 };
   },
-  corner(rect: Rect, corner: "tl" | "tr" | "bl" | "br"): Point {
-    if (corner === "tl") return { x: rect.x, y: rect.y };
-    if (corner === "tr") return { x: rect.x + rect.width, y: rect.y };
-    if (corner === "bl") return { x: rect.x, y: rect.y + rect.height };
-    if (corner === "br")
-      return { x: rect.x + rect.width, y: rect.y + rect.height };
-    return { x: rect.x, y: rect.y };
+  corner(re: Rect, corner: "tl" | "tr" | "bl" | "br"): Point {
+    if (corner === "tl") return { x: re.x, y: re.y };
+    if (corner === "tr") return { x: re.x + re.width, y: re.y };
+    if (corner === "bl") return { x: re.x, y: re.y + re.height };
+    if (corner === "br") return { x: re.x + re.width, y: re.y + re.height };
+    return { x: re.x, y: re.y };
   },
   containsRect(outer: Rect, inner: Rect) {
     return (
@@ -57,10 +62,10 @@ export const rectOp = {
       inner.y + inner.height <= outer.y + outer.height
     );
   },
-  containsPoint(rect: Rect, po: Point) {
+  containsPoint(re: Rect, po: Point) {
     return (
-      inBetween(po.x, rect.x, rect.x + rect.width) &&
-      inBetween(po.y, rect.y, rect.y + rect.height)
+      inBetween(po.x, re.x, re.x + re.width) &&
+      inBetween(po.y, re.y, re.y + re.height)
     );
   },
 };

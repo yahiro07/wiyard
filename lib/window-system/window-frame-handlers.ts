@@ -23,8 +23,6 @@ export const windowFrameHandlers = {
     } else {
       actions.setCurrentWindowId(windowCoordVm.windowId);
       const originalWindowBounds = windowCoordVm.windowBounds;
-      // const unitOriginalPos = windowCoordVm.position;
-
       let latestDist = 0;
 
       let timerId: NodeJS.Timeout | undefined = setTimeout(() => {
@@ -69,13 +67,15 @@ export const windowFrameHandlers = {
 
     startDragSessionEx(e0, {
       onMove(_, delta) {
-        const bounds = windowPlacementHelper.updateWindowBounds(
+        const bounds = windowPlacementHelper.updateSize(
           originalWindowBounds,
           anchor,
           delta,
           { contentAspectRatioSpec, minContentSize },
         );
-        windowCoordVm.setWindowBounds(bounds);
+        if (bounds) {
+          windowCoordVm.setWindowBounds(bounds);
+        }
       },
     });
     e0.stopPropagation();
