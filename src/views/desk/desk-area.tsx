@@ -62,7 +62,7 @@ export const DeskArea = () => {
       // if a new project loaded, refresh all dom elements related to units
       key={projectLoadedIndex}
       id={domIds.deskArea}
-      className="grow relative bg-#808488"
+      className="grow relative bg-#808488 overflow-hidden"
       onPointerDown={(e) => {
         if (checkSightTarget(e)) {
           sightHandlers.onPointerDown(e.nativeEvent);
