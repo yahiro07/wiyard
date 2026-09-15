@@ -106,7 +106,7 @@ const SequencerUnitItemView = ({
 const SequencerSection = () => {
   const unitItems = notePortGetters.useNoteInputPortUnitItems();
   return (
-    <div className="flex-grow relative">
+    <div className="flex-grow relative overflow-hidden">
       {unitItems.map((item) => (
         <SequencerUnitItemView key={item.unitId} notePortUnitItem={item} />
       ))}
