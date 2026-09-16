@@ -109,7 +109,7 @@ export const appPersistence = {
     }
   },
 };
-if (appEnvs.isDevelopment && 1) {
+if (appEnvs.isDevelopment && 0) {
   //bypass persistence for debug
   typedAssign(appPersistence, {
     async load() {},

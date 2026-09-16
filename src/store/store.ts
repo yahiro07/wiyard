@@ -14,7 +14,7 @@ import {
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { defaultScene } from "@/project/default-data";
+import { blankScene, defaultScene } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 
 export type StoreState = {
@@ -114,6 +114,7 @@ const defaultStoreState: StoreState = {
 if (1) {
   // store.setSequencerWindowVisible(true);
   typedAssign(defaultStoreState, {
+    ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
   });
