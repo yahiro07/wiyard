@@ -82,7 +82,7 @@ export const appPersistence = {
           const data = tryParseJson<PersistenceData>(text, () =>
             raiseProjectLoadingError(`failed to parse persistence data json`),
           );
-          store.assign({ ...data.sessionStates });
+          store.assign(helpers.pickSessionStates(data.sessionStates));
           const inputProjectData = data.projectData;
           if (inputProjectData.pageDeployId !== appEnvs.cfPagesDeployId) {
             //todo: consider adding version selection phase
@@ -91,14 +91,21 @@ export const appPersistence = {
           }
           const projectData = migrateProjectData(data.projectData);
           void projectDataIo.applyProjectData(projectData);
+          store.setAutoPersistenceEnabled(true);
+        } else {
+          store.setAutoPersistenceEnabled(true);
         }
       } catch (error) {
+        //if the error caused by migration, it should be treated as fatal
+        //show explicit ui to revoke the data manually or open the data in the created version
         console.warn(error);
         store.setProjectLoadErrorStatus({
           message: `error loading persistence data: ${error}`,
         });
+        //at this point, discard the old data and force refresh new states
+        appPersistence.save(appPersistence.emitPersistenceData());
+        store.setAutoPersistenceEnabled(true);
       }
-      store.setAutoPersistenceEnabled(true);
     }
   },
 };
