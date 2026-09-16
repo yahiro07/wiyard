@@ -21,5 +21,5 @@ if (appEnvs.isDevelopment) {
 }
 
 export const appConfig = {
-  supportAutomationPorts: false,
+  supportAutomationPorts: true,
 };

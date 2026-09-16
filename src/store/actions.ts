@@ -1,8 +1,5 @@
 import { KeyName } from "@lib/contract";
-import {
-  AddOrRemoveArrayItem,
-  setOrDeleteValue,
-} from "@lib/utils/array-object-helper";
+import { setOrDeleteValue } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
 import { boardSize, getDeskAreaElement } from "@/common/constants";
@@ -113,9 +110,20 @@ export const actions = {
       sourcePortKey,
       destPortKey,
     );
-    store.setWireConnectionKeys((prev) =>
-      AddOrRemoveArrayItem(prev, connectionKey),
-    );
+    const exists = store.state.wireConnectionKeys.includes(connectionKey);
+    if (exists) {
+      store.setWireConnectionKeys((prev) =>
+        prev.filter((key) => key !== connectionKey),
+      );
+      store.produceWireGains((draft) => {
+        delete draft[connectionKey];
+      });
+      store.produceWireAutomationParameterIds((draft) => {
+        delete draft[connectionKey];
+      });
+    } else {
+      store.setWireConnectionKeys((prev) => [...prev, connectionKey]);
+    }
   },
   setUnitPickerVisible(visible: boolean) {
     store.setUnitPickerVisible(visible);
@@ -188,6 +196,16 @@ export const actions = {
     store.setWireConnectionKeys((prev) =>
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
+    store.produceWireGains((draft) => {
+      for (const key of wireConnectionKeys) {
+        delete draft[key];
+      }
+    });
+    store.produceWireAutomationParameterIds((draft) => {
+      for (const key of wireConnectionKeys) {
+        delete draft[key];
+      }
+    });
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
     store.setMenuTargetUnitId(null);
     windowSystem.remove(unitId);

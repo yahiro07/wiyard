@@ -8,6 +8,7 @@ export type ProjectStoreStates = {
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   wireGains: Record<string, number>;
+  wireAutomationParameterIds: Record<string, string>;
   windowSpecs: Record<WindowId, WindowSpec>;
   currentNoteChannelId: string;
   currentWindowId: string | null;

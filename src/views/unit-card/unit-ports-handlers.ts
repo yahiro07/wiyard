@@ -3,7 +3,7 @@ import { createDragSessionEx } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
 import { getGraphEditPlaneElement } from "@/common/constants";
 import { uiConfigs } from "@/common/theme";
-import { isPortConnectable } from "@/domain/port-helpers";
+import { isPortConnectable, splitConnectionKey } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
@@ -26,7 +26,7 @@ const helpers = {
     return wireConnectionKeys.filter((key) => key.includes(portKey));
   },
   getAltSidePortKey(connectionKey: string, portKey: string) {
-    const portKeys = connectionKey.split("-");
+    const portKeys = splitConnectionKey(connectionKey);
     return portKeys.find((key) => key !== portKey);
   },
 };

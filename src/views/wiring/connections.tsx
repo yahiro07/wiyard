@@ -1,6 +1,6 @@
 import { HeadlessGain } from "@lib/port-units";
 import { Connection } from "wafer-host/react";
-import { getWireVolumeUnitId } from "@/domain/port-helpers";
+import { getWireVolumeUnitId, splitConnectionKey } from "@/domain/port-helpers";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 
@@ -11,7 +11,7 @@ const WireConnectionWithGain = ({
   connectionKey: string;
   level?: number;
 }) => {
-  const [sourcePortKey, destinationPortKey] = connectionKey.split("-");
+  const [sourcePortKey, destinationPortKey] = splitConnectionKey(connectionKey);
   const wireVolumeUnitId = getWireVolumeUnitId(connectionKey);
   const gain = level * 2;
   return (
@@ -33,7 +33,12 @@ const WireConnectionWithGain = ({
 export const UnitConnectionsRoot = () => {
   const internalSequencerConnectionSpecs =
     notePortGetters.useInternalSequencerConnectionSpecs();
-  const { wireConnectionKeys, wireGains, portStuffs } = store.useSnapshot();
+  const {
+    wireConnectionKeys,
+    wireGains,
+    wireAutomationParameterIds,
+    portStuffs,
+  } = store.useSnapshot();
   return (
     <>
       {internalSequencerConnectionSpecs.map((spec) => (
@@ -44,7 +49,8 @@ export const UnitConnectionsRoot = () => {
         />
       ))}
       {wireConnectionKeys.map((connectionKey) => {
-        const [sourcePortKey, destinationPortKey] = connectionKey.split("-");
+        const [sourcePortKey, destinationPortKey] =
+          splitConnectionKey(connectionKey);
         const sourcePortStuff = portStuffs[sourcePortKey];
         const subType = sourcePortStuff?.subtype;
         if (destinationPortKey.includes("$output")) {
@@ -57,6 +63,17 @@ export const UnitConnectionsRoot = () => {
               key={connectionKey}
               connectionKey={connectionKey}
               level={wireGains[connectionKey]}
+            />
+          );
+        } else if (subType === "automation") {
+          const paramId = wireAutomationParameterIds[connectionKey];
+          if (!paramId) return null;
+          const destination = `${destinationPortKey}#${paramId}`;
+          return (
+            <Connection
+              key={connectionKey}
+              source={sourcePortKey}
+              destination={destination}
             />
           );
         } else {

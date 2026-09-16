@@ -39,5 +39,13 @@ export function buildUnitStuffLoaded(unitInstance: HsUnitInstance): UnitStuff {
   const inputPortSpecs = portsIncluded.filter((p) => p.direction === "input");
   const outputPortSpecs = portsIncluded.filter((p) => p.direction === "output");
 
-  return { status: "loaded", inputPortSpecs, outputPortSpecs };
+  const automationPort = unitInstance.automationInput;
+  const automationParameterSpecs = automationPort?.getParameterSpecs();
+
+  return {
+    status: "loaded",
+    inputPortSpecs,
+    outputPortSpecs,
+    automationParameterSpecs,
+  };
 }

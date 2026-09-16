@@ -1,6 +1,7 @@
 import { Point, Size } from "@lib/utils/common-types";
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 import { CatalogKey, UnitClassKey } from "@/domain/unit-entries";
+import { AutomationParameterSpec } from "wafer-host/unit-types";
 
 export type BoardUnitItem = {
   type: "board";
@@ -43,6 +44,7 @@ export type UnitStuff = {
   inputPortSpecs?: UnitPortSpec[];
   outputPortSpecs?: UnitPortSpec[];
   viewSize?: Size;
+  automationParameterSpecs?: AutomationParameterSpec[];
 };
 
 export type PortStuff = {
