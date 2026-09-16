@@ -131,9 +131,7 @@ const ShareUrlButton = () => {
     alert(`shared url copied to clipboard (${url.length}bytes)`);
   };
   return (
-    <button type="button" onClick={onClick}>
-      share
-    </button>
+    <ControlButton onClick={onClick} children={<Icons.Share size={24} />} />
   );
 };
 
@@ -149,7 +147,6 @@ export const ControlButtons = () => {
       <MidiInButtonContainer />
       {/* <PickerLaunchButton /> */}
       <SecondBarButton />
-      <ShareUrlButton />
       {/* <WindowEvacuationButton /> */}
     </div>
   );
@@ -158,6 +155,7 @@ export const ControlButtons = () => {
 export const ControlButtonsRight = () => {
   return (
     <div className="flex-h gap-2">
+      <ShareUrlButton />
       <SightZoomInput />
     </div>
   );
