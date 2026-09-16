@@ -215,7 +215,7 @@ type PointerCaptureSessionCallbacks = {
   onUpOrCancel?(e: PointerEvent, cause: "up" | "cancel"): void;
 };
 
-function startPointerCaptureSession(
+export function startPointerCaptureSession(
   e0: PointerEvent,
   callbacks: PointerCaptureSessionCallbacks,
 ) {
