@@ -5,6 +5,7 @@ import { mountAppRoot } from "@lib/utils/mount-app-root";
 import { appEnvs } from "@/common/app-config";
 import { productionFix } from "@/periphery/production-fix-wrapper";
 import { appPersistence } from "@/project/app-persistence";
+import { AppUnitsDev } from "@/units-dev";
 
 function start() {
   if (appEnvs.isProduction && productionFix?.isFullyDisabled) {
@@ -15,4 +16,14 @@ function start() {
   mountAppRoot(<App />);
   window.addEventListener("contextmenu", (e) => e.preventDefault());
 }
-start();
+
+function startDev() {
+  mountAppRoot(<AppUnitsDev />);
+  window.addEventListener("contextmenu", (e) => e.preventDefault());
+}
+
+if (appEnvs.isDevelopment && location.search.includes("unit-dev")) {
+  startDev();
+} else {
+  start();
+}

@@ -1,6 +1,3 @@
-import { createPianoRollUnit } from "@lib/piano-roll";
-import { ReactUnitFrame } from "wafer-host/react";
-import { appEnvs } from "@/common/app-config";
 import { ScreenScaler } from "@/components/screen-scaler";
 import { store } from "@/store/store";
 import { TopBar } from "@/views/controls/top-control-bars";
@@ -39,21 +36,6 @@ const PageRootMain = () => {
   );
 };
 
-const PageRootPianoRollDev = () => {
-  return (
-    <div className="h-dvh flex-c">
-      <ReactUnitFrame
-        unitId="pianoRollDev"
-        unitTemplateFn={createPianoRollUnit}
-      />
-    </div>
-  );
-};
-
 export const PageRoot = () => {
-  if (appEnvs.isDevelopment && location.search.includes("unit-dev")) {
-    return <PageRootPianoRollDev />;
-  } else {
-    return <PageRootMain />;
-  }
+  return <PageRootMain />;
 };
