@@ -1,5 +1,5 @@
 import { KeyName } from "@lib/contract";
-import { pickObjectMembers } from "@lib/utils/array-object-helper";
+import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
@@ -14,7 +14,8 @@ import {
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { defaultScene } from "@/project/default-data";
+import { blankScene, defaultScene } from "@/project/default-data";
+import { ProjectLoadErrorStatus } from "@/store/store-types";
 
 export type StoreState = {
   //included in project data
@@ -44,6 +45,10 @@ export type StoreState = {
   projectLoadedIndex: number;
   projectLoading: boolean;
   secondBarVisible: boolean;
+  autoPersistenceEnabled: boolean;
+  importedProjectFileName: string | null;
+  projectLoadErrorStatus: ProjectLoadErrorStatus | null;
+  loadedFromSharedUrl: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -73,6 +78,10 @@ const blankStoreState: StoreState = {
   projectLoading: false,
   secondBarVisible: false,
   uiScaling: 1,
+  autoPersistenceEnabled: false,
+  importedProjectFileName: null,
+  projectLoadErrorStatus: null,
+  loadedFromSharedUrl: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -99,12 +108,13 @@ export const projectResetterStates: Partial<StoreState> = {
 
 const defaultStoreState: StoreState = {
   ...blankStoreState,
-  ...defaultScene,
+  ...defaultScene.storeStates,
 };
 
 if (1) {
   // store.setSequencerWindowVisible(true);
-  Object.assign(defaultStoreState, {
+  typedAssign(defaultStoreState, {
+    ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
   });

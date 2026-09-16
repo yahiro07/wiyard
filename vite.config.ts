@@ -15,6 +15,9 @@ export default defineConfig(({ mode }) => {
       UnoCSS(),
       unitLoaderPlugin({ unitSourceUrls, cacheFolderPath: "./.wafer-cache" }),
     ],
+    define: {
+      __CfPagesUrl: JSON.stringify(process.env.CF_PAGES_URL || ""),
+    },
     resolve: { tsconfigPaths: true },
     server: {
       port: 3004,

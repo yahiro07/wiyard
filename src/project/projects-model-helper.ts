@@ -5,7 +5,10 @@ export function downloadFile(uri: string, fileName: string) {
   link.click();
 }
 
-export function loadLocalFileText(): Promise<string | null> {
+export function loadLocalFileText(): Promise<{
+  fileName: string;
+  content: string;
+} | null> {
   const input = document.createElement("input");
   input.type = "file";
 
@@ -13,7 +16,12 @@ export function loadLocalFileText(): Promise<string | null> {
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        file.text().then(resolve).catch(reject);
+        try {
+          const content = await file.text();
+          resolve({ fileName: file.name, content });
+        } catch (error) {
+          reject(error);
+        }
       }
     };
     input.oncancel = () => {

@@ -9,15 +9,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "dequal": "^2.0.3",
+    "fflate": "^0.8.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
     "snap-store": "^0.1.14",
-    "wafer-host": "^0.1.11",
-    "dequal": "^2.0.3"
+    "wafer-host": "^0.1.11"
   },
   "devDependencies": {
-    "unocss": "^66.9.2",
     "@types/node": "^26.4.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
@@ -25,6 +25,7 @@
     "@unocss/vite": "^66.9.2",
     "@vitejs/plugin-react": "^6.1.1",
     "typescript": "^7.0.2",
+    "unocss": "^66.9.2",
     "vite": "8.0.12"
   }
 }

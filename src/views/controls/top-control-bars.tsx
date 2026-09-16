@@ -1,3 +1,4 @@
+import { appEnvs } from "@/common/app-config";
 import { store, windowSystem } from "@/store/store";
 import {
   ControlButtons,
@@ -33,11 +34,12 @@ export const TopBar = () => {
 };
 
 export const SecondBar = () => {
-  const { secondBarVisible } = store.useSnapshot();
+  const { secondBarVisible, importedProjectFileName } = store.useSnapshot();
   if (!secondBarVisible) return null;
   return (
     <div className="absolute-top-center mt-2 z-4">
       <ProjectButtons />
+      {appEnvs.isDevelopment && <div>{importedProjectFileName}</div>}
     </div>
   );
 };

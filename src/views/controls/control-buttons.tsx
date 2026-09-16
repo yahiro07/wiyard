@@ -3,6 +3,7 @@ import { Icons } from "@/common/icons";
 import { Knob } from "@/components/knob";
 import { NumberSlider } from "@/components/number-slider";
 import { UpperLabel } from "@/components/upper-label";
+import { sharedUrlSupport } from "@/project/shared-url-support";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 import { MidiInButtonContainer } from "@/views/controls/midi-in-button";
@@ -37,7 +38,7 @@ const ControlButton = ({
   );
 };
 
-export const PickerLaunchButton = () => {
+const _PickerLaunchButton = () => {
   const { projectLoading } = store.useSnapshot();
   return (
     <ControlButton
@@ -48,7 +49,7 @@ export const PickerLaunchButton = () => {
   );
 };
 
-export const WindowEvacuationButton = () => {
+const _WindowEvacuationButton = () => {
   // const { windowSpecs } = store.useSnapshot();
   // const hasWindow = Object.values(windowSpecs).some(
   //   (spec) => spec.status === "visible",
@@ -62,7 +63,7 @@ export const WindowEvacuationButton = () => {
   );
 };
 
-export const PlaybackButton = () => {
+const PlaybackButton = () => {
   const { playing, projectLoading } = store.useSnapshot();
   return (
     <ControlButton
@@ -74,7 +75,7 @@ export const PlaybackButton = () => {
   );
 };
 
-export const BpmInput = () => {
+const BpmInput = () => {
   const { bpm } = store.useSnapshot();
   return (
     <UpperLabel label="tempo">
@@ -89,7 +90,7 @@ export const BpmInput = () => {
   );
 };
 
-export const MasterVolumeInput = () => {
+const MasterVolumeInput = () => {
   const { masterVolume } = store.useSnapshot();
   return (
     <UpperLabel label="master">
@@ -98,7 +99,9 @@ export const MasterVolumeInput = () => {
   );
 };
 
-export const SecondBarButton = () => {
+const SecondBarButton = () => {
+  const { loadedFromSharedUrl } = store.useSnapshot();
+  if (loadedFromSharedUrl) return null;
   return (
     <ControlButton
       onClick={store.toggleSecondBarVisible}
@@ -107,7 +110,7 @@ export const SecondBarButton = () => {
   );
 };
 
-export const SightZoomInput = () => {
+const SightZoomInput = () => {
   const { sight } = store.useSnapshot();
   return (
     <UpperLabel label="zoom">
@@ -118,6 +121,17 @@ export const SightZoomInput = () => {
         max={2}
       />
     </UpperLabel>
+  );
+};
+
+const ShareUrlButton = () => {
+  const onClick = () => {
+    const url = sharedUrlSupport.generateSharedUrl();
+    navigator.clipboard.writeText(url);
+    alert(`shared url copied to clipboard (${url.length}bytes)`);
+  };
+  return (
+    <ControlButton onClick={onClick} children={<Icons.Share size={24} />} />
   );
 };
 
@@ -141,6 +155,7 @@ export const ControlButtons = () => {
 export const ControlButtonsRight = () => {
   return (
     <div className="flex-h gap-2">
+      <ShareUrlButton />
       <SightZoomInput />
     </div>
   );
