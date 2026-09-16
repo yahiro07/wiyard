@@ -30,7 +30,7 @@ export function createDragSession(
   const e0 = "nativeEvent" in inputEvent ? inputEvent.nativeEvent : inputEvent;
 
   const baseEl =
-    options?.coordinateBaseElement ?? (e0.currentTarget as HTMLElement);
+    options?.coordinateBaseElement ?? (inputEvent.currentTarget as HTMLElement);
   const baseRect = baseEl.getBoundingClientRect();
   const baseSx = baseRect.width / (baseEl.offsetWidth || 1);
   const baseSy = baseRect.height / (baseEl.offsetHeight || 1);
@@ -111,7 +111,7 @@ export function createDragSessionEx(
   const e0 = "nativeEvent" in inputEvent ? inputEvent.nativeEvent : inputEvent;
 
   const baseEl =
-    options?.coordinateBaseElement ?? (e0.currentTarget as HTMLElement);
+    options?.coordinateBaseElement ?? (inputEvent.currentTarget as HTMLElement);
   const baseRect = baseEl.getBoundingClientRect();
   const baseSx = baseRect.width / (baseEl.offsetWidth || 1);
   const baseSy = baseRect.height / (baseEl.offsetHeight || 1);
