@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": ["dist/**", ".wus-cache/**", ".local/**"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
+  "rules": {
+    "eslint/no-constant-condition": "off",
+    "eslint/no-constant-binary-expression": "off",
+    "typescript/unbound-method": "off"
+  }
+}

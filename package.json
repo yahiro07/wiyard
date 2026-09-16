@@ -6,7 +6,7 @@
     "dev": "vite dev --force",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "lint": "oxlint --type-aware --type-check"
   },
   "dependencies": {
     "dequal": "^2.0.3",
@@ -26,6 +26,9 @@
     "@vitejs/plugin-react": "^6.1.1",
     "typescript": "^7.0.2",
     "unocss": "^66.9.2",
-    "vite": "8.0.12"
+    "vite": "8.0.12",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
+    "oxlint-tsgolint": "^7.0.2001"
   }
 }
