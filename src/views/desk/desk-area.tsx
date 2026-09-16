@@ -10,6 +10,7 @@ import { SequencerWindow } from "@/views/sequencer/sequencer-window";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { UnitWindowsRoot } from "@/views/unit-window/unit-windows";
 import { UnitConnectionsRoot } from "@/views/wiring/connections";
+import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";
 import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
 import { WiringLayer } from "@/views/wiring/wiring-layer";
 
@@ -31,6 +32,7 @@ const GraphEditPlane = () => {
       >
         <WiringLayer />
         <WireKnobsRoot />
+        <WireAutomationSwitchersRoot />
         <UnitCardsRoot />
         <UnitPicker_AddingItem />
         {false && <CoordDebugLayer />}
