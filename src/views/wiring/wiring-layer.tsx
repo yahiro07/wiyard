@@ -6,6 +6,8 @@ import { uiConstants, wireColors } from "@/common/theme";
 import {
   getForwardDirectionWireConnectionKey,
   getPortDirectionFromPortKey,
+  portKeyEquals,
+  splitConnectionKey,
 } from "@/domain/port-helpers";
 import { store } from "@/store/store";
 
@@ -54,9 +56,11 @@ const Wire = ({
   weaken?: boolean;
 }) => {
   const { portStuffs } = store.useSnapshot();
-  const [sourcePortKey, destinationPortKey] = wireConnectionKey.split("-");
+  const [sourcePortKey, destinationPortKey] =
+    splitConnectionKey(wireConnectionKey);
   const sourcePort = portStuffs[sourcePortKey];
   const destPort = portStuffs[destinationPortKey];
+
   if (!(sourcePort && destPort)) return null;
   const signalType = sourcePort.subtype;
   const p0 = sourcePort.position;
@@ -112,7 +116,7 @@ const DragPreviewWire = () => {
     previewDestPortKey,
   );
 
-  if (wireConnectionKeys.includes(connectionKey)) {
+  if (wireConnectionKeys.some((it) => portKeyEquals(it, connectionKey))) {
     //existing wire, show nothing for removing preview
     return;
   }

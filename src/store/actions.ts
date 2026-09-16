@@ -1,14 +1,12 @@
 import { KeyName } from "@lib/contract";
-import {
-  AddOrRemoveArrayItem,
-  setOrDeleteValue,
-} from "@lib/utils/array-object-helper";
+import { setOrDeleteValue } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
 import { boardSize, getDeskAreaElement } from "@/common/constants";
 import {
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
+  portKeyEquals,
 } from "@/domain/port-helpers";
 import {
   BoardUnitItem,
@@ -113,9 +111,16 @@ export const actions = {
       sourcePortKey,
       destPortKey,
     );
-    store.setWireConnectionKeys((prev) =>
-      AddOrRemoveArrayItem(prev, connectionKey),
+    const exists = store.state.wireConnectionKeys.some((it) =>
+      portKeyEquals(it, connectionKey),
     );
+    if (exists) {
+      store.setWireConnectionKeys((prev) =>
+        prev.filter((it) => !portKeyEquals(it, connectionKey)),
+      );
+    } else {
+      store.setWireConnectionKeys((prev) => [...prev, connectionKey]);
+    }
   },
   setUnitPickerVisible(visible: boolean) {
     store.setUnitPickerVisible(visible);

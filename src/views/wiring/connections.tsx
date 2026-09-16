@@ -1,6 +1,6 @@
 import { HeadlessGain } from "@lib/port-units";
 import { Connection } from "wafer-host/react";
-import { getWireVolumeUnitId } from "@/domain/port-helpers";
+import { getWireVolumeUnitId, splitConnectionKey } from "@/domain/port-helpers";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 
@@ -11,7 +11,7 @@ const WireConnectionWithGain = ({
   connectionKey: string;
   level?: number;
 }) => {
-  const [sourcePortKey, destinationPortKey] = connectionKey.split("-");
+  const [sourcePortKey, destinationPortKey] = splitConnectionKey(connectionKey);
   const wireVolumeUnitId = getWireVolumeUnitId(connectionKey);
   const gain = level * 2;
   return (
@@ -44,10 +44,11 @@ export const UnitConnectionsRoot = () => {
         />
       ))}
       {wireConnectionKeys.map((connectionKey) => {
-        const [sourcePortKey, destinationPortKey] = connectionKey.split("-");
+        const [sourcePortKey, destinationPortKeyFull] =
+          connectionKey.split("-");
         const sourcePortStuff = portStuffs[sourcePortKey];
         const subType = sourcePortStuff?.subtype;
-        if (destinationPortKey.includes("$output")) {
+        if (destinationPortKeyFull.includes("$output")) {
           //prohibit direct connection to output, it should be connected via speakerPort
           return null;
         }
@@ -64,7 +65,7 @@ export const UnitConnectionsRoot = () => {
             <Connection
               key={connectionKey}
               source={sourcePortKey}
-              destination={destinationPortKey}
+              destination={destinationPortKeyFull}
             />
           );
         }
