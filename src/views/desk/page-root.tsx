@@ -5,7 +5,23 @@ import { ScreenScaler } from "@/components/screen-scaler";
 import { store } from "@/store/store";
 import { TopBar } from "@/views/controls/top-control-bars";
 import { DeskArea } from "@/views/desk/desk-area";
+import { ErrorDialog } from "@/views/desk/error-dialog";
 import { UnitPickerRoot } from "@/views/desk/unit-picker";
+
+const ErrorDialogContainer = () => {
+  const { projectLoadErrorStatus: errorStatus } = store.useSnapshot();
+  if (!errorStatus) return null;
+  return (
+    <ErrorDialog
+      message={errorStatus.message}
+      closeCallback={() => {
+        if (errorStatus.reloadPageWithCleanUrl) {
+          location.href = "/";
+        }
+      }}
+    />
+  );
+};
 
 const PageRootMain = () => {
   const { uiScaling } = store.useSnapshot();
@@ -18,6 +34,7 @@ const PageRootMain = () => {
         </div>
         <UnitPickerRoot />
       </div>
+      <ErrorDialogContainer />
     </ScreenScaler>
   );
 };

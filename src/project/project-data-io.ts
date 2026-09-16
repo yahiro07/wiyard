@@ -1,7 +1,6 @@
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
 import { appEnvs } from "@/common/app-config";
 import { hostSystem } from "@/domain/host-system-instance";
-import { migrateProjectData } from "@/project/project-data-migrator";
 import {
   ProjectData,
   ProjectStoreStates,
@@ -40,14 +39,10 @@ export const projectDataIo = {
       unitStates,
     };
   },
-  checkCompatibility(data: ProjectData) {
-    return data.formatCode === projectsConstants.formatCode;
-  },
   async applyProjectData(
-    inputProjectData: ProjectData,
+    projectData: ProjectData,
     importedProjectFileName?: string,
   ) {
-    const projectData = migrateProjectData(inputProjectData);
     const { storeStates, unitStates } = projectData;
     store.setProjectLoading(true);
     try {
@@ -61,6 +56,8 @@ export const projectDataIo = {
       if (unitStates) {
         hostSystem.setAllUnitStates(unitStates);
       }
+    } catch (error) {
+      console.warn(error);
     } finally {
       store.setProjectLoading(false);
     }

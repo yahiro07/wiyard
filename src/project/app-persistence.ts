@@ -1,7 +1,9 @@
 import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
-import { dequal } from "dequal";
+import { tryParseJson, tryParseJsonOrNull } from "@lib/utils/general-helper";
 import { appEnvs } from "@/common/app-config";
 import { projectDataIo } from "@/project/project-data-io";
+import { migrateProjectData } from "@/project/project-data-migrator";
+import { raiseProjectLoadingError } from "@/project/project-error";
 import { ProjectData } from "@/project/project-types";
 import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
@@ -33,33 +35,49 @@ export const appPersistence = {
     // console.log(JSON.stringify(data, null, 2));
   },
   async load() {
-    try {
-      const text = localStorage.getItem("wireboard-states");
-      let userSelfProject: ProjectData | undefined;
-      if (text) {
-        const data = JSON.parse(text) as PersistenceData;
-        store.assign(data.sessionStates);
-        userSelfProject = data.projectData;
+    const url = new URLSearchParams(location.search);
+    const urlDataText = url.get("data");
+
+    if (urlDataText) {
+      try {
+        const storageText = localStorage.getItem("wireboard-states");
+        if (storageText) {
+          const data = tryParseJsonOrNull<PersistenceData>(storageText);
+          if (data) {
+            store.assign(data.sessionStates);
+          }
+        }
+        const projectData = migrateProjectData(
+          sharedUrlSupport.loadSharedUrlData(urlDataText),
+        );
+        void projectDataIo.applyProjectData(projectData);
+      } catch (error) {
+        //fatal
+        console.warn(error);
+        store.setProjectLoadErrorStatus({
+          message: `error loading shared url data: ${error}`,
+          reloadPageWithCleanUrl: true,
+        });
       }
-      const sharedUrlProjectResult =
-        sharedUrlSupport.loadSharedUrlDataIfExists();
-      if (sharedUrlProjectResult) {
-        const res = sharedUrlProjectResult;
-        store.setUserSelfProjectActive(false);
-        if (res.status === "ok") {
-          await projectDataIo.applyProjectData(res.projectData);
+    } else {
+      try {
+        const text = localStorage.getItem("wireboard-states");
+        if (text) {
+          const data = tryParseJson<PersistenceData>(text, () =>
+            raiseProjectLoadingError(`failed to parse persistence data json`),
+          );
+          store.assign({ ...data.sessionStates, userSelfProjectActive: true });
+          const projectData = migrateProjectData(data.projectData);
+          void projectDataIo.applyProjectData(projectData);
         } else {
-          console.warn(res.message);
-          alert(res.message);
+          store.setUserSelfProjectActive(true);
         }
-      } else {
-        store.setUserSelfProjectActive(true);
-        if (userSelfProject) {
-          await projectDataIo.applyProjectData(userSelfProject);
-        }
+      } catch (error) {
+        console.warn(error);
+        store.setProjectLoadErrorStatus({
+          message: `error loading persistence data: ${error}`,
+        });
       }
-    } catch (error) {
-      console.error(error);
     }
   },
 };
@@ -69,24 +87,4 @@ if (appEnvs.isDevelopment && 1) {
     async load() {},
     save() {},
   });
-}
-
-export function setupAutoPersistenceTask() {
-  if (!store.state.userSelfProjectActive) return;
-
-  let latestData = appPersistence.emitPersistenceData();
-  const internal = {
-    ensureLatestSaved() {
-      if (store.state.projectLoading) return;
-      const data = appPersistence.emitPersistenceData();
-      if (!dequal(data, latestData)) {
-        appPersistence.save(data);
-        latestData = data;
-      }
-    },
-  };
-  const timerId = setInterval(() => {
-    internal.ensureLatestSaved();
-  }, 5 * 1000);
-  return () => clearInterval(timerId);
 }

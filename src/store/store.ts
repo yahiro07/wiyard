@@ -15,6 +15,7 @@ import {
   WindowId,
 } from "@/domain/types";
 import { defaultScene } from "@/project/default-data";
+import { ProjectLoadErrorStatus } from "@/store/store-types";
 
 export type StoreState = {
   //included in project data
@@ -46,6 +47,7 @@ export type StoreState = {
   secondBarVisible: boolean;
   userSelfProjectActive: boolean;
   importedProjectFileName: string | null;
+  projectLoadErrorStatus: ProjectLoadErrorStatus | null;
 };
 
 const blankStoreState: StoreState = {
@@ -75,8 +77,9 @@ const blankStoreState: StoreState = {
   projectLoading: false,
   secondBarVisible: false,
   uiScaling: 1,
-  userSelfProjectActive: true,
+  userSelfProjectActive: false,
   importedProjectFileName: null,
+  projectLoadErrorStatus: null,
 };
 
 export const projectResetterStates: Partial<StoreState> = {

@@ -1,5 +1,8 @@
+import { tryParseJson } from "@lib/utils/general-helper";
 import { blankScene, defaultScene } from "@/project/default-data";
 import { projectDataIo } from "@/project/project-data-io";
+import { migrateProjectData } from "@/project/project-data-migrator";
+import { raiseProjectLoadingError } from "@/project/project-error";
 import { ProjectData } from "@/project/project-types";
 import {
   downloadFile,
@@ -27,21 +30,23 @@ function createProjectsModel(): ProjectsModel {
       try {
         const res = await loadLocalFileText();
         if (!res) return;
-        const projectData = JSON.parse(res.content) as ProjectData;
-        if (projectDataIo.checkCompatibility(projectData)) {
-          await projectDataIo.applyProjectData(projectData, res.fileName);
-        } else {
-          alert(`incompatible project format: ${projectData.formatCode}`);
-        }
+        const inputProjectData = tryParseJson<ProjectData>(res.content, () =>
+          raiseProjectLoadingError(`failed to parse project data json`),
+        );
+        const projectData = migrateProjectData(inputProjectData);
+        void projectDataIo.applyProjectData(projectData, res.fileName);
       } catch (error) {
-        console.warn("error importing project", error);
+        console.warn(error);
+        store.setProjectLoadErrorStatus({
+          message: `error importing project: ${error}`,
+        });
       }
     },
     loadBlankProject() {
-      projectDataIo.applyProjectData(blankScene);
+      void projectDataIo.applyProjectData(blankScene);
     },
     loadDemoProject() {
-      projectDataIo.applyProjectData(defaultScene);
+      void projectDataIo.applyProjectData(defaultScene);
     },
   };
 }
