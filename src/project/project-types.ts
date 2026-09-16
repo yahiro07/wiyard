@@ -6,8 +6,9 @@ import { UnitItem, WindowId } from "@/domain/types";
 
 export type ProjectStoreStates = {
   unitItems: UnitItem[];
-  windowSpecs: Record<WindowId, WindowSpec>;
   wireConnectionKeys: string[];
+  wireGains: Record<string, number>;
+  windowSpecs: Record<WindowId, WindowSpec>;
   currentNoteChannelId: string;
   currentWindowId: string | null;
   windowsEvacuated: boolean;

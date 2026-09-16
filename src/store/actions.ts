@@ -204,4 +204,7 @@ export const actions = {
   setKeyName(keyName: KeyName) {
     store.setKeyName(keyName);
   },
+  setWireGain(wireConnectionKey: string, value: number) {
+    store.patchWireGains({ [wireConnectionKey]: value });
+  },
 };

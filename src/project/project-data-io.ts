@@ -14,8 +14,9 @@ const helpers = {
       storeStates,
       {
         unitItems: 1,
-        windowSpecs: 1,
         wireConnectionKeys: 1,
+        wireGains: 1,
+        windowSpecs: 1,
         currentNoteChannelId: 1,
         currentWindowId: 1,
         windowsEvacuated: 1,

@@ -63,6 +63,7 @@ function createDefaultScene(): ProjectData {
       unitItems,
       currentNoteChannelId: "noteInputPort1",
       wireConnectionKeys,
+      wireGains: {},
       sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
       keyName: "C" as KeyName,
       windowSpecs: {},
@@ -97,6 +98,7 @@ function createBlankScene(): ProjectData {
     storeStates: {
       unitItems,
       wireConnectionKeys: [],
+      wireGains: {},
       currentNoteChannelId: "noteInputPort1",
       sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
       keyName: "C" as KeyName,
