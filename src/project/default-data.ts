@@ -40,10 +40,10 @@ function createDefaultScene(): ProjectData {
   ];
 
   const wireConnectionKeys = [
-    "noteInputPort1.noteOutput-synth1.noteInput",
-    "drum1.audioOutput-speakerPort.audioInput",
-    "synth1.audioOutput-effect1.audioInput",
-    "effect1.audioOutput-speakerPort.audioInput",
+    "noteInputPort1.noteOutput>synth1.noteInput",
+    "drum1.audioOutput>speakerPort.audioInput",
+    "synth1.audioOutput>effect1.audioInput",
+    "effect1.audioOutput>speakerPort.audioInput",
   ];
 
   if (appEnvs.isDevelopment) {
