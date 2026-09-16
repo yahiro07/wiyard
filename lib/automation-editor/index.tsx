@@ -4,7 +4,8 @@ import { Point, Size } from "@lib/utils/common-types";
 import { useMemo, useRef } from "react";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { createStore } from "snap-store";
-import { startPointerCaptureSession } from "@lib/utils/drag-session";
+import { createDragSession } from "@lib/utils/drag-session";
+import { resultOf } from "@lib/utils/general-helper";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
@@ -19,6 +20,13 @@ const PointsDisplayLayer = ({
   size: Size;
   color: string;
 }) => {
+  const polyPoints = resultOf(() => {
+    const lastP = points.at(-1);
+    if (lastP && lastP.x < 0.99) {
+      return [...points, { x: 1, y: lastP.y }];
+    }
+    return points;
+  });
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
       <g>
@@ -33,7 +41,7 @@ const PointsDisplayLayer = ({
         ))}
       </g>
       <polyline
-        points={points
+        points={polyPoints
           .map((po) => `${po.x * size.width} ${(1 - po.y) * size.height}`)
           .join(" ")}
         stroke={color}
@@ -66,47 +74,54 @@ function createPointsMutations(accessor: StorePointsAccessor) {
   };
 }
 
+function createViewSpace(size: Size) {
+  const toNormalized = (pos: Point): Point => ({
+    x: pos.x / size.width,
+    y: 1 - pos.y / size.height,
+  });
+  const hitRadii = (pixelRadius: number) => ({
+    rx: pixelRadius / size.width,
+    ry: pixelRadius / size.height,
+  });
+  return { toNormalized, hitRadii };
+}
+
+const helpers = {
+  hitTestPoint(
+    points: Point[],
+    pos: Point,
+    radii: { rx: number; ry: number },
+  ): Point | undefined {
+    return points.find((po) => {
+      const dx = (po.x - pos.x) / radii.rx;
+      const dy = (po.y - pos.y) / radii.ry;
+      return dx * dx + dy * dy <= 1;
+    });
+  },
+};
+
 function createEditInputActions(accessor: StorePointsAccessor) {
   const pointsMutations = createPointsMutations(accessor);
 
-  const core = {
-    getHitTestRadius(e: PointerEvent) {
-      const el = e.target as HTMLElement;
-      const rect = el.getBoundingClientRect();
-      return 8 / rect.width;
-    },
-    getPointCoord(e: PointerEvent) {
-      const el = e.target as HTMLElement;
-      const rect = el.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = 1 - (e.clientY - rect.top) / rect.height;
-      return { x, y };
-    },
-    hitTestPoints(pos: Point, radius: number) {
-      const points = accessor.getPoints();
-      return points.filter((po) => {
-        const dx = po.x - pos.x;
-        const dy = po.y - pos.y;
-        return dx * dx + dy * dy <= radius * radius;
-      })[0];
-    },
-  };
-
   return {
-    handlePointerDown(e0: PointerEvent) {
-      const pos = core.getPointCoord(e0);
-      const hitTestRadius = core.getHitTestRadius(e0);
-      const po = core.hitTestPoints(pos, hitTestRadius);
-      if (po) {
-        pointsMutations.removePoint(po);
+    handlePointerDown(e0: React.PointerEvent) {
+      const ds = createDragSession(e0);
+      const viewSpace = createViewSpace(ds.getBaseSize());
+      const startPos = viewSpace.toNormalized(ds.getStartPosition());
+      const hit = helpers.hitTestPoint(
+        accessor.getPoints(),
+        startPos,
+        viewSpace.hitRadii(8),
+      );
+      if (hit) {
+        pointsMutations.removePoint(hit);
       } else {
-        pointsMutations.addPoint(pos);
-        startPointerCaptureSession(e0, {
-          onMove(e) {
-            const pos = core.getPointCoord(e);
-            pointsMutations.addPoint(pos);
+        pointsMutations.addPoint(startPos);
+        ds.run({
+          onMove(inputPos) {
+            const pos = viewSpace.toNormalized(inputPos);
           },
-          onUpOrCancel(e, cause) {},
+          onEnd() {},
         });
       }
     },
@@ -118,7 +133,7 @@ const EditInputLayer = ({ accessor }: { accessor: StorePointsAccessor }) => {
   return (
     <div
       className="absolute-full"
-      onPointerDown={(e) => editInputActions.handlePointerDown(e.nativeEvent)}
+      onPointerDown={(e) => editInputActions.handlePointerDown(e)}
     />
   );
 };

@@ -1,4 +1,5 @@
 type Point = { x: number; y: number };
+type Size = { width: number; height: number };
 type Vector = Point;
 
 const getDist = (p1: Point, p2: Point): number => {
@@ -13,7 +14,9 @@ type DragSessionCallbacks = {
 };
 
 type DragSession = {
-  startPosition: Point;
+  // startPosition: Point;
+  getStartPosition(): Point;
+  getBaseSize(): Size;
   run(callbacks: DragSessionCallbacks): void;
 };
 
@@ -43,7 +46,11 @@ export function createDragSession(
   };
   const startPosition = getPos(e0);
   return {
-    startPosition,
+    getStartPosition: () => startPosition,
+    getBaseSize: () => ({
+      width: baseEl.offsetWidth,
+      height: baseEl.offsetHeight,
+    }),
     run(callbacks) {
       startPointerCaptureSession(e0, {
         onMove(e) {
