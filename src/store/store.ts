@@ -108,7 +108,7 @@ export const projectResetterStates: Partial<StoreState> = {
 
 const defaultStoreState: StoreState = {
   ...blankStoreState,
-  ...defaultScene,
+  ...defaultScene.storeStates,
 };
 
 if (1) {
