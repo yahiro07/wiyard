@@ -1,9 +1,51 @@
 import { setOrDeleteValue } from "@lib/utils/array-object-helper";
 import { cz } from "@lib/utils/cz";
+import { useHandleClickOutside } from "@lib/utils/use-handle-click-outside";
+import { useRef } from "react";
+import { AutomationParameterSpec } from "wafer-host/unit-types";
+import { wireColors } from "@/common/theme";
 import { decodeWireConnectionKey } from "@/domain/port-helpers";
 import { store } from "@/store/store";
 import { wireGetters } from "@/store/wire-getters";
 import { useWireMiddlePoint } from "@/views/wiring/wire-view-helpers";
+
+const AutomationSwitcherMenu = ({
+  currentParameterId,
+  setParameterId,
+  automationParameterSpecs,
+}: {
+  currentParameterId: string | null;
+  setParameterId: (id: string | null) => void;
+  automationParameterSpecs: AutomationParameterSpec[];
+}) => {
+  const baseDivRef = useRef<HTMLDivElement>(null);
+  useHandleClickOutside(baseDivRef, () => {
+    store.setConfigTargetWireKey(null);
+  });
+  return (
+    <div ref={baseDivRef} className="flex-v bg-#777e p-2">
+      <div
+        className={cz(!currentParameterId && "bg-#8af")}
+        onClick={() => setParameterId(null)}
+      >
+        --
+      </div>
+      {automationParameterSpecs.map((spec, i) => (
+        <div
+          key={spec.id}
+          className={cz(
+            "px-1 py-0.75",
+            spec.id === currentParameterId && "bg-#8af",
+          )}
+          onClick={() => setParameterId(spec.id)}
+        >
+          {/* {i + 1}. */}
+          {spec.id}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const AutomationSwitcherContainer = ({
   connectionKey,
@@ -40,30 +82,26 @@ const AutomationSwitcherContainer = ({
 
   return (
     <div
-      className="absolute -translate-x-1/2 -translate-y-1/2"
+      className="absolute -translate-x-1/2 -translate-y-1/2 z-3"
       style={{ left: pos.x, top: pos.y }}
     >
-      <div className="relative">
-        <div className="w-3 h-3 bg-red-500" onClick={onAnchorClick} />
-      </div>
-      {isConfigTarget && (
-        <>
+      {!isConfigTarget && (
+        <div
+          className="w-6 h-6 flex-c cursor-pointer hover:opacity-80"
+          onClick={onAnchorClick}
+        >
           <div
-            className={cz(!currentParameterId && "bg-blue-500")}
-            onClick={() => setParameterId(null)}
-          >
-            --
-          </div>
-          {automationParameterSpecs.map((spec) => (
-            <div
-              key={spec.id}
-              className={cz(spec.id === currentParameterId && "bg-blue-500")}
-              onClick={() => setParameterId(spec.id)}
-            >
-              {spec.id}
-            </div>
-          ))}
-        </>
+            className="w-3 h-3"
+            style={{ backgroundColor: wireColors.automation }}
+          />
+        </div>
+      )}
+      {isConfigTarget && (
+        <AutomationSwitcherMenu
+          currentParameterId={currentParameterId}
+          setParameterId={setParameterId}
+          automationParameterSpecs={automationParameterSpecs}
+        />
       )}
     </div>
   );
