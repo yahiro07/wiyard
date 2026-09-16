@@ -4,6 +4,9 @@ export const createSpeakerPortUnit: ReactUnitTemplateFn = (unitInterface) => {
   unitInterface.audioInputNode.connect(unitInterface.audioOutputNode);
   unitInterface.completeSetup({
     unitAspects: { unitType: "effect" },
+    cleanup() {
+      unitInterface.audioInputNode.disconnect();
+    },
   });
   return {
     RenderUi() {

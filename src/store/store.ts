@@ -20,10 +20,11 @@ import { ProjectLoadErrorStatus } from "@/store/store-types";
 export type StoreState = {
   //included in project data
   unitItems: UnitItem[];
+  wireConnectionKeys: string[];
+  wireGains: Record<string, number>; //0~1,center 0.5 for unity gain, store only edited values
   windowSpecs: Record<WindowId, WindowSpec>;
   currentWindowId: string | null;
   windowsEvacuated: boolean;
-  wireConnectionKeys: string[];
   currentNoteChannelId: string;
   bpm: number;
   sight: FieldSight;
@@ -54,6 +55,7 @@ export type StoreState = {
 const blankStoreState: StoreState = {
   unitItems: [],
   wireConnectionKeys: [],
+  wireGains: {},
   windowSpecs: {},
   currentWindowId: null,
   windowsEvacuated: false,
@@ -87,6 +89,7 @@ const blankStoreState: StoreState = {
 export const projectResetterStates: Partial<StoreState> = {
   unitItems: [],
   wireConnectionKeys: [],
+  wireGains: {},
   windowSpecs: {},
   currentWindowId: null,
   windowsEvacuated: false,
