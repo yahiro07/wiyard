@@ -50,7 +50,9 @@ export const projectDataTextSupport = {
 function createSharedUrlSupport(): SharedUrlSupport {
   return {
     generateSharedUrl() {
-      const baseUrl = appEnvs.cfPagesUrl || location.origin;
+      const baseUrl = appEnvs.isDevelopment
+        ? location.origin
+        : appEnvs.cfPagesUrl;
       const projectData = projectDataIo.emitProjectData();
       const projectDataText =
         projectDataTextSupport.emitProjectDataText(projectData);
