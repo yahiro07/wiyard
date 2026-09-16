@@ -53,3 +53,7 @@ export function decodeWireConnectionKey(wireConnectionKey: string) {
     destinationPortId,
   };
 }
+
+export function getWireVolumeUnitId(wireConnectionKey: string) {
+  return `wg_${wireConnectionKey}`.replace(/[.-]/g, "_");
+}

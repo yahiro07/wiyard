@@ -21,7 +21,7 @@ export type StoreState = {
   //included in project data
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
-  wireGains: Record<string, number>;
+  wireGains: Record<string, number>; //0~1,center 0.5 for unity gain, store only edited values
   windowSpecs: Record<WindowId, WindowSpec>;
   currentWindowId: string | null;
   windowsEvacuated: boolean;
