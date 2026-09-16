@@ -3,7 +3,7 @@ import { appPersistence } from "@/project/app-persistence";
 import { store } from "@/store/store";
 
 export function setupAutoPersistenceTask() {
-  if (!store.state.userSelfProjectActive) return;
+  if (!store.state.autoPersistenceEnabled) return;
 
   let latestData = appPersistence.emitPersistenceData();
   const internal = {

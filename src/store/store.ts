@@ -45,9 +45,10 @@ export type StoreState = {
   projectLoadedIndex: number;
   projectLoading: boolean;
   secondBarVisible: boolean;
-  userSelfProjectActive: boolean;
+  autoPersistenceEnabled: boolean;
   importedProjectFileName: string | null;
   projectLoadErrorStatus: ProjectLoadErrorStatus | null;
+  loadedFromSharedUrl: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -77,9 +78,10 @@ const blankStoreState: StoreState = {
   projectLoading: false,
   secondBarVisible: false,
   uiScaling: 1,
-  userSelfProjectActive: false,
+  autoPersistenceEnabled: false,
   importedProjectFileName: null,
   projectLoadErrorStatus: null,
+  loadedFromSharedUrl: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {

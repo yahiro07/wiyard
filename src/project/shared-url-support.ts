@@ -24,9 +24,6 @@ export const projectDataTextSupport = {
     applyProductionFix: boolean,
   ): ProjectData {
     const decompressed = decompressTextFromBase64(dataText);
-    if (!decompressed) {
-      raiseProjectLoadingError(`failed to decompress project data text`);
-    }
     const projectData = tryParseJson<ProjectData>(decompressed, () =>
       raiseProjectLoadingError(`failed to parse project data json`),
     );

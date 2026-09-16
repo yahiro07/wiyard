@@ -52,12 +52,10 @@ export const projectDataIo = {
         projectLoadedIndex: store.state.projectLoadedIndex + 1,
         importedProjectFileName: importedProjectFileName ?? null,
       });
-      await hostSystem.waitUnitsLoaded();
+      await hostSystem.waitUnitsLoaded(); //basically this does not throw errors
       if (unitStates) {
         hostSystem.setAllUnitStates(unitStates);
       }
-    } catch (error) {
-      console.warn(error);
     } finally {
       store.setProjectLoading(false);
     }

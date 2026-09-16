@@ -1,4 +1,5 @@
 import { tryParseJson } from "@lib/utils/general-helper";
+import { appEnvs } from "@/common/app-config";
 import { blankScene, defaultScene } from "@/project/default-data";
 import { projectDataIo } from "@/project/project-data-io";
 import { migrateProjectData } from "@/project/project-data-migrator";
@@ -34,6 +35,12 @@ function createProjectsModel(): ProjectsModel {
           raiseProjectLoadingError(`failed to parse project data json`),
         );
         const projectData = migrateProjectData(inputProjectData);
+        if (projectData.pageDeployId !== appEnvs.cfPagesDeployId) {
+          //todo: show selection dialog
+          //the data saved in an old version of the app
+          //--open in a new tab with the compatible version of the app (safe, recommended)
+          //--load the data in this tab (data might be corrupted)
+        }
         void projectDataIo.applyProjectData(projectData, res.fileName);
       } catch (error) {
         console.warn(error);

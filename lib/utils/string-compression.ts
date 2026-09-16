@@ -20,7 +20,7 @@ export function compressTextToBase64(text: string): string {
   return bytesToBase64Url(bytes);
 }
 
-export function decompressTextFromBase64(base64Text: string): string | null {
+export function decompressTextFromBase64(base64Text: string): string {
   const bytes = base64UrlToBytes(base64Text);
   return strFromU8(inflateSync(bytes));
 }

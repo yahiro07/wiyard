@@ -100,6 +100,8 @@ const MasterVolumeInput = () => {
 };
 
 const SecondBarButton = () => {
+  const { loadedFromSharedUrl } = store.useSnapshot();
+  if (loadedFromSharedUrl) return null;
   return (
     <ControlButton
       onClick={store.toggleSecondBarVisible}

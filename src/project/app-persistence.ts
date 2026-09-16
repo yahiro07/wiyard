@@ -19,22 +19,32 @@ type PersistenceData = {
   sessionStates: AppSessionStates;
 };
 
-export const appPersistence = {
-  emitPersistenceData(): PersistenceData {
-    const projectData = projectDataIo.emitProjectData();
-    const sessionStates = pickObjectMembers(store.state, {
+const helpers = {
+  pickSessionStates(storeState: AppSessionStates) {
+    return pickObjectMembers(storeState, {
       midiInEnabled: 1,
       masterVolume: 1,
       uiScaling: 1,
     });
+  },
+};
+
+export const appPersistence = {
+  emitPersistenceData(): PersistenceData {
+    const projectData = projectDataIo.emitProjectData();
+    const sessionStates = helpers.pickSessionStates(store.state);
     return { projectData, sessionStates };
   },
   save(data: PersistenceData) {
-    localStorage.setItem("wireboard-states", JSON.stringify(data));
-    console.log("saved");
-    // console.log(JSON.stringify(data, null, 2));
+    try {
+      localStorage.setItem("wireboard-states", JSON.stringify(data));
+      console.log("saved");
+      // console.log(JSON.stringify(data, null, 2));
+    } catch (error) {
+      console.warn(error);
+    }
   },
-  async load() {
+  load() {
     const url = new URLSearchParams(location.search);
     const urlDataText = url.get("data");
 
@@ -44,12 +54,17 @@ export const appPersistence = {
         if (storageText) {
           const data = tryParseJsonOrNull<PersistenceData>(storageText);
           if (data) {
-            store.assign(data.sessionStates);
+            store.assign(helpers.pickSessionStates(data.sessionStates));
           }
         }
-        const projectData = migrateProjectData(
-          sharedUrlSupport.loadSharedUrlData(urlDataText),
-        );
+        const inputProjectData =
+          sharedUrlSupport.loadSharedUrlData(urlDataText);
+        if (inputProjectData.pageDeployId !== appEnvs.cfPagesDeployId) {
+          //todo: consider adding version selection phase
+          //if the data is saved in an old version, it's preferred to open in that version
+          //since the migration logic could not be perfect
+        }
+        const projectData = migrateProjectData(inputProjectData);
         void projectDataIo.applyProjectData(projectData);
       } catch (error) {
         //fatal
@@ -59,6 +74,7 @@ export const appPersistence = {
           reloadPageWithCleanUrl: true,
         });
       }
+      store.setLoadedFromSharedUrl(true);
     } else {
       try {
         const text = localStorage.getItem("wireboard-states");
@@ -66,11 +82,15 @@ export const appPersistence = {
           const data = tryParseJson<PersistenceData>(text, () =>
             raiseProjectLoadingError(`failed to parse persistence data json`),
           );
-          store.assign({ ...data.sessionStates, userSelfProjectActive: true });
+          store.assign({ ...data.sessionStates });
+          const inputProjectData = data.projectData;
+          if (inputProjectData.pageDeployId !== appEnvs.cfPagesDeployId) {
+            //todo: consider adding version selection phase
+            //if the data is saved in an old version, it's preferred to open in that version
+            //since the migration logic could not be perfect
+          }
           const projectData = migrateProjectData(data.projectData);
           void projectDataIo.applyProjectData(projectData);
-        } else {
-          store.setUserSelfProjectActive(true);
         }
       } catch (error) {
         console.warn(error);
@@ -78,6 +98,7 @@ export const appPersistence = {
           message: `error loading persistence data: ${error}`,
         });
       }
+      store.setAutoPersistenceEnabled(true);
     }
   },
 };
