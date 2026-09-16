@@ -33,7 +33,12 @@ const WireConnectionWithGain = ({
 export const UnitConnectionsRoot = () => {
   const internalSequencerConnectionSpecs =
     notePortGetters.useInternalSequencerConnectionSpecs();
-  const { wireConnectionKeys, wireGains, portStuffs } = store.useSnapshot();
+  const {
+    wireConnectionKeys,
+    wireGains,
+    wireAutomationParameterIds,
+    portStuffs,
+  } = store.useSnapshot();
   return (
     <>
       {internalSequencerConnectionSpecs.map((spec) => (
@@ -44,11 +49,11 @@ export const UnitConnectionsRoot = () => {
         />
       ))}
       {wireConnectionKeys.map((connectionKey) => {
-        const [sourcePortKey, destinationPortKeyFull] =
-          connectionKey.split("-");
+        const [sourcePortKey, destinationPortKey] =
+          splitConnectionKey(connectionKey);
         const sourcePortStuff = portStuffs[sourcePortKey];
         const subType = sourcePortStuff?.subtype;
-        if (destinationPortKeyFull.includes("$output")) {
+        if (destinationPortKey.includes("$output")) {
           //prohibit direct connection to output, it should be connected via speakerPort
           return null;
         }
@@ -60,12 +65,23 @@ export const UnitConnectionsRoot = () => {
               level={wireGains[connectionKey]}
             />
           );
+        } else if (subType === "automation") {
+          const paramId = wireAutomationParameterIds[connectionKey];
+          if (!paramId) return null;
+          const destination = `${destinationPortKey}#${paramId}`;
+          return (
+            <Connection
+              key={connectionKey}
+              source={sourcePortKey}
+              destination={destination}
+            />
+          );
         } else {
           return (
             <Connection
               key={connectionKey}
               source={sourcePortKey}
-              destination={destinationPortKeyFull}
+              destination={destinationPortKey}
             />
           );
         }

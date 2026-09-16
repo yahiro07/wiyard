@@ -16,6 +16,7 @@ const helpers = {
         unitItems: 1,
         wireConnectionKeys: 1,
         wireGains: 1,
+        wireAutomationParameterIds: 1,
         windowSpecs: 1,
         currentNoteChannelId: 1,
         currentWindowId: 1,

@@ -6,7 +6,6 @@ import { boardSize, getDeskAreaElement } from "@/common/constants";
 import {
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
-  portKeyEquals,
 } from "@/domain/port-helpers";
 import {
   BoardUnitItem,
@@ -111,13 +110,17 @@ export const actions = {
       sourcePortKey,
       destPortKey,
     );
-    const exists = store.state.wireConnectionKeys.some((it) =>
-      portKeyEquals(it, connectionKey),
-    );
+    const exists = store.state.wireConnectionKeys.includes(connectionKey);
     if (exists) {
       store.setWireConnectionKeys((prev) =>
-        prev.filter((it) => !portKeyEquals(it, connectionKey)),
+        prev.filter((key) => key !== connectionKey),
       );
+      store.produceWireGains((draft) => {
+        delete draft[connectionKey];
+      });
+      store.produceWireAutomationParameterIds((draft) => {
+        delete draft[connectionKey];
+      });
     } else {
       store.setWireConnectionKeys((prev) => [...prev, connectionKey]);
     }
@@ -193,6 +196,16 @@ export const actions = {
     store.setWireConnectionKeys((prev) =>
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
+    store.produceWireGains((draft) => {
+      for (const key of wireConnectionKeys) {
+        delete draft[key];
+      }
+    });
+    store.produceWireAutomationParameterIds((draft) => {
+      for (const key of wireConnectionKeys) {
+        delete draft[key];
+      }
+    });
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
     store.setMenuTargetUnitId(null);
     windowSystem.remove(unitId);

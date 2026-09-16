@@ -22,6 +22,7 @@ export type StoreState = {
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   wireGains: Record<string, number>; //0~1,center 0.5 for unity gain, store only edited values
+  wireAutomationParameterIds: Record<string, string>;
   windowSpecs: Record<WindowId, WindowSpec>;
   currentWindowId: string | null;
   windowsEvacuated: boolean;
@@ -50,11 +51,13 @@ export type StoreState = {
   importedProjectFileName: string | null;
   projectLoadErrorStatus: ProjectLoadErrorStatus | null;
   loadedFromSharedUrl: boolean;
+  configTargetWireKey: string | null;
 };
 
 const blankStoreState: StoreState = {
   unitItems: [],
   wireConnectionKeys: [],
+  wireAutomationParameterIds: {},
   wireGains: {},
   windowSpecs: {},
   currentWindowId: null,
@@ -84,11 +87,13 @@ const blankStoreState: StoreState = {
   importedProjectFileName: null,
   projectLoadErrorStatus: null,
   loadedFromSharedUrl: false,
+  configTargetWireKey: null,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
   unitItems: [],
   wireConnectionKeys: [],
+  wireAutomationParameterIds: {},
   wireGains: {},
   windowSpecs: {},
   currentWindowId: null,

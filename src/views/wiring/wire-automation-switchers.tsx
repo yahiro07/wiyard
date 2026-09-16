@@ -1,3 +1,4 @@
+import { setOrDeleteValue } from "@lib/utils/array-object-helper";
 import { cz } from "@lib/utils/cz";
 import { decodeWireConnectionKey } from "@/domain/port-helpers";
 import { store } from "@/store/store";
@@ -9,7 +10,12 @@ const AutomationSwitcherContainer = ({
 }: {
   connectionKey: string;
 }) => {
-  const { portStuffs, unitStuffs } = store.useSnapshot();
+  const {
+    portStuffs,
+    unitStuffs,
+    configTargetWireKey,
+    wireAutomationParameterIds,
+  } = store.useSnapshot();
   const pos = useWireMiddlePoint(connectionKey);
   if (!pos) return;
   const d = decodeWireConnectionKey(connectionKey);
@@ -17,36 +23,48 @@ const AutomationSwitcherContainer = ({
   const unitStuff = unitStuffs[destinationPort?.unitId];
   const automationParameterSpecs = unitStuff?.automationParameterSpecs;
   if (!automationParameterSpecs) return;
-  const currentParameterId = d.destinationParameterId;
 
-  const setParameterId = (id: string) => {
-    const removed = connectionKey;
-    const added = `${d.sourcePortKey}-${d.destinationPortKey}#${id}`;
-    store.setWireConnectionKeys((prev) => [
-      ...prev.filter((key) => key !== removed),
-      added,
-    ]);
+  const currentParameterId = wireAutomationParameterIds[connectionKey];
+
+  const setParameterId = (id: string | null) => {
+    store.produceWireAutomationParameterIds((draft) => {
+      setOrDeleteValue(draft, connectionKey, id);
+    });
   };
+
+  const isConfigTarget = configTargetWireKey === connectionKey;
+
+  const onAnchorClick = () => {
+    store.setConfigTargetWireKey(isConfigTarget ? null : connectionKey);
+  };
+
   return (
     <div
       className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: pos.x, top: pos.y }}
     >
-      <div
-        className={cz(!currentParameterId && "bg-blue-500")}
-        onClick={() => setParameterId("")}
-      >
-        --
+      <div className="relative">
+        <div className="w-3 h-3 bg-red-500" onClick={onAnchorClick} />
       </div>
-      {automationParameterSpecs.map((spec) => (
-        <div
-          key={spec.id}
-          className={cz(spec.id === currentParameterId && "bg-blue-500")}
-          onClick={() => setParameterId(spec.id)}
-        >
-          {spec.id}
-        </div>
-      ))}
+      {isConfigTarget && (
+        <>
+          <div
+            className={cz(!currentParameterId && "bg-blue-500")}
+            onClick={() => setParameterId(null)}
+          >
+            --
+          </div>
+          {automationParameterSpecs.map((spec) => (
+            <div
+              key={spec.id}
+              className={cz(spec.id === currentParameterId && "bg-blue-500")}
+              onClick={() => setParameterId(spec.id)}
+            >
+              {spec.id}
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 };

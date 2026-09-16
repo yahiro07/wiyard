@@ -29,9 +29,7 @@ export function getForwardDirectionWireConnectionKey(
 }
 
 export function splitConnectionKey(wireConnectionKey: string) {
-  const [former] = wireConnectionKey.split("#");
-  const [sourcePortKey, destinationPortKey] = former.split("-");
-  return [sourcePortKey, destinationPortKey];
+  return wireConnectionKey.split("-");
 }
 
 export function filterUnitRelatedWires(
@@ -47,8 +45,7 @@ export function filterUnitRelatedWires(
 }
 
 export function decodeWireConnectionKey(wireConnectionKey: string) {
-  const [former, destinationParameterId] = wireConnectionKey.split("#");
-  const [sourcePortKey, destinationPortKey] = former.split("-");
+  const [sourcePortKey, destinationPortKey] = wireConnectionKey.split("-");
   const [sourceUnitId, sourcePortId] = sourcePortKey.split(".");
   const [destinationUnitId, destinationPortId] = destinationPortKey.split(".");
   return {
@@ -58,14 +55,9 @@ export function decodeWireConnectionKey(wireConnectionKey: string) {
     sourcePortId,
     destinationUnitId,
     destinationPortId,
-    destinationParameterId,
   };
 }
 
 export function getWireVolumeUnitId(wireConnectionKey: string) {
   return `wg_${wireConnectionKey}`.replace(/[.-]/g, "_");
-}
-
-export function portKeyEquals(portKeyA: string, portKeyB: string) {
-  return portKeyA.split("#")[0] === portKeyB.split("#")[0];
 }

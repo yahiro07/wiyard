@@ -110,9 +110,11 @@ export const appPersistence = {
   },
 };
 if (appEnvs.isDevelopment && 0) {
-  //bypass persistence for debug
+  //bypass persistence load for debug
   typedAssign(appPersistence, {
-    async load() {},
+    async load() {
+      store.setAutoPersistenceEnabled(true);
+    },
     save() {},
   });
 }

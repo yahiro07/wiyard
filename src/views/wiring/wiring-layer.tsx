@@ -6,7 +6,6 @@ import { uiConstants, wireColors } from "@/common/theme";
 import {
   getForwardDirectionWireConnectionKey,
   getPortDirectionFromPortKey,
-  portKeyEquals,
   splitConnectionKey,
 } from "@/domain/port-helpers";
 import { store } from "@/store/store";
@@ -116,7 +115,7 @@ const DragPreviewWire = () => {
     previewDestPortKey,
   );
 
-  if (wireConnectionKeys.some((it) => portKeyEquals(it, connectionKey))) {
+  if (wireConnectionKeys.includes(connectionKey)) {
     //existing wire, show nothing for removing preview
     return;
   }
