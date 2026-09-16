@@ -1,4 +1,4 @@
-import { clampValue, inBetween } from "@lib/utils/number-helper";
+import { clampValue, inBetween } from "./number-helper";
 import { Point, Rect, Size, Vector } from "./common-types";
 
 export const vectorOp = {

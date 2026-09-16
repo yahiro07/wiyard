@@ -42,7 +42,7 @@ function createProjectsModel(): ProjectsModel {
           //--load the data in this tab (data might be corrupted)
         }
         void projectDataIo.applyProjectData(projectData, res.fileName);
-      } catch (error) {
+      } catch (error: any) {
         console.warn(error);
         store.setProjectLoadErrorStatus({
           message: `error importing project: ${error}`,
