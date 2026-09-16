@@ -2,6 +2,23 @@ import { Connection } from "wafer-host/react";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 
+const WireConnectionWithGain = ({
+  connectionKey,
+}: {
+  connectionKey: string;
+}) => {
+  const [sourcePortKey, destinationPortKey] = connectionKey.split("-");
+  return (
+    <>
+      <Connection
+        key={connectionKey}
+        source={sourcePortKey}
+        destination={destinationPortKey}
+      />
+    </>
+  );
+};
+
 export const UnitConnectionsRoot = () => {
   const internalSequencerConnectionSpecs =
     notePortGetters.useInternalSequencerConnectionSpecs();
@@ -16,12 +33,10 @@ export const UnitConnectionsRoot = () => {
         />
       ))}
       {wireConnectionKeys.map((connectionKey) => {
-        const [sourcePortKey, destinationPortKey] = connectionKey.split("-");
         return (
-          <Connection
+          <WireConnectionWithGain
             key={connectionKey}
-            source={sourcePortKey}
-            destination={destinationPortKey}
+            connectionKey={connectionKey}
           />
         );
       })}
