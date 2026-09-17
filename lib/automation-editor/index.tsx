@@ -6,6 +6,7 @@ import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { createStore } from "snap-store";
 import { createDragSession } from "@lib/utils/drag-session";
 import { resultOf } from "@lib/utils/general-helper";
+import { clampValue } from "@lib/utils/number-helper";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
@@ -60,11 +61,12 @@ type StorePointsAccessor = {
 function createPointsMutations(accessor: StorePointsAccessor) {
   return {
     addPoint(po: Point) {
-      accessor.setPoints((prev) => {
-        const newPoints = [...prev, po];
-        newPoints.sort((a, b) => a.x - b.x);
-        return newPoints;
-      });
+      accessor.setPoints((prev) => [...prev, po].sort((a, b) => a.x - b.x));
+    },
+    replacePoint(target: Point, po: Point) {
+      accessor.setPoints((prev) =>
+        prev.map((p) => (p === target ? po : p)).sort((a, b) => a.x - b.x),
+      );
     },
     removePoint(po: Point) {
       accessor.setPoints((prev) => {
@@ -75,15 +77,20 @@ function createPointsMutations(accessor: StorePointsAccessor) {
 }
 
 function createViewSpace(size: Size) {
-  const toNormalized = (pos: Point): Point => ({
-    x: pos.x / size.width,
-    y: 1 - pos.y / size.height,
-  });
-  const hitRadii = (pixelRadius: number) => ({
-    rx: pixelRadius / size.width,
-    ry: pixelRadius / size.height,
-  });
-  return { toNormalized, hitRadii };
+  return {
+    toNormalized(pos: Point, clamp?: boolean) {
+      const x = pos.x / size.width;
+      const y = 1 - pos.y / size.height;
+      if (clamp) {
+        return { x: clampValue(x, 0, 1), y: clampValue(y, 0, 1) };
+      } else {
+        return { x, y };
+      }
+    },
+    hitRadii(pixelRadius: number) {
+      return { rx: pixelRadius / size.width, ry: pixelRadius / size.height };
+    },
+  };
 }
 
 const helpers = {
@@ -107,7 +114,7 @@ function createEditInputActions(accessor: StorePointsAccessor) {
     handlePointerDown(e0: React.PointerEvent) {
       const ds = createDragSession(e0);
       const viewSpace = createViewSpace(ds.getBaseSize());
-      const startPos = viewSpace.toNormalized(ds.getStartPosition());
+      const startPos = viewSpace.toNormalized(ds.getStartPosition(), true);
       const hit = helpers.hitTestPoint(
         accessor.getPoints(),
         startPos,
@@ -117,9 +124,12 @@ function createEditInputActions(accessor: StorePointsAccessor) {
         pointsMutations.removePoint(hit);
       } else {
         pointsMutations.addPoint(startPos);
+        let latestPoint = startPos;
         ds.run({
           onMove(inputPos) {
-            const pos = viewSpace.toNormalized(inputPos);
+            const pos = viewSpace.toNormalized(inputPos, true);
+            pointsMutations.replacePoint(latestPoint, pos);
+            latestPoint = pos;
           },
           onEnd() {},
         });
