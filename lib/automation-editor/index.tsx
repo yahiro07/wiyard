@@ -4,7 +4,7 @@ import { Point, Size } from "@lib/utils/common-types";
 import { useMemo, useRef } from "react";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { createStore } from "snap-store";
-import { createDragSession } from "@lib/utils/drag-session";
+import { createDragSessionEx } from "@lib/utils/drag-session";
 import { resultOf } from "@lib/utils/general-helper";
 import { clampValue } from "@lib/utils/number-helper";
 
@@ -112,7 +112,7 @@ function createEditInputActions(accessor: StorePointsAccessor) {
 
   return {
     handlePointerDown(e0: React.PointerEvent) {
-      const ds = createDragSession(e0);
+      const ds = createDragSessionEx(e0);
       const viewSpace = createViewSpace(ds.getBaseSize());
       const startPos = viewSpace.toNormalized(ds.getStartPosition(), true);
       const hit = helpers.hitTestPoint(
@@ -120,20 +120,29 @@ function createEditInputActions(accessor: StorePointsAccessor) {
         startPos,
         viewSpace.hitRadii(8),
       );
-      if (hit) {
-        pointsMutations.removePoint(hit);
-      } else {
-        pointsMutations.addPoint(startPos);
-        let latestPoint = startPos;
-        ds.run({
-          onMove(inputPos) {
-            const pos = viewSpace.toNormalized(inputPos, true);
-            pointsMutations.replacePoint(latestPoint, pos);
-            latestPoint = pos;
-          },
-          onEnd() {},
-        });
-      }
+      let latestPoint: Point | undefined = hit;
+      ds.run({
+        onStart() {
+          if (!latestPoint) {
+            pointsMutations.addPoint(startPos);
+            latestPoint = startPos;
+          }
+        },
+        onMove(inputPos) {
+          if (!latestPoint) return;
+          const pos = viewSpace.toNormalized(inputPos, true);
+          pointsMutations.replacePoint(latestPoint, pos);
+          latestPoint = pos;
+        },
+        onTap() {
+          if (hit) {
+            pointsMutations.removePoint(hit);
+            latestPoint = undefined;
+          }
+        },
+        onHold() {},
+        onEnd() {},
+      });
     },
   };
 }

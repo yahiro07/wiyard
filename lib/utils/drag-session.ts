@@ -14,7 +14,6 @@ type DragSessionCallbacks = {
 };
 
 type DragSession = {
-  // startPosition: Point;
   getStartPosition(): Point;
   getBaseSize(): Size;
   run(callbacks: DragSessionCallbacks): void;
@@ -90,7 +89,8 @@ type DragSessionCallbacksEx = {
 };
 
 type DragSessionEx = {
-  startPosition: Point;
+  getStartPosition(): Point;
+  getBaseSize(): Size;
   run(callbacks: DragSessionCallbacksEx): void;
 };
 
@@ -137,7 +137,11 @@ export function createDragSessionEx(
   let latestPosition = startPosition;
 
   return {
-    startPosition,
+    getStartPosition: () => startPosition,
+    getBaseSize: () => ({
+      width: baseEl.offsetWidth,
+      height: baseEl.offsetHeight,
+    }),
     run(callbacks) {
       const callMove = (pos: Point) => {
         const relativeMoveAmountFromStart = {
