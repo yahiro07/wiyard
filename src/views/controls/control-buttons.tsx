@@ -127,7 +127,7 @@ const SightZoomInput = () => {
 const ShareUrlButton = () => {
   const onClick = () => {
     const url = sharedUrlSupport.generateSharedUrl();
-    navigator.clipboard.writeText(url);
+    void navigator.clipboard.writeText(url);
     alert(`shared url copied to clipboard (${url.length}bytes)`);
   };
   return (

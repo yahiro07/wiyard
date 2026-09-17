@@ -66,7 +66,7 @@ export const appPersistence = {
         }
         const projectData = migrateProjectData(inputProjectData);
         void projectDataIo.applyProjectData(projectData);
-      } catch (error) {
+      } catch (error: any) {
         //fatal
         console.warn(error);
         store.setProjectLoadErrorStatus({
@@ -95,7 +95,7 @@ export const appPersistence = {
         } else {
           store.setAutoPersistenceEnabled(true);
         }
-      } catch (error) {
+      } catch (error: any) {
         //if the error caused by migration, it should be treated as fatal
         //show explicit ui to revoke the data manually or open the data in the created version
         console.warn(error);

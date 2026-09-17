@@ -30,7 +30,7 @@ const AutomationSwitcherMenu = ({
       >
         --
       </div>
-      {automationParameterSpecs.map((spec, i) => (
+      {automationParameterSpecs.map((spec) => (
         <div
           key={spec.id}
           className={cz(

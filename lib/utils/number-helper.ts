@@ -1,5 +1,5 @@
 export function seqNumbers(n: number): number[] {
-  return new Array(n).fill(0).map((_, i) => i);
+  return Array.from({ length: n }, (_, i) => i);
 }
 
 export function clampValue(value: number, min: number, max: number) {
