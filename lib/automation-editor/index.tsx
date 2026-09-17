@@ -180,6 +180,9 @@ function createEditInputActions(accessor: StorePointsAccessor) {
           latestPoint = pos;
         },
         onTap() {
+          //toggle knot kind of the point
+        },
+        onHold() {
           if (editMode === "edit") {
             pointsMutations.removePoint(latestPoint);
           }
