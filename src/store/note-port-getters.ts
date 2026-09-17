@@ -34,22 +34,4 @@ export const notePortGetters = {
   getSequencerUnitId(notePortUnitId: string) {
     return `${notePortUnitId}_sourceSequencer`;
   },
-  useInternalSequencerConnectionSpecs(): {
-    source: string;
-    destination: string;
-  }[] {
-    const noteInputPortUnitItems = notePortGetters.useNoteInputPortUnitItems();
-    return useMemo(() => {
-      return noteInputPortUnitItems
-        .map((item) => {
-          const sequencerUnitId = notePortGetters.getSequencerUnitId(
-            item.unitId,
-          );
-          const source = `${sequencerUnitId}.noteOutput`;
-          const destination = `${item.unitId}.noteInput`;
-          return { source, destination };
-        })
-        .filter(Boolean);
-    }, [noteInputPortUnitItems]);
-  },
 };

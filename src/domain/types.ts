@@ -28,8 +28,9 @@ export type UnitItem =
   | NoteInputPortUnitItem
   | SpeakerPortUnitItem;
 
-export type WindowId = string; //unitId | "sequencerWindow"
+export type WindowId = string; //unitId | "sequencerWindow" | "keyboardWindow"
 export const kSequencerWindowId = "sequencerWindow";
+export const kKeyboardWindowId = "keyboardWindow";
 
 export type UnitPortSpec = {
   direction: HsPortDirection;

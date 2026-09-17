@@ -65,7 +65,7 @@ export const createKeyboardUnit: ReactUnitTemplateFn = (unitInterface) => {
       }, [notes, octave]);
       const labelOctaveIndex = 3 + octave;
       return (
-        <div className="w-480px h-154px flex-c px-1 bg-#b0b0b0 bd-#333">
+        <div className="w-480px h-154px flex-c px-1 bg-#b0b0b0">
           <div className="flex-v gap-2.5">
             <OctaveShifter octave={octave} setOctave={actions.setOctave} />
             <div className="flex-h touch-none" data-keyboard-root>

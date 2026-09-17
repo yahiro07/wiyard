@@ -6,7 +6,7 @@ import {
 } from "@lib/window-system";
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
-import { kSequencerWindowId } from "@/domain/types";
+import { kKeyboardWindowId, kSequencerWindowId } from "@/domain/types";
 import { catalog } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
@@ -84,6 +84,18 @@ export const DockRoot = () => {
         children={
           <DockIcon
             icon={Icons.Timeline}
+            bgColor="#46a"
+            textColor="#fff"
+            fontSize={28}
+          />
+        }
+      />
+      <WindowDockItem
+        id={kKeyboardWindowId}
+        title="keyboard"
+        children={
+          <DockIcon
+            icon={Icons.Piano}
             bgColor="#46a"
             textColor="#fff"
             fontSize={28}

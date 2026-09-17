@@ -1,8 +1,9 @@
 import { clampValue, linearInterpolate } from "@lib/utils/number-helper";
-import { UnitInterface } from "wafer-host/unit-types";
+import { NoteOutputPort, UnitInterface } from "wafer-host/unit-types";
 import { LoopBarLength, Note, SequencerEditState } from "../definitions/types";
 
 export type SequencerEngine = {
+  noteOutputPort: NoteOutputPort | undefined;
   setNotes(notes: Note[]): void;
   setOctaveShift(octave: number): void;
   setNoteDuty(duty: number): void;
@@ -57,6 +58,7 @@ export function createSequencerEngine(
   };
 
   return {
+    noteOutputPort,
     setNotes(notes: Note[]) {
       editState.notes = notes;
     },

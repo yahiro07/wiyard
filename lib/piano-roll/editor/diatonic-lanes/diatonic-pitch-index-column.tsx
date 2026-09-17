@@ -14,15 +14,20 @@ const PitchCell = ({
   keySpec,
   octaveShift,
   setPreviewNotePitch,
+  liveInputNoteNumbers,
 }: {
   i: number;
   cellH: number;
   keySpec: SongKeySpec;
   octaveShift: number;
   setPreviewNotePitch: (pitch: number | null) => void;
+  liveInputNoteNumbers: number[];
 }) => {
   const pitch = diatonicLanesPitchHelper.mapYIndexToPitch(i, keySpec);
   const isTonic = pitch % 12 === (keySpec.root + 12) % 12;
+
+  const noteNumber = 24 + pitch;
+  const extPressed = liveInputNoteNumbers.includes(noteNumber);
 
   let label: string | undefined;
   if (isTonic) {
@@ -55,7 +60,7 @@ const PitchCell = ({
         "w-100px flex-c cursor-pointer",
         "bd-#333",
         isTonic ? "bg-#568" : "bg-#444",
-        pressed && "!bg-#4dd",
+        (pressed || extPressed) && "!bg-#4dd",
       )}
       style={{ height: cellH }}
       onPointerDown={handlePointerDown}
@@ -66,7 +71,7 @@ const PitchCell = ({
 };
 
 export const DiatonicPitchIndexColumn = ({ cellH }: { cellH: number }) => {
-  const [{ keySpec, octaveShift }, mt] = useStoreAccess();
+  const [{ keySpec, octaveShift, liveInputNoteNumbers }, mt] = useStoreAccess();
   return (
     <div className="flex-c h-full">
       <div className="flex-v flex-col-reverse">
@@ -78,6 +83,7 @@ export const DiatonicPitchIndexColumn = ({ cellH }: { cellH: number }) => {
             keySpec={keySpec}
             octaveShift={octaveShift}
             setPreviewNotePitch={mt.setPreviewNotePitch}
+            liveInputNoteNumbers={liveInputNoteNumbers}
           />
         ))}
       </div>

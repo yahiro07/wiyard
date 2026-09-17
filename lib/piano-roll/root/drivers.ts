@@ -2,6 +2,7 @@ import { UnitInterface } from "wafer-host/unit-types";
 import { createPersistence } from "./persistence";
 import { SequencerEngine } from "./sequencer";
 import { AppStore } from "./store";
+import { createLiveNoteInput } from "./leve-note-input";
 
 export function setupUnit(
   unitInterface: UnitInterface,
@@ -30,10 +31,27 @@ export function setupUnit(
     true,
   );
 
+  const liveNoteInput = createLiveNoteInput(engine, store);
+
   unitInterface?.completeSetup({
     unitAspects: {
       unitType: "sequencer",
       // viewSize: [800, 450],
+    },
+    noteInput: {
+      noteOn(noteNumber, time, attrs) {
+        store.setLiveInputNoteNumbers([
+          ...store.state.liveInputNoteNumbers,
+          noteNumber,
+        ]);
+        liveNoteInput.noteOn(noteNumber, time, attrs);
+      },
+      noteOff(noteNumber, time) {
+        store.setLiveInputNoteNumbers(
+          store.state.liveInputNoteNumbers.filter((n) => n !== noteNumber),
+        );
+        liveNoteInput.noteOff(noteNumber, time);
+      },
     },
     clockHandlers: {
       start() {
