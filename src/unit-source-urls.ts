@@ -61,6 +61,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/altair-xm/`,
 
       `file://${waferUnitsLocalDistDir}/multi-lfo/`,
+      `file://${waferUnitsLocalDistDir}/step-automator/`,
 
       `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
