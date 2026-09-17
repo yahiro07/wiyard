@@ -22,11 +22,26 @@ const PointsDisplayLayer = ({
   color: string;
 }) => {
   const polyPoints = resultOf(() => {
+    const firstP = points.at(0);
     const lastP = points.at(-1);
-    if (lastP && lastP.x < 0.99) {
-      return [...points, { x: 1, y: lastP.y }];
+    const noOp =
+      !firstP ||
+      !lastP ||
+      (firstP &&
+        lastP &&
+        lastP !== firstP &&
+        firstP.x < 0.01 &&
+        lastP.x > 0.99);
+    if (noOp) return points;
+
+    const newPoints = [...points];
+    if (firstP.x > 0.01) {
+      newPoints.unshift({ x: 0, y: firstP.y });
     }
-    return points;
+    if (lastP.x < 0.99) {
+      newPoints.push({ x: 1, y: lastP.y });
+    }
+    return newPoints;
   });
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
@@ -189,8 +204,11 @@ const App = () => {
   return (
     <div className="bg-#ccc p-3 flex-vc gap-2">
       <h3>Automation Editor</h3>
-      <div className="grow bd-#666 w-800px h-180px">
+      <div className="grow bd-#666 w-800px h-180px relative">
         <GridBackground nx={8} ny={1} />
+        <div className="absolute-full">
+          <MultiPointsEditor points={st.points} setPoints={store.setPoints} />
+        </div>
       </div>
       <div className="bd-#666 w-400px h-300px">
         <MultiPointsEditor points={st.points} setPoints={store.setPoints} />
