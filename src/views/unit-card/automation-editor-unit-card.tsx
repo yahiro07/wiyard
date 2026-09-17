@@ -15,13 +15,13 @@ export const AutomationEditorUnitCardRoot = () => {
           top: firstItem.cardPosition.y,
         }}
       >
-        <div className="flex-ha gap-2">
+        <div className="flex-ha gap-1">
           <div className="w-90px h-90px bg-white/10 flex-c relative shadow-md" />
-          <div>
+          <div className="flex-v gap-1">
             {uniteItems.map((item, i) => (
               <div className="flex-ha gap-1">
+                <div className="text-10px">{i + 1}</div>
                 <div className="w-10px h-10px bg-#f08 rounded-full" />
-                <div>{i + 1}</div>
               </div>
             ))}
           </div>

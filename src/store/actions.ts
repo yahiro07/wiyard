@@ -21,11 +21,12 @@ import { unitIdHelper } from "@/domain/unit-id-helper";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
 import { resultOf } from "@lib/utils/general-helper";
+import { commonGetters } from "@/store/common-getters";
 
 const unitWindowInitialSizes = {
   sequencerWindow: { width: 1000, height: 600 },
   keyboardWindow: { width: 480, height: 154 },
-  automationEditorWindow: { width: 800, height: 300 },
+  automationEditorWindow: { width: 900, height: 220 },
   general: {
     targetHeight: 280,
   },
@@ -245,6 +246,21 @@ export const actions = {
     const nextPort =
       remaining[currentIndex] ?? remaining[currentIndex - 1] ?? remaining[0];
     store.setCurrentNoteChannelId(nextPort.unitId);
+  },
+  removeCurrentAutomationChannel() {
+    const currentId = store.state.currentAutomationChannelId;
+    if (!currentId) return;
+    const currentItem = commonGetters.getUnitItemById(currentId);
+    if (!currentItem) return;
+    actions.removeUnit(currentId);
+    const remaining = commonGetters.getAutomationEditorUnitItems();
+    const first = remaining[0];
+    if (first) {
+      store.setCurrentAutomationChannelId(first.unitId);
+      actionsInternal.patchUnitAttrs(first.unitId, {
+        cardPosition: currentItem.cardPosition,
+      });
+    }
   },
   setMenuTargetUnit(unitId: string | null) {
     store.setMenuTargetUnitId(unitId);

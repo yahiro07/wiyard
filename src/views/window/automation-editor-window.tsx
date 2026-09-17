@@ -12,14 +12,12 @@ const ChannelListColumn = () => {
   const { currentAutomationChannelId } = store.useSnapshot();
   const channelIds = automationChannelGetters.useAutomationChannelIds();
   const canAdd = channelIds.length < 4;
-  const canDelete = channelIds.length > 1;
+  const canDelete = channelIds.length > 0;
 
   const handleRemove = () => {
-    const ok = window.confirm(
-      `are you sure to remove the current note channel?`,
-    );
+    const ok = window.confirm(`are you sure to remove the automation channel?`);
     if (ok) {
-      // actions.removeCurrentNoteChannel();
+      actions.removeCurrentAutomationChannel();
     }
   };
   const { ColumnFrame, ChannelButton, AddButton, DeleteButton } =
