@@ -1,6 +1,6 @@
 import { ScalerBoxAutoSized } from "@lib/components/headless/scaler-box-auto-sized";
 import { kKeyboardWindowId } from "@/domain/types";
-import { internalUnitSpecs, kKeyboardUnitId } from "@/domain/unit-entries";
+import { interUnitFactories, kKeyboardUnitId } from "@/domain/unit-entries";
 import { WindowFrame } from "@lib/window-system";
 import { ReactUnitFrame } from "wafer-host/react";
 
@@ -10,7 +10,7 @@ export const KeyboardWindow = () => {
       <ScalerBoxAutoSized>
         <ReactUnitFrame
           unitId={kKeyboardUnitId}
-          unitTemplateFn={internalUnitSpecs.keyboard.factory}
+          unitTemplateFn={interUnitFactories.keyboard}
         />
       </ScalerBoxAutoSized>
     </WindowFrame>

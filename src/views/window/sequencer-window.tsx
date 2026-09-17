@@ -7,7 +7,7 @@ import {
   CatalogKey,
   catalog,
   InternalUnitKey,
-  internalUnitSpecs,
+  interUnitFactories,
 } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
@@ -76,18 +76,18 @@ const SequencerUnitItemView = ({
 }) => {
   const { currentNoteChannelId } = store.useSnapshot();
   const displayed = notePortUnitItem.unitId === currentNoteChannelId;
-  const internalUnitSpec =
-    internalUnitSpecs[notePortUnitItem.sequencerClassKey as InternalUnitKey];
+  const internalUnitFactory =
+    interUnitFactories[notePortUnitItem.sequencerClassKey as InternalUnitKey];
   const catalogItem = catalog[notePortUnitItem.sequencerClassKey as CatalogKey];
   const sequencerUnitId = notePortGetters.getSequencerUnitId(
     notePortUnitItem.unitId,
   );
   let content: ReactNode;
-  if (internalUnitSpec) {
+  if (internalUnitFactory) {
     content = (
       <ReactUnitFrame
         unitId={sequencerUnitId}
-        unitTemplateFn={internalUnitSpec.factory}
+        unitTemplateFn={internalUnitFactory}
       />
     );
   } else if (catalogItem) {

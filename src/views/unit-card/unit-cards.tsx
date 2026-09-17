@@ -2,7 +2,7 @@ import { cz } from "@lib/utils/cz";
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
 import { BoardUnitItem, UnitItem, UnitPortSpec } from "@/domain/types";
-import { catalog, internalUnitSpecs } from "@/domain/unit-entries";
+import { catalog, internalUnitCardIcons } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
@@ -151,7 +151,6 @@ const EdgeUnitCard_NoteInputPort = ({ unitItem }: { unitItem: UnitItem }) => {
   const { currentNoteChannelId } = store.useSnapshot();
   const notePortIndex = notePortGetters.useNoteInputPortIndex(unitItem.unitId);
   const isCurrent = unitItem.unitId === currentNoteChannelId;
-  const internalUnitSpec = internalUnitSpecs.noteInputPort;
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
@@ -159,7 +158,7 @@ const EdgeUnitCard_NoteInputPort = ({ unitItem }: { unitItem: UnitItem }) => {
       outputPortSpecs={unitStuff?.outputPortSpecs}
       highlighted={isCurrent}
       label={`input ${notePortIndex + 1}`}
-      iconComponent={internalUnitSpec.iconComponent}
+      iconComponent={internalUnitCardIcons.noteInputPort}
       handlePointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
     />
   );
@@ -167,14 +166,13 @@ const EdgeUnitCard_NoteInputPort = ({ unitItem }: { unitItem: UnitItem }) => {
 
 const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: UnitItem }) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
-  const internalUnitSpec = internalUnitSpecs.speakerPort;
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
       inputPortSpecs={unitStuff?.inputPortSpecs}
       outputPortSpecs={[]}
       highlighted={false}
-      iconComponent={internalUnitSpec.iconComponent}
+      iconComponent={internalUnitCardIcons.speakerPort}
       label="output"
       handlePointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
     />

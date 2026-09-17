@@ -6,7 +6,7 @@ import { BoardUnitItem, UnitItem } from "@/domain/types";
 import {
   catalog,
   InternalUnitKey,
-  internalUnitSpecs,
+  interUnitFactories,
 } from "@/domain/unit-entries";
 import { sourceNoteChannelGetters } from "@/store/source-note-channel-getters";
 import { store, windowSystem } from "@/store/store";
@@ -72,14 +72,14 @@ const EdgeUnitWindow = ({
   unitId: string;
   internalUnitKey: InternalUnitKey;
 }) => {
-  const internalUnitSpec = internalUnitSpecs[internalUnitKey];
+  const internalUnitFactory = interUnitFactories[internalUnitKey];
   const reporter = useUnitStuffReporter(unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
 
   return (
     <ReactUnitFrame
       unitId={unitId}
-      unitTemplateFn={internalUnitSpec.factory}
+      unitTemplateFn={internalUnitFactory}
       onUnitInstanceLoaded={reporter.reportLoaded}
     />
   );
