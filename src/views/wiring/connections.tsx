@@ -23,7 +23,6 @@ const BoardItemConnections = () => {
     connectionsPresenter.useBoardItemConnectionSpecs();
   return boardItemConnectionSpecs.map((spec) => {
     if ("wireGain" in spec) {
-      console.log(spec);
       return (
         <Fragment key={spec.connectionKey}>
           <Connection
