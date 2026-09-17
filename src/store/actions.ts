@@ -23,8 +23,30 @@ import {
 } from "@/domain/unit-id-helper";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
+import { resultOf } from "@lib/utils/general-helper";
+
+const unitWindowInitialSizes = {
+  kSequencerWindowId: { width: 1000, height: 600 },
+  kKeyboardWindowId: { width: 480, height: 154 },
+  general: {
+    targetHeight: 280,
+  },
+};
 
 const helpers = {
+  getGeneralUnitInitialSize(windowId: string) {
+    const viewSize = store.state.unitStuffs[windowId]?.viewSize;
+    if (viewSize) {
+      const { targetHeight } = unitWindowInitialSizes.general;
+      const scale = targetHeight / viewSize.height;
+      return {
+        width: viewSize.width * scale,
+        height: viewSize.height * scale,
+      };
+    } else {
+      return { width: 300, height: 200 };
+    }
+  },
   createInitialWIndowSpec(
     windowId: string,
     status: WindowStatus,
@@ -32,29 +54,16 @@ const helpers = {
   ) {
     const isSequencer = windowId === kSequencerWindowId;
     const isKeyboard = windowId === kKeyboardWindowId;
-    let position = { x: 0, y: 0 };
-    let contentSize = { width: 300, height: 200 };
-    if (isSequencer) {
-      position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-      contentSize = { width: 1000, height: 600 };
-    } else if (isKeyboard) {
-      position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-      contentSize = { width: 480, height: 154 };
-    } else {
-      position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-
-      // const unitItem = store.state.unitItems.find(
-      //   (item) => item.unitId === windowId,
-      // );
-      // if (unitItem) {
-      //   position = unitItem.cardPosition;
-      // }
-      const viewSize = store.state.unitStuffs[windowId]?.viewSize;
-      if (viewSize) {
-        contentSize.width = viewSize.width;
-        contentSize.height = viewSize.height;
+    let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+    let contentSize = resultOf(() => {
+      if (isSequencer) {
+        return unitWindowInitialSizes.kSequencerWindowId;
+      } else if (isKeyboard) {
+        return unitWindowInitialSizes.kKeyboardWindowId;
+      } else {
+        return helpers.getGeneralUnitInitialSize(windowId);
       }
-    }
+    });
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
     const newWindowSpec: WindowSpec = {
       position,
