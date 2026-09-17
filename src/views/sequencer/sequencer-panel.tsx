@@ -2,7 +2,7 @@ import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { Icons } from "@/common/icons";
-import { NoteInputPortUnitItem } from "@/domain/types";
+import { kSequencerWindowId, NoteInputPortUnitItem } from "@/domain/types";
 import {
   CatalogKey,
   catalog,
@@ -12,6 +12,7 @@ import {
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
+import { WindowFrame } from "@lib/window-system";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
@@ -114,11 +115,19 @@ const SequencerSection = () => {
   );
 };
 
-export const SequencerPanel = () => {
+const SequencerPanel = () => {
   return (
     <div className="w-full h-full flex-h">
       <NoteChannelListColumn />
       <SequencerSection />
     </div>
+  );
+};
+
+export const SequencerWindow = () => {
+  return (
+    <WindowFrame id={kSequencerWindowId} title="piano roll">
+      <SequencerPanel />
+    </WindowFrame>
   );
 };

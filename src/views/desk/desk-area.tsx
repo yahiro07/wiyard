@@ -6,7 +6,8 @@ import { SecondBar } from "@/views/controls/top-control-bars";
 import { CoordDebugLayer } from "@/views/desk/coord-debug-layer";
 import { DockRoot } from "@/views/desk/dock-root";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
-import { SequencerWindow } from "@/views/sequencer/sequencer-window";
+import { KeyboardWindow } from "@/views/sequencer/keyboard-window";
+import { SequencerWindow } from "@/views/sequencer/sequencer-panel";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { UnitWindowsRoot } from "@/views/unit-window/unit-windows";
 import { UnitConnectionsRoot } from "@/views/wiring/connections";
@@ -46,6 +47,7 @@ const FrontWindowsPlane = () => {
     <>
       <UnitWindowsRoot />
       <SequencerWindow />
+      <KeyboardWindow />
       <DockRoot />
       <SecondBar />
     </>

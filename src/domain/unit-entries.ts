@@ -8,6 +8,7 @@ import { ReactUnitTemplateFn } from "wafer-host/react";
 import { UnitInventorySpec } from "wafer-host/vite-plugin";
 import { Icons } from "@/common/icons";
 import unitInventories from "../unit-inventories.json";
+import { createKeyboardUnit } from "@lib/keyboard";
 
 export type CatalogKey = keyof typeof unitInventories;
 
@@ -23,7 +24,11 @@ type InternalUnitSpec = {
   iconComponent: IconType;
 };
 
-export type InternalUnitKey = "speakerPort" | "noteInputPort" | "pianoRoll";
+export type InternalUnitKey =
+  | "speakerPort"
+  | "noteInputPort"
+  | "pianoRoll"
+  | "keyboard";
 
 export const internalUnitSpecs: Record<InternalUnitKey, InternalUnitSpec> = {
   speakerPort: {
@@ -38,6 +43,13 @@ export const internalUnitSpecs: Record<InternalUnitKey, InternalUnitSpec> = {
     factory: createPianoRollUnit,
     iconComponent: Icons.Piano,
   },
+  keyboard: {
+    factory: createKeyboardUnit,
+    iconComponent: Icons.Piano,
+  },
 };
 
 export type UnitClassKey = CatalogKey | InternalUnitKey;
+
+export const kKeyboardUnitId = "keyboard";
+export const kSpeakerPortUnitId = "speakerPort";

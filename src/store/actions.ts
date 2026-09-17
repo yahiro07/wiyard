@@ -9,6 +9,7 @@ import {
 } from "@/domain/port-helpers";
 import {
   BoardUnitItem,
+  kKeyboardWindowId,
   kSequencerWindowId,
   NoteInputPortUnitItem,
   PortStuff,
@@ -44,11 +45,15 @@ export const actions = {
       const deskAreaRect = deskArea.getBoundingClientRect();
 
       const isSequencer = windowId === kSequencerWindowId;
+      const isKeyboard = windowId === kKeyboardWindowId;
       let position = { x: 0, y: 0 };
       let contentSize = { width: 300, height: 200 };
       if (isSequencer) {
         position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
         contentSize = { width: 1000, height: 600 };
+      } else if (isKeyboard) {
+        position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+        contentSize = { width: 480, height: 154 };
       } else {
         position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
 
@@ -70,6 +75,7 @@ export const actions = {
         contentSize,
         status,
         ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
+        ...(isKeyboard ? { pinned: true } : {}),
       };
       windowSystem.add(windowId, newWindowSpec);
       windowSystem.setCurrentWindow(windowId);
