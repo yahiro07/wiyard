@@ -6,22 +6,20 @@ import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { createStore } from "snap-store";
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { resultOf } from "@lib/utils/general-helper";
-import { clampValue } from "@lib/utils/number-helper";
+import { clampValue, mapUnaryTo } from "@lib/utils/number-helper";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
 type SetPointsFn = StoreSetterFn<Point[]>;
 
-const PointsDisplayLayer = ({
-  points,
-  size,
-  color,
-}: {
-  points: Point[];
-  size: Size;
-  color: string;
-}) => {
+function mapPointsDisplayLayerPoints(inputPoints: Point[]) {
+  const points = inputPoints.map((po) => ({
+    x: po.x,
+    //slightly add paddings to the edge of edit area
+    y: mapUnaryTo(po.y, 0.01, 0.99),
+  }));
   const polyPoints = resultOf(() => {
+    //add end points at x=0 and x=1
     const firstP = points.at(0);
     const lastP = points.at(-1);
     const noOp =
@@ -43,6 +41,19 @@ const PointsDisplayLayer = ({
     }
     return newPoints;
   });
+  return { points, polyPoints };
+}
+
+const PointsDisplayLayer = ({
+  points: inputPoints,
+  size,
+  color,
+}: {
+  points: Point[];
+  size: Size;
+  color: string;
+}) => {
+  const { points, polyPoints } = mapPointsDisplayLayerPoints(inputPoints);
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
       <g>
@@ -70,6 +81,7 @@ const PointsDisplayLayer = ({
 
 type StorePointsAccessor = {
   getPoints(): Point[];
+  usePoints(): Point[];
   setPoints: SetPointsFn;
 };
 
@@ -120,6 +132,15 @@ const helpers = {
       return dx * dx + dy * dy <= 1;
     });
   },
+  xBoundsFor(points: Point[], target: Point) {
+    const i = points.findIndex((p) => p === target);
+    const prev = i > 0 ? points[i - 1] : undefined;
+    const next = i >= 0 && i < points.length - 1 ? points[i + 1] : undefined;
+    return {
+      minX: prev?.x ?? 0,
+      maxX: next?.x ?? 1,
+    };
+  },
 };
 
 function createEditInputActions(accessor: StorePointsAccessor) {
@@ -144,9 +165,17 @@ function createEditInputActions(accessor: StorePointsAccessor) {
         pointsMutations.addPoint(startPos);
         latestPoint = startPos;
       }
+      const bounds = helpers.xBoundsFor(accessor.getPoints(), latestPoint);
+
       ds.run({
         onMove(inputPos) {
-          const pos = viewSpace.toNormalized(inputPos, true);
+          const pos = resultOf(() => {
+            const normPos = viewSpace.toNormalized(inputPos, true);
+            return {
+              x: clampValue(normPos.x, bounds.minX, bounds.maxX),
+              y: normPos.y,
+            };
+          });
           pointsMutations.replacePoint(latestPoint, pos);
           latestPoint = pos;
         },
@@ -170,19 +199,12 @@ const EditInputLayer = ({ accessor }: { accessor: StorePointsAccessor }) => {
   );
 };
 
-const MultiPointsEditor = ({
-  points,
-  setPoints,
-}: {
-  points: Point[];
-  setPoints: SetPointsFn;
-}) => {
+const MultiPointsEditor = ({ accessor }: { accessor: StorePointsAccessor }) => {
+  const points = accessor.usePoints();
   const baseDivRef = useRef<HTMLDivElement>(null);
   const size = useDomElementSize(baseDivRef) ?? { width: 0, height: 0 };
   const color = "#79f";
-  const accessor = useMemo(() => {
-    return { getPoints: () => points, setPoints: setPoints };
-  }, [points, setPoints]);
+
   return (
     <div ref={baseDivRef} className="w-full h-full relative">
       <PointsDisplayLayer points={points} size={size} color={color} />
@@ -198,18 +220,24 @@ const defaultPoints: Point[] = [
 const store = createStore<{ points: Point[] }>({ points: defaultPoints });
 
 const App = () => {
-  const st = store.useSnapshot();
+  const accessor = useMemo(() => {
+    return {
+      getPoints: () => store.state.points,
+      usePoints: () => store.useSnapshot().points,
+      setPoints: store.setPoints,
+    };
+  }, []);
   return (
     <div className="bg-#ccc p-3 flex-vc gap-2">
       <h3>Automation Editor</h3>
       <div className="grow bd-#666 w-800px h-180px relative">
         <GridBackground nx={8} ny={1} />
         <div className="absolute-full">
-          <MultiPointsEditor points={st.points} setPoints={store.setPoints} />
+          <MultiPointsEditor accessor={accessor} />
         </div>
       </div>
       <div className="bd-#666 w-400px h-300px">
-        <MultiPointsEditor points={st.points} setPoints={store.setPoints} />
+        <MultiPointsEditor accessor={accessor} />
       </div>
     </div>
   );
