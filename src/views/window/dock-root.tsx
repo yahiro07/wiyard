@@ -6,10 +6,10 @@ import {
 } from "@lib/window-system";
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
-import { windowIds } from "@/domain/types";
 import { catalog } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
+import { builtinAppItems } from "@/domain/builtin-app-entries";
 
 const DockIcon = ({
   icon: IconComponent,
@@ -78,42 +78,26 @@ export const DockRoot = () => {
             );
           })}
       </>
-      <WindowDockItem
-        id={windowIds.sequencer}
-        title="piano roll"
-        children={
-          <DockIcon
-            icon={Icons.Timeline}
-            bgColor="#46a"
-            textColor="#fff"
-            fontSize={28}
-          />
-        }
-      />
-      <WindowDockItem
-        id={windowIds.automationEditor}
-        title="automation"
-        children={
-          <DockIcon
-            icon={Icons.DirectionRight}
-            bgColor="#46a"
-            textColor="#fff"
-            fontSize={28}
-          />
-        }
-      />
-      <WindowDockItem
-        id={windowIds.keyboard}
-        title="keyboard"
-        children={
-          <DockIcon
-            icon={Icons.Piano}
-            bgColor="#46a"
-            textColor="#fff"
-            fontSize={28}
-          />
-        }
-      />
+      <>
+        {builtinAppItems.map((item) => {
+          const { windowId, title, dockItemSpec } = item;
+          return (
+            <WindowDockItem
+              key={windowId}
+              id={windowId}
+              title={title}
+              children={
+                <DockIcon
+                  icon={dockItemSpec.icon}
+                  bgColor={dockItemSpec.bgColor}
+                  textColor="#fff"
+                  fontSize={dockItemSpec.fontSize}
+                />
+              }
+            />
+          );
+        })}
+      </>
     </WindowDock>
   );
 };

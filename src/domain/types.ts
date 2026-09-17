@@ -42,6 +42,7 @@ export const windowIds = {
   sequencer: "sequencerWindow",
   keyboard: "keyboardWindow",
   automationEditor: "automationEditorWindow",
+  controlSurface: "controlSurfaceWindow",
 };
 
 export type UnitPortSpec = {

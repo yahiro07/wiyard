@@ -1,6 +1,9 @@
 import { KeyName } from "@lib/contract";
-import { setOrDeleteValue } from "@lib/utils/array-object-helper";
-import { Point } from "@lib/utils/common-types";
+import {
+  stripUndefined,
+  setOrDeleteValue,
+} from "@lib/utils/array-object-helper";
+import { Point, Size } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
 import { boardSize, getDeskAreaElement } from "@/common/constants";
 import {
@@ -14,30 +17,24 @@ import {
   PortStuff,
   UnitAddingItem,
   UnitStuff,
-  windowIds,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { unitIdHelper } from "@/domain/unit-id-helper";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
-import { resultOf } from "@lib/utils/general-helper";
 import { commonGetters } from "@/store/common-getters";
-
-const unitWindowInitialSizes = {
-  sequencerWindow: { width: 1000, height: 600 },
-  keyboardWindow: { width: 480, height: 154 },
-  automationEditorWindow: { width: 900, height: 220 },
-  general: {
-    targetHeight: 280,
-  },
-};
+import { builtinAppItems } from "@/domain/builtin-app-entries";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
     const viewSize = store.state.unitStuffs[windowId]?.viewSize;
     if (viewSize) {
-      const { targetHeight } = unitWindowInitialSizes.general;
-      const scale = targetHeight / viewSize.height;
+      const baseHeight = 220;
+      const maxWidth = 440;
+      let scale = Math.min(baseHeight / viewSize.height);
+      if (viewSize.width * scale > maxWidth) {
+        scale = maxWidth / viewSize.width;
+      }
       return {
         width: viewSize.width * scale,
         height: viewSize.height * scale,
@@ -46,35 +43,36 @@ const helpers = {
       return { width: 300, height: 200 };
     }
   },
-  createInitialWIndowSpec(
+  getInitialWindowSpecAttrs(windowId: string): {
+    contentSize: Size;
+    pinned?: boolean;
+    freeRatio?: boolean;
+  } {
+    const appItem = builtinAppItems.find((item) => item.windowId === windowId);
+    if (appItem) {
+      return {
+        contentSize: appItem.windowInitialSize,
+        freeRatio: appItem.windowFreeRatio,
+        pinned: true,
+      };
+    } else {
+      return { contentSize: helpers.getGeneralUnitInitialSize(windowId) };
+    }
+  },
+  createInitialWindowSpec(
     windowId: string,
     status: WindowStatus,
     deskAreaRect: DOMRect,
   ) {
-    const isSequencer = windowId === windowIds.sequencer;
-    const isKeyboard = windowId === windowIds.keyboard;
-    const isAutomationEditor = windowId === windowIds.automationEditor;
-
     let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-    let contentSize = resultOf(() => {
-      if (isSequencer) {
-        return unitWindowInitialSizes.sequencerWindow;
-      } else if (isKeyboard) {
-        return unitWindowInitialSizes.keyboardWindow;
-      } else if (isAutomationEditor) {
-        return unitWindowInitialSizes.automationEditorWindow;
-      } else {
-        return helpers.getGeneralUnitInitialSize(windowId);
-      }
-    });
+    const { contentSize, freeRatio, pinned } =
+      helpers.getInitialWindowSpecAttrs(windowId);
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
     const newWindowSpec: WindowSpec = {
       position,
       contentSize,
       status,
-      ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
-      ...(isKeyboard ? { pinned: true } : {}),
-      ...(isAutomationEditor ? { freeRatio: true, pinned: true } : {}),
+      ...stripUndefined({ freeRatio, pinned }),
     };
     return newWindowSpec;
   },
@@ -138,7 +136,7 @@ export const actions = {
     if (!exists) {
       const deskArea = getDeskAreaElement();
       const deskAreaRect = deskArea.getBoundingClientRect();
-      const windowSpec = helpers.createInitialWIndowSpec(
+      const windowSpec = helpers.createInitialWindowSpec(
         windowId,
         status,
         deskAreaRect,
