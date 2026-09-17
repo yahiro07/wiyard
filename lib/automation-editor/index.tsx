@@ -120,29 +120,29 @@ function createEditInputActions(accessor: StorePointsAccessor) {
         startPos,
         viewSpace.hitRadii(8),
       );
-      let latestPoint: Point | undefined = hit;
-      ds.run({
-        onStart() {
-          if (!latestPoint) {
-            pointsMutations.addPoint(startPos);
-            latestPoint = startPos;
-          }
-        },
-        onMove(inputPos) {
-          if (!latestPoint) return;
-          const pos = viewSpace.toNormalized(inputPos, true);
-          pointsMutations.replacePoint(latestPoint, pos);
-          latestPoint = pos;
-        },
-        onTap() {
-          if (hit) {
-            pointsMutations.removePoint(hit);
-            latestPoint = undefined;
-          }
-        },
-        onHold() {},
-        onEnd() {},
-      });
+      if (hit) {
+        let latestPoint = hit;
+        ds.run({
+          onMove(inputPos) {
+            const pos = viewSpace.toNormalized(inputPos, true);
+            pointsMutations.replacePoint(latestPoint, pos);
+            latestPoint = pos;
+          },
+          onTap() {
+            pointsMutations.removePoint(latestPoint);
+          },
+        });
+      } else {
+        pointsMutations.addPoint(startPos);
+        let latestPoint = startPos;
+        ds.run({
+          onMove(inputPos) {
+            const pos = viewSpace.toNormalized(inputPos, true);
+            pointsMutations.replacePoint(latestPoint, pos);
+            latestPoint = pos;
+          },
+        });
+      }
     },
   };
 }
