@@ -16,7 +16,8 @@
       "@lib/utils/*": ["./lib/utils/*"],
       "@lib/port-units": ["./lib/port-units/index.ts"],
       "@lib/keyboard": ["./lib/keyboard/index.tsx"],
-      "@lib/contract": ["./lib/contract/index.ts"]
+      "@lib/contract": ["./lib/contract/index.ts"],
+      "@lib/components/*": ["./lib/components/*"]
     }
   },
   "include": ["src"]

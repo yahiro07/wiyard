@@ -1,6 +1,6 @@
 import { cz } from "@lib/utils/cz";
 import { SelectorOption } from "@lib/utils/selector-option";
-import { HeadlessSelector } from "./headless/headless-selector";
+import { HeadlessSelector } from "@lib/components/headless/headless-selector";
 
 export const Selector = <T extends string | number>({
   className,

@@ -1,4 +1,4 @@
-import { ScreenScaler } from "@/components/screen-scaler";
+import { ScreenScaler } from "@lib/components/headless/screen-scaler";
 import { store } from "@/store/store";
 import { TopBar } from "@/views/controls/top-control-bars";
 import { DeskArea } from "@/views/desk/desk-area";

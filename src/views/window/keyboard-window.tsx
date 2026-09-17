@@ -1,4 +1,4 @@
-import { ScalerBoxAutoSized } from "@/components/scaler-box-auto-sized";
+import { ScalerBoxAutoSized } from "@lib/components/headless/scaler-box-auto-sized";
 import { kKeyboardWindowId } from "@/domain/types";
 import { internalUnitSpecs, kKeyboardUnitId } from "@/domain/unit-entries";
 import { WindowFrame } from "@lib/window-system";

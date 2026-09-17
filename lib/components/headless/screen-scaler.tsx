@@ -1,4 +1,4 @@
-import { useWindowSize } from "@lib/utils/use-window-size";
+import { useWindowSize } from "../../utils/use-window-size";
 
 export const ScreenScaler = ({
   children,

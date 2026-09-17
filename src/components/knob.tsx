@@ -1,5 +1,5 @@
 import { linearInterpolate } from "@lib/utils/number-helper";
-import { KnobFrame } from "@/components/knob-frame";
+import { KnobFrame } from "@lib/components/headless/knob-frame";
 
 export const Knob = ({
   value,

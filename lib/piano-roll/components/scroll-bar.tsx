@@ -3,7 +3,7 @@ import { colorStyle } from "@lib/utils/color-style";
 import { cz } from "@lib/utils/cz";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { useRef } from "react";
-import { KnobFrame } from "./headless/knob-frame";
+import { KnobFrame } from "@lib/components/headless/knob-frame";
 
 const colorStyles = {
   base: colorStyle({ bg: colorMod("#404046", "v-2 h220"), bd: "#2c2c2c" }),

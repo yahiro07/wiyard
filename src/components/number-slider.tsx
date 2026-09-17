@@ -1,4 +1,4 @@
-import { KnobFrame } from "@/components/knob-frame";
+import { KnobFrame } from "@lib/components/headless/knob-frame";
 
 export function NumberSliderBoxView(props: {
   value: number;

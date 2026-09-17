@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@lib/utils/*": ["../utils/*"],
-      "@lib/contract": ["../contract/index.ts"]
+      "@lib/contract": ["../contract/index.ts"],
+      "@lib/components/*": ["../components/*"]
     }
   },
   "include": ["."]

@@ -1,4 +1,4 @@
-import { useDomElementSize } from "@lib/utils/use-dom-element-size";
+import { useDomElementSize } from "../../utils/use-dom-element-size";
 import { ReactNode, useMemo, useRef } from "react";
 
 export function ScalerBoxAutoSized({
