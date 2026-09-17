@@ -2,7 +2,7 @@ import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { Icons } from "@/common/icons";
-import { kSequencerWindowId, NoteInputPortUnitItem } from "@/domain/types";
+import { NoteInputPortUnitItem, windowIds } from "@/domain/types";
 import {
   CatalogKey,
   catalog,
@@ -127,7 +127,7 @@ const SequencerPanel = () => {
 
 export const SequencerWindow = () => {
   return (
-    <WindowFrame id={kSequencerWindowId} title="piano roll">
+    <WindowFrame id={windowIds.sequencer} title="piano roll">
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <SequencerPanel />
       </ScalerBoxDW>

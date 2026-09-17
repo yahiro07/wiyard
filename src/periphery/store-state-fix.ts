@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { kKeyboardWindowId, kSequencerWindowId } from "@/domain/types";
+import { windowIds } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 
@@ -8,11 +8,13 @@ export function useProjectInitialStateFix() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: manual management
   useEffect(() => {
     const windowSpecs = store.state.windowSpecs;
-    if (windowSpecs[kSequencerWindowId] === undefined) {
-      actions.setWindowStatus(kSequencerWindowId, "minimized");
+    const sequencerWindowId = windowIds.sequencer;
+    const keyboardWindowId = windowIds.keyboard;
+    if (windowSpecs[sequencerWindowId] === undefined) {
+      actions.setWindowStatus(sequencerWindowId, "minimized");
     }
-    if (windowSpecs[kSequencerWindowId] === undefined) {
-      actions.setWindowStatus(kKeyboardWindowId, "minimized");
+    if (windowSpecs[keyboardWindowId] === undefined) {
+      actions.setWindowStatus(keyboardWindowId, "minimized");
     }
   }, [projectLoadedIndex]);
 }
