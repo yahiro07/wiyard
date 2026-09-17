@@ -9,6 +9,7 @@ import { UnitInventorySpec } from "wafer-host/vite-plugin";
 import { Icons } from "@/common/icons";
 import unitInventories from "../unit-inventories.json";
 import { createKeyboardUnit } from "@lib/keyboard";
+import { createAutomationEditorUnit } from "@lib/automation-editor";
 
 export type CatalogKey = keyof typeof unitInventories;
 
@@ -28,7 +29,8 @@ export type InternalUnitKey =
   | "speakerPort"
   | "noteInputPort"
   | "pianoRoll"
-  | "keyboard";
+  | "keyboard"
+  | "automationEditor";
 
 export const internalUnitSpecs: Record<InternalUnitKey, InternalUnitSpec> = {
   speakerPort: {
@@ -46,6 +48,10 @@ export const internalUnitSpecs: Record<InternalUnitKey, InternalUnitSpec> = {
   keyboard: {
     factory: createKeyboardUnit,
     iconComponent: Icons.Piano,
+  },
+  automationEditor: {
+    factory: createAutomationEditorUnit,
+    iconComponent: null as any,
   },
 };
 
