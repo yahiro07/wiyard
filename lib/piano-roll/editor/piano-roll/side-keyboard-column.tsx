@@ -3,8 +3,8 @@ import { startDragSessionV0 } from "@lib/utils/drag-session-v0";
 import { seqNumbers } from "@lib/utils/number-helper";
 import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext } from "../../root/app-context";
 import { getNoteNameLabel } from "../common/note-name-helper";
+import { useStoreAccess } from "../../root/app-context";
 
 const keyTypes = [
   "whiteL",
@@ -66,17 +66,22 @@ const KeyboardKey = ({
   cellH,
   setPreviewNotePitch,
   octaveShift,
+  liveInputNoteNumbers,
 }: {
   yi: number;
   cellH: number;
   setPreviewNotePitch: (pitch: number | null) => void;
   octaveShift: number;
+  liveInputNoteNumbers: number[];
 }) => {
+  const keyNoteNumber = 24 + yi;
+  const extPressed = liveInputNoteNumbers.includes(keyNoteNumber);
+
   const subIndex = yi % 12;
   const label = subIndex === 0 && getNoteNameLabel(yi, octaveShift);
   const [pressed, setPressed] = useState(false);
 
-  const keyStyle = getKeyStyle(subIndex, cellH, pressed);
+  const keyStyle = getKeyStyle(subIndex, cellH, pressed || extPressed);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     setPressed(true);
@@ -119,8 +124,7 @@ export const SideKeyboardColumn = ({
   width: number;
   cellH: number;
 }) => {
-  const { store } = useAppContext();
-  const { octaveShift } = store.useSnapshot();
+  const [{ octaveShift, liveInputNoteNumbers }, mt] = useStoreAccess();
   const { numKeys } = uiConfig;
   return (
     <div className="shrink-0" style={{ width }}>
@@ -129,8 +133,9 @@ export const SideKeyboardColumn = ({
           key={i}
           yi={numKeys - i - 1}
           cellH={cellH}
-          setPreviewNotePitch={store.setPreviewNotePitch}
+          setPreviewNotePitch={mt.setPreviewNotePitch}
           octaveShift={octaveShift}
+          liveInputNoteNumbers={liveInputNoteNumbers}
         />
       ))}
     </div>

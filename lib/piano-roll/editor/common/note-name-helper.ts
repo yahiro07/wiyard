@@ -14,7 +14,7 @@ const subNoteNames = [
 ];
 
 export function getNoteNameLabel(yi: number, octaveShift: number) {
-  const octave = ((yi / 12) >>> 0) + 2 + octaveShift;
+  const octave = Math.floor(yi / 12) + 1 + octaveShift;
   const subIndex = (yi + 12) % 12;
   return `${subNoteNames[subIndex]}${octave}`;
 }
