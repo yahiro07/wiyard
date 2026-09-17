@@ -51,7 +51,7 @@ const PointsDisplayLayer = ({
             key={i}
             cx={po.x * size.width}
             cy={(1 - po.y) * size.height}
-            r={6}
+            r={5}
             fill={color}
           />
         ))}
@@ -135,29 +135,27 @@ function createEditInputActions(accessor: StorePointsAccessor) {
         startPos,
         viewSpace.hitRadii(8),
       );
+
+      const editMode = hit ? "edit" : "create";
+      let latestPoint: Point;
       if (hit) {
-        let latestPoint = hit;
-        ds.run({
-          onMove(inputPos) {
-            const pos = viewSpace.toNormalized(inputPos, true);
-            pointsMutations.replacePoint(latestPoint, pos);
-            latestPoint = pos;
-          },
-          onTap() {
-            pointsMutations.removePoint(latestPoint);
-          },
-        });
+        latestPoint = hit;
       } else {
         pointsMutations.addPoint(startPos);
-        let latestPoint = startPos;
-        ds.run({
-          onMove(inputPos) {
-            const pos = viewSpace.toNormalized(inputPos, true);
-            pointsMutations.replacePoint(latestPoint, pos);
-            latestPoint = pos;
-          },
-        });
+        latestPoint = startPos;
       }
+      ds.run({
+        onMove(inputPos) {
+          const pos = viewSpace.toNormalized(inputPos, true);
+          pointsMutations.replacePoint(latestPoint, pos);
+          latestPoint = pos;
+        },
+        onTap() {
+          if (editMode === "edit") {
+            pointsMutations.removePoint(latestPoint);
+          }
+        },
+      });
     },
   };
 }
