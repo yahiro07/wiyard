@@ -18,7 +18,8 @@
       "@lib/keyboard": ["./lib/keyboard/index.tsx"],
       "@lib/contract": ["./lib/contract/index.ts"],
       "@lib/components/*": ["./lib/components/*"],
-      "@lib/automation-editor": ["./lib/automation-editor/index.tsx"]
+      "@lib/automation-editor": ["./lib/automation-editor/index.tsx"],
+      "@lib/control-surface": ["./lib/control-surface/index.tsx"]
     }
   },
   "include": ["src"]

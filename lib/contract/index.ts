@@ -24,7 +24,9 @@ export type KeyName =
   | "A#m"
   | "Bm";
 
-export type MessageFromUnit = {
-  type: "setKeyName";
-  keyName: KeyName;
-};
+export type MessageFromUnit =
+  | { type: "setKeyName"; keyName: KeyName }
+  | {
+      type: "setAutomationOutputPortsOptInFlags";
+      flags: Record<string, boolean>;
+    };
