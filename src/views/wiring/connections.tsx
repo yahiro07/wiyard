@@ -3,6 +3,7 @@ import { Connection } from "wafer-host/react";
 import { getWireVolumeUnitId, splitConnectionKey } from "@/domain/port-helpers";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
+import { kKeyboardUnitId } from "@/domain/unit-entries";
 
 const WireConnectionWithGain = ({
   connectionKey,
@@ -38,7 +39,10 @@ export const UnitConnectionsRoot = () => {
     wireGains,
     wireAutomationParameterIds,
     portStuffs,
+    currentNoteChannelId,
   } = store.useSnapshot();
+  const currentSequencerUnitId =
+    notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
     <>
       {internalSequencerConnectionSpecs.map((spec) => (
@@ -86,6 +90,10 @@ export const UnitConnectionsRoot = () => {
           );
         }
       })}
+      <Connection
+        source={`${kKeyboardUnitId}.noteOutput`}
+        destination={`${currentSequencerUnitId}.noteInput`}
+      />
       <Connection source="speakerPort.audioOutput" destination="$output" />
     </>
   );

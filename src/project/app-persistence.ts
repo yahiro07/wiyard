@@ -115,6 +115,6 @@ if (appEnvs.isDevelopment && 0) {
     async load() {
       store.setAutoPersistenceEnabled(true);
     },
-    save() {},
+    // save() {},
   });
 }
