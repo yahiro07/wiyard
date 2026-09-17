@@ -332,16 +332,14 @@ export const PageRoot = () => {
   const { isPatternView, diatonicLanesEnabled } =
     useAppContext().store.useSnapshot();
   return (
-    <div className="w-full h-full">
-      <div
-        className="w-full h-full flex-vc gap-1 p-2 text-white"
-        style={colorStyle({ bg: uiColors.clPanelBody })}
-      >
-        <TopBar />
-        {isPatternView && <PatternEditorView />}
-        {!isPatternView && diatonicLanesEnabled && <DiatonicLanesEditorView />}
-        {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
-      </div>
+    <div
+      className="w-full h-full flex-vc gap-1 p-2 text-white"
+      style={colorStyle({ bg: uiColors.clPanelBody })}
+    >
+      <TopBar />
+      {isPatternView && <PatternEditorView />}
+      {!isPatternView && diatonicLanesEnabled && <DiatonicLanesEditorView />}
+      {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
     </div>
   );
 };

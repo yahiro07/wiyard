@@ -42,7 +42,7 @@ const defaultStoreState: StoreState = {
   inputNotes: [],
   patternBars: 0.25,
   patternNotes: [],
-  sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.45, yZoom: 0.6 },
+  sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.4, yZoom: 0.4 },
   isPatternView: false,
   patternEnabled: false,
   realized: false,

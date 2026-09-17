@@ -13,6 +13,7 @@ import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { WindowFrame } from "@lib/window-system";
+import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
@@ -127,7 +128,9 @@ const SequencerPanel = () => {
 export const SequencerWindow = () => {
   return (
     <WindowFrame id={kSequencerWindowId} title="piano roll">
-      <SequencerPanel />
+      <ScalerBoxDW designWidth={1100}>
+        <SequencerPanel />
+      </ScalerBoxDW>
     </WindowFrame>
   );
 };
