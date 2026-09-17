@@ -239,9 +239,9 @@ const App = () => {
           <MultiPointsEditor accessor={accessor} />
         </div>
       </div>
-      <div className="bd-#666 w-400px h-300px">
+      {/* <div className="bd-#666 w-400px h-300px">
         <MultiPointsEditor accessor={accessor} />
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -249,8 +249,15 @@ const App = () => {
 export const createAutomationEditorUnit: ReactUnitTemplateFn = (
   unitInterface,
 ) => {
+  const automationOutputPort = unitInterface.createAutomationOutputPort();
+  const timerId = setInterval(() => {
+    automationOutputPort.emitValue(Math.random());
+  }, 1000);
   unitInterface.completeSetup({
     unitAspects: { unitType: "sequencer" },
+    cleanup() {
+      clearInterval(timerId);
+    },
   });
   return {
     RenderUi() {
