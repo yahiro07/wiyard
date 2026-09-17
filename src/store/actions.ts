@@ -24,6 +24,63 @@ import {
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
 
+const helpers = {
+  createInitialWIndowSpec(
+    windowId: string,
+    status: WindowStatus,
+    deskAreaRect: DOMRect,
+  ) {
+    const isSequencer = windowId === kSequencerWindowId;
+    const isKeyboard = windowId === kKeyboardWindowId;
+    let position = { x: 0, y: 0 };
+    let contentSize = { width: 300, height: 200 };
+    if (isSequencer) {
+      position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+      contentSize = { width: 1000, height: 600 };
+    } else if (isKeyboard) {
+      position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+      contentSize = { width: 480, height: 154 };
+    } else {
+      position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+
+      // const unitItem = store.state.unitItems.find(
+      //   (item) => item.unitId === windowId,
+      // );
+      // if (unitItem) {
+      //   position = unitItem.cardPosition;
+      // }
+      const viewSize = store.state.unitStuffs[windowId]?.viewSize;
+      if (viewSize) {
+        contentSize.width = viewSize.width;
+        contentSize.height = viewSize.height;
+      }
+    }
+    // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
+    const newWindowSpec: WindowSpec = {
+      position,
+      contentSize,
+      status,
+      ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
+      ...(isKeyboard ? { pinned: true } : {}),
+    };
+    return newWindowSpec;
+  },
+  createNoteChannelPort(
+    existingPorts: NoteInputPortUnitItem[],
+  ): NoteInputPortUnitItem {
+    const lastPort = existingPorts.at(-1);
+    const unitId = getNextNoteInputPortUnitId(store.state.unitItems);
+    return {
+      type: "noteInput",
+      unitId,
+      sequencerClassKey: lastPort?.sequencerClassKey ?? "pianoRoll",
+      cardPosition: lastPort
+        ? { x: lastPort.cardPosition.x, y: lastPort.cardPosition.y + 100 }
+        : { x: boardSize.width / 2, y: boardSize.height / 2 },
+    };
+  },
+};
+
 export const actionsInternal = {
   patchUnitAttrs(unitId: string, attrs: Partial<{ cardPosition: Point }>) {
     store.setUnitItems((prev) =>
@@ -31,6 +88,21 @@ export const actionsInternal = {
         item.unitId === unitId ? { ...item, ...attrs } : item,
       ),
     );
+  },
+  removeWires(wireConnectionKeys: string[]) {
+    store.setWireConnectionKeys((prev) =>
+      prev.filter((key) => !wireConnectionKeys.includes(key)),
+    );
+    store.produceWireGains((draft) => {
+      for (const key of wireConnectionKeys) {
+        delete draft[key];
+      }
+    });
+    store.produceWireAutomationParameterIds((draft) => {
+      for (const key of wireConnectionKeys) {
+        delete draft[key];
+      }
+    });
   },
 };
 
@@ -43,41 +115,12 @@ export const actions = {
     if (!exists) {
       const deskArea = getDeskAreaElement();
       const deskAreaRect = deskArea.getBoundingClientRect();
-
-      const isSequencer = windowId === kSequencerWindowId;
-      const isKeyboard = windowId === kKeyboardWindowId;
-      let position = { x: 0, y: 0 };
-      let contentSize = { width: 300, height: 200 };
-      if (isSequencer) {
-        position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-        contentSize = { width: 1000, height: 600 };
-      } else if (isKeyboard) {
-        position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-        contentSize = { width: 480, height: 154 };
-      } else {
-        position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-
-        // const unitItem = store.state.unitItems.find(
-        //   (item) => item.unitId === windowId,
-        // );
-        // if (unitItem) {
-        //   position = unitItem.cardPosition;
-        // }
-        const viewSize = store.state.unitStuffs[windowId]?.viewSize;
-        if (viewSize) {
-          contentSize.width = viewSize.width;
-          contentSize.height = viewSize.height;
-        }
-      }
-      // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
-      const newWindowSpec: WindowSpec = {
-        position,
-        contentSize,
+      const windowSpec = helpers.createInitialWIndowSpec(
+        windowId,
         status,
-        ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
-        ...(isKeyboard ? { pinned: true } : {}),
-      };
-      windowSystem.add(windowId, newWindowSpec);
+        deskAreaRect,
+      );
+      windowSystem.add(windowId, windowSpec);
       windowSystem.setCurrentWindow(windowId);
     }
     windowSystem.setStatus(windowId, status);
@@ -118,15 +161,7 @@ export const actions = {
     );
     const exists = store.state.wireConnectionKeys.includes(connectionKey);
     if (exists) {
-      store.setWireConnectionKeys((prev) =>
-        prev.filter((key) => key !== connectionKey),
-      );
-      store.produceWireGains((draft) => {
-        delete draft[connectionKey];
-      });
-      store.produceWireAutomationParameterIds((draft) => {
-        delete draft[connectionKey];
-      });
+      actionsInternal.removeWires([connectionKey]);
     } else {
       store.setWireConnectionKeys((prev) => [...prev, connectionKey]);
     }
@@ -155,19 +190,9 @@ export const actions = {
       store.state.unitItems,
     );
     if (existingPorts.length >= 4) return;
-
-    const lastPort = existingPorts.at(-1);
-    const unitId = getNextNoteInputPortUnitId(store.state.unitItems);
-    const newPort: NoteInputPortUnitItem = {
-      type: "noteInput",
-      unitId,
-      sequencerClassKey: lastPort?.sequencerClassKey ?? "pianoRoll",
-      cardPosition: lastPort
-        ? { x: lastPort.cardPosition.x, y: lastPort.cardPosition.y + 100 }
-        : { x: boardSize.width / 2, y: boardSize.height / 2 },
-    };
+    const newPort = helpers.createNoteChannelPort(existingPorts);
     store.setUnitItems((prev) => [...prev, newPort]);
-    store.setCurrentNoteChannelId(unitId);
+    store.setCurrentNoteChannelId(newPort.unitId);
   },
   removeCurrentNoteChannel() {
     const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
@@ -199,19 +224,7 @@ export const actions = {
       store.state.wireConnectionKeys,
       unitId,
     );
-    store.setWireConnectionKeys((prev) =>
-      prev.filter((key) => !wireConnectionKeys.includes(key)),
-    );
-    store.produceWireGains((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
-    store.produceWireAutomationParameterIds((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
+    actionsInternal.removeWires(wireConnectionKeys);
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
     store.setMenuTargetUnitId(null);
     windowSystem.remove(unitId);
