@@ -128,7 +128,7 @@ const SequencerPanel = () => {
 export const SequencerWindow = () => {
   return (
     <WindowFrame id={kSequencerWindowId} title="piano roll">
-      <ScalerBoxDW designWidth={1100}>
+      <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <SequencerPanel />
       </ScalerBoxDW>
     </WindowFrame>

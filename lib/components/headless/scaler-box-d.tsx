@@ -1,6 +1,7 @@
 import { FC, useMemo, useRef } from "react";
 import { useWindowSize } from "../../utils/use-window-size";
 import { useDomElementSize } from "../../utils/use-dom-element-size";
+import { bottomLimit, topLimit } from "@lib/utils/number-helper";
 
 const UiScaler: FC<{
   children: React.ReactNode;
@@ -56,18 +57,24 @@ export const ScalerBoxD: FC<{
 export const ScalerBoxDW: FC<{
   children: React.ReactNode;
   designWidth: number;
-}> = ({ children, designWidth }) => {
+  scaleDirection: "lower" | "upper" | "both";
+}> = ({ children, designWidth, scaleDirection }) => {
   const baseDivRef = useRef<HTMLDivElement>(null);
   const size = useDomElementSize(baseDivRef);
   const [scale, designHeight] = useMemo(() => {
     if (size) {
-      const sc = size.width / designWidth;
+      let sc = size.width / designWidth;
       const asr = size.width / size.height;
+      if (scaleDirection === "lower") {
+        sc = topLimit(sc, 1);
+      } else if (scaleDirection === "upper") {
+        sc = bottomLimit(sc, 1);
+      }
       return [sc, designWidth / asr];
     } else {
       return [1, 1];
     }
-  }, [size]);
+  }, [size, scaleDirection]);
   return (
     <div ref={baseDivRef} style={{ height: "100%", overflow: "hidden" }}>
       <UiScaler
