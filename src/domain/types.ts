@@ -23,10 +23,17 @@ export type SpeakerPortUnitItem = {
   cardPosition: Point;
 };
 
+export type AutomationEditorUnitItem = {
+  type: "automationEditor";
+  unitId: string;
+  cardPosition: Point;
+};
+
 export type UnitItem =
   | BoardUnitItem
   | NoteInputPortUnitItem
-  | SpeakerPortUnitItem;
+  | SpeakerPortUnitItem
+  | AutomationEditorUnitItem;
 
 export type WindowId = string; //unitId | "sequencerWindow" | "keyboardWindow" | "automationEditorWindow"
 

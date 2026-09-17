@@ -4,7 +4,7 @@ import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
 import { SecondBar } from "@/views/controls/top-control-bars";
 import { CoordDebugLayer } from "@/views/desk/coord-debug-layer";
-import { DockRoot } from "@/views/desk/dock-root";
+import { DockRoot } from "@/views/window/dock-root";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { KeyboardWindow } from "@/views/window/keyboard-window";
 import { SequencerWindow } from "@/views/window/sequencer-window";
@@ -14,6 +14,7 @@ import { UnitConnectionsRoot } from "@/views/wiring/connections";
 import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";
 import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
 import { WiringLayer } from "@/views/wiring/wiring-layer";
+import { AutomationEditorWindow } from "@/views/window/automation-editor-window";
 
 const GraphEditPlane = () => {
   const { sight } = store.useSnapshot();
@@ -47,6 +48,7 @@ const FrontWindowsPlane = () => {
     <>
       <UnitWindowsRoot />
       <SequencerWindow />
+      <AutomationEditorWindow />
       <KeyboardWindow />
       <DockRoot />
       <SecondBar />

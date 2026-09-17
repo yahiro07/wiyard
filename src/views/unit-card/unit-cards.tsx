@@ -9,6 +9,7 @@ import { store } from "@/store/store";
 import { unitCardHandlers } from "@/views/unit-card/unit-card-handlers";
 import { useUnitCardPortPositionManager } from "@/views/unit-card/unit-card-port-position-manager";
 import { UnitPortsColumn } from "@/views/unit-card/unit-ports";
+import { AutomationEditorUnitCardRoot } from "@/views/unit-card/automation-editor-unit-card";
 
 function useUnitStuff(unitId: string) {
   const { unitStuffs } = store.useSnapshot();
@@ -196,6 +197,7 @@ export const UnitCardsRoot = () => {
       {unitItems.map((item) => (
         <UnitCardRoot key={item.unitId} unitItem={item} />
       ))}
+      <AutomationEditorUnitCardRoot />
     </>
   );
 };
