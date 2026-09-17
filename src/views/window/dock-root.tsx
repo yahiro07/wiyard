@@ -92,7 +92,7 @@ export const DockRoot = () => {
       />
       <WindowDockItem
         id={windowIds.automationEditor}
-        title="automation editor"
+        title="automation"
         children={
           <DockIcon
             icon={Icons.DirectionRight}

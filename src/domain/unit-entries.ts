@@ -38,6 +38,7 @@ export const interUnitFactories: Record<InternalUnitKey, ReactUnitTemplateFn> =
 export const internalUnitCardIcons = {
   speakerPort: Icons.ArrowRightToBracket,
   noteInputPort: Icons.ArrowRightFromBracket,
+  automationChannel: Icons.ArrowRightFromBracket,
 };
 
 export type UnitClassKey = CatalogKey | InternalUnitKey;

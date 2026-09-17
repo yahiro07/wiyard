@@ -43,12 +43,12 @@ export function createUnitCardPortPositionManager(
         );
         const position = vectorOp.add(cardPos, relativePosition);
 
-        const { direction, subtype } = portEntry.portSpec;
+        const ps = portEntry.portSpec;
         const portStuff: PortStuff = {
-          portKey: portEntry.portSpec.portKey,
-          direction,
-          subtype,
-          unitId: unitItem.unitId,
+          portKey: ps.portKey,
+          direction: ps.direction,
+          subtype: ps.subtype,
+          unitId: ps.portKey.split(".")[0],
           position,
         };
         return portStuff;

@@ -7,6 +7,9 @@ import { WindowFrame } from "@lib/window-system";
 import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
 import { automationChannelGetters } from "@/store/automation-channel-getters";
 import { channelListColumnComponents } from "@/views/window/components/channel-list-column";
+import { cz } from "@lib/utils/cz";
+import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
+import { useLayoutEffect } from "react";
 
 const ChannelListColumn = () => {
   const { currentAutomationChannelId } = store.useSnapshot();
@@ -39,60 +42,36 @@ const ChannelListColumn = () => {
   );
 };
 
-// const SequencerUnitItemView = ({
-//   notePortUnitItem,
-// }: {
-//   notePortUnitItem: NoteInputPortUnitItem;
-// }) => {
-//   const { currentNoteChannelId } = store.useSnapshot();
-//   const displayed = notePortUnitItem.unitId === currentNoteChannelId;
-//   const internalUnitFactory =
-//     interUnitFactories[notePortUnitItem.sequencerClassKey as InternalUnitKey];
-//   const catalogItem = catalog[notePortUnitItem.sequencerClassKey as CatalogKey];
-//   const sequencerUnitId = notePortGetters.getSequencerUnitId(
-//     notePortUnitItem.unitId,
-//   );
-//   let content: ReactNode;
-//   if (internalUnitFactory) {
-//     content = (
-//       <ReactUnitFrame
-//         unitId={sequencerUnitId}
-//         unitTemplateFn={internalUnitFactory}
-//       />
-//     );
-//   } else if (catalogItem) {
-//     content = (
-//       <UnitFrameScaled
-//         unitId={sequencerUnitId}
-//         unitUrl={catalogItem.loaderPageUrl}
-//       />
-//     );
-//   }
-//   return (
-//     <div className={cz("absolute-full", !displayed && "invisible")}>
-//       {content}
-//     </div>
-//   );
-// };
+const EditorUnitItemView = ({ unitId }: { unitId: string }) => {
+  const { currentAutomationChannelId } = store.useSnapshot();
+  const displayed = unitId === currentAutomationChannelId;
+  const reporter = useUnitStuffReporter(unitId);
+  useLayoutEffect(reporter.reportLoadStart, []);
+  return (
+    <div className={cz("absolute-full", !displayed && "invisible")}>
+      <ReactUnitFrame
+        unitId={unitId}
+        unitTemplateFn={interUnitFactories.automationEditor}
+        onUnitInstanceLoaded={reporter.reportLoaded}
+      />
+    </div>
+  );
+};
 
 const EditorContentSection = () => {
-  // const unitItems = notePortGetters.useNoteInputPortUnitItems();
+  const unitItems = automationChannelGetters.useAutomationEditorUnitItems();
   return (
     <div className="flex-grow relative overflow-hidden">
-      {/* {unitItems.map((item) => (
-        <SequencerUnitItemView key={item.unitId} notePortUnitItem={item} />
-      ))} */}
-      <ReactUnitFrame
-        unitId={"automationEditor1"}
-        unitTemplateFn={interUnitFactories.automationEditor}
-      />
+      {unitItems.map((item) => (
+        <EditorUnitItemView key={item.unitId} unitId={item.unitId} />
+      ))}
     </div>
   );
 };
 
 export const AutomationEditorWindow = () => {
   return (
-    <WindowFrame id={windowIds.automationEditor} title="automation editor">
+    <WindowFrame id={windowIds.automationEditor} title="automation">
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <div className="h-full flex-h">
           <ChannelListColumn />

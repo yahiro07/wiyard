@@ -37,6 +37,7 @@ const internalHandlers = {
     if (connectedWires.length === 0) {
       const { portStuffs } = store.state;
       const selfPort = portStuffs[portKey];
+      if (!selfPort) return;
       const targetPorts = Object.values(portStuffs).filter(
         (ps) =>
           (isPortConnectable(portKey, ps.portKey) &&
