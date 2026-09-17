@@ -27,6 +27,7 @@ import { resultOf } from "@lib/utils/general-helper";
 const unitWindowInitialSizes = {
   sequencerWindow: { width: 1000, height: 600 },
   keyboardWindow: { width: 480, height: 154 },
+  automationEditorWindow: { width: 800, height: 300 },
   general: {
     targetHeight: 280,
   },
@@ -53,12 +54,16 @@ const helpers = {
   ) {
     const isSequencer = windowId === windowIds.sequencer;
     const isKeyboard = windowId === windowIds.keyboard;
+    const isAutomationEditor = windowId === windowIds.automationEditor;
+
     let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
     let contentSize = resultOf(() => {
       if (isSequencer) {
         return unitWindowInitialSizes.sequencerWindow;
       } else if (isKeyboard) {
         return unitWindowInitialSizes.keyboardWindow;
+      } else if (isAutomationEditor) {
+        return unitWindowInitialSizes.automationEditorWindow;
       } else {
         return helpers.getGeneralUnitInitialSize(windowId);
       }
@@ -70,6 +75,7 @@ const helpers = {
       status,
       ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
       ...(isKeyboard ? { pinned: true } : {}),
+      ...(isAutomationEditor ? { freeRatio: true, pinned: true } : {}),
     };
     return newWindowSpec;
   },
