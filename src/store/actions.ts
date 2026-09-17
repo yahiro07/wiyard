@@ -227,6 +227,7 @@ export const actions = {
     if (existingUnits.length >= 4) return;
     const newUnit = helpers.createAutomationEditorUnit();
     store.setUnitItems((prev) => [...prev, newUnit]);
+    store.setCurrentAutomationChannelId(newUnit.unitId);
   },
   removeCurrentNoteChannel() {
     const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
@@ -248,18 +249,23 @@ export const actions = {
     store.setCurrentNoteChannelId(nextPort.unitId);
   },
   removeCurrentAutomationChannel() {
-    const currentId = store.state.currentAutomationChannelId;
-    if (!currentId) return;
-    const currentItem = commonGetters.getUnitItemById(currentId);
-    if (!currentItem) return;
-    actions.removeUnit(currentId);
-    const remaining = commonGetters.getAutomationEditorUnitItems();
-    const first = remaining[0];
-    if (first) {
-      store.setCurrentAutomationChannelId(first.unitId);
-      actionsInternal.patchUnitAttrs(first.unitId, {
-        cardPosition: currentItem.cardPosition,
-      });
+    const targetId = store.state.currentAutomationChannelId;
+    if (!targetId) return;
+    const items = commonGetters.getAutomationEditorUnitItems();
+    const targetItem = commonGetters.getUnitItemById(targetId);
+    if (!targetItem) return;
+    actions.removeUnit(targetId);
+    const isAlteringFirstItem = targetItem === items[0];
+
+    const remaining = items.filter((it) => it.unitId !== targetId);
+    const nextFirstItem = remaining[0];
+    if (nextFirstItem) {
+      store.setCurrentAutomationChannelId(nextFirstItem.unitId);
+      if (isAlteringFirstItem) {
+        actionsInternal.patchUnitAttrs(nextFirstItem.unitId, {
+          cardPosition: targetItem.cardPosition,
+        });
+      }
     }
   },
   setMenuTargetUnit(unitId: string | null) {

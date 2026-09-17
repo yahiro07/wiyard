@@ -26,6 +26,7 @@ export type SpeakerPortUnitItem = {
 export type AutomationEditorUnitItem = {
   type: "automationEditor";
   unitId: string;
+  //first unit card represents multiple automation editor and show their all ports
   cardPosition: Point;
 };
 
