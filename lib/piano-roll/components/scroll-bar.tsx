@@ -36,7 +36,7 @@ export const ScrollBarH = ({
     >
       <div
         ref={baseDivRef}
-        className={cz("w-full h-24px relative")}
+        className={cz("w-full h-22px relative")}
         style={colorStyles.base}
       >
         <div
@@ -75,7 +75,7 @@ export const ScrollBarV = ({
     >
       <div
         ref={baseDivRef}
-        className={cz("h-full w-24px relative")}
+        className={cz("h-full w-22px relative")}
         style={colorStyles.base}
       >
         <div

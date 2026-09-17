@@ -28,8 +28,8 @@ export const EditorCommonLayout = ({
       )}
       style={{
         display: "grid",
-        gridTemplateColumns: `${sideContentWidth}px 1fr 24px`,
-        gridTemplateRows: "24px 1fr 24px",
+        gridTemplateColumns: `${sideContentWidth}px 1fr 22px`,
+        gridTemplateRows: "24px 1fr 22px",
       }}
     >
       <div></div>
