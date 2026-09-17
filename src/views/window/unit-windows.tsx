@@ -10,7 +10,7 @@ import {
 } from "@/domain/unit-entries";
 import { sourceNoteChannelGetters } from "@/store/source-note-channel-getters";
 import { store, windowSystem } from "@/store/store";
-import { useUnitStuffReporter } from "@/views/unit-window/unit-stuff-reporter";
+import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
 
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(
