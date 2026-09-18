@@ -5,22 +5,9 @@ import { cz } from "../utils/cz";
 import { MessageFromUnit, MessageToUnit } from "../contract";
 import { useEffect } from "react";
 import { Knob } from "./knob";
-import { FaSpaceShuttle } from "react-icons/fa";
-import { HiMiniWrenchScrewdriver } from "react-icons/hi2";
-import { IoCloseOutline } from "react-icons/io5";
-import { PiPanoramaFill } from "react-icons/pi";
 import { IconType } from "react-icons";
-import { IoMdAdd } from "react-icons/io";
-import { MdArrowRight } from "react-icons/md";
-
-export const Icons = {
-  ArrowRight: MdArrowRight,
-  Add: IoMdAdd,
-  Close: IoCloseOutline,
-  Panorama: PiPanoramaFill,
-  Wrench: HiMiniWrenchScrewdriver,
-  Shuttle: FaSpaceShuttle,
-};
+import { pickObjectMembers } from "../utils/array-object-helper";
+import { Icons } from "./icons";
 
 type SlotId = "ch1" | "ch2" | "ch3" | "ch4" | "ch5" | "ch6" | "ch7" | "ch8";
 
