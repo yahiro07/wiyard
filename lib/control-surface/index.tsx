@@ -34,7 +34,6 @@ type ParameterSlot = {
   id: SlotId;
   enabled: boolean;
   value: number;
-  ccNumber: number | null;
 };
 
 const store = createStore<{
@@ -42,6 +41,7 @@ const store = createStore<{
   wideLayout: boolean;
   controlChangeAssignTargetSlotId: SlotId | null;
   assignsFixed: boolean;
+  controlChangeAssignMap: { [key in SlotId]?: number };
   destinationParameterPathsMap: { [key in SlotId]?: string[] };
   draggingSlotId: SlotId | null;
 }>({
@@ -54,6 +54,7 @@ const store = createStore<{
   wideLayout: false,
   controlChangeAssignTargetSlotId: null,
   assignsFixed: false,
+  controlChangeAssignMap: {},
   destinationParameterPathsMap: {},
   draggingSlotId: null,
 });
@@ -76,14 +77,18 @@ const actions = {
   setControlChangeAssignTarget(slotId: SlotId | null) {
     store.setControlChangeAssignTargetSlotId(slotId);
   },
-  assignControlChange(slotId: SlotId, ccNumber: number) {
-    const currentAssignedSlot = store.state.parameterSlots.find(
-      (slot) => slot.ccNumber === ccNumber,
-    );
-    if (currentAssignedSlot) {
-      actionsInternal.patchSlot(currentAssignedSlot.id, { ccNumber: null });
+  assignControlChange(slotId: SlotId, ccNumber: number | null) {
+    const newMap = { ...store.state.controlChangeAssignMap };
+    if (ccNumber !== null) {
+      const unassignedSlotId = allSlotIds.find((id) => newMap[id] === ccNumber);
+      if (unassignedSlotId) {
+        delete newMap[unassignedSlotId];
+      }
+      newMap[slotId] = ccNumber;
+    } else {
+      delete newMap[slotId];
     }
-    actionsInternal.patchSlot(slotId, { ccNumber });
+    store.setControlChangeAssignMap(newMap);
   },
   clearControlChangeAssignTarget() {
     store.setControlChangeAssignTargetSlotId(null);
@@ -126,7 +131,9 @@ const IconButton = ({
 };
 
 const ControlCell = ({ slot }: { slot: ParameterSlot }) => {
-  const { assignsFixed } = store.useSnapshot();
+  const { assignsFixed, controlChangeAssignMap } = store.useSnapshot();
+  const slotCcNumber = controlChangeAssignMap[slot.id];
+
   const editing = !assignsFixed;
 
   return (
@@ -159,7 +166,7 @@ const ControlCell = ({ slot }: { slot: ParameterSlot }) => {
               className="absolute bottom-0 right-0 mx-1 my-0.5 text-11px"
               onClick={() => actions.setControlChangeAssignTarget(slot.id)}
             >
-              {slot.ccNumber ? `CC#${slot.ccNumber}` : "CC"}
+              {slotCcNumber ? `CC#${slotCcNumber}` : "CC"}
             </div>
           )}
         </>
@@ -356,7 +363,8 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
             actions.clearControlChangeAssignTarget();
           } else {
             for (const slot of store.state.parameterSlots) {
-              if (slot.ccNumber === controlNumber) {
+              const slotCcNumber = store.state.controlChangeAssignMap[slot.id];
+              if (slotCcNumber === controlNumber) {
                 actions.setParameter(slot.id, value);
               }
             }
