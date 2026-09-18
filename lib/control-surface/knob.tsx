@@ -37,7 +37,7 @@ export const Knob = ({
   );
 };
 const styles = cz(
-  "relative rounded-full w-64px h-64px p-5px border-solid border-0.5 border-#666",
+  "relative rounded-full w-60px h-60px p-5px border-solid border-0.5 border-#666",
   "hover:opacity-80",
   "[&>.inner]:(w-full h-full rounded-full bg-#eee)",
   "[&>.tick-plane]:(absolute-full flex-va)",

@@ -123,7 +123,7 @@ const ControlCell = ({ slot }: { slot: ParameterSlot }) => {
   return (
     <div className={cz("w-100px h-100px bg-#ddd rounded-4px relative flex-c")}>
       {(slot.enabled || editing) && (
-        <div className="absolute top-0 left-0 mx-1 my-0.5 text-sm">
+        <div className="absolute top-0 left-0 mx-5px my-2px text-sm font-500">
           {slot.id.replace("ch", "")}
         </div>
       )}
@@ -251,7 +251,7 @@ const ControlChangeAssignDialogContainer = () => {
 
 const App = () => {
   return (
-    <div className="bg-#f0f0f0 p-4 flex-vc gap-2 text-#333 relative">
+    <div className="bg-#f0f0f0 p-4 flex-vc gap-2 text-#444 relative">
       <div className="w-full flex-h justify-between">
         <div />
         <div className="flex-h gap-5">
