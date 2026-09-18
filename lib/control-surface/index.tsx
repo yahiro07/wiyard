@@ -2,7 +2,7 @@ import { createStore } from "snap-store";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { seqNumbers } from "../utils/number-helper";
 import { cz } from "../utils/cz";
-import { MessageToUnit } from "../contract";
+import { MessageFromUnit, MessageToUnit } from "../contract";
 import { useEffect } from "react";
 import { Knob } from "./knob";
 
@@ -22,26 +22,29 @@ type ParameterSlot = {
 const allSlotIds: SlotId[] = seqNumbers(8).map(getSlotId);
 
 const store = createStore<{
-  // parameterSlots: ParameterSlot[];
-  slotsIds: SlotId[];
-  slots: Record<SlotId, ParameterSlot>;
+  parameterSlots: ParameterSlot[];
+  // slotsIds: SlotId[];
+  // slots: Record<SlotId, ParameterSlot>;
   wideLayout: boolean;
 }>({
-  slotsIds: allSlotIds,
-  slots: Object.fromEntries(
-    allSlotIds.map((id) => [id, { id, enabled: id === "ch1", value: 0.5 }]),
-  ) as Record<SlotId, ParameterSlot>,
-  // parameterSlots: seqNumbers(8).map((i) => ({
-  //   id: getSlotId(i),
-  //   enabled: false,
-  //   value: 0.5,
-  // })),
+  // slotsIds: allSlotIds,
+  // slots: Object.fromEntries(
+  //   allSlotIds.map((id) => [id, { id, enabled: id === "ch1", value: 0.5 }]),
+  // ) as Record<SlotId, ParameterSlot>,
+  parameterSlots: seqNumbers(8).map((i) => ({
+    id: getSlotId(i),
+    enabled: false,
+    value: 0.5,
+  })),
   wideLayout: false,
 });
 
 const actionsInternal = {
   patchSlot(slotId: SlotId, attrs: Partial<ParameterSlot>) {
-    store.patchSlots((prev) => ({ [slotId]: { ...prev[slotId], ...attrs } }));
+    // store.patchSlots((prev) => ({ [slotId]: { ...prev[slotId], ...attrs } }));
+    store.setParameterSlots((prev) =>
+      prev.map((slot) => (slot.id === slotId ? { ...slot, ...attrs } : slot)),
+    );
   },
 };
 
@@ -93,11 +96,12 @@ const ControlCellsRow = ({
   offset: number;
   count: number;
 }) => {
-  const { slotsIds, slots } = store.useSnapshot();
+  // const { slotsIds, slots } = store.useSnapshot();
+  const { parameterSlots } = store.useSnapshot();
   return (
     <div className="flex-h gap-1">
-      {slotsIds.slice(offset, offset + count).map((id) => (
-        <ControlCell key={id} slot={slots[id]} />
+      {parameterSlots.slice(offset, offset + count).map((slot) => (
+        <ControlCell key={slot.id} slot={slot} />
       ))}
     </div>
   );
@@ -174,18 +178,33 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
     },
   });
 
+  let activeChannelsCode = "";
+
+  function buildActiveChannelFlags() {
+    return Object.fromEntries(
+      store.state.parameterSlots.map((slot) => [slot.id, slot.enabled]),
+    );
+  }
+
   const setupSynchronization = () => {
     // console.log("CS setupSynchronization");
-    return store.subscribe(({ slots, wideLayout }) => {
-      // if (activeChannelFlags !== undefined) {
-      //   queueMicrotask(() => {
-      //     // console.log("CS sendMessageToHost", activeChannelFlags);
-      //     unitInterface.sendMessageToHost({
-      //       type: "setAutomationOutputPortsOptInFlags",
-      //       flags: activeChannelFlags,
-      //     } satisfies MessageFromUnit);
-      //   });
-      // }
+    return store.subscribe(({ parameterSlots, wideLayout }) => {
+      if (parameterSlots) {
+        const nextActiveChannelsCode = parameterSlots
+          .map((slot) => (slot.enabled ? 1 : 0))
+          .join("");
+        if (nextActiveChannelsCode !== activeChannelsCode) {
+          const activeChannelFlags = buildActiveChannelFlags();
+          queueMicrotask(() => {
+            // console.log("CS sendMessageToHost", activeChannelFlags);
+            unitInterface.sendMessageToHost({
+              type: "setAutomationOutputPortsOptInFlags",
+              flags: activeChannelFlags,
+            } satisfies MessageFromUnit);
+          });
+          activeChannelsCode = nextActiveChannelsCode;
+        }
+      }
       if (wideLayout !== undefined) {
         if (wideLayout) {
           unitInterface.setViewSize(824, 156);
