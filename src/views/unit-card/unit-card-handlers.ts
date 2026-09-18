@@ -1,9 +1,9 @@
 import { startDragSessionEx } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
 import { getGraphEditPlaneElement } from "@/common/constants";
-import { UnitItem } from "@/domain/types";
+import { UnitItem, windowIds } from "@/domain/types";
 import { actions } from "@/store/actions";
-import { windowSystem } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;
 
@@ -28,12 +28,25 @@ export const unitCardHandlers = {
           }
         },
         onTap() {
-          if (unitItem.type === "board") {
+          const makeWindowActive = (windowId: string) => {
             windowSystem.setEvacuate(false);
-            actions.setWindowStatus(unitItem.unitId, "visible");
-            windowSystem.setCurrentWindow(unitItem.unitId);
+            actions.setWindowStatus(windowId, "visible");
+            windowSystem.setCurrentWindow(windowId);
+          };
+          if (unitItem.type === "board") {
+            makeWindowActive(unitItem.unitId);
           } else if (unitItem.type === "noteInput") {
-            actions.setCurrentNoteChannelId(unitItem.unitId);
+            const isCurrent =
+              store.state.currentNoteChannelId === unitItem.unitId;
+            if (!isCurrent) {
+              actions.setCurrentNoteChannelId(unitItem.unitId);
+            } else {
+              makeWindowActive(windowIds.sequencer);
+            }
+          } else if (unitItem.type === "controlSurface") {
+            makeWindowActive(windowIds.controlSurface);
+          } else if (unitItem.type === "automationEditor") {
+            makeWindowActive(windowIds.automationEditor);
           }
         },
         onHold() {
