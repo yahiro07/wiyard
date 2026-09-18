@@ -2,52 +2,86 @@ import { createStore } from "snap-store";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { seqNumbers } from "../utils/number-helper";
 import { cz } from "../utils/cz";
-import { MessageToUnit, MessageFromUnit } from "../contract";
+import { MessageToUnit } from "../contract";
 import { useEffect } from "react";
+import { Knob } from "./knob";
 
-type ChannelId = "ch1" | "ch2" | "ch3" | "ch4" | "ch5" | "ch6" | "ch7" | "ch8";
+type SlotId = "ch1" | "ch2" | "ch3" | "ch4" | "ch5" | "ch6" | "ch7" | "ch8";
 
-function getChannelId(index: number): ChannelId {
-  return `ch${index + 1}` as ChannelId;
+function getSlotId(index: number): SlotId {
+  return `ch${index + 1}` as SlotId;
 }
+// const allChannelIds: ChannelId[] = seqNumbers(8).map(getChannelId);
+
+type ParameterSlot = {
+  id: SlotId;
+  enabled: boolean;
+  value: number;
+};
+
+const allSlotIds: SlotId[] = seqNumbers(8).map(getSlotId);
 
 const store = createStore<{
-  activeChannelFlags: Record<ChannelId, boolean>;
+  // parameterSlots: ParameterSlot[];
+  slotsIds: SlotId[];
+  slots: Record<SlotId, ParameterSlot>;
   wideLayout: boolean;
 }>({
-  activeChannelFlags: {
-    ch1: false,
-    ch2: false,
-    ch3: false,
-    ch4: false,
-    ch5: false,
-    ch6: false,
-    ch7: false,
-    ch8: false,
-  },
+  slotsIds: allSlotIds,
+  slots: Object.fromEntries(
+    allSlotIds.map((id) => [id, { id, enabled: id === "ch1", value: 0.5 }]),
+  ) as Record<SlotId, ParameterSlot>,
+  // parameterSlots: seqNumbers(8).map((i) => ({
+  //   id: getSlotId(i),
+  //   enabled: false,
+  //   value: 0.5,
+  // })),
   wideLayout: false,
 });
 
-const ControlCell = ({
-  channelId,
-  active,
-}: {
-  channelId: ChannelId;
-  active: boolean;
-}) => {
+const actionsInternal = {
+  patchSlot(slotId: SlotId, attrs: Partial<ParameterSlot>) {
+    store.patchSlots((prev) => ({ [slotId]: { ...prev[slotId], ...attrs } }));
+  },
+};
+
+const actions = {
+  setParameter(slotId: SlotId, value: number) {
+    actionsInternal.patchSlot(slotId, { value });
+  },
+  setSlotEnabled(slotId: SlotId, enabled: boolean) {
+    actionsInternal.patchSlot(slotId, { enabled });
+  },
+};
+
+const ControlCell = ({ slot }: { slot: ParameterSlot }) => {
   return (
-    <div
-      className={cz(
-        "w-100px h-100px bg-#ddd rounded-4px relative",
-        active && "bg-#f088",
-      )}
-      onClick={() => {
-        store.patchActiveChannelFlags({ [channelId]: !active });
-      }}
-    >
+    <div className={cz("w-100px h-100px bg-#ddd rounded-4px relative flex-c")}>
       <div className="absolute top-0 left-0 mx-1 my-0.5 text-sm">
-        {channelId.replace("ch", "")}
+        {slot.id.replace("ch", "")}
       </div>
+      {slot.enabled ? (
+        <>
+          <Knob
+            value={slot.value}
+            onChange={(v) => actions.setParameter(slot.id, v)}
+          />
+          <div
+            className="absolute top-0 right-0 mx-1 my-0.5 text-sm"
+            onClick={() => actions.setSlotEnabled(slot.id, false)}
+          >
+            x
+          </div>
+          <div
+            className="absolute bottom-0 right-0 mx-1 my-0.5 text-sm"
+            onClick={() => actions.setSlotEnabled(slot.id, false)}
+          >
+            cc
+          </div>
+        </>
+      ) : (
+        <div onClick={() => actions.setSlotEnabled(slot.id, true)}>+</div>
+      )}
     </div>
   );
 };
@@ -59,14 +93,12 @@ const ControlCellsRow = ({
   offset: number;
   count: number;
 }) => {
-  const { activeChannelFlags } = store.useSnapshot();
+  const { slotsIds, slots } = store.useSnapshot();
   return (
     <div className="flex-h gap-1">
-      {seqNumbers(count).map((ch) => {
-        const channelId = getChannelId(offset + ch);
-        const active = activeChannelFlags[channelId];
-        return <ControlCell channelId={channelId} active={active} />;
-      })}
+      {slotsIds.slice(offset, offset + count).map((id) => (
+        <ControlCell key={id} slot={slots[id]} />
+      ))}
     </div>
   );
 };
@@ -117,12 +149,8 @@ const App = () => {
 export const createControlSurfaceUnit: ReactUnitTemplateFn = (
   unitInterface,
 ) => {
-  const outputPorts = seqNumbers(8).map((i) => {
-    const channelId = getChannelId(i);
-    return unitInterface.createAutomationOutputPort(
-      channelId,
-      (i + 1).toString(),
-    );
+  const outputPorts = allSlotIds.map((id) => {
+    return unitInterface.createAutomationOutputPort(id, id.replace("ch", ""));
   });
   const timerId = setInterval(() => {
     for (const port of outputPorts) {
@@ -148,16 +176,16 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
 
   const setupSynchronization = () => {
     // console.log("CS setupSynchronization");
-    return store.subscribe(({ activeChannelFlags, wideLayout }) => {
-      if (activeChannelFlags !== undefined) {
-        queueMicrotask(() => {
-          // console.log("CS sendMessageToHost", activeChannelFlags);
-          unitInterface.sendMessageToHost({
-            type: "setAutomationOutputPortsOptInFlags",
-            flags: activeChannelFlags,
-          } satisfies MessageFromUnit);
-        });
-      }
+    return store.subscribe(({ slots, wideLayout }) => {
+      // if (activeChannelFlags !== undefined) {
+      //   queueMicrotask(() => {
+      //     // console.log("CS sendMessageToHost", activeChannelFlags);
+      //     unitInterface.sendMessageToHost({
+      //       type: "setAutomationOutputPortsOptInFlags",
+      //       flags: activeChannelFlags,
+      //     } satisfies MessageFromUnit);
+      //   });
+      // }
       if (wideLayout !== undefined) {
         if (wideLayout) {
           unitInterface.setViewSize(824, 156);
