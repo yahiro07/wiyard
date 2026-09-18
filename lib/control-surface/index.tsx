@@ -33,7 +33,7 @@ const store = createStore<{
   // ) as Record<SlotId, ParameterSlot>,
   parameterSlots: seqNumbers(8).map((i) => ({
     id: getSlotId(i),
-    enabled: false,
+    enabled: i === 0,
     value: 0.5,
   })),
   wideLayout: false,
@@ -156,17 +156,9 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
   const outputPorts = allSlotIds.map((id) => {
     return unitInterface.createAutomationOutputPort(id, id.replace("ch", ""));
   });
-  const timerId = setInterval(() => {
-    for (const port of outputPorts) {
-      port.emitValue(Math.random());
-    }
-  }, 1000);
   // console.log("CS completeSetup");
   unitInterface.completeSetup({
     unitAspects: { unitType: "sequencer" },
-    cleanup() {
-      clearInterval(timerId);
-    },
     unitCallbacks: {
       onMessageFromHost(message: MessageToUnit) {
         // console.log("CS onMessageFromHost", message);
@@ -179,6 +171,7 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
   });
 
   let activeChannelsCode = "";
+  const sentValues: { [key in SlotId]?: number } = {};
 
   function buildActiveChannelFlags() {
     return Object.fromEntries(
@@ -203,6 +196,13 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
             } satisfies MessageFromUnit);
           });
           activeChannelsCode = nextActiveChannelsCode;
+        }
+        for (let i = 0; i < parameterSlots.length; i++) {
+          const slot = parameterSlots[i];
+          if (slot.value !== sentValues[slot.id]) {
+            outputPorts[i].emitValue(slot.value);
+            sentValues[slot.id] = slot.value;
+          }
         }
       }
       if (wideLayout !== undefined) {
