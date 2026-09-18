@@ -21,22 +21,14 @@ const moduleActions = {
 
 export function useSetupUnitPortMasking() {
   useEffect(() => {
-    // console.log("useSetupUnitPortMasking");
     return hostSystem.eventPort.subscribe((ev) => {
       if (ev.type === "messageFromUnit") {
         const message = ev.message as MessageFromUnit;
         if (message.type === "setAutomationOutputPortsOptInFlags") {
-          // console.log(
-          //   "setAutomationOutputPortsOptInFlags",
-          //   message.flags,
-          //   ev.senderUnitId,
-          // );
-          // queueMicrotask(() => {
           moduleActions.setOutputPortsOptInFlags(
             ev.senderUnitId,
             message.flags,
           );
-          // });
         }
       }
     });
