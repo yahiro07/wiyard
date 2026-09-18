@@ -2,14 +2,14 @@ import { setupMidiKeyboardInput } from "@lib/utils/midi-keyboard-input";
 import { useEffect } from "react";
 import { hostSystem } from "@/domain/host-system-instance";
 import { store } from "@/store/store";
-import { kKeyboardUnitId } from "@/domain/unit-entries";
+import { builtinUnitIds } from "@/domain/unit-entries";
 
 export function useMidiInputHandling() {
   const { midiInEnabled } = store.useSnapshot();
   useEffect(() => {
     if (midiInEnabled) {
       const noteToUnitIdMap: Record<number, string> = {};
-      const destUnitId = kKeyboardUnitId;
+      const destUnitId = builtinUnitIds.keyboard;
       return setupMidiKeyboardInput({
         noteOn(noteNumber) {
           if (destUnitId) {

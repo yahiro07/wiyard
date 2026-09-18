@@ -9,6 +9,7 @@ import { Icons } from "@/common/icons";
 import unitInventories from "../unit-inventories.json";
 import { createKeyboardUnit } from "@lib/keyboard";
 import { createAutomationEditorUnit } from "@lib/automation-editor";
+import { createControlSurfaceUnit } from "@lib/control-surface";
 
 export type CatalogKey = keyof typeof unitInventories;
 
@@ -24,7 +25,8 @@ export type InternalUnitKey =
   | "noteInputPort"
   | "pianoRoll"
   | "keyboard"
-  | "automationEditor";
+  | "automationEditor"
+  | "controlSurface";
 
 export const interUnitFactories: Record<InternalUnitKey, ReactUnitTemplateFn> =
   {
@@ -33,15 +35,19 @@ export const interUnitFactories: Record<InternalUnitKey, ReactUnitTemplateFn> =
     pianoRoll: createPianoRollUnit,
     keyboard: createKeyboardUnit,
     automationEditor: createAutomationEditorUnit,
+    controlSurface: createControlSurfaceUnit,
   };
 
 export const internalUnitCardIcons = {
   speakerPort: Icons.ArrowRightToBracket,
   noteInputPort: Icons.ArrowRightFromBracket,
   automationChannel: Icons.ArrowRightFromBracket,
+  controlSurface: Icons.DirectionRight,
 };
 
 export type UnitClassKey = CatalogKey | InternalUnitKey;
 
-export const kKeyboardUnitId = "keyboard";
-export const kSpeakerPortUnitId = "speakerPort";
+export const builtinUnitIds = {
+  keyboard: "keyboard",
+  controlSurface: "controlSurface",
+};
