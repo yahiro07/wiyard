@@ -105,6 +105,12 @@ const actions = {
   setDraggingSlotId(slotId: SlotId | null) {
     store.setDraggingSlotId(slotId);
   },
+  removeCurrentControlTargetAssignment() {
+    const targetId = store.state.controlChangeAssignTargetSlotId;
+    if (targetId) {
+      actions.assignControlChange(targetId, null);
+    }
+  },
 };
 
 const IconButton = ({
@@ -254,8 +260,17 @@ const ControlChangeAssignDialog = () => {
       className="absolute-full flex-c"
       onClick={actions.clearControlChangeAssignTarget}
     >
-      <div className="bg-#fffd p-6">
-        <div>touch knob to assign control change</div>
+      <div className="bg-#fffd p-6 flex-vc gap-3">
+        <div>Touch knob to assign control change</div>
+        <div className="flex-ha gap-2">
+          <div>or</div>
+          <button
+            className="bg-#ccc text-white px-1 py-1.5 cursor-pointer"
+            onClick={actions.removeCurrentControlTargetAssignment}
+          >
+            remove it
+          </button>
+        </div>
       </div>
     </div>
   );
