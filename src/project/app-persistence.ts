@@ -55,6 +55,19 @@ export const appPersistence = {
     const url = new URLSearchParams(location.search);
     const urlDataText = url.get("data");
 
+    const wrapApplyProjectData = async (
+      projectData: ProjectData,
+      controlSurfaceState: Record<string, any> | null,
+    ) => {
+      await projectDataIo.applyProjectData(projectData);
+      if (controlSurfaceState) {
+        hostSystem.sendMessageToUnit(builtinUnitIds.controlSurface, {
+          type: "applySessionState",
+          state: controlSurfaceState,
+        });
+      }
+    };
+
     if (urlDataText) {
       try {
         const storageText = localStorage.getItem("wireboard-states");
@@ -66,6 +79,7 @@ export const appPersistence = {
             controlSurfaceState = data.controlSurfaceState;
           }
         }
+
         const inputProjectData =
           sharedUrlSupport.loadSharedUrlData(urlDataText);
         if (inputProjectData.pageDeployId !== appEnvs.cfPagesDeployId) {
@@ -74,17 +88,10 @@ export const appPersistence = {
           //since the migration logic could not be perfect
         }
         const projectData = migrateProjectData(inputProjectData);
-        void (async () => {
-          //this floating promise is out of the scope of try-catch block
-          //error occurred in each unit is notified to the mount point component
-          await projectDataIo.applyProjectData(projectData);
-          if (controlSurfaceState) {
-            hostSystem.sendMessageToUnit(builtinUnitIds.controlSurface, {
-              type: "applySessionState",
-              state: controlSurfaceState,
-            });
-          }
-        })();
+
+        //this floating promise is out of the scope of try-catch block
+        //error occurred in each unit is notified to the mount point component
+        void wrapApplyProjectData(projectData, controlSurfaceState);
       } catch (error: any) {
         //fatal
         console.warn(error);
@@ -97,11 +104,15 @@ export const appPersistence = {
     } else {
       try {
         const text = localStorage.getItem("wireboard-states");
+        let controlSurfaceState: Record<string, any> | null = null;
+
         if (text) {
           const data = tryParseJson<PersistenceData>(text, () =>
             raiseProjectLoadingError(`failed to parse persistence data json`),
           );
           store.assign(helpers.pickSessionStates(data.sessionStates));
+          controlSurfaceState = data.controlSurfaceState;
+
           const inputProjectData = data.projectData;
           if (inputProjectData.pageDeployId !== appEnvs.cfPagesDeployId) {
             //todo: consider adding version selection phase
@@ -109,7 +120,11 @@ export const appPersistence = {
             //since the migration logic could not be perfect
           }
           const projectData = migrateProjectData(data.projectData);
-          void projectDataIo.applyProjectData(projectData);
+
+          //this floating promise is out of the scope of try-catch block
+          //error occurred in each unit is notified to the mount point component
+          void wrapApplyProjectData(projectData, controlSurfaceState);
+
           store.setAutoPersistenceEnabled(true);
         } else {
           store.setAutoPersistenceEnabled(true);

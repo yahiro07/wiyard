@@ -255,7 +255,7 @@ const ControlChangeAssignDialog = () => {
         <div className="flex-ha gap-2">
           <div>or</div>
           <button
-            className="bg-#ccc text-white px-1 py-1.5 cursor-pointer"
+            className="bg-#ccc text-white p-1.5 cursor-pointer text-sm font-600"
             onClick={actions.removeCurrentControlTargetAssignment}
           >
             remove it
@@ -357,10 +357,8 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
     unitAspects: { unitType: "sequencer" },
     unitCallbacks: {
       onMessageFromHost(message: MessageToUnit) {
-        // console.log("CS onMessageFromHost", message);
         if (message.type === "controlChange") {
           const { controlNumber, value } = message;
-          console.log("CS control change received", controlNumber, value);
           const assignTargetSlotId =
             store.state.controlChangeAssignTargetSlotId;
           if (assignTargetSlotId) {
@@ -375,10 +373,6 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
             }
           }
         } else if (message.type === "setDestinationParameterPaths") {
-          console.log(
-            "CS setDestinationParameterPaths",
-            message.destinationParameterPaths,
-          );
           store.setDestinationParameterPathsMap(
             message.destinationParameterPaths,
           );
@@ -415,7 +409,6 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
   }
 
   const setupSynchronization = () => {
-    // console.log("CS setupSynchronization");
     return store.subscribe(({ parameterSlots, wideLayout }) => {
       if (parameterSlots) {
         const nextActiveChannelsCode = parameterSlots
@@ -424,7 +417,6 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
         if (nextActiveChannelsCode !== activeChannelsCode) {
           const activeChannelFlags = buildActiveChannelFlags();
           queueMicrotask(() => {
-            // console.log("CS sendMessageToHost", activeChannelFlags);
             unitInterface.sendMessageToHost({
               type: "setAutomationOutputPortsOptInFlags",
               flags: activeChannelFlags,
