@@ -5,6 +5,20 @@ import { cz } from "../utils/cz";
 import { MessageFromUnit, MessageToUnit } from "../contract";
 import { useEffect } from "react";
 import { Knob } from "./knob";
+import { FaSpaceShuttle } from "react-icons/fa";
+import { HiMiniWrenchScrewdriver } from "react-icons/hi2";
+import { IoCloseOutline } from "react-icons/io5";
+import { PiPanoramaFill } from "react-icons/pi";
+import { IconType } from "react-icons";
+import { IoMdAdd } from "react-icons/io";
+
+export const Icons = {
+  Add: IoMdAdd,
+  Close: IoCloseOutline,
+  Panorama: PiPanoramaFill,
+  Wrench: HiMiniWrenchScrewdriver,
+  Shuttle: FaSpaceShuttle,
+};
 
 type SlotId = "ch1" | "ch2" | "ch3" | "ch4" | "ch5" | "ch6" | "ch7" | "ch8";
 
@@ -25,6 +39,7 @@ const store = createStore<{
   parameterSlots: ParameterSlot[];
   wideLayout: boolean;
   controlChangeAssignTargetSlotId: SlotId | null;
+  assignsFixed: boolean;
 }>({
   parameterSlots: seqNumbers(8).map((i) => ({
     id: getSlotId(i),
@@ -34,6 +49,7 @@ const store = createStore<{
   })),
   wideLayout: false,
   controlChangeAssignTargetSlotId: null,
+  assignsFixed: false,
 });
 
 const actionsInternal = {
@@ -66,35 +82,87 @@ const actions = {
   clearControlChangeAssignTarget() {
     store.setControlChangeAssignTargetSlotId(null);
   },
+  toggleLayout() {
+    store.toggleWideLayout();
+  },
+  setAssignsFixed(assignsFixed: boolean) {
+    store.setAssignsFixed(assignsFixed);
+  },
+  toggleAssignsFixed() {
+    store.toggleAssignsFixed();
+  },
+};
+
+const IconButton = ({
+  className,
+  icon: IconComponent,
+  size = 20,
+  active,
+  onClick,
+}: {
+  className?: string;
+  icon: IconType;
+  size?: number;
+  active?: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <button
+      className={cz("cursor-pointer", active && "text-#8ae", className)}
+      onClick={onClick}
+    >
+      <IconComponent size={size} />
+    </button>
+  );
 };
 
 const ControlCell = ({ slot }: { slot: ParameterSlot }) => {
+  const { assignsFixed } = store.useSnapshot();
+  const editing = !assignsFixed;
+
   return (
     <div className={cz("w-100px h-100px bg-#ddd rounded-4px relative flex-c")}>
-      <div className="absolute top-0 left-0 mx-1 my-0.5 text-sm">
-        {slot.id.replace("ch", "")}
-      </div>
+      {(slot.enabled || editing) && (
+        <div className="absolute top-0 left-0 mx-1 my-0.5 text-sm">
+          {slot.id.replace("ch", "")}
+        </div>
+      )}
       {slot.enabled ? (
         <>
           <Knob
             value={slot.value}
             onChange={(v) => actions.setParameter(slot.id, v)}
           />
-          <div
-            className="absolute top-0 right-0 mx-1 my-0.5 text-sm"
-            onClick={() => actions.setSlotEnabled(slot.id, false)}
-          >
-            x
-          </div>
-          <div
-            className="absolute bottom-0 right-0 mx-1 my-0.5 text-11px"
-            onClick={() => actions.setControlChangeAssignTarget(slot.id)}
-          >
-            {slot.ccNumber ? `CC#${slot.ccNumber}` : "CC"}
-          </div>
+          {editing && (
+            <div className="absolute top-0 right-0 p-2px">
+              <IconButton
+                className="text-#666"
+                icon={Icons.Close}
+                onClick={() => actions.setSlotEnabled(slot.id, false)}
+                size={18}
+              />
+            </div>
+          )}
+          {editing && (
+            <div
+              className="absolute bottom-0 right-0 mx-1 my-0.5 text-11px"
+              onClick={() => actions.setControlChangeAssignTarget(slot.id)}
+            >
+              {slot.ccNumber ? `CC#${slot.ccNumber}` : "CC"}
+            </div>
+          )}
         </>
       ) : (
-        <div onClick={() => actions.setSlotEnabled(slot.id, true)}>+</div>
+        <>
+          {editing && (
+            <IconButton
+              className="text-#666"
+              icon={Icons.Add}
+              onClick={() => actions.setSlotEnabled(slot.id, true)}
+              size={18}
+            />
+          )}
+        </>
       )}
     </div>
   );
@@ -120,23 +188,29 @@ const ControlCellsRow = ({
 const LayoutSwitcherButton = () => {
   const { wideLayout } = store.useSnapshot();
   return (
+    <IconButton
+      icon={Icons.Panorama}
+      active={wideLayout}
+      onClick={actions.toggleLayout}
+    />
+  );
+};
+
+const AssignsFixedSwitcherButtons = () => {
+  const { assignsFixed } = store.useSnapshot();
+  return (
     <div className="flex-h gap-1">
-      <button
-        className={cz(!wideLayout && "bg-#f088")}
-        onClick={() => {
-          store.setWideLayout(false);
-        }}
-      >
-        4x2
-      </button>
-      <button
-        className={cz(wideLayout && "bg-#f088")}
-        onClick={() => {
-          store.setWideLayout(true);
-        }}
-      >
-        8x1
-      </button>
+      <IconButton
+        icon={Icons.Wrench}
+        active={!assignsFixed}
+        onClick={() => actions.setAssignsFixed(false)}
+        size={17}
+      />
+      <IconButton
+        icon={Icons.Shuttle}
+        active={assignsFixed}
+        onClick={() => actions.setAssignsFixed(true)}
+      />
     </div>
   );
 };
@@ -180,7 +254,10 @@ const App = () => {
     <div className="bg-#f0f0f0 p-4 flex-vc gap-2 text-#333 relative">
       <div className="w-full flex-h justify-between">
         <div />
-        <LayoutSwitcherButton />
+        <div className="flex-h gap-5">
+          <LayoutSwitcherButton />
+          <AssignsFixedSwitcherButtons />
+        </div>
       </div>
       <KnobsArea />
       <ControlChangeAssignDialogContainer />
