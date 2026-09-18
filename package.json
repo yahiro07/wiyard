@@ -15,7 +15,7 @@
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
     "snap-store": "^0.1.14",
-    "wafer-host": "^0.1.13"
+    "wafer-host": "^0.1.14"
   },
   "devDependencies": {
     "@types/node": "^26.4.1",

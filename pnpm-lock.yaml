@@ -27,8 +27,8 @@ importers:
         specifier: ^0.1.14
         version: 0.1.14(react@19.2.8)
       wafer-host:
-        specifier: ^0.1.13
-        version: 0.1.13(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^0.1.14
+        version: 0.1.14(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@types/node':
         specifier: ^26.4.1
@@ -1244,8 +1244,8 @@ packages:
       yaml:
         optional: true
 
-  wafer-host@0.1.13:
-    resolution: {integrity: sha512-jXaPIsZiz4vlb27d6k/tvHB8JRX+EttzNzyY/GOaN5XGxdIv8/SmjbfMm+M+4mQ/L+9RdxmgCEtT1Dc8QN4cyQ==}
+  wafer-host@0.1.14:
+    resolution: {integrity: sha512-n3BU9wtVg6BAoWHkgXiTfXvEGp3TTGadATSYVYKodHM/gTmz3I14ud2eylWIcV06XnQGg4hK8EQAdhmnHOyWhw==}
     peerDependencies:
       react: ^19.2.6
       react-dom: ^19.2.6
@@ -2189,7 +2189,7 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.7.0
 
-  wafer-host@0.1.13(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  wafer-host@0.1.14(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     optionalDependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
