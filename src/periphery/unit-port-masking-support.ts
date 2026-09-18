@@ -31,12 +31,12 @@ export function useSetupUnitPortMasking() {
           //   message.flags,
           //   ev.senderUnitId,
           // );
-          queueMicrotask(() => {
-            moduleActions.setOutputPortsOptInFlags(
-              ev.senderUnitId,
-              message.flags,
-            );
-          });
+          // queueMicrotask(() => {
+          moduleActions.setOutputPortsOptInFlags(
+            ev.senderUnitId,
+            message.flags,
+          );
+          // });
         }
       }
     });
