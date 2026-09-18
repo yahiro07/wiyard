@@ -166,6 +166,14 @@ export const actions = {
     }
     windowSystem.setStatus(windowId, status);
   },
+  setWindowContentSize(windowId: string, newSize: Size) {
+    store.patchWindowSpecs((prev) => ({
+      [windowId]: {
+        ...prev[windowId],
+        contentSize: newSize,
+      },
+    }));
+  },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
   },

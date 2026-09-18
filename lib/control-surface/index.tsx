@@ -13,6 +13,7 @@ function getChannelId(index: number): ChannelId {
 
 const store = createStore<{
   activeChannelFlags: Record<ChannelId, boolean>;
+  wideLayout: boolean;
 }>({
   activeChannelFlags: {
     ch1: false,
@@ -24,30 +25,86 @@ const store = createStore<{
     ch7: false,
     ch8: false,
   },
+  wideLayout: false,
 });
 
-const App = () => {
+const ControlCell = ({
+  channelId,
+  active,
+}: {
+  channelId: ChannelId;
+  active: boolean;
+}) => {
+  return (
+    <div
+      className={cz("w-100px h-100px bg-#666", active && "bg-#f088")}
+      onClick={() => {
+        store.patchActiveChannelFlags({ [channelId]: !active });
+      }}
+    >
+      {channelId}
+    </div>
+  );
+};
+
+const ControlCellsRow = ({
+  offset,
+  count,
+}: {
+  offset: number;
+  count: number;
+}) => {
   const { activeChannelFlags } = store.useSnapshot();
   return (
+    <div className="flex-h">
+      {seqNumbers(count).map((ch) => {
+        const channelId = getChannelId(offset + ch);
+        const active = activeChannelFlags[channelId];
+        return <ControlCell channelId={channelId} active={active} />;
+      })}
+    </div>
+  );
+};
+
+const LayoutSwitcherButton = () => {
+  const { wideLayout } = store.useSnapshot();
+  return (
+    <div className="flex-h gap-1">
+      <button
+        className={cz(!wideLayout && "bg-#f088")}
+        onClick={() => {
+          store.setWideLayout(false);
+        }}
+      >
+        4x2
+      </button>
+      <button
+        className={cz(wideLayout && "bg-#f088")}
+        onClick={() => {
+          store.setWideLayout(true);
+        }}
+      >
+        8x1
+      </button>
+    </div>
+  );
+};
+
+const App = () => {
+  const { wideLayout } = store.useSnapshot();
+  return (
     <div className="bg-#ccc p-3 flex-vc gap-2">
-      <h3>Control Surface</h3>
-      <div className="flex-h">
-        {seqNumbers(8).map((ch) => {
-          const channelId = getChannelId(ch);
-          const active = activeChannelFlags[channelId];
-          return (
-            <div
-              key={ch}
-              className={cz("w-100px h-100px bg-#666", active && "bg-#f088")}
-              onClick={() => {
-                store.patchActiveChannelFlags({ [channelId]: !active });
-              }}
-            >
-              {channelId}
-            </div>
-          );
-        })}
+      <div className="w-full flex-h justify-between">
+        <h3>Control Surface</h3>
+        <LayoutSwitcherButton />
       </div>
+      {!wideLayout && (
+        <div className="flex-v">
+          <ControlCellsRow offset={0} count={4} />
+          <ControlCellsRow offset={4} count={4} />
+        </div>
+      )}
+      {wideLayout && <ControlCellsRow offset={0} count={8} />}
     </div>
   );
 };
@@ -86,8 +143,8 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
 
   const setupSynchronization = () => {
     // console.log("CS setupSynchronization");
-    return store.subscribe(({ activeChannelFlags }) => {
-      if (activeChannelFlags) {
+    return store.subscribe(({ activeChannelFlags, wideLayout }) => {
+      if (activeChannelFlags !== undefined) {
         queueMicrotask(() => {
           // console.log("CS sendMessageToHost", activeChannelFlags);
           unitInterface.sendMessageToHost({
@@ -95,6 +152,13 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
             flags: activeChannelFlags,
           } satisfies MessageFromUnit);
         });
+      }
+      if (wideLayout !== undefined) {
+        if (wideLayout) {
+          unitInterface.setViewSize(824, 156);
+        } else {
+          unitInterface.setViewSize(424, 256);
+        }
       }
     }, true);
   };
