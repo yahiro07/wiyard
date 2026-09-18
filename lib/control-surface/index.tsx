@@ -40,6 +40,7 @@ const store = createStore<{
   wideLayout: boolean;
   controlChangeAssignTargetSlotId: SlotId | null;
   assignsFixed: boolean;
+  destinationParameterPathsMap: { [key in SlotId]?: string[] };
 }>({
   parameterSlots: seqNumbers(8).map((i) => ({
     id: getSlotId(i),
@@ -50,6 +51,7 @@ const store = createStore<{
   wideLayout: false,
   controlChangeAssignTargetSlotId: null,
   assignsFixed: false,
+  destinationParameterPathsMap: {},
 });
 
 const actionsInternal = {
@@ -292,6 +294,14 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
               }
             }
           }
+        } else if (message.type === "setDestinationParameterPaths") {
+          console.log(
+            "CS setDestinationParameterPaths",
+            message.destinationParameterPaths,
+          );
+          store.setDestinationParameterPathsMap(
+            message.destinationParameterPaths,
+          );
         }
       },
     },

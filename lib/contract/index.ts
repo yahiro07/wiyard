@@ -31,8 +31,13 @@ export type MessageFromUnit =
       flags: Record<string, boolean>;
     };
 
-export type MessageToUnit = {
-  type: "controlChange";
-  controlNumber: number;
-  value: number; //0~127
-};
+export type MessageToUnit =
+  | {
+      type: "controlChange";
+      controlNumber: number;
+      value: number; //0~127
+    }
+  | {
+      type: "setDestinationParameterPaths";
+      destinationParameterPaths: Record<string, string[]>;
+    };

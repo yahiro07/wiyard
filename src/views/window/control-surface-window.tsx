@@ -8,20 +8,57 @@ import { useEffect, useLayoutEffect } from "react";
 import { useUnitStuff } from "@/views/unit-card/unit-cards-common";
 import { store } from "@/store/store";
 import { actions } from "@/store/actions";
+import { decodeWireConnectionKey } from "@/domain/port-helpers";
+import { hostSystem } from "@/domain/host-system-instance";
+import { MessageToUnit } from "@lib/contract";
+
+const controlSurfaceHooks = {
+  useAffectViewSizeChange() {
+    const unitStuff = useUnitStuff(builtinUnitIds.controlSurface);
+    useEffect(() => {
+      const viewSize = unitStuff?.viewSize;
+      const windowSpec = store.state.windowSpecs[windowIds.controlSurface];
+      const currentSize = windowSpec?.contentSize;
+      if (currentSize && viewSize) {
+        actions.setWindowContentSize(windowIds.controlSurface, viewSize);
+      }
+    }, [unitStuff]);
+  },
+  useReportDestinationParameterPaths() {
+    const { wireConnectionKeys, wireAutomationParameterIds } =
+      store.useSnapshot();
+    useEffect(() => {
+      const csUnitId = builtinUnitIds.controlSurface;
+      const targetConnectionKeys = wireConnectionKeys.filter((key) =>
+        key.startsWith(csUnitId),
+      );
+      let paths: Record<string, string[]> = {};
+      for (const connectionKey of targetConnectionKeys) {
+        const { sourcePortId, destinationUnitId } =
+          decodeWireConnectionKey(connectionKey);
+        const destParameterId = wireAutomationParameterIds[connectionKey];
+        if (destParameterId) {
+          paths[sourcePortId] ??= [];
+          paths[sourcePortId].push(
+            `${destinationUnitId.replace("_", "-")}.${destParameterId}`,
+          );
+        }
+      }
+      const message: MessageToUnit = {
+        type: "setDestinationParameterPaths",
+        destinationParameterPaths: paths,
+      };
+      hostSystem.sendMessageToUnit(csUnitId, message);
+    }, [wireConnectionKeys, wireAutomationParameterIds]);
+  },
+};
 
 export const ControlSurfaceWindow = () => {
   const unitId = builtinUnitIds.controlSurface;
   const reporter = useUnitStuffReporter(unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
-  const unitStuff = useUnitStuff(unitId);
-  useEffect(() => {
-    const viewSize = unitStuff?.viewSize;
-    const windowSpec = store.state.windowSpecs[windowIds.controlSurface];
-    const currentSize = windowSpec?.contentSize;
-    if (currentSize && viewSize) {
-      actions.setWindowContentSize(windowIds.controlSurface, viewSize);
-    }
-  }, [unitStuff]);
+  controlSurfaceHooks.useAffectViewSizeChange();
+  controlSurfaceHooks.useReportDestinationParameterPaths();
 
   return (
     <WindowFrame id={windowIds.controlSurface} title="control surface">
