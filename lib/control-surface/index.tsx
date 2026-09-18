@@ -11,37 +11,33 @@ type SlotId = "ch1" | "ch2" | "ch3" | "ch4" | "ch5" | "ch6" | "ch7" | "ch8";
 function getSlotId(index: number): SlotId {
   return `ch${index + 1}` as SlotId;
 }
-// const allChannelIds: ChannelId[] = seqNumbers(8).map(getChannelId);
+
+const allSlotIds: SlotId[] = seqNumbers(8).map(getSlotId);
 
 type ParameterSlot = {
   id: SlotId;
   enabled: boolean;
   value: number;
+  ccNumber: number | null;
 };
-
-const allSlotIds: SlotId[] = seqNumbers(8).map(getSlotId);
 
 const store = createStore<{
   parameterSlots: ParameterSlot[];
-  // slotsIds: SlotId[];
-  // slots: Record<SlotId, ParameterSlot>;
   wideLayout: boolean;
+  controlChangeAssignTargetSlotId: SlotId | null;
 }>({
-  // slotsIds: allSlotIds,
-  // slots: Object.fromEntries(
-  //   allSlotIds.map((id) => [id, { id, enabled: id === "ch1", value: 0.5 }]),
-  // ) as Record<SlotId, ParameterSlot>,
   parameterSlots: seqNumbers(8).map((i) => ({
     id: getSlotId(i),
     enabled: i === 0,
     value: 0.5,
+    ccNumber: null,
   })),
   wideLayout: false,
+  controlChangeAssignTargetSlotId: null,
 });
 
 const actionsInternal = {
   patchSlot(slotId: SlotId, attrs: Partial<ParameterSlot>) {
-    // store.patchSlots((prev) => ({ [slotId]: { ...prev[slotId], ...attrs } }));
     store.setParameterSlots((prev) =>
       prev.map((slot) => (slot.id === slotId ? { ...slot, ...attrs } : slot)),
     );
@@ -54,6 +50,21 @@ const actions = {
   },
   setSlotEnabled(slotId: SlotId, enabled: boolean) {
     actionsInternal.patchSlot(slotId, { enabled });
+  },
+  setControlChangeAssignTarget(slotId: SlotId | null) {
+    store.setControlChangeAssignTargetSlotId(slotId);
+  },
+  assignControlChange(slotId: SlotId, ccNumber: number) {
+    const currentAssignedSlot = store.state.parameterSlots.find(
+      (slot) => slot.ccNumber === ccNumber,
+    );
+    if (currentAssignedSlot) {
+      actionsInternal.patchSlot(currentAssignedSlot.id, { ccNumber: null });
+    }
+    actionsInternal.patchSlot(slotId, { ccNumber });
+  },
+  clearControlChangeAssignTarget() {
+    store.setControlChangeAssignTargetSlotId(null);
   },
 };
 
@@ -76,10 +87,10 @@ const ControlCell = ({ slot }: { slot: ParameterSlot }) => {
             x
           </div>
           <div
-            className="absolute bottom-0 right-0 mx-1 my-0.5 text-sm"
-            onClick={() => actions.setSlotEnabled(slot.id, false)}
+            className="absolute bottom-0 right-0 mx-1 my-0.5 text-11px"
+            onClick={() => actions.setControlChangeAssignTarget(slot.id)}
           >
-            cc
+            {slot.ccNumber ? `CC#${slot.ccNumber}` : "CC"}
           </div>
         </>
       ) : (
@@ -96,7 +107,6 @@ const ControlCellsRow = ({
   offset: number;
   count: number;
 }) => {
-  // const { slotsIds, slots } = store.useSnapshot();
   const { parameterSlots } = store.useSnapshot();
   return (
     <div className="flex-h gap-1">
@@ -131,14 +141,10 @@ const LayoutSwitcherButton = () => {
   );
 };
 
-const App = () => {
+const KnobsArea = () => {
   const { wideLayout } = store.useSnapshot();
   return (
-    <div className="bg-#f0f0f0 p-4 flex-vc gap-2 text-#333">
-      <div className="w-full flex-h justify-between">
-        <div />
-        <LayoutSwitcherButton />
-      </div>
+    <div>
       {!wideLayout && (
         <div className="flex-v gap-1">
           <ControlCellsRow offset={0} count={4} />
@@ -146,6 +152,38 @@ const App = () => {
         </div>
       )}
       {wideLayout && <ControlCellsRow offset={0} count={8} />}
+    </div>
+  );
+};
+
+const ControlChangeAssignDialog = () => {
+  return (
+    <div
+      className="absolute-full flex-c"
+      onClick={actions.clearControlChangeAssignTarget}
+    >
+      <div className="bg-#fffd p-6">
+        <div>touch knob to assign control change</div>
+      </div>
+    </div>
+  );
+};
+
+const ControlChangeAssignDialogContainer = () => {
+  const { controlChangeAssignTargetSlotId } = store.useSnapshot();
+  if (!controlChangeAssignTargetSlotId) return;
+  return <ControlChangeAssignDialog />;
+};
+
+const App = () => {
+  return (
+    <div className="bg-#f0f0f0 p-4 flex-vc gap-2 text-#333 relative">
+      <div className="w-full flex-h justify-between">
+        <div />
+        <LayoutSwitcherButton />
+      </div>
+      <KnobsArea />
+      <ControlChangeAssignDialogContainer />
     </div>
   );
 };
@@ -165,6 +203,11 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
         if (message.type === "controlChange") {
           const { controlNumber, value } = message;
           console.log("CS control change received", controlNumber, value);
+          const targetSlotId = store.state.controlChangeAssignTargetSlotId;
+          if (targetSlotId) {
+            actions.assignControlChange(targetSlotId, controlNumber);
+            actions.clearControlChangeAssignTarget();
+          }
         }
       },
     },
