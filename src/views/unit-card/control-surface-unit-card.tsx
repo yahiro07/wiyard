@@ -8,12 +8,15 @@ export const ControlSurfaceUnitCardRoot = () => {
   const unitItem = unitItems.find((item) => item.type === "controlSurface");
   if (!unitItem) return;
   const unitStuff = unitStuffs[unitItem.unitId];
-
+  const outputPortSpecs = unitStuff?.outputPortSpecs?.filter(
+    (spec) => unitStuff.outputPortsOptInFlags?.[spec.id] ?? true,
+  );
   return (
     <EdgeUnitCardView
+      key={outputPortSpecs?.map((it) => it.id).join(",")}
       unitItem={unitItem}
       inputPortSpecs={[]}
-      outputPortSpecs={unitStuff?.outputPortSpecs}
+      outputPortSpecs={outputPortSpecs}
       highlighted={false}
       iconComponent={internalUnitCardIcons.controlSurface}
       label="surface"

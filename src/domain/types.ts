@@ -67,6 +67,7 @@ export type UnitStuff = {
   outputPortSpecs?: UnitPortSpec[];
   viewSize?: Size;
   automationParameterSpecs?: AutomationParameterSpec[];
+  outputPortsOptInFlags?: Record<string, boolean>;
 };
 
 export type PortStuff = {

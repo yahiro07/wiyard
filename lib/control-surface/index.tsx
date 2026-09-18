@@ -3,6 +3,7 @@ import { ReactUnitTemplateFn } from "wafer-host/react";
 import { seqNumbers } from "../utils/number-helper";
 import { cz } from "../utils/cz";
 import { MessageFromUnit } from "../contract";
+import { useEffect } from "react";
 
 type ChannelId = "ch1" | "ch2" | "ch3" | "ch4" | "ch5" | "ch6" | "ch7" | "ch8";
 
@@ -66,22 +67,29 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
       port.emitValue(Math.random());
     }
   }, 1000);
+  // console.log("CS completeSetup");
   unitInterface.completeSetup({
     unitAspects: { unitType: "sequencer" },
     cleanup() {
       clearInterval(timerId);
     },
   });
-  store.subscribe(({ activeChannelFlags }) => {
-    if (activeChannelFlags) {
-      unitInterface.sendMessageToHost({
-        type: "setAutomationOutputPortsOptInFlags",
-        flags: activeChannelFlags,
-      } satisfies MessageFromUnit);
-    }
-  }, true);
+
+  const setupSynchronization = () => {
+    // console.log("CS setupSynchronization");
+    return store.subscribe(({ activeChannelFlags }) => {
+      if (activeChannelFlags) {
+        // console.log("CS sendMessageToHost", activeChannelFlags);
+        unitInterface.sendMessageToHost({
+          type: "setAutomationOutputPortsOptInFlags",
+          flags: activeChannelFlags,
+        } satisfies MessageFromUnit);
+      }
+    }, true);
+  };
   return {
     RenderUi() {
+      useEffect(setupSynchronization, []);
       return <App />;
     },
   };

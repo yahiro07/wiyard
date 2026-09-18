@@ -7,12 +7,14 @@ import { useSetupSongKeySupport } from "@/periphery/song-key-support";
 import { useProjectInitialStateFix } from "@/periphery/store-state-fix";
 import { store } from "@/store/store";
 import { PageRoot } from "@/views/desk/page-root";
+import { useSetupUnitPortMasking } from "@/periphery/unit-port-masking-support";
 
 const EffectsHookBox = () => {
   useMidiInputHandling();
   useEffect(setupAutoPersistenceTask, []);
   useSetupSongKeySupport();
   useProjectInitialStateFix();
+  useSetupUnitPortMasking();
   return null;
 };
 
