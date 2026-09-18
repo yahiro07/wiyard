@@ -11,8 +11,10 @@ import { IoCloseOutline } from "react-icons/io5";
 import { PiPanoramaFill } from "react-icons/pi";
 import { IconType } from "react-icons";
 import { IoMdAdd } from "react-icons/io";
+import { MdArrowRight } from "react-icons/md";
 
 export const Icons = {
+  ArrowRight: MdArrowRight,
   Add: IoMdAdd,
   Close: IoCloseOutline,
   Panorama: PiPanoramaFill,
@@ -41,6 +43,7 @@ const store = createStore<{
   controlChangeAssignTargetSlotId: SlotId | null;
   assignsFixed: boolean;
   destinationParameterPathsMap: { [key in SlotId]?: string[] };
+  draggingSlotId: SlotId | null;
 }>({
   parameterSlots: seqNumbers(8).map((i) => ({
     id: getSlotId(i),
@@ -52,6 +55,7 @@ const store = createStore<{
   controlChangeAssignTargetSlotId: null,
   assignsFixed: false,
   destinationParameterPathsMap: {},
+  draggingSlotId: null,
 });
 
 const actionsInternal = {
@@ -92,6 +96,9 @@ const actions = {
   },
   toggleAssignsFixed() {
     store.toggleAssignsFixed();
+  },
+  setDraggingSlotId(slotId: SlotId | null) {
+    store.setDraggingSlotId(slotId);
   },
 };
 
@@ -134,6 +141,8 @@ const ControlCell = ({ slot }: { slot: ParameterSlot }) => {
           <Knob
             value={slot.value}
             onChange={(v) => actions.setParameter(slot.id, v)}
+            onDragStart={() => actions.setDraggingSlotId(slot.id)}
+            onDragEnd={() => actions.setDraggingSlotId(null)}
           />
           {editing && (
             <div className="absolute top-0 right-0 p-2px">
@@ -251,16 +260,74 @@ const ControlChangeAssignDialogContainer = () => {
   return <ControlChangeAssignDialog />;
 };
 
-const App = () => {
+const ParameterDetailDisplay = ({
+  slot,
+  destParameterPaths,
+}: {
+  slot: ParameterSlot;
+  destParameterPaths: string[] | undefined;
+}) => {
   return (
-    <div className="bg-#f0f0f0 p-4 flex-vc gap-2 text-#444 relative">
-      <div className="w-full flex-h justify-between">
-        <div />
-        <div className="flex-h gap-5">
-          <LayoutSwitcherButton />
-          <AssignsFixedSwitcherButtons />
-        </div>
+    <div
+      className={cz(
+        "flex-h overflow-hidden text-sm min-w-0 flex-1 h-20px",
+        "[&>div]:(whitespace-nowrap)",
+      )}
+    >
+      <div className="shrink-0">{slot.id.replace("ch", "")}</div>
+      <div className="shrink-0 w-44px pl-3">{slot.value.toFixed(2)}</div>
+      {destParameterPaths && (
+        <>
+          <div className="shrink-0 flex-c -mx-1">
+            <Icons.ArrowRight size={24} />
+          </div>
+          <div className="min-w-0 flex-1 text-ellipsis overflow-hidden">
+            {destParameterPaths.join(", ")}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const ParameterDetailDisplayContainer = () => {
+  const { parameterSlots, draggingSlotId, destinationParameterPathsMap } =
+    store.useSnapshot();
+  if (!draggingSlotId) return;
+  const slot = parameterSlots.find((slot) => slot.id === draggingSlotId);
+  if (!slot) return;
+  const destParameterPaths = destinationParameterPathsMap[slot.id];
+  return (
+    <ParameterDetailDisplay
+      slot={slot}
+      destParameterPaths={destParameterPaths}
+    />
+  );
+};
+
+const TopArea = () => {
+  return (
+    <div className="w-full flex-h justify-between">
+      <ParameterDetailDisplayContainer />
+      <div className="w-4 shrink-0" />
+      <div className="flex-h gap-5">
+        <LayoutSwitcherButton />
+        <AssignsFixedSwitcherButtons />
       </div>
+    </div>
+  );
+};
+
+const App = () => {
+  const { wideLayout } = store.useSnapshot();
+  return (
+    <div
+      className={cz(
+        "bg-#f0f0f0 p-4 flex-vc gap-2 text-#444 relative",
+        wideLayout ? "w-860px h-160px" : "w-444px h-264px",
+      )}
+    >
+      <TopArea />
       <KnobsArea />
       <ControlChangeAssignDialogContainer />
     </div>
@@ -344,9 +411,9 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
       }
       if (wideLayout !== undefined) {
         if (wideLayout) {
-          unitInterface.setViewSize(824, 156);
+          unitInterface.setViewSize(860, 160);
         } else {
-          unitInterface.setViewSize(424, 256);
+          unitInterface.setViewSize(444, 264);
         }
       }
     }, true);

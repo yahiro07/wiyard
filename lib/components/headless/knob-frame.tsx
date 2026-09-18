@@ -11,10 +11,12 @@ type Props = {
   children: ReactNode;
   onChange: (value: number) => void;
   dragRange?: number;
-  onClick?: () => void;
+  onTap?: () => void;
   horizontal?: boolean;
   invert?: boolean;
   cursor?: string;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 };
 
 export function KnobFrame({
@@ -26,14 +28,16 @@ export function KnobFrame({
   children,
   onChange,
   dragRange = 100,
-  onClick,
+  onTap,
   horizontal,
   invert,
   cursor = "pointer",
+  onDragStart,
+  onDragEnd,
 }: Props) {
   const handlePointerDown = (e0: React.PointerEvent) => {
     const originalValue = value;
-
+    onDragStart?.();
     startDragSessionEx(e0.nativeEvent, {
       onMove(_, moveAmount) {
         let delta =
@@ -50,7 +54,10 @@ export function KnobFrame({
         onChange(newValue);
       },
       onTap() {
-        onClick?.();
+        onTap?.();
+      },
+      onEnd() {
+        onDragEnd?.();
       },
     });
   };
