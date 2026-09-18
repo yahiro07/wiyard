@@ -11,6 +11,8 @@ export const ControlSurfaceUnitCardRoot = () => {
   const outputPortSpecs = unitStuff?.outputPortSpecs?.filter(
     (spec) => unitStuff.outputPortsOptInFlags?.[spec.id] ?? true,
   );
+  if (outputPortSpecs?.length === 0) return;
+
   return (
     <EdgeUnitCardView
       key={outputPortSpecs?.map((it) => it.id).join(",")}
