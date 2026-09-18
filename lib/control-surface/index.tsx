@@ -382,6 +382,12 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
           store.setDestinationParameterPathsMap(
             message.destinationParameterPaths,
           );
+        } else if (message.type === "emitSessionState") {
+          const { controlChangeAssignMap } = store.state;
+          return { controlChangeAssignMap };
+        } else if (message.type === "applySessionState") {
+          const { controlChangeAssignMap } = message.state;
+          store.assign({ controlChangeAssignMap });
         }
       },
     },

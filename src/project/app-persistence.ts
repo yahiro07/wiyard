@@ -7,6 +7,8 @@ import { raiseProjectLoadingError } from "@/project/project-error";
 import { ProjectData } from "@/project/project-types";
 import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
+import { hostSystem } from "@/domain/host-system-instance";
+import { builtinUnitIds } from "@/domain/unit-entries";
 
 type AppSessionStates = {
   midiInEnabled: boolean;
@@ -17,6 +19,7 @@ type AppSessionStates = {
 type PersistenceData = {
   projectData: ProjectData;
   sessionStates: AppSessionStates;
+  controlSurfaceState: Record<string, any> | null;
 };
 
 const helpers = {
@@ -33,7 +36,11 @@ export const appPersistence = {
   emitPersistenceData(): PersistenceData {
     const projectData = projectDataIo.emitProjectData();
     const sessionStates = helpers.pickSessionStates(store.state);
-    return { projectData, sessionStates };
+    const controlSurfaceState =
+      hostSystem.sendMessageToUnit(builtinUnitIds.controlSurface, {
+        type: "emitSessionState",
+      }) ?? null;
+    return { projectData, sessionStates, controlSurfaceState };
   },
   save(data: PersistenceData) {
     try {
@@ -51,10 +58,12 @@ export const appPersistence = {
     if (urlDataText) {
       try {
         const storageText = localStorage.getItem("wireboard-states");
+        let controlSurfaceState: Record<string, any> | null = null;
         if (storageText) {
           const data = tryParseJsonOrNull<PersistenceData>(storageText);
           if (data) {
             store.assign(helpers.pickSessionStates(data.sessionStates));
+            controlSurfaceState = data.controlSurfaceState;
           }
         }
         const inputProjectData =
@@ -65,7 +74,17 @@ export const appPersistence = {
           //since the migration logic could not be perfect
         }
         const projectData = migrateProjectData(inputProjectData);
-        void projectDataIo.applyProjectData(projectData);
+        void (async () => {
+          //this floating promise is out of the scope of try-catch block
+          //error occurred in each unit is notified to the mount point component
+          await projectDataIo.applyProjectData(projectData);
+          if (controlSurfaceState) {
+            hostSystem.sendMessageToUnit(builtinUnitIds.controlSurface, {
+              type: "applySessionState",
+              state: controlSurfaceState,
+            });
+          }
+        })();
       } catch (error: any) {
         //fatal
         console.warn(error);

@@ -40,4 +40,12 @@ export type MessageToUnit =
   | {
       type: "setDestinationParameterPaths";
       destinationParameterPaths: Record<string, string[]>;
+    }
+  | {
+      type: "emitSessionState";
+      //returning Record<string, any>;
+    }
+  | {
+      type: "applySessionState";
+      state: Record<string, any>;
     };
