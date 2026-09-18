@@ -11,6 +11,7 @@ import { actions } from "@/store/actions";
 import { decodeWireConnectionKey } from "@/domain/port-helpers";
 import { hostSystem } from "@/domain/host-system-instance";
 import { MessageToUnit } from "@lib/contract";
+import { sizeOp } from "@lib/utils/geometry-helper";
 
 const controlSurfaceHooks = {
   useAffectViewSizeChange() {
@@ -20,7 +21,8 @@ const controlSurfaceHooks = {
       const windowSpec = store.state.windowSpecs[windowIds.controlSurface];
       const currentSize = windowSpec?.contentSize;
       if (currentSize && viewSize) {
-        actions.setWindowContentSize(windowIds.controlSurface, viewSize);
+        const modSize = sizeOp.scale(viewSize, 0.8);
+        actions.setWindowContentSize(windowIds.controlSurface, modSize);
       }
     }, [unitStuff]);
   },
