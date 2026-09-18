@@ -37,12 +37,17 @@ const ControlCell = ({
 }) => {
   return (
     <div
-      className={cz("w-100px h-100px bg-#666", active && "bg-#f088")}
+      className={cz(
+        "w-100px h-100px bg-#ddd rounded-4px relative",
+        active && "bg-#f088",
+      )}
       onClick={() => {
         store.patchActiveChannelFlags({ [channelId]: !active });
       }}
     >
-      {channelId}
+      <div className="absolute top-0 left-0 mx-1 my-0.5 text-sm">
+        {channelId.replace("ch", "")}
+      </div>
     </div>
   );
 };
@@ -56,7 +61,7 @@ const ControlCellsRow = ({
 }) => {
   const { activeChannelFlags } = store.useSnapshot();
   return (
-    <div className="flex-h">
+    <div className="flex-h gap-1">
       {seqNumbers(count).map((ch) => {
         const channelId = getChannelId(offset + ch);
         const active = activeChannelFlags[channelId];
@@ -93,13 +98,13 @@ const LayoutSwitcherButton = () => {
 const App = () => {
   const { wideLayout } = store.useSnapshot();
   return (
-    <div className="bg-#ccc p-3 flex-vc gap-2">
+    <div className="bg-#f0f0f0 p-4 flex-vc gap-2 text-#333">
       <div className="w-full flex-h justify-between">
-        <h3>Control Surface</h3>
+        <div />
         <LayoutSwitcherButton />
       </div>
       {!wideLayout && (
-        <div className="flex-v">
+        <div className="flex-v gap-1">
           <ControlCellsRow offset={0} count={4} />
           <ControlCellsRow offset={4} count={4} />
         </div>
