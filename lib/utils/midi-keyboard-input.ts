@@ -2,6 +2,7 @@ type MidiKeyboardInputOptions = {
   connectionStateCallback?: (connected: boolean) => void;
   noteOn?: (noteNumber: number, velocity: number /* 0~1 */) => void;
   noteOff?: (noteNumber: number) => void;
+  controlChange?: (controlNumber: number, value: number /* 0~127 */) => void;
 };
 
 type MidiKeyboardInputCore = {
@@ -33,6 +34,9 @@ function createMidiKeyboardInputCore(
       } else if (cmd === 0x80 || (cmd === 0x90 && data2 === 0)) {
         const noteNumber = data1;
         options.noteOff?.(noteNumber);
+      } else if (cmd === 0xb0) {
+        const [controlNumber, value] = [data1, data2];
+        options.controlChange?.(controlNumber, value / 127);
       } else {
         console.log(status, data1, data2);
       }

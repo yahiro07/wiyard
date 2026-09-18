@@ -30,3 +30,9 @@ export type MessageFromUnit =
       type: "setAutomationOutputPortsOptInFlags";
       flags: Record<string, boolean>;
     };
+
+export type MessageToUnit = {
+  type: "controlChange";
+  controlNumber: number;
+  value: number; //0~127
+};

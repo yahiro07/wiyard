@@ -2,7 +2,7 @@ import { createStore } from "snap-store";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { seqNumbers } from "../utils/number-helper";
 import { cz } from "../utils/cz";
-import { MessageFromUnit } from "../contract";
+import { MessageToUnit, MessageFromUnit } from "../contract";
 import { useEffect } from "react";
 
 type ChannelId = "ch1" | "ch2" | "ch3" | "ch4" | "ch5" | "ch6" | "ch7" | "ch8";
@@ -73,17 +73,28 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
     cleanup() {
       clearInterval(timerId);
     },
+    unitCallbacks: {
+      onMessageFromHost(message: MessageToUnit) {
+        // console.log("CS onMessageFromHost", message);
+        if (message.type === "controlChange") {
+          const { controlNumber, value } = message;
+          console.log("CS control change received", controlNumber, value);
+        }
+      },
+    },
   });
 
   const setupSynchronization = () => {
     // console.log("CS setupSynchronization");
     return store.subscribe(({ activeChannelFlags }) => {
       if (activeChannelFlags) {
-        // console.log("CS sendMessageToHost", activeChannelFlags);
-        unitInterface.sendMessageToHost({
-          type: "setAutomationOutputPortsOptInFlags",
-          flags: activeChannelFlags,
-        } satisfies MessageFromUnit);
+        queueMicrotask(() => {
+          // console.log("CS sendMessageToHost", activeChannelFlags);
+          unitInterface.sendMessageToHost({
+            type: "setAutomationOutputPortsOptInFlags",
+            flags: activeChannelFlags,
+          } satisfies MessageFromUnit);
+        });
       }
     }, true);
   };
