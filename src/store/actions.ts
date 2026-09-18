@@ -13,10 +13,12 @@ import {
 import {
   AutomationEditorUnitItem,
   BoardUnitItem,
+  ControlSurfaceUnitItem,
   NoteInputPortUnitItem,
   PortStuff,
   UnitAddingItem,
   UnitStuff,
+  windowIds,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { unitIdHelper } from "@/domain/unit-id-helper";
@@ -78,7 +80,10 @@ const helpers = {
   },
   _getNextPortCardPosition() {
     const items = store.state.unitItems.filter(
-      (it) => it.type === "noteInput" || it.type === "automationEditor",
+      (it) =>
+        it.type === "noteInput" ||
+        it.type === "automationEditor" ||
+        it.type === "controlSurface",
     );
     const lastItem = items.at(-1);
     return lastItem
@@ -99,6 +104,13 @@ const helpers = {
     );
     const cardPosition = helpers._getNextPortCardPosition();
     return { type: "automationEditor", unitId, cardPosition };
+  },
+  createControlSurfaceUnit(): ControlSurfaceUnitItem {
+    return {
+      type: "controlSurface",
+      unitId: "controlSurface",
+      cardPosition: helpers._getNextPortCardPosition(),
+    };
   },
 };
 
@@ -143,6 +155,14 @@ export const actions = {
       );
       windowSystem.add(windowId, windowSpec);
       windowSystem.setCurrentWindow(windowId);
+
+      if (windowId === windowIds.controlSurface) {
+        const csUnitItem = commonGetters.getControlSurfaceUnitItem();
+        if (!csUnitItem) {
+          const newUnit = helpers.createControlSurfaceUnit();
+          store.setUnitItems((prev) => [...prev, newUnit]);
+        }
+      }
     }
     windowSystem.setStatus(windowId, status);
   },

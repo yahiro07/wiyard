@@ -8,4 +8,7 @@ export const commonGetters = {
   getAutomationEditorUnitItems() {
     return store.state.unitItems.filter((it) => it.type === "automationEditor");
   },
+  getControlSurfaceUnitItem() {
+    return store.state.unitItems.find((it) => it.type === "controlSurface");
+  },
 };

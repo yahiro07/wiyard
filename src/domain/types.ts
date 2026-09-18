@@ -30,13 +30,18 @@ export type AutomationEditorUnitItem = {
   cardPosition: Point;
 };
 
+export type ControlSurfaceUnitItem = {
+  type: "controlSurface";
+  unitId: string;
+  cardPosition: Point;
+};
+
 export type UnitItem =
   | BoardUnitItem
   | NoteInputPortUnitItem
   | SpeakerPortUnitItem
-  | AutomationEditorUnitItem;
-
-export type WindowId = string; //unitId | "sequencerWindow" | "keyboardWindow" | "automationEditorWindow"
+  | AutomationEditorUnitItem
+  | ControlSurfaceUnitItem;
 
 export const windowIds = {
   sequencer: "sequencerWindow",
@@ -44,6 +49,9 @@ export const windowIds = {
   automationEditor: "automationEditorWindow",
   controlSurface: "controlSurfaceWindow",
 };
+
+//unitId for board units, or value of windowIds for builtin app units
+export type WindowId = string;
 
 export type UnitPortSpec = {
   direction: HsPortDirection;
