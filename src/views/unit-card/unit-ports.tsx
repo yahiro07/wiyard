@@ -34,7 +34,7 @@ const PortView = ({
   return (
     <div
       ref={refCallback}
-      className="w-20px h-20px flex-c cursor-pointer"
+      className="w-20px h-20px flex-c cursor-pointer relative"
       style={{ opacity: active ? 1 : uiConstants.dimmedWireOpacity }}
       onPointerDown={(e) => handlePortPointerDown(e, portSpec.portKey)}
     >
@@ -45,6 +45,11 @@ const PortView = ({
         )}
         style={{ background: color }}
       />
+      {portSpec.label && (
+        <div className="absolute-top-center -top-5px text-8px">
+          {portSpec.label}
+        </div>
+      )}
     </div>
   );
 };
