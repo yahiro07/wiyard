@@ -24,25 +24,28 @@ type ParameterSlot = {
 };
 
 const store = createStore<{
+  //saved in project data
   parameterSlots: ParameterSlot[];
   wideLayout: boolean;
-  controlChangeAssignTargetSlotId: SlotId | null;
   assignsFixed: boolean;
+  //
+  //persisted in session data
   controlChangeAssignMap: { [key in SlotId]?: number };
+  //
   destinationParameterPathsMap: { [key in SlotId]?: string[] };
+  controlChangeAssignTargetSlotId: SlotId | null;
   draggingSlotId: SlotId | null;
 }>({
   parameterSlots: seqNumbers(8).map((i) => ({
     id: getSlotId(i),
     enabled: i === 0,
     value: 0.5,
-    ccNumber: null,
   })),
   wideLayout: false,
-  controlChangeAssignTargetSlotId: null,
   assignsFixed: false,
   controlChangeAssignMap: {},
   destinationParameterPathsMap: {},
+  controlChangeAssignTargetSlotId: null,
   draggingSlotId: null,
 });
 
@@ -380,6 +383,18 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
             message.destinationParameterPaths,
           );
         }
+      },
+    },
+    persistence: {
+      emitState() {
+        return pickObjectMembers(store.state, [
+          "parameterSlots",
+          "wideLayout",
+          "assignsFixed",
+        ]);
+      },
+      applyState(attrs) {
+        store.assign(attrs);
       },
     },
   });
