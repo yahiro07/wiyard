@@ -203,10 +203,17 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
         if (message.type === "controlChange") {
           const { controlNumber, value } = message;
           console.log("CS control change received", controlNumber, value);
-          const targetSlotId = store.state.controlChangeAssignTargetSlotId;
-          if (targetSlotId) {
-            actions.assignControlChange(targetSlotId, controlNumber);
+          const assignTargetSlotId =
+            store.state.controlChangeAssignTargetSlotId;
+          if (assignTargetSlotId) {
+            actions.assignControlChange(assignTargetSlotId, controlNumber);
             actions.clearControlChangeAssignTarget();
+          } else {
+            for (const slot of store.state.parameterSlots) {
+              if (slot.ccNumber === controlNumber) {
+                actions.setParameter(slot.id, value);
+              }
+            }
           }
         }
       },
