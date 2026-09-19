@@ -13,64 +13,54 @@ type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
 type SetPointsFn = StoreSetterFn<KnotPoint[]>;
 
-function mapPointsDisplayLayerPoints(
-  inputPoints: KnotPoint[],
-  areaSize: Size,
-): {
-  points: KnotPoint[];
-  polyPoints: KnotPoint[];
-} {
-  const points = inputPoints.map((po) => ({
-    x: po.x,
-    //slightly add paddings to the edge of edit area
-    y: mapUnaryTo(po.y, 0.01, 0.99),
-    curved: po.curved,
-  }));
-  const polyPoints = resultOf(() => {
-    //add end points at x=0 and x=1
-    const firstP = points.at(0);
-    const lastP = points.at(-1);
-    const noOp =
-      !firstP ||
-      !lastP ||
-      (firstP &&
-        lastP &&
-        lastP !== firstP &&
-        firstP.x < 0.01 &&
-        lastP.x > 0.99);
-    if (noOp) return points;
+const knotHelpers = {
+  mapPointsDisplayLayerPoints(points: KnotPoint[]) {
+    const polyPoints = resultOf(() => {
+      //add end points at x=0 and x=1
+      const firstP = points.at(0);
+      const lastP = points.at(-1);
+      const noOp =
+        !firstP ||
+        !lastP ||
+        (firstP &&
+          lastP &&
+          lastP !== firstP &&
+          firstP.x < 0.01 &&
+          lastP.x > 0.99);
+      if (noOp) return points;
 
-    const newPoints = [...points];
-    if (firstP.x > 0.01) {
-      newPoints.unshift({ x: 0, y: firstP.y, curved: false });
-    }
-    if (lastP.x < 0.99) {
-      newPoints.push({ x: 1, y: lastP.y, curved: false });
-    }
-    return newPoints;
-  });
-
-  const mapCoord = (p: KnotPoint) => {
+      const newPoints = [...points];
+      if (firstP.x > 0.01) {
+        newPoints.unshift({ x: 0, y: firstP.y, curved: false });
+      }
+      if (lastP.x < 0.99) {
+        newPoints.push({ x: 1, y: lastP.y, curved: false });
+      }
+      return newPoints;
+    });
+    return polyPoints;
+  },
+  mapCoord(p: KnotPoint, areaSize: Size, paddingY: number): KnotPoint {
+    const y0 = paddingY;
+    const y1 = areaSize.height - paddingY;
     return {
       x: p.x * areaSize.width,
-      y: (1 - p.y) * areaSize.height,
+      y: mapUnaryTo(p.y, y1, y0),
       curved: p.curved,
     };
-  };
-  return { points: points.map(mapCoord), polyPoints: polyPoints.map(mapCoord) };
-}
-
-function generatePolyPointsPath(points: KnotPoint[]): string {
-  return points
-    .map((po, i) => {
-      if (i === 0) {
-        return `M ${po.x},${po.y}`;
-      } else {
-        return `L ${po.x},${po.y}`;
-      }
-    })
-    .join(" ");
-}
+  },
+  generatePolyPointsPath(points: KnotPoint[]): string {
+    return points
+      .map((po, i) => {
+        if (i === 0) {
+          return `M ${po.x},${po.y}`;
+        } else {
+          return `L ${po.x},${po.y}`;
+        }
+      })
+      .join(" ");
+  },
+};
 
 const PointsDisplayLayer = ({
   points: inputPoints,
@@ -81,8 +71,12 @@ const PointsDisplayLayer = ({
   size: Size;
   color: string;
 }) => {
-  const { points, polyPoints } = mapPointsDisplayLayerPoints(inputPoints, size);
-  const polyPointsPath = generatePolyPointsPath(polyPoints);
+  const points = inputPoints.map((po) => knotHelpers.mapCoord(po, size, 1));
+  const polyPoints = knotHelpers
+    .mapPointsDisplayLayerPoints(inputPoints)
+    .map((po) => knotHelpers.mapCoord(po, size, 1));
+
+  const polyPointsPath = knotHelpers.generatePolyPointsPath(polyPoints);
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
       <g>
