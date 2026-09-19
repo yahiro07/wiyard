@@ -46,8 +46,6 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
     sourceNoteChannelGetters.useUnitSourceActiveNoteChannelIndex(unitId);
   const isPlaybackCapable = unitPlaybackCapabilityFlags[catalogKey] ?? false;
 
-  const { SoloPlaybackButton } = windowTitleBarControlComponents;
-
   return (
     <WindowFrame
       id={unitId}
@@ -61,7 +59,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
             </div>
           ) : undefined}
           {isPlaybackCapable && (
-            <SoloPlaybackButton
+            <windowTitleBarControlComponents.SoloPlaybackButton
               active={unitId === soloPlaybackUnitId}
               disabled={projectLoading}
               onClick={() => {

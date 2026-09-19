@@ -342,8 +342,17 @@ export const actions = {
     }
     store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
   },
-  selectNoteChannel(noteChannelId: string) {
-    store.setCurrentNoteChannelId(noteChannelId);
+  selectNoteChannel(nextNoteChannelId: string) {
+    const sequencerUnitId = notePortGetters.getSequencerUnitId(
+      store.state.currentNoteChannelId,
+    );
+    store.setCurrentNoteChannelId(nextNoteChannelId);
+
+    if (store.state.soloPlaybackUnitId === sequencerUnitId) {
+      const nextSequencerUnitId =
+        notePortGetters.getSequencerUnitId(nextNoteChannelId);
+      store.setSoloPlaybackUnitId(nextSequencerUnitId);
+    }
   },
   selectAutomationChannel(automationChannelId: string) {
     store.setCurrentAutomationChannelId(automationChannelId);

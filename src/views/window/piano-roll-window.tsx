@@ -14,6 +14,7 @@ import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { WindowFrame } from "@lib/window-system";
 import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
+import { windowTitleBarControlComponents } from "@/views/window/components/window-title-bar-controls";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
@@ -128,8 +129,24 @@ const PianoRollPanel = () => {
 };
 
 export const PianoRollWindow = () => {
+  const { currentNoteChannelId, soloPlaybackUnitId, projectLoading } =
+    store.useSnapshot();
+  const sequencerUnitId =
+    notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
-    <WindowFrame id={windowIds.pianoRoll} title="piano roll">
+    <WindowFrame
+      id={windowIds.pianoRoll}
+      title="piano roll"
+      topBarInnerControls={
+        <windowTitleBarControlComponents.SoloPlaybackButton
+          active={soloPlaybackUnitId === sequencerUnitId}
+          disabled={projectLoading}
+          onClick={() => {
+            actions.toggleSoloPlayback(sequencerUnitId);
+          }}
+        />
+      }
+    >
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <PianoRollPanel />
       </ScalerBoxDW>
