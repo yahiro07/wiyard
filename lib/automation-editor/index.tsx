@@ -49,16 +49,50 @@ const knotHelpers = {
       curved: p.curved,
     };
   },
+  mapPolyPointsToSegments(points: KnotPoint[]): CurveSegment[] {},
+  mapSegmentsToPath(segments: CurveSegment[]): string {},
   generatePolyPointsPath(points: KnotPoint[]): string {
-    return points
-      .map((po, i) => {
-        if (i === 0) {
-          return `M ${po.x},${po.y}`;
-        } else {
-          return `L ${po.x},${po.y}`;
-        }
-      })
-      .join(" ");
+    if (points.length === 0) return "";
+
+    const slope = (a: KnotPoint, b: KnotPoint) => {
+      const dx = b.x - a.x;
+      return dx === 0 ? 0 : (b.y - a.y) / dx;
+    };
+    const outgoingSlope = (i: number) => {
+      const a = points[i];
+      const b = points[i + 1];
+      if (!b) return 0;
+      if (!a.curved) return slope(a, b);
+      const prev = points[i - 1];
+      return prev ? slope(prev, b) : slope(a, b);
+    };
+    const incomingSlope = (i: number) => {
+      const b = points[i];
+      const a = points[i - 1];
+      if (!a) return 0;
+      if (!b.curved) return slope(a, b);
+      const next = points[i + 1];
+      return next ? slope(a, next) : slope(a, b);
+    };
+
+    const cmds = [`M ${points[0].x},${points[0].y}`];
+    for (let i = 1; i < points.length; i++) {
+      const a = points[i - 1];
+      const b = points[i];
+      if (!a.curved && !b.curved) {
+        cmds.push(`L ${b.x},${b.y}`);
+        continue;
+      }
+      const dx = b.x - a.x;
+      const m0 = outgoingSlope(i - 1);
+      const m1 = incomingSlope(i);
+      const c1x = a.x + dx / 3;
+      const c1y = a.y + (m0 * dx) / 3;
+      const c2x = b.x - dx / 3;
+      const c2y = b.y - (m1 * dx) / 3;
+      cmds.push(`C ${c1x},${c1y} ${c2x},${c2y} ${b.x},${b.y}`);
+    }
+    return cmds.join(" ");
   },
 };
 
