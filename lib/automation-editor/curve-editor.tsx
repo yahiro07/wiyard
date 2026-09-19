@@ -5,15 +5,11 @@ import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { resultOf } from "@lib/utils/general-helper";
 import { clampValue, mapUnaryTo } from "@lib/utils/number-helper";
-import { KnotPoint } from "./types";
+import { CurveSegment, KnotPoint } from "./types";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
 type SetPointsFn = StoreSetterFn<KnotPoint[]>;
-
-type CurveSegment =
-  | { type: "line"; points: [Point, Point] }
-  | { type: "curve"; points: [Point, Point, Point, Point] };
 
 const knotHelpers = {
   mapPointsDisplayLayerPoints(points: KnotPoint[]) {
