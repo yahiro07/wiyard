@@ -41,7 +41,7 @@ export const unitCardHandlers = {
             if (!isCurrent) {
               actions.setCurrentNoteChannelId(unitItem.unitId);
             } else {
-              makeWindowActive(windowIds.sequencer);
+              makeWindowActive(windowIds.pianoRoll);
             }
           } else if (unitItem.type === "controlSurface") {
             makeWindowActive(windowIds.controlSurface);

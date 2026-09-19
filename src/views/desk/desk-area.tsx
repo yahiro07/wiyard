@@ -7,7 +7,7 @@ import { CoordDebugLayer } from "@/views/desk/coord-debug-layer";
 import { DockRoot } from "@/views/window/dock-root";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { KeyboardWindow } from "@/views/window/keyboard-window";
-import { SequencerWindow } from "@/views/window/sequencer-window";
+import { PianoRollWindow } from "@/views/window/piano-roll-window";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { UnitWindowsRoot } from "@/views/window/unit-windows";
 import { UnitConnectionsRoot } from "@/views/wiring/connections";
@@ -48,7 +48,7 @@ const FrontWindowsPlane = () => {
   return (
     <>
       <UnitWindowsRoot />
-      <SequencerWindow />
+      <PianoRollWindow />
       <AutomationEditorWindow />
       <ControlSurfaceWindow />
       <KeyboardWindow />

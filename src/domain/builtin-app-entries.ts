@@ -17,7 +17,7 @@ type BuiltinAppItem = {
 
 export const builtinAppItems: BuiltinAppItem[] = [
   {
-    windowId: windowIds.sequencer,
+    windowId: windowIds.pianoRoll,
     title: "piano roll",
     dockItemSpec: {
       icon: Icons.Timeline,

@@ -44,7 +44,7 @@ export type UnitItem =
   | ControlSurfaceUnitItem;
 
 export const windowIds = {
-  sequencer: "sequencerWindow",
+  pianoRoll: "pianoRollWIndow",
   keyboard: "keyboardWindow",
   automationEditor: "automationEditorWindow",
   controlSurface: "controlSurfaceWindow",

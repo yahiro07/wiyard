@@ -107,7 +107,7 @@ const SequencerUnitItemView = ({
   );
 };
 
-const SequencerSection = () => {
+const PianoRollSection = () => {
   const unitItems = notePortGetters.useNoteInputPortUnitItems();
   return (
     <div className="flex-grow relative overflow-hidden">
@@ -118,20 +118,20 @@ const SequencerSection = () => {
   );
 };
 
-const SequencerPanel = () => {
+const PianoRollPanel = () => {
   return (
     <div className="w-full h-full flex-h">
       <NoteChannelListColumn />
-      <SequencerSection />
+      <PianoRollSection />
     </div>
   );
 };
 
-export const SequencerWindow = () => {
+export const PianoRollWindow = () => {
   return (
-    <WindowFrame id={windowIds.sequencer} title="piano roll">
+    <WindowFrame id={windowIds.pianoRoll} title="piano roll">
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
-        <SequencerPanel />
+        <PianoRollPanel />
       </ScalerBoxDW>
     </WindowFrame>
   );
