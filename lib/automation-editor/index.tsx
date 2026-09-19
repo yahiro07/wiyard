@@ -1,31 +1,9 @@
 import { ReactUnitTemplateFn } from "wafer-host/react";
-import { useMemo } from "react";
-import { createStore, Store } from "snap-store";
-import { KnotPoint, LoopBars } from "./types";
+import { LoopBars } from "./types";
 import { CurveEditorRoot } from "./curve-editor";
 import { createSelectorOptions } from "@lib/utils/selector-option";
 import { ShiftSelector } from "./shift-selector";
-
-type StoreState = {
-  points: KnotPoint[];
-  loopBars: LoopBars;
-};
-type AppStore = Store<StoreState>;
-
-const defaultPoints: KnotPoint[] = [
-  { x: 0, y: 0, curved: false },
-  { x: 1, y: 1, curved: false },
-];
-
-function useStoreAccessor(store: AppStore) {
-  return useMemo(() => {
-    return {
-      getPoints: () => store.state.points,
-      usePoints: () => store.useSnapshot().points,
-      setPoints: store.setPoints,
-    };
-  }, [store]);
-}
+import { AppStore, createAppStore, useStoreAccessor } from "./store";
 
 const loopBarsOptions = createSelectorOptions<LoopBars>([
   [0.25, "1/4"],
@@ -69,8 +47,7 @@ export const createAutomationEditorUnit: ReactUnitTemplateFn = (
   unitInterface,
 ) => {
   const automationOutputPort = unitInterface.createAutomationOutputPort();
-  const store = createStore<StoreState>({ points: defaultPoints, loopBars: 4 });
-
+  const store = createAppStore();
   unitInterface.completeSetup({
     unitAspects: { unitType: "sequencer" },
   });
