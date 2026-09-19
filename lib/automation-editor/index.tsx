@@ -13,6 +13,10 @@ type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
 type SetPointsFn = StoreSetterFn<KnotPoint[]>;
 
+type CurveSegment =
+  | { type: "line"; points: [Point, Point] }
+  | { type: "curve"; points: [Point, Point, Point, Point] };
+
 const knotHelpers = {
   mapPointsDisplayLayerPoints(points: KnotPoint[]) {
     const polyPoints = resultOf(() => {
@@ -40,21 +44,30 @@ const knotHelpers = {
     });
     return polyPoints;
   },
-  mapCoord(p: KnotPoint, areaSize: Size, paddingY: number): KnotPoint {
+  mapCoord(p: Point, areaSize: Size, paddingY: number): Point {
     const y0 = paddingY;
     const y1 = areaSize.height - paddingY;
     return {
       x: p.x * areaSize.width,
       y: mapUnaryTo(p.y, y1, y0),
-      curved: p.curved,
     };
   },
-  mapPolyPointsToSegments(points: KnotPoint[]): CurveSegment[] {},
-  mapSegmentsToPath(segments: CurveSegment[]): string {},
-  generatePolyPointsPath(points: KnotPoint[]): string {
-    if (points.length === 0) return "";
+  mapSegmentCoords(
+    segments: CurveSegment[],
+    areaSize: Size,
+    paddingY: number,
+  ): CurveSegment[] {
+    return segments.map((segment) => ({
+      type: segment.type,
+      points: segment.points.map((p) =>
+        knotHelpers.mapCoord(p, areaSize, paddingY),
+      ),
+    })) as CurveSegment[];
+  },
+  mapPolyPointsToSegments(points: KnotPoint[]): CurveSegment[] {
+    if (points.length < 2) return [];
 
-    const slope = (a: KnotPoint, b: KnotPoint) => {
+    const slope = (a: Point, b: Point) => {
       const dx = b.x - a.x;
       return dx === 0 ? 0 : (b.y - a.y) / dx;
     };
@@ -75,22 +88,41 @@ const knotHelpers = {
       return next ? slope(a, next) : slope(a, b);
     };
 
-    const cmds = [`M ${points[0].x},${points[0].y}`];
+    const segments: CurveSegment[] = [];
     for (let i = 1; i < points.length; i++) {
       const a = points[i - 1];
       const b = points[i];
       if (!a.curved && !b.curved) {
-        cmds.push(`L ${b.x},${b.y}`);
+        segments.push({ type: "line", points: [a, b] });
         continue;
       }
       const dx = b.x - a.x;
       const m0 = outgoingSlope(i - 1);
       const m1 = incomingSlope(i);
-      const c1x = a.x + dx / 3;
-      const c1y = a.y + (m0 * dx) / 3;
-      const c2x = b.x - dx / 3;
-      const c2y = b.y - (m1 * dx) / 3;
-      cmds.push(`C ${c1x},${c1y} ${c2x},${c2y} ${b.x},${b.y}`);
+      segments.push({
+        type: "curve",
+        points: [
+          a,
+          { x: a.x + dx / 3, y: a.y + (m0 * dx) / 3 },
+          { x: b.x - dx / 3, y: b.y - (m1 * dx) / 3 },
+          b,
+        ],
+      });
+    }
+    return segments;
+  },
+  mapSegmentsToPath(segments: CurveSegment[]): string {
+    const first = segments[0];
+    if (!first) return "";
+    const cmds = [`M ${first.points[0].x},${first.points[0].y}`];
+    for (const segment of segments) {
+      if (segment.type === "line") {
+        const [, p1] = segment.points;
+        cmds.push(`L ${p1.x},${p1.y}`);
+      } else {
+        const [, c1, c2, p1] = segment.points;
+        cmds.push(`C ${c1.x},${c1.y} ${c2.x},${c2.y} ${p1.x},${p1.y}`);
+      }
     }
     return cmds.join(" ");
   },
@@ -105,12 +137,15 @@ const PointsDisplayLayer = ({
   size: Size;
   color: string;
 }) => {
-  const points = inputPoints.map((po) => knotHelpers.mapCoord(po, size, 1));
-  const polyPoints = knotHelpers
-    .mapPointsDisplayLayerPoints(inputPoints)
-    .map((po) => knotHelpers.mapCoord(po, size, 1));
-
-  const polyPointsPath = knotHelpers.generatePolyPointsPath(polyPoints);
+  const points = inputPoints.map((po) => ({
+    ...knotHelpers.mapCoord(po, size, 1),
+    curved: po.curved,
+  }));
+  const displayLayerPoints =
+    knotHelpers.mapPointsDisplayLayerPoints(inputPoints);
+  const segments = knotHelpers.mapPolyPointsToSegments(displayLayerPoints);
+  const displaySegments = knotHelpers.mapSegmentCoords(segments, size, 1);
+  const polyPointsPath = knotHelpers.mapSegmentsToPath(displaySegments);
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
       <g>
