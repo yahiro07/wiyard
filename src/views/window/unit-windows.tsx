@@ -4,7 +4,7 @@ import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { Icons } from "@/common/icons";
 import { BoardUnitItem, UnitItem } from "@/domain/types";
 import {
-  catalog,
+  getCatalogItem,
   InternalUnitKey,
   interUnitFactories,
 } from "@/domain/unit-entries";
@@ -32,7 +32,7 @@ const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
 };
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const catalogItem = catalog[unitItem.catalogKey];
+  const catalogItem = getCatalogItem(unitItem.catalogKey);
   const reporter = useUnitStuffReporter(unitItem.unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
   const onIframeMounted = useUnitIframeMountedCallback(unitItem);
@@ -44,7 +44,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   return (
     <WindowFrame
       id={unitItem.unitId}
-      title={catalogItem.name}
+      title={catalogItem?.name ?? unitItem.catalogKey}
       topBarInnerControls={
         sourceNoteChannelIndex !== undefined ? (
           <div className="flex-ha gap-2px">
@@ -54,13 +54,17 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
         ) : undefined
       }
     >
-      <UnitFrameScaled
-        unitId={unitItem.unitId}
-        unitUrl={catalogItem.loaderPageUrl}
-        onIframeMounted={onIframeMounted}
-        onUnitInstanceLoaded={reporter.reportLoaded}
-        onLoadFailed={reporter.reportFailure}
-      />
+      {catalogItem ? (
+        <UnitFrameScaled
+          unitId={unitItem.unitId}
+          unitUrl={catalogItem.loaderPageUrl}
+          onIframeMounted={onIframeMounted}
+          onUnitInstanceLoaded={reporter.reportLoaded}
+          onLoadFailed={reporter.reportFailure}
+        />
+      ) : (
+        <div>error: catalog item not found for {unitItem.catalogKey}</div>
+      )}
     </WindowFrame>
   );
 };

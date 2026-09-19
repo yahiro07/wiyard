@@ -5,9 +5,9 @@ import { Icons } from "@/common/icons";
 import { NoteInputPortUnitItem, windowIds } from "@/domain/types";
 import {
   CatalogKey,
-  catalog,
   InternalUnitKey,
   interUnitFactories,
+  getCatalogItem,
 } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
@@ -78,7 +78,9 @@ const SequencerUnitItemView = ({
   const displayed = notePortUnitItem.unitId === currentNoteChannelId;
   const internalUnitFactory =
     interUnitFactories[notePortUnitItem.sequencerClassKey as InternalUnitKey];
-  const catalogItem = catalog[notePortUnitItem.sequencerClassKey as CatalogKey];
+  const catalogItem = getCatalogItem(
+    notePortUnitItem.sequencerClassKey as CatalogKey,
+  );
   const sequencerUnitId = notePortGetters.getSequencerUnitId(
     notePortUnitItem.unitId,
   );

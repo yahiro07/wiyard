@@ -13,12 +13,28 @@ import { createControlSurfaceUnit } from "@lib/control-surface";
 
 export type CatalogKey = keyof typeof unitInventories;
 
-const catalog = unitInventories as Record<
-  CatalogKey,
-  UnitInventorySpec & { catalogKey: CatalogKey }
->;
+type CatalogItem = UnitInventorySpec & { catalogKey: CatalogKey };
 
-export { catalog };
+const catalog = unitInventories as Record<CatalogKey, CatalogItem>;
+
+export const allCatalogItems = Object.values(catalog);
+
+export function getCatalogItem(
+  catalogKey: CatalogKey,
+): CatalogItem | undefined {
+  return catalog[catalogKey];
+}
+
+const fallbackCatalogItem = {
+  name: "Unknown Unit",
+  thumbnailUrl: "/assets/unknown-unit.png",
+};
+export function getCatalogItemWithFallback(catalogKey: CatalogKey): {
+  name: string;
+  thumbnailUrl?: string;
+} {
+  return catalog[catalogKey] ?? fallbackCatalogItem;
+}
 
 export type InternalUnitKey =
   | "speakerPort"

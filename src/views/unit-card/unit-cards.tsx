@@ -1,5 +1,5 @@
 import { BoardUnitItem, UnitItem } from "@/domain/types";
-import { catalog, internalUnitCardIcons } from "@/domain/unit-entries";
+import { getCatalogItem, internalUnitCardIcons } from "@/domain/unit-entries";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { unitCardHandlers } from "@/views/unit-card/unit-card-handlers";
@@ -18,7 +18,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const isMenuTarget = menuTargetUnitId === unitItem.unitId;
   const unitStuff = useUnitStuff(unitItem.unitId);
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
-  const catalogItem = catalog[unitItem.catalogKey];
+  const catalogItem = getCatalogItem(unitItem.catalogKey);
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
 
@@ -39,11 +39,17 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           className="h-100px bg-white cursor-pointer relative shadow-md"
           onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
         >
-          <img
-            src={catalogItem.thumbnailUrl}
-            className="h-full object-contain"
-            alt={catalogItem.name}
-          />
+          {catalogItem ? (
+            <img
+              src={catalogItem.thumbnailUrl}
+              className="h-full object-contain"
+              alt={catalogItem.name}
+            />
+          ) : (
+            <div className="w-150px h-full text-black flex-c text-sm">
+              error: catalog item not found for {unitItem.catalogKey}
+            </div>
+          )}
           {isMenuTarget && <UnitCardOperationOverlay unitItem={unitItem} />}
         </div>
         {outputPortSpecs && (
@@ -54,7 +60,9 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
         )}
       </div>
       <div className="absolute bottom-0 left-0 right-0 -mb-22px">
-        <div className="flex-c text-sm">{catalogItem.name}</div>
+        <div className="flex-c text-sm">
+          {catalogItem?.name ?? `error (${unitItem.catalogKey})`}
+        </div>
       </div>
     </div>
   );

@@ -6,10 +6,10 @@ import {
 } from "@lib/window-system";
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
-import { catalog } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
+import { getCatalogItemWithFallback } from "@/domain/unit-entries";
 
 const DockIcon = ({
   icon: IconComponent,
@@ -67,7 +67,7 @@ export const DockRoot = () => {
         {unitItems
           .filter((item) => item.type === "board")
           .map((item) => {
-            const catalogItem = catalog[item.catalogKey];
+            const catalogItem = getCatalogItemWithFallback(item.catalogKey);
             return (
               <WindowDockItem
                 key={item.unitId}

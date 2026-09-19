@@ -3,7 +3,11 @@ import { useState } from "react";
 import { getGraphEditPlaneElement } from "@/common/constants";
 import { showcaseEntries } from "@/domain/showcase-entries";
 import { UnitAddingItem } from "@/domain/types";
-import { CatalogKey, catalog } from "@/domain/unit-entries";
+import {
+  CatalogKey,
+  getCatalogItem,
+  getCatalogItemWithFallback,
+} from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 
@@ -34,7 +38,7 @@ const pickerItemHandlers = {
 const UnitPicker = () => {
   const [selectedCatalogKey, setSelectedCatalogKey] =
     useState<CatalogKey | null>(null);
-  const selectedItem = selectedCatalogKey && catalog[selectedCatalogKey];
+  const selectedItem = selectedCatalogKey && getCatalogItem(selectedCatalogKey);
 
   return (
     <div
@@ -71,7 +75,7 @@ const UnitPicker = () => {
 };
 
 const UnitAddingItemView = ({ item }: { item: UnitAddingItem }) => {
-  const catalogItem = catalog[item.catalogKey];
+  const catalogItem = getCatalogItemWithFallback(item.catalogKey);
   return (
     <div
       className="absolute -translate-x-1/2 -translate-y-1/2 z-2"
