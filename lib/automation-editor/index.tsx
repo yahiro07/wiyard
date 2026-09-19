@@ -7,20 +7,18 @@ import { createStore } from "snap-store";
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { resultOf } from "@lib/utils/general-helper";
 import { clampValue, mapUnaryTo } from "@lib/utils/number-helper";
+import { KnotPoint } from "./types";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
-type KnotPoint = {
-  x: number;
-  y: number;
-  curved: boolean;
-};
-
 type SetPointsFn = StoreSetterFn<KnotPoint[]>;
 
-function mapPointsDisplayLayerPoints(inputPoints: KnotPoint[]): {
+function mapPointsDisplayLayerPoints(
+  inputPoints: KnotPoint[],
+  areaSize: Size,
+): {
   points: KnotPoint[];
-  polyPoints: Point[];
+  polyPoints: KnotPoint[];
 } {
   const points = inputPoints.map((po) => ({
     x: po.x,
@@ -51,7 +49,27 @@ function mapPointsDisplayLayerPoints(inputPoints: KnotPoint[]): {
     }
     return newPoints;
   });
-  return { points, polyPoints };
+
+  const mapCoord = (p: KnotPoint) => {
+    return {
+      x: p.x * areaSize.width,
+      y: (1 - p.y) * areaSize.height,
+      curved: p.curved,
+    };
+  };
+  return { points: points.map(mapCoord), polyPoints: polyPoints.map(mapCoord) };
+}
+
+function generatePolyPointsPath(points: KnotPoint[]): string {
+  return points
+    .map((po, i) => {
+      if (i === 0) {
+        return `M ${po.x},${po.y}`;
+      } else {
+        return `L ${po.x},${po.y}`;
+      }
+    })
+    .join(" ");
 }
 
 const PointsDisplayLayer = ({
@@ -63,7 +81,8 @@ const PointsDisplayLayer = ({
   size: Size;
   color: string;
 }) => {
-  const { points, polyPoints } = mapPointsDisplayLayerPoints(inputPoints);
+  const { points, polyPoints } = mapPointsDisplayLayerPoints(inputPoints, size);
+  const polyPointsPath = generatePolyPointsPath(polyPoints);
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
       <g>
@@ -71,8 +90,8 @@ const PointsDisplayLayer = ({
           return (
             <circle
               key={i}
-              cx={po.x * size.width}
-              cy={(1 - po.y) * size.height}
+              cx={po.x}
+              cy={po.y}
               r={5}
               fill={!po.curved ? color : "none"}
               stroke={po.curved ? color : "none"}
@@ -80,14 +99,7 @@ const PointsDisplayLayer = ({
           );
         })}
       </g>
-      <polyline
-        points={polyPoints
-          .map((po) => `${po.x * size.width} ${(1 - po.y) * size.height}`)
-          .join(" ")}
-        stroke={color}
-        strokeWidth={2}
-        fill="none"
-      />
+      <path d={polyPointsPath} stroke={color} strokeWidth={2} fill="none" />
     </svg>
   );
 };
