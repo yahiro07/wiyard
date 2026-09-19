@@ -9,7 +9,12 @@ const UiScaler: FC<{
   originalWidth: number;
   originalHeight: number;
 }> = ({ children, scale, originalWidth, originalHeight }) => {
-  if (scale === 1) return <>{children}</>;
+  if (scale === 1)
+    return (
+      <div>
+        <div>{children}</div>
+      </div>
+    );
   return (
     <div
       style={{
