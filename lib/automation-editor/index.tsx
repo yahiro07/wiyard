@@ -4,6 +4,8 @@ import { CurveEditorRoot } from "./curve-editor";
 import { createSelectorOptions } from "@lib/utils/selector-option";
 import { ShiftSelector } from "./shift-selector";
 import { AppStore, createAppStore, useStoreAccessor } from "./store";
+import { createAutomationEngine } from "./engine";
+import { UnitInterface } from "wafer-host/unit-types";
 
 const loopBarsOptions = createSelectorOptions<LoopBars>([
   [0.25, "1/4"],
@@ -43,14 +45,32 @@ const App = ({ store }: { store: AppStore }) => {
   );
 };
 
+function setupDrivers(store: AppStore, unitInterface: UnitInterface) {
+  const engine = createAutomationEngine(unitInterface);
+
+  const unsubscribeStore = store.subscribe(({ points, loopBars }) => {
+    if (points) {
+      engine.setPoints(points);
+    }
+    if (loopBars) {
+      engine.setLoopBars(loopBars);
+    }
+  }, true);
+
+  unitInterface.completeSetup({
+    unitAspects: { unitType: "sequencer" },
+    clockHandlers: engine.clockHandlers,
+    cleanup() {
+      unsubscribeStore();
+    },
+  });
+}
+
 export const createAutomationEditorUnit: ReactUnitTemplateFn = (
   unitInterface,
 ) => {
-  const automationOutputPort = unitInterface.createAutomationOutputPort();
   const store = createAppStore();
-  unitInterface.completeSetup({
-    unitAspects: { unitType: "sequencer" },
-  });
+  setupDrivers(store, unitInterface);
   return {
     RenderUi() {
       return <App store={store} />;
