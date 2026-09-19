@@ -1,30 +1,66 @@
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { useMemo } from "react";
-import { createStore } from "snap-store";
-import { KnotPoint } from "./types";
+import { createStore, Store } from "snap-store";
+import { KnotPoint, LoopBars } from "./types";
 import { CurveEditorRoot } from "./curve-editor";
+import { createSelectorOptions } from "@lib/utils/selector-option";
+import { ShiftSelector } from "./shift-selector";
+
+type StoreState = {
+  points: KnotPoint[];
+  loopBars: LoopBars;
+};
+type AppStore = Store<StoreState>;
 
 const defaultPoints: KnotPoint[] = [
   { x: 0, y: 0, curved: false },
   { x: 1, y: 1, curved: false },
 ];
-const store = createStore<{ points: KnotPoint[] }>({ points: defaultPoints });
 
-const App = () => {
-  const accessor = useMemo(() => {
+function useStoreAccessor(store: AppStore) {
+  return useMemo(() => {
     return {
       getPoints: () => store.state.points,
       usePoints: () => store.useSnapshot().points,
       setPoints: store.setPoints,
     };
-  }, []);
+  }, [store]);
+}
+
+const loopBarsOptions = createSelectorOptions<LoopBars>([
+  [0.25, "1/4"],
+  [0.5, "1/2"],
+  [1, "1"],
+  [2, "2"],
+  [4, "4"],
+  [8, "8"],
+  [16, "16"],
+  [32, "32"],
+  [64, "64"],
+]);
+const LoopBarsSelector = ({ store }: { store: AppStore }) => {
+  const { loopBars } = store.useSnapshot();
   return (
-    <div className="bg-#ccc p-3 flex-vc gap-2 w-full h-full">
-      <h3>Automation Editor</h3>
+    <ShiftSelector
+      options={loopBarsOptions}
+      value={loopBars}
+      onChange={store.setLoopBars}
+    />
+  );
+};
+
+const App = ({ store }: { store: AppStore }) => {
+  const accessor = useStoreAccessor(store);
+  return (
+    <div className="bg-#ccc p-3 flex-vc gap-2 w-full h-full text-#333">
+      <div className="w-full flex-ha justify-between">
+        <h3>Automation Editor</h3>
+        <div className="flex-ha gap-3">
+          <div>loop bars</div>
+          <LoopBarsSelector store={store} />
+        </div>
+      </div>
       <CurveEditorRoot accessor={accessor} />
-      {/* <div className="bd-#666 w-400px h-300px">
-        <MultiPointsEditor accessor={accessor} />
-      </div> */}
     </div>
   );
 };
@@ -33,18 +69,14 @@ export const createAutomationEditorUnit: ReactUnitTemplateFn = (
   unitInterface,
 ) => {
   const automationOutputPort = unitInterface.createAutomationOutputPort();
-  const timerId = setInterval(() => {
-    automationOutputPort.emitValue(Math.random());
-  }, 1000);
+  const store = createStore<StoreState>({ points: defaultPoints, loopBars: 4 });
+
   unitInterface.completeSetup({
     unitAspects: { unitType: "sequencer" },
-    cleanup() {
-      clearInterval(timerId);
-    },
   });
   return {
     RenderUi() {
-      return <App />;
+      return <App store={store} />;
     },
   };
 };
