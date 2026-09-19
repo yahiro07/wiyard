@@ -331,7 +331,16 @@ export const actions = {
     store.toggleMidiInEnabled();
   },
   togglePlayback() {
+    if (!store.state.playing && store.state.soloPlaybackUnitId) {
+      store.setSoloPlaybackUnitId(null);
+    }
     store.togglePlaying();
+  },
+  toggleSoloPlayback(unitId: string) {
+    if (unitId && store.state.playing) {
+      store.setPlaying(false);
+    }
+    store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
   },
   selectNoteChannel(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
@@ -344,8 +353,5 @@ export const actions = {
   },
   setWireGain(wireConnectionKey: string, value: number) {
     store.patchWireGains({ [wireConnectionKey]: value });
-  },
-  toggleSoloPlayback(unitId: string) {
-    store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
   },
 };

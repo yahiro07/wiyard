@@ -64,11 +64,11 @@ const _WindowEvacuationButton = () => {
 };
 
 const PlaybackButton = () => {
-  const { playing, projectLoading, soloPlaybackUnitId } = store.useSnapshot();
+  const { playing, projectLoading } = store.useSnapshot();
   return (
     <ControlButton
       active={playing}
-      disabled={projectLoading || soloPlaybackUnitId !== null}
+      disabled={projectLoading}
       onClick={actions.togglePlayback}
       children={<Icons.Play />}
     />

@@ -1,9 +1,6 @@
 import { useEffect, useMemo } from "react";
-import {
-  HostAppProvider,
-  useSequencerTickDriverRunner,
-} from "wafer-host/react";
-import { hostSystem, sequencerTickDriver } from "@/domain/host-system-instance";
+import { HostAppProvider } from "wafer-host/react";
+import { hostSystem } from "@/domain/host-system-instance";
 import { setupAutoPersistenceTask } from "@/periphery/auto-persistence-task";
 import { useMidiInputHandling } from "@/periphery/midi-input-handling";
 import { useSetupSongKeySupport } from "@/periphery/song-key-support";
@@ -32,7 +29,6 @@ const AppInner = () => {
     () => mapKnobGainDb(masterVolume, 0.5),
     [masterVolume],
   );
-  useSequencerTickDriverRunner({ sequencerTickDriver, playing, bpm });
   return (
     <HostAppProvider
       hostSystem={hostSystem}

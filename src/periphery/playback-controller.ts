@@ -3,16 +3,26 @@ import { store } from "@/store/store";
 import { useEffect } from "react";
 
 export function usePlaybackController() {
-  const { soloPlaybackUnitId } = store.useSnapshot();
+  const { soloPlaybackUnitId, bpm, playing } = store.useSnapshot();
   useEffect(() => {
-    if (soloPlaybackUnitId) {
-      sequencerTickDriver.setUnitClockingFlags({
-        [soloPlaybackUnitId]: true,
-      });
+    if (bpm) {
+      sequencerTickDriver?.setBpm(bpm);
+    }
+  }, [bpm]);
+
+  useEffect(() => {
+    if (soloPlaybackUnitId || playing) {
+      if (soloPlaybackUnitId) {
+        sequencerTickDriver.setUnitClockingFlags({
+          [soloPlaybackUnitId]: true,
+        });
+      } else {
+        sequencerTickDriver.setUnitClockingFlags(null);
+      }
       sequencerTickDriver.start();
     } else {
       sequencerTickDriver.setUnitClockingFlags(null);
       sequencerTickDriver.stop();
     }
-  }, [soloPlaybackUnitId]);
+  }, [soloPlaybackUnitId, playing]);
 }

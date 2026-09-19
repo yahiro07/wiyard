@@ -35,7 +35,7 @@ const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
 };
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const { soloPlaybackUnitId, playing } = store.useSnapshot();
+  const { soloPlaybackUnitId, projectLoading } = store.useSnapshot();
   const { unitId, catalogKey } = unitItem;
 
   const catalogItem = getCatalogItem(catalogKey);
@@ -63,7 +63,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           {isPlaybackCapable && (
             <SoloPlaybackButton
               active={unitId === soloPlaybackUnitId}
-              disabled={playing}
+              disabled={projectLoading}
               onClick={() => {
                 actions.toggleSoloPlayback(unitId);
               }}
