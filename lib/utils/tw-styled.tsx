@@ -11,7 +11,7 @@ export const twStyled = new Proxy(
           return (
             <TagName
               {...props}
-              class={cz(...classes, props.className as string)}
+              className={cz(...classes, props.className as string)}
             />
           );
         };

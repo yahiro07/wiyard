@@ -10,11 +10,16 @@ export function useProjectInitialStateFix() {
     const windowSpecs = store.state.windowSpecs;
     const sequencerWindowId = windowIds.sequencer;
     const keyboardWindowId = windowIds.keyboard;
+    const automationEditorWindowId = windowIds.automationEditor;
+
     if (windowSpecs[sequencerWindowId] === undefined) {
       actions.setWindowStatus(sequencerWindowId, "minimized");
     }
     if (windowSpecs[keyboardWindowId] === undefined) {
       actions.setWindowStatus(keyboardWindowId, "minimized");
+    }
+    if (windowSpecs[automationEditorWindowId] === undefined) {
+      actions.setWindowStatus(automationEditorWindowId, "minimized");
     }
   }, [projectLoadedIndex]);
 }

@@ -8,6 +8,7 @@ import {
   getForwardDirectionWireConnectionKey,
 } from "@/domain/port-helpers";
 import {
+  AutomationEditorUnitItem,
   BoardUnitItem,
   NoteInputPortUnitItem,
   PortStuff,
@@ -16,17 +17,16 @@ import {
   windowIds,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
-import {
-  getNextNoteInputPortUnitId,
-  getNextUnitId,
-} from "@/domain/unit-id-helper";
+import { unitIdHelper } from "@/domain/unit-id-helper";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
 import { resultOf } from "@lib/utils/general-helper";
+import { commonGetters } from "@/store/common-getters";
 
 const unitWindowInitialSizes = {
   sequencerWindow: { width: 1000, height: 600 },
   keyboardWindow: { width: 480, height: 154 },
+  automationEditorWindow: { width: 900, height: 220 },
   general: {
     targetHeight: 280,
   },
@@ -53,12 +53,16 @@ const helpers = {
   ) {
     const isSequencer = windowId === windowIds.sequencer;
     const isKeyboard = windowId === windowIds.keyboard;
+    const isAutomationEditor = windowId === windowIds.automationEditor;
+
     let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
     let contentSize = resultOf(() => {
       if (isSequencer) {
         return unitWindowInitialSizes.sequencerWindow;
       } else if (isKeyboard) {
         return unitWindowInitialSizes.keyboardWindow;
+      } else if (isAutomationEditor) {
+        return unitWindowInitialSizes.automationEditorWindow;
       } else {
         return helpers.getGeneralUnitInitialSize(windowId);
       }
@@ -70,22 +74,33 @@ const helpers = {
       status,
       ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
       ...(isKeyboard ? { pinned: true } : {}),
+      ...(isAutomationEditor ? { freeRatio: true, pinned: true } : {}),
     };
     return newWindowSpec;
   },
-  createNoteChannelPort(
-    existingPorts: NoteInputPortUnitItem[],
-  ): NoteInputPortUnitItem {
-    const lastPort = existingPorts.at(-1);
-    const unitId = getNextNoteInputPortUnitId(store.state.unitItems);
-    return {
-      type: "noteInput",
-      unitId,
-      sequencerClassKey: lastPort?.sequencerClassKey ?? "pianoRoll",
-      cardPosition: lastPort
-        ? { x: lastPort.cardPosition.x, y: lastPort.cardPosition.y + 100 }
-        : { x: boardSize.width / 2, y: boardSize.height / 2 },
-    };
+  _getNextPortCardPosition() {
+    const items = store.state.unitItems.filter(
+      (it) => it.type === "noteInput" || it.type === "automationEditor",
+    );
+    const lastItem = items.at(-1);
+    return lastItem
+      ? { x: lastItem.cardPosition.x, y: lastItem.cardPosition.y + 100 }
+      : { x: boardSize.width / 2, y: boardSize.height / 2 };
+  },
+  createNoteChannelPort(): NoteInputPortUnitItem {
+    const unitId = unitIdHelper.getNextNoteInputPortUnitId(
+      store.state.unitItems,
+    );
+    const sequencerClassKey = "pianoRoll";
+    const cardPosition = helpers._getNextPortCardPosition();
+    return { type: "noteInput", unitId, sequencerClassKey, cardPosition };
+  },
+  createAutomationEditorUnit(): AutomationEditorUnitItem {
+    const unitId = unitIdHelper.getNextAutomationEditorUnitId(
+      store.state.unitItems,
+    );
+    const cardPosition = helpers._getNextPortCardPosition();
+    return { type: "automationEditor", unitId, cardPosition };
   },
 };
 
@@ -184,7 +199,10 @@ export const actions = {
     store.setUnitAddingItem(item);
   },
   addUnit(catalogKey: CatalogKey, position: Point) {
-    const unitId = getNextUnitId(store.state.unitItems, catalogKey);
+    const unitId = unitIdHelper.getNextUnitId(
+      store.state.unitItems,
+      catalogKey,
+    );
     const newUnit: BoardUnitItem = {
       type: "board",
       unitId,
@@ -198,9 +216,18 @@ export const actions = {
       store.state.unitItems,
     );
     if (existingPorts.length >= 4) return;
-    const newPort = helpers.createNoteChannelPort(existingPorts);
+    const newPort = helpers.createNoteChannelPort();
     store.setUnitItems((prev) => [...prev, newPort]);
     store.setCurrentNoteChannelId(newPort.unitId);
+  },
+  addAutomationEditorUnit() {
+    const existingUnits = store.state.unitItems.filter(
+      (it) => it.type === "automationEditor",
+    );
+    if (existingUnits.length >= 4) return;
+    const newUnit = helpers.createAutomationEditorUnit();
+    store.setUnitItems((prev) => [...prev, newUnit]);
+    store.setCurrentAutomationChannelId(newUnit.unitId);
   },
   removeCurrentNoteChannel() {
     const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
@@ -220,6 +247,26 @@ export const actions = {
     const nextPort =
       remaining[currentIndex] ?? remaining[currentIndex - 1] ?? remaining[0];
     store.setCurrentNoteChannelId(nextPort.unitId);
+  },
+  removeCurrentAutomationChannel() {
+    const targetId = store.state.currentAutomationChannelId;
+    if (!targetId) return;
+    const items = commonGetters.getAutomationEditorUnitItems();
+    const targetItem = commonGetters.getUnitItemById(targetId);
+    if (!targetItem) return;
+    actions.removeUnit(targetId);
+    const isAlteringFirstItem = targetItem === items[0];
+
+    const remaining = items.filter((it) => it.unitId !== targetId);
+    const nextFirstItem = remaining[0];
+    if (nextFirstItem) {
+      store.setCurrentAutomationChannelId(nextFirstItem.unitId);
+      if (isAlteringFirstItem) {
+        actionsInternal.patchUnitAttrs(nextFirstItem.unitId, {
+          cardPosition: targetItem.cardPosition,
+        });
+      }
+    }
   },
   setMenuTargetUnit(unitId: string | null) {
     store.setMenuTargetUnitId(unitId);
@@ -245,6 +292,9 @@ export const actions = {
   },
   selectNoteChannel(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
+  },
+  selectAutomationChannel(automationChannelId: string) {
+    store.setCurrentAutomationChannelId(automationChannelId);
   },
   setKeyName(keyName: KeyName) {
     store.setKeyName(keyName);

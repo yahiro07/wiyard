@@ -91,6 +91,18 @@ export const DockRoot = () => {
         }
       />
       <WindowDockItem
+        id={windowIds.automationEditor}
+        title="automation"
+        children={
+          <DockIcon
+            icon={Icons.DirectionRight}
+            bgColor="#46a"
+            textColor="#fff"
+            fontSize={28}
+          />
+        }
+      />
+      <WindowDockItem
         id={windowIds.keyboard}
         title="keyboard"
         children={
