@@ -14,6 +14,7 @@ import { useSetupUnitPortMasking } from "@/periphery/unit-port-masking-support";
 import { ErrorBoundary } from "react-error-boundary";
 import { FallbackRender } from "@/periphery/fallback-render";
 import { mapKnobGainDb } from "@lib/utils/volume-curve";
+import { usePlaybackController } from "@/periphery/playback-controller";
 
 const EffectsHookBox = () => {
   useMidiInputHandling();
@@ -21,6 +22,7 @@ const EffectsHookBox = () => {
   useSetupSongKeySupport();
   useProjectInitialStateFix();
   useSetupUnitPortMasking();
+  usePlaybackController();
   return null;
 };
 
