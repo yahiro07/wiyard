@@ -19,6 +19,7 @@ const helpers = {
         wireAutomationParameterIds: 1,
         windowSpecs: 1,
         currentNoteChannelId: 1,
+        currentAutomationChannelId: 1,
         currentWindowId: 1,
         windowsEvacuated: 1,
         bpm: 1,

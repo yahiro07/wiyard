@@ -11,6 +11,7 @@ export type ProjectStoreStates = {
   wireAutomationParameterIds: Record<string, string>;
   windowSpecs: Record<WindowId, WindowSpec>;
   currentNoteChannelId: string;
+  currentAutomationChannelId: string | null;
   currentWindowId: string | null;
   windowsEvacuated: boolean;
   bpm: number;
