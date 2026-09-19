@@ -197,11 +197,11 @@ function createEditInputActions(accessor: StorePointsAccessor) {
 
       const operations = {
         toggleCurved() {
-          if (latestPoint !== accessor.getPoints()[0]) {
-            const newPoint = { ...latestPoint, curved: !latestPoint.curved };
-            pointsMutations.replacePoint(latestPoint, newPoint);
-            latestPoint = newPoint;
-          }
+          // if (latestPoint !== accessor.getPoints()[0]) {
+          const newPoint = { ...latestPoint, curved: !latestPoint.curved };
+          pointsMutations.replacePoint(latestPoint, newPoint);
+          latestPoint = newPoint;
+          // }
         },
         updatePosition(pos: Point) {
           const newPoint = { x: pos.x, y: pos.y, curved: latestPoint.curved };
