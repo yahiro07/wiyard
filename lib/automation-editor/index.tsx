@@ -18,11 +18,15 @@ type KnotPoint = {
 
 type SetPointsFn = StoreSetterFn<KnotPoint[]>;
 
-function mapPointsDisplayLayerPoints(inputPoints: Point[]) {
+function mapPointsDisplayLayerPoints(inputPoints: KnotPoint[]): {
+  points: KnotPoint[];
+  polyPoints: Point[];
+} {
   const points = inputPoints.map((po) => ({
     x: po.x,
     //slightly add paddings to the edge of edit area
     y: mapUnaryTo(po.y, 0.01, 0.99),
+    curved: po.curved,
   }));
   const polyPoints = resultOf(() => {
     //add end points at x=0 and x=1
@@ -40,10 +44,10 @@ function mapPointsDisplayLayerPoints(inputPoints: Point[]) {
 
     const newPoints = [...points];
     if (firstP.x > 0.01) {
-      newPoints.unshift({ x: 0, y: firstP.y });
+      newPoints.unshift({ x: 0, y: firstP.y, curved: false });
     }
     if (lastP.x < 0.99) {
-      newPoints.push({ x: 1, y: lastP.y });
+      newPoints.push({ x: 1, y: lastP.y, curved: false });
     }
     return newPoints;
   });
@@ -63,15 +67,18 @@ const PointsDisplayLayer = ({
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
       <g>
-        {points.map((po, i) => (
-          <circle
-            key={i}
-            cx={po.x * size.width}
-            cy={(1 - po.y) * size.height}
-            r={5}
-            fill={color}
-          />
-        ))}
+        {points.map((po, i) => {
+          return (
+            <circle
+              key={i}
+              cx={po.x * size.width}
+              cy={(1 - po.y) * size.height}
+              r={5}
+              fill={!po.curved ? color : "none"}
+              stroke={po.curved ? color : "none"}
+            />
+          );
+        })}
       </g>
       <polyline
         points={polyPoints
@@ -99,6 +106,11 @@ function createPointsMutations(accessor: StorePointsAccessor) {
     replacePoint(target: KnotPoint, po: KnotPoint) {
       accessor.setPoints((prev) =>
         prev.map((p) => (p === target ? po : p)).sort((a, b) => a.x - b.x),
+      );
+    },
+    toggleCurved(po: KnotPoint) {
+      accessor.setPoints((prev) =>
+        prev.map((p) => (p === po ? { ...p, curved: !p.curved } : p)),
       );
     },
     removePoint(po: KnotPoint) {
@@ -188,7 +200,9 @@ function createEditInputActions(accessor: StorePointsAccessor) {
           latestPoint = newPoint;
         },
         onTap() {
+          if (latestPoint === store.state.points[0]) return;
           //toggle knot kind of the point
+          pointsMutations.toggleCurved(latestPoint);
         },
         onHold() {
           if (editMode === "edit") {
