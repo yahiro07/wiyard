@@ -8,6 +8,8 @@ import { useProjectInitialStateFix } from "@/periphery/store-state-fix";
 import { store } from "@/store/store";
 import { PageRoot } from "@/views/desk/page-root";
 import { useSetupUnitPortMasking } from "@/periphery/unit-port-masking-support";
+import { ErrorBoundary } from "react-error-boundary";
+import { FallbackRender } from "@/periphery/fallback-render";
 
 const EffectsHookBox = () => {
   useMidiInputHandling();
@@ -18,7 +20,7 @@ const EffectsHookBox = () => {
   return null;
 };
 
-export const App = () => {
+const AppInner = () => {
   const { playing, bpm, masterVolume } = store.useSnapshot();
   return (
     <HostAppProvider
@@ -30,5 +32,13 @@ export const App = () => {
       <PageRoot />
       <EffectsHookBox />
     </HostAppProvider>
+  );
+};
+
+export const App = () => {
+  return (
+    <ErrorBoundary fallbackRender={FallbackRender}>
+      <AppInner />
+    </ErrorBoundary>
   );
 };
