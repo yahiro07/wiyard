@@ -32,7 +32,6 @@ const quadraticCurveHelper = {
       }
     });
   },
-  },
 };
 
 function splitStrokePointsToCurveGroups(points: KnotPoint[]): KnotPoint[][] {
@@ -53,5 +52,4 @@ export function curveMapperQuadratic_buildSegments(
 ): CurveSegment[] {
   const curveGroups = splitStrokePointsToCurveGroups(points);
   return curveGroups.flatMap(quadraticCurveHelper.buildSegmentsInnerFit);
-}
 }
