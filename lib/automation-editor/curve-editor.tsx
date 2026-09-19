@@ -60,9 +60,7 @@ const knotHelpers = {
     })) as CurveSegment[];
   },
   mapPolyPointsToSegments(points: KnotPoint[]): CurveSegment[] {
-    // return curveMapperHermite_buildSegments(points);
-    return curveMapperQuadratic_buildSegments(points, "innerFit");
-    // return curveMapperQuadratic_buildSegments(points, "outerFit");
+    return curveMapperQuadratic_buildSegments(points);
   },
   mapSegmentsToPath(segments: CurveSegment[]): string {
     const first = segments[0];

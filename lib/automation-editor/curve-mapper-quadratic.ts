@@ -32,20 +32,6 @@ const quadraticCurveHelper = {
       }
     });
   },
-  fixPointsForOuterFit(points: Point[]): Point[] {
-    return points.map((po, i) => {
-      if (i === 0 || i === points.length - 1) {
-        return po;
-      }
-      const p0 = points[i - 1];
-      const p1 = points[i];
-      const p2 = points[i + 1];
-      const mp01 = vectorOp.middle(p0, p1);
-      const mp02 = vectorOp.middle(p1, p2);
-      const foot = vectorOp.middle(mp01, mp02);
-      const ev = vectorOp.subtract(p1, foot);
-      return vectorOp.add(p1, vectorOp.scale(ev, 0.5));
-    });
   },
 };
 
@@ -64,15 +50,8 @@ function splitStrokePointsToCurveGroups(points: KnotPoint[]): KnotPoint[][] {
 
 export function curveMapperQuadratic_buildSegments(
   points: KnotPoint[],
-  mode: "innerFit" | "outerFit",
 ): CurveSegment[] {
   const curveGroups = splitStrokePointsToCurveGroups(points);
-  if (mode === "innerFit") {
-    return curveGroups.flatMap(quadraticCurveHelper.buildSegmentsInnerFit);
-  } else {
-    return curveGroups.flatMap((points) => {
-      const fixedPoints = quadraticCurveHelper.fixPointsForOuterFit(points);
-      return quadraticCurveHelper.buildSegmentsInnerFit(fixedPoints);
-    });
-  }
+  return curveGroups.flatMap(quadraticCurveHelper.buildSegmentsInnerFit);
+}
 }
