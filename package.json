@@ -13,6 +13,7 @@
     "fflate": "^0.8.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-error-boundary": "^6.1.5",
     "react-icons": "^5.7.0",
     "snap-store": "^0.1.14",
     "wafer-host": "link:../wafer/lib/wafer-host"
@@ -24,11 +25,11 @@
     "@unocss/preset-wind4": "^66.9.2",
     "@unocss/vite": "^66.9.2",
     "@vitejs/plugin-react": "^6.1.1",
-    "typescript": "^7.0.2",
-    "unocss": "^66.9.2",
-    "vite": "8.0.12",
     "oxfmt": "^0.68.0",
     "oxlint": "^1.83.0",
-    "oxlint-tsgolint": "^7.0.2001"
+    "oxlint-tsgolint": "^7.0.2001",
+    "typescript": "^7.0.2",
+    "unocss": "^66.9.2",
+    "vite": "8.0.12"
   }
 }
