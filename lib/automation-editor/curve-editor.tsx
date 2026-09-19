@@ -93,14 +93,19 @@ const PointsDisplayLayer = ({
   size: Size;
   color: string;
 }) => {
+  const paddingY = 4;
   const points = inputPoints.map((po) => ({
-    ...knotHelpers.mapCoord(po, size, 1),
+    ...knotHelpers.mapCoord(po, size, paddingY),
     curved: po.curved,
   }));
   const displayLayerPoints =
     knotHelpers.mapPointsDisplayLayerPoints(inputPoints);
   const segments = knotHelpers.mapPolyPointsToSegments(displayLayerPoints);
-  const displaySegments = knotHelpers.mapSegmentCoords(segments, size, 1);
+  const displaySegments = knotHelpers.mapSegmentCoords(
+    segments,
+    size,
+    paddingY,
+  );
   const polyPointsPath = knotHelpers.mapSegmentsToPath(displaySegments);
   return (
     <svg viewBox={`0 0 ${size.width} ${size.height}`} className="w-full h-full">
