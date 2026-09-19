@@ -17,6 +17,14 @@ export function setupDrivers(store: AppStore, unitInterface: UnitInterface) {
   unitInterface.completeSetup({
     unitAspects: { unitType: "sequencer" },
     clockHandlers: engine.clockHandlers,
+    persistence: {
+      emitState() {
+        return store.state;
+      },
+      applyState(state) {
+        store.assign(state);
+      },
+    },
     cleanup() {
       unsubscribeStore();
     },
