@@ -25,7 +25,10 @@ const AutomationSwitcherMenu = ({
   return (
     <div ref={baseDivRef} className="flex-v bg-#777e p-2">
       <div
-        className={cz(!currentParameterId && "bg-#8af")}
+        className={cz(
+          "cursor-pointer hover:bg-white/10",
+          !currentParameterId && "!bg-#8af",
+        )}
         onClick={() => setParameterId(null)}
       >
         --
@@ -34,8 +37,8 @@ const AutomationSwitcherMenu = ({
         <div
           key={spec.id}
           className={cz(
-            "px-1 py-0.75",
-            spec.id === currentParameterId && "bg-#8af",
+            "px-1 py-0.75 cursor-pointer hover:bg-white/10",
+            spec.id === currentParameterId && "!bg-#8af",
           )}
           onClick={() => setParameterId(spec.id)}
         >

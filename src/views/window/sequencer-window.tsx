@@ -2,12 +2,12 @@ import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { Icons } from "@/common/icons";
-import { kSequencerWindowId, NoteInputPortUnitItem } from "@/domain/types";
+import { NoteInputPortUnitItem, windowIds } from "@/domain/types";
 import {
   CatalogKey,
   catalog,
   InternalUnitKey,
-  internalUnitSpecs,
+  interUnitFactories,
 } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
@@ -76,18 +76,18 @@ const SequencerUnitItemView = ({
 }) => {
   const { currentNoteChannelId } = store.useSnapshot();
   const displayed = notePortUnitItem.unitId === currentNoteChannelId;
-  const internalUnitSpec =
-    internalUnitSpecs[notePortUnitItem.sequencerClassKey as InternalUnitKey];
+  const internalUnitFactory =
+    interUnitFactories[notePortUnitItem.sequencerClassKey as InternalUnitKey];
   const catalogItem = catalog[notePortUnitItem.sequencerClassKey as CatalogKey];
   const sequencerUnitId = notePortGetters.getSequencerUnitId(
     notePortUnitItem.unitId,
   );
   let content: ReactNode;
-  if (internalUnitSpec) {
+  if (internalUnitFactory) {
     content = (
       <ReactUnitFrame
         unitId={sequencerUnitId}
-        unitTemplateFn={internalUnitSpec.factory}
+        unitTemplateFn={internalUnitFactory}
       />
     );
   } else if (catalogItem) {
@@ -127,7 +127,7 @@ const SequencerPanel = () => {
 
 export const SequencerWindow = () => {
   return (
-    <WindowFrame id={kSequencerWindowId} title="piano roll">
+    <WindowFrame id={windowIds.sequencer} title="piano roll">
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <SequencerPanel />
       </ScalerBoxDW>

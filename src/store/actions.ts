@@ -9,12 +9,11 @@ import {
 } from "@/domain/port-helpers";
 import {
   BoardUnitItem,
-  kKeyboardWindowId,
-  kSequencerWindowId,
   NoteInputPortUnitItem,
   PortStuff,
   UnitAddingItem,
   UnitStuff,
+  windowIds,
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import {
@@ -26,8 +25,8 @@ import { store, windowSystem } from "@/store/store";
 import { resultOf } from "@lib/utils/general-helper";
 
 const unitWindowInitialSizes = {
-  kSequencerWindowId: { width: 1000, height: 600 },
-  kKeyboardWindowId: { width: 480, height: 154 },
+  sequencerWindow: { width: 1000, height: 600 },
+  keyboardWindow: { width: 480, height: 154 },
   general: {
     targetHeight: 280,
   },
@@ -52,14 +51,14 @@ const helpers = {
     status: WindowStatus,
     deskAreaRect: DOMRect,
   ) {
-    const isSequencer = windowId === kSequencerWindowId;
-    const isKeyboard = windowId === kKeyboardWindowId;
+    const isSequencer = windowId === windowIds.sequencer;
+    const isKeyboard = windowId === windowIds.keyboard;
     let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
     let contentSize = resultOf(() => {
       if (isSequencer) {
-        return unitWindowInitialSizes.kSequencerWindowId;
+        return unitWindowInitialSizes.sequencerWindow;
       } else if (isKeyboard) {
-        return unitWindowInitialSizes.kKeyboardWindowId;
+        return unitWindowInitialSizes.keyboardWindow;
       } else {
         return helpers.getGeneralUnitInitialSize(windowId);
       }

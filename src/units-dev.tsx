@@ -2,6 +2,7 @@ import { createKeyboardUnit } from "@lib/keyboard";
 import { createPianoRollUnit } from "@lib/piano-roll";
 import { HostAppProvider, ReactUnitFrame } from "wafer-host/react";
 import { hostSystem } from "@/domain/host-system-instance";
+import { createAutomationEditorUnit } from "@lib/automation-editor";
 
 const PageRootUnitsDev = () => {
   return (
@@ -12,10 +13,16 @@ const PageRootUnitsDev = () => {
           unitTemplateFn={createPianoRollUnit}
         />
       )}
-      {true && (
+      {false && (
         <ReactUnitFrame
           unitId="keyboardDev"
           unitTemplateFn={createKeyboardUnit}
+        />
+      )}
+      {true && (
+        <ReactUnitFrame
+          unitId="automationEditorDev"
+          unitTemplateFn={createAutomationEditorUnit}
         />
       )}
     </div>

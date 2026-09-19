@@ -1,4 +1,5 @@
 type Point = { x: number; y: number };
+type Size = { width: number; height: number };
 type Vector = Point;
 
 const getDist = (p1: Point, p2: Point): number => {
@@ -13,7 +14,8 @@ type DragSessionCallbacks = {
 };
 
 type DragSession = {
-  startPosition: Point;
+  getStartPosition(): Point;
+  getBaseSize(): Size;
   run(callbacks: DragSessionCallbacks): void;
 };
 
@@ -30,7 +32,7 @@ export function createDragSession(
   const e0 = "nativeEvent" in inputEvent ? inputEvent.nativeEvent : inputEvent;
 
   const baseEl =
-    options?.coordinateBaseElement ?? (e0.currentTarget as HTMLElement);
+    options?.coordinateBaseElement ?? (inputEvent.currentTarget as HTMLElement);
   const baseRect = baseEl.getBoundingClientRect();
   const baseSx = baseRect.width / (baseEl.offsetWidth || 1);
   const baseSy = baseRect.height / (baseEl.offsetHeight || 1);
@@ -43,7 +45,11 @@ export function createDragSession(
   };
   const startPosition = getPos(e0);
   return {
-    startPosition,
+    getStartPosition: () => startPosition,
+    getBaseSize: () => ({
+      width: baseEl.offsetWidth,
+      height: baseEl.offsetHeight,
+    }),
     run(callbacks) {
       startPointerCaptureSession(e0, {
         onMove(e) {
@@ -83,7 +89,8 @@ type DragSessionCallbacksEx = {
 };
 
 type DragSessionEx = {
-  startPosition: Point;
+  getStartPosition(): Point;
+  getBaseSize(): Size;
   run(callbacks: DragSessionCallbacksEx): void;
 };
 
@@ -111,7 +118,7 @@ export function createDragSessionEx(
   const e0 = "nativeEvent" in inputEvent ? inputEvent.nativeEvent : inputEvent;
 
   const baseEl =
-    options?.coordinateBaseElement ?? (e0.currentTarget as HTMLElement);
+    options?.coordinateBaseElement ?? (inputEvent.currentTarget as HTMLElement);
   const baseRect = baseEl.getBoundingClientRect();
   const baseSx = baseRect.width / (baseEl.offsetWidth || 1);
   const baseSy = baseRect.height / (baseEl.offsetHeight || 1);
@@ -130,7 +137,11 @@ export function createDragSessionEx(
   let latestPosition = startPosition;
 
   return {
-    startPosition,
+    getStartPosition: () => startPosition,
+    getBaseSize: () => ({
+      width: baseEl.offsetWidth,
+      height: baseEl.offsetHeight,
+    }),
     run(callbacks) {
       const callMove = (pos: Point) => {
         const relativeMoveAmountFromStart = {
@@ -215,7 +226,7 @@ type PointerCaptureSessionCallbacks = {
   onUpOrCancel?(e: PointerEvent, cause: "up" | "cancel"): void;
 };
 
-function startPointerCaptureSession(
+export function startPointerCaptureSession(
   e0: PointerEvent,
   callbacks: PointerCaptureSessionCallbacks,
 ) {

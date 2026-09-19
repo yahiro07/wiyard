@@ -17,7 +17,8 @@
       "@lib/port-units": ["./lib/port-units/index.ts"],
       "@lib/keyboard": ["./lib/keyboard/index.tsx"],
       "@lib/contract": ["./lib/contract/index.ts"],
-      "@lib/components/*": ["./lib/components/*"]
+      "@lib/components/*": ["./lib/components/*"],
+      "@lib/automation-editor": ["./lib/automation-editor/index.tsx"]
     }
   },
   "include": ["src"]
