@@ -5,6 +5,33 @@ export function downloadFile(uri: string, fileName: string) {
   link.click();
 }
 
+export async function saveProjectJsonToLocalFileSystem(
+  text: string,
+  suggestedName: string,
+): Promise<string | undefined> {
+  let handle: FileSystemFileHandle;
+  try {
+    handle = await (window as any).showSaveFilePicker({
+      suggestedName,
+      startIn: "downloads",
+      types: [
+        {
+          description: "Wireboard project",
+          accept: { "application/json": [".json"] },
+        },
+      ],
+    });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError")
+      return undefined;
+    throw error;
+  }
+  const writable = await handle.createWritable();
+  await writable.write(text);
+  await writable.close();
+  return handle.name;
+}
+
 export function loadLocalFileText(): Promise<{
   fileName: string;
   content: string;

@@ -8,6 +8,7 @@ import { ProjectData } from "@/project/project-types";
 import {
   downloadFile,
   loadLocalFileText,
+  saveProjectJsonToLocalFileSystem,
 } from "@/project/projects-model-helper";
 import { store } from "@/store/store";
 
@@ -20,12 +21,28 @@ export type ProjectsModel = {
 
 function createProjectsModel(): ProjectsModel {
   return {
-    exportProject() {
+    async exportProject() {
       const projectData = projectDataIo.emitProjectData();
       const text = JSON.stringify(projectData, null, 2);
-      const uri = `data:application/json;charset=utf-8,${encodeURIComponent(text)}`;
+      const isSaveFilePickerAvailable = "showSaveFilePicker" in window;
       const fileName = store.state.importedProjectFileName ?? "project.json";
-      downloadFile(uri, fileName);
+
+      if (isSaveFilePickerAvailable) {
+        try {
+          const savedFileName = await saveProjectJsonToLocalFileSystem(
+            text,
+            fileName,
+          );
+          if (savedFileName) {
+            store.setImportedProjectFileName(savedFileName);
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+      } else {
+        const uri = `data:application/json;charset=utf-8,${encodeURIComponent(text)}`;
+        downloadFile(uri, fileName);
+      }
     },
     async importProject() {
       try {
