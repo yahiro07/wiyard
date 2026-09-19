@@ -36,7 +36,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
         <div
-          className="h-100px bg-white cursor-pointer relative shadow-md"
+          className="h-100px bg-white cursor-pointer relative shadow-md rounded-3px overflow-hidden"
           onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
         >
           {catalogItem ? (
