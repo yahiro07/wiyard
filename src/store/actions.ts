@@ -27,6 +27,7 @@ import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
 import { commonGetters } from "@/store/common-getters";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
+import { appConfig } from "@/common/app-config";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -204,7 +205,11 @@ export const actions = {
   setPreviewDestPosition(position: Point | null) {
     store.setPreviewDestPosition(position);
   },
-  toggleWire(sourcePortKey: string, destPortKey: string) {
+  toggleWire(
+    sourcePortKey: string,
+    destPortKey: string,
+    connectingByDrag?: boolean,
+  ) {
     const connectionKey = getForwardDirectionWireConnectionKey(
       sourcePortKey,
       destPortKey,
@@ -214,10 +219,16 @@ export const actions = {
       actionsInternal.removeWires([connectionKey]);
     } else {
       store.setWireConnectionKeys((prev) => [...prev, connectionKey]);
-      const { sourcePortKey } = decodeWireConnectionKey(connectionKey);
-      const portStuff = store.state.portStuffs[sourcePortKey];
-      if (portStuff.subtype === "automation") {
-        store.setConfigTargetWireKey(connectionKey);
+
+      if (
+        connectingByDrag &&
+        appConfig.showAutomationTargetParameterSelectionMenuOnConnection
+      ) {
+        const { sourcePortKey } = decodeWireConnectionKey(connectionKey);
+        const portStuff = store.state.portStuffs[sourcePortKey];
+        if (portStuff.subtype === "automation") {
+          store.setConfigTargetWireKey(connectionKey);
+        }
       }
     }
   },
