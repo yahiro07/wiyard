@@ -39,7 +39,11 @@ export const SecondBar = () => {
   return (
     <div className="absolute-top-center mt-2 z-4">
       <ProjectButtons />
-      {appEnvs.isDevelopment && <div>{importedProjectFileName}</div>}
+      {appEnvs.isDevelopment && (
+        <div className="flex justify-end text-sm">
+          {importedProjectFileName}
+        </div>
+      )}
     </div>
   );
 };
