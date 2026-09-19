@@ -10,7 +10,13 @@ import { clampValue, mapUnaryTo } from "@lib/utils/number-helper";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
-type SetPointsFn = StoreSetterFn<Point[]>;
+type KnotPoint = {
+  x: number;
+  y: number;
+  curved: boolean;
+};
+
+type SetPointsFn = StoreSetterFn<KnotPoint[]>;
 
 function mapPointsDisplayLayerPoints(inputPoints: Point[]) {
   const points = inputPoints.map((po) => ({
@@ -49,7 +55,7 @@ const PointsDisplayLayer = ({
   size,
   color,
 }: {
-  points: Point[];
+  points: KnotPoint[];
   size: Size;
   color: string;
 }) => {
@@ -80,22 +86,22 @@ const PointsDisplayLayer = ({
 };
 
 type StorePointsAccessor = {
-  getPoints(): Point[];
-  usePoints(): Point[];
+  getPoints(): KnotPoint[];
+  usePoints(): KnotPoint[];
   setPoints: SetPointsFn;
 };
 
 function createPointsMutations(accessor: StorePointsAccessor) {
   return {
-    addPoint(po: Point) {
+    addPoint(po: KnotPoint) {
       accessor.setPoints((prev) => [...prev, po].sort((a, b) => a.x - b.x));
     },
-    replacePoint(target: Point, po: Point) {
+    replacePoint(target: KnotPoint, po: KnotPoint) {
       accessor.setPoints((prev) =>
         prev.map((p) => (p === target ? po : p)).sort((a, b) => a.x - b.x),
       );
     },
-    removePoint(po: Point) {
+    removePoint(po: KnotPoint) {
       accessor.setPoints((prev) => {
         return prev.filter((p) => p !== po);
       });
@@ -122,10 +128,10 @@ function createViewSpace(size: Size) {
 
 const helpers = {
   hitTestPoint(
-    points: Point[],
+    points: KnotPoint[],
     pos: Point,
     radii: { rx: number; ry: number },
-  ): Point | undefined {
+  ): KnotPoint | undefined {
     return points.find((po) => {
       const dx = (po.x - pos.x) / radii.rx;
       const dy = (po.y - pos.y) / radii.ry;
@@ -158,12 +164,13 @@ function createEditInputActions(accessor: StorePointsAccessor) {
       );
 
       const editMode = hit ? "edit" : "create";
-      let latestPoint: Point;
+      let latestPoint: KnotPoint;
       if (hit) {
         latestPoint = hit;
       } else {
-        pointsMutations.addPoint(startPos);
-        latestPoint = startPos;
+        const startPoint = { x: startPos.x, y: startPos.y, curved: false };
+        pointsMutations.addPoint(startPoint);
+        latestPoint = startPoint;
       }
       const bounds = helpers.xBoundsFor(accessor.getPoints(), latestPoint);
 
@@ -176,8 +183,9 @@ function createEditInputActions(accessor: StorePointsAccessor) {
               y: normPos.y,
             };
           });
-          pointsMutations.replacePoint(latestPoint, pos);
-          latestPoint = pos;
+          const newPoint = { x: pos.x, y: pos.y, curved: latestPoint.curved };
+          pointsMutations.replacePoint(latestPoint, newPoint);
+          latestPoint = newPoint;
         },
         onTap() {
           //toggle knot kind of the point
@@ -216,11 +224,11 @@ const MultiPointsEditor = ({ accessor }: { accessor: StorePointsAccessor }) => {
   );
 };
 
-const defaultPoints: Point[] = [
-  { x: 0, y: 0 },
-  { x: 1, y: 1 },
+const defaultPoints: KnotPoint[] = [
+  { x: 0, y: 0, curved: false },
+  { x: 1, y: 1, curved: false },
 ];
-const store = createStore<{ points: Point[] }>({ points: defaultPoints });
+const store = createStore<{ points: KnotPoint[] }>({ points: defaultPoints });
 
 const App = () => {
   const accessor = useMemo(() => {
