@@ -91,10 +91,7 @@ const WindowControlButton = ({
     <button
       type="button"
       className={cz("cursor-pointer w-28px h-36px flex-c")}
-      onPointerDown={(e) => {
-        onClick();
-        e.stopPropagation();
-      }}
+      onClick={onClick}
     >
       <div className={cz("w-16px h-16px rounded-full bg-white/50 flex-c")}>
         <IConComponent size={iconSize} />
@@ -130,7 +127,7 @@ const TopBar = ({
         windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
       }
     >
-      <div className="flex-ha gap-2">
+      <div className="flex-ha gap-2" onPointerDown={(e) => e.stopPropagation()}>
         <div
           className={cz(
             "flex-ha",

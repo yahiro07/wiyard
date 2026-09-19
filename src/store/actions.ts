@@ -345,4 +345,7 @@ export const actions = {
   setWireGain(wireConnectionKey: string, value: number) {
     store.patchWireGains({ [wireConnectionKey]: value });
   },
+  toggleSoloPlayback(unitId: string) {
+    store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
+  },
 };
