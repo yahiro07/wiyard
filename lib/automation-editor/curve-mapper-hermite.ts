@@ -39,7 +39,7 @@ export function curveMapperHermite_buildSegments(
     const m0 = outgoingSlope(i - 1);
     const m1 = incomingSlope(i);
     segments.push({
-      type: "curve",
+      type: "bezier",
       points: [
         a,
         { x: a.x + dx / 3, y: a.y + (m0 * dx) / 3 },

@@ -8,4 +8,5 @@ export type KnotPoint = {
 
 export type CurveSegment =
   | { type: "line"; points: [Point, Point] }
-  | { type: "curve"; points: [Point, Point, Point, Point] };
+  | { type: "curve"; points: [Point, Point, Point, Point] }
+  | { type: "quadratic"; points: [Point, Point, Point] };

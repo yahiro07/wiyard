@@ -6,7 +6,7 @@ import { createDragSessionEx } from "@lib/utils/drag-session";
 import { resultOf } from "@lib/utils/general-helper";
 import { clampValue, mapUnaryTo } from "@lib/utils/number-helper";
 import { CurveSegment, KnotPoint } from "./types";
-import { curveMapperHermite_buildSegments } from "./curve-mapper-hermite";
+import { curveMapperQuadratic_buildSegments } from "./curve-mapper-quadratic";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
@@ -60,19 +60,24 @@ const knotHelpers = {
     })) as CurveSegment[];
   },
   mapPolyPointsToSegments(points: KnotPoint[]): CurveSegment[] {
-    return curveMapperHermite_buildSegments(points);
+    // return curveMapperHermite_buildSegments(points);
+    return curveMapperQuadratic_buildSegments(points, "innerFit");
+    // return curveMapperQuadratic_buildSegments(points, "outerFit");
   },
   mapSegmentsToPath(segments: CurveSegment[]): string {
     const first = segments[0];
     if (!first) return "";
     const cmds = [`M ${first.points[0].x},${first.points[0].y}`];
     for (const segment of segments) {
-      if (segment.type === "line") {
-        const [, p1] = segment.points;
-        cmds.push(`L ${p1.x},${p1.y}`);
-      } else {
+      if (segment.type === "bezier") {
         const [, c1, c2, p1] = segment.points;
         cmds.push(`C ${c1.x},${c1.y} ${c2.x},${c2.y} ${p1.x},${p1.y}`);
+      } else if (segment.type === "quadratic") {
+        const [, c1, p1] = segment.points;
+        cmds.push(`Q ${c1.x},${c1.y} ${p1.x},${p1.y}`);
+      } else if (segment.type === "line") {
+        const [, p1] = segment.points;
+        cmds.push(`L ${p1.x},${p1.y}`);
       }
     }
     return cmds.join(" ");
@@ -193,7 +198,7 @@ function createEditInputActions(accessor: StorePointsAccessor) {
       const hit = helpers.hitTestPoint(
         accessor.getPoints(),
         startPos,
-        viewSpace.hitRadii(8),
+        viewSpace.hitRadii(10),
       );
 
       const editMode = hit ? "edit" : "create";
