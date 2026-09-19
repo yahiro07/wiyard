@@ -20,13 +20,13 @@ const PageRootUnitsDev = () => {
           unitTemplateFn={createKeyboardUnit}
         />
       )}
-      {false && (
+      {true && (
         <ReactUnitFrame
           unitId="automationEditorDev"
           unitTemplateFn={createAutomationEditorUnit}
         />
       )}
-      {true && (
+      {false && (
         <ReactUnitFrame
           unitId="controlSurfaceDev"
           unitTemplateFn={createControlSurfaceUnit}
