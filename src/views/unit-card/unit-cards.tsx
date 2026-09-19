@@ -11,6 +11,7 @@ import {
   UnitCardOperationOverlay,
   EdgeUnitCardView,
 } from "@/views/unit-card/unit-cards-common";
+import { ControlSurfaceUnitCardRoot } from "@/views/unit-card/control-surface-unit-card";
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const { menuTargetUnitId } = store.useSnapshot();
@@ -110,6 +111,7 @@ export const UnitCardsRoot = () => {
         <UnitCardRoot key={item.unitId} unitItem={item} />
       ))}
       <AutomationEditorUnitCardRoot />
+      <ControlSurfaceUnitCardRoot />
     </>
   );
 };

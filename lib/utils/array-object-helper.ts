@@ -51,3 +51,13 @@ export function mapObjectValues<T, R>(
 export function typedAssign<T extends object>(target: T, attrs: Partial<T>) {
   return Object.assign(target, attrs);
 }
+
+export function stripUndefined<T extends object>(obj: T): T {
+  const hasUndefinedValue = Object.values(obj).some((it) => it === undefined);
+  if (hasUndefinedValue) {
+    return Object.fromEntries(
+      Object.entries(obj).filter((it) => it[1] !== undefined),
+    ) as T;
+  }
+  return obj;
+}

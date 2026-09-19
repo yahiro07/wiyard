@@ -7,6 +7,8 @@ import { raiseProjectLoadingError } from "@/project/project-error";
 import { ProjectData } from "@/project/project-types";
 import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
+import { hostSystem } from "@/domain/host-system-instance";
+import { builtinUnitIds } from "@/domain/unit-entries";
 
 type AppSessionStates = {
   midiInEnabled: boolean;
@@ -17,6 +19,7 @@ type AppSessionStates = {
 type PersistenceData = {
   projectData: ProjectData;
   sessionStates: AppSessionStates;
+  controlSurfaceState: Record<string, any> | null;
 };
 
 const helpers = {
@@ -33,7 +36,11 @@ export const appPersistence = {
   emitPersistenceData(): PersistenceData {
     const projectData = projectDataIo.emitProjectData();
     const sessionStates = helpers.pickSessionStates(store.state);
-    return { projectData, sessionStates };
+    const controlSurfaceState =
+      hostSystem.sendMessageToUnit(builtinUnitIds.controlSurface, {
+        type: "emitSessionState",
+      }) ?? null;
+    return { projectData, sessionStates, controlSurfaceState };
   },
   save(data: PersistenceData) {
     try {
@@ -48,15 +55,31 @@ export const appPersistence = {
     const url = new URLSearchParams(location.search);
     const urlDataText = url.get("data");
 
+    const wrapApplyProjectData = async (
+      projectData: ProjectData,
+      controlSurfaceState: Record<string, any> | null,
+    ) => {
+      await projectDataIo.applyProjectData(projectData);
+      if (controlSurfaceState) {
+        hostSystem.sendMessageToUnit(builtinUnitIds.controlSurface, {
+          type: "applySessionState",
+          state: controlSurfaceState,
+        });
+      }
+    };
+
     if (urlDataText) {
       try {
         const storageText = localStorage.getItem("wireboard-states");
+        let controlSurfaceState: Record<string, any> | null = null;
         if (storageText) {
           const data = tryParseJsonOrNull<PersistenceData>(storageText);
           if (data) {
             store.assign(helpers.pickSessionStates(data.sessionStates));
+            controlSurfaceState = data.controlSurfaceState;
           }
         }
+
         const inputProjectData =
           sharedUrlSupport.loadSharedUrlData(urlDataText);
         if (inputProjectData.pageDeployId !== appEnvs.cfPagesDeployId) {
@@ -65,7 +88,10 @@ export const appPersistence = {
           //since the migration logic could not be perfect
         }
         const projectData = migrateProjectData(inputProjectData);
-        void projectDataIo.applyProjectData(projectData);
+
+        //this floating promise is out of the scope of try-catch block
+        //error occurred in each unit is notified to the mount point component
+        void wrapApplyProjectData(projectData, controlSurfaceState);
       } catch (error: any) {
         //fatal
         console.warn(error);
@@ -78,11 +104,15 @@ export const appPersistence = {
     } else {
       try {
         const text = localStorage.getItem("wireboard-states");
+        let controlSurfaceState: Record<string, any> | null = null;
+
         if (text) {
           const data = tryParseJson<PersistenceData>(text, () =>
             raiseProjectLoadingError(`failed to parse persistence data json`),
           );
           store.assign(helpers.pickSessionStates(data.sessionStates));
+          controlSurfaceState = data.controlSurfaceState;
+
           const inputProjectData = data.projectData;
           if (inputProjectData.pageDeployId !== appEnvs.cfPagesDeployId) {
             //todo: consider adding version selection phase
@@ -90,7 +120,11 @@ export const appPersistence = {
             //since the migration logic could not be perfect
           }
           const projectData = migrateProjectData(data.projectData);
-          void projectDataIo.applyProjectData(projectData);
+
+          //this floating promise is out of the scope of try-catch block
+          //error occurred in each unit is notified to the mount point component
+          void wrapApplyProjectData(projectData, controlSurfaceState);
+
           store.setAutoPersistenceEnabled(true);
         } else {
           store.setAutoPersistenceEnabled(true);

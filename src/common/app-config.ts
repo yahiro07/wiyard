@@ -22,4 +22,5 @@ if (appEnvs.isDevelopment) {
 
 export const appConfig = {
   supportAutomationPorts: true,
+  showAutomationTargetParameterSelectionMenuOnConnection: false,
 };

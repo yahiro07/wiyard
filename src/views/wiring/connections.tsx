@@ -3,8 +3,8 @@ import { Connection } from "wafer-host/react";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { Fragment } from "react";
-import { kKeyboardUnitId } from "@/domain/unit-entries";
 import { connectionsPresenter } from "@/views/wiring/connections-presenter";
+import { builtinUnitIds } from "@/domain/unit-entries";
 
 const InternalSequencerConnections = () => {
   const internalSequencerConnectionSpecs =
@@ -57,7 +57,7 @@ export const UnitConnectionsRoot = () => {
       <InternalSequencerConnections />
       <BoardItemConnections />
       <Connection
-        source={`${kKeyboardUnitId}.noteOutput`}
+        source={`${builtinUnitIds.keyboard}.noteOutput`}
         destination={`${currentSequencerUnitId}.noteInput`}
       />
       <Connection source="speakerPort.audioOutput" destination="$output" />

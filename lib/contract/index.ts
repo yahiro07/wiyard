@@ -24,7 +24,28 @@ export type KeyName =
   | "A#m"
   | "Bm";
 
-export type MessageFromUnit = {
-  type: "setKeyName";
-  keyName: KeyName;
-};
+export type MessageFromUnit =
+  | { type: "setKeyName"; keyName: KeyName }
+  | {
+      type: "setAutomationOutputPortsOptInFlags";
+      flags: Record<string, boolean>;
+    };
+
+export type MessageToUnit =
+  | {
+      type: "controlChange";
+      controlNumber: number;
+      value: number; //0~127
+    }
+  | {
+      type: "setDestinationParameterPaths";
+      destinationParameterPaths: Record<string, string[]>;
+    }
+  | {
+      type: "emitSessionState";
+      //returning Record<string, any>;
+    }
+  | {
+      type: "applySessionState";
+      state: Record<string, any>;
+    };

@@ -5,6 +5,7 @@ import {
 } from "wafer-host/core";
 import { appConfig } from "@/common/app-config";
 import { UnitStuff } from "@/domain/types";
+import { builtinUnitIds } from "@/domain/unit-entries";
 
 const subtypeOrder = ["audio", "note", "automation"];
 
@@ -42,10 +43,18 @@ export function buildUnitStuffLoaded(unitInstance: HsUnitInstance): UnitStuff {
   const automationPort = unitInstance.automationInput;
   const automationParameterSpecs = automationPort?.getParameterSpecs();
 
+  let outputPortsOptInFlags: Record<string, boolean> | undefined;
+  if (unitId === builtinUnitIds.controlSurface) {
+    outputPortsOptInFlags = Object.fromEntries(
+      outputPortSpecs.map((p) => [p.id, false]),
+    );
+  }
+
   return {
     status: "loaded",
     inputPortSpecs,
     outputPortSpecs,
     automationParameterSpecs,
+    outputPortsOptInFlags,
   };
 }

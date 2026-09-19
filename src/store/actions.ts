@@ -1,15 +1,20 @@
 import { KeyName } from "@lib/contract";
-import { setOrDeleteValue } from "@lib/utils/array-object-helper";
-import { Point } from "@lib/utils/common-types";
+import {
+  stripUndefined,
+  setOrDeleteValue,
+} from "@lib/utils/array-object-helper";
+import { Point, Size } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
 import { boardSize, getDeskAreaElement } from "@/common/constants";
 import {
+  decodeWireConnectionKey,
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
 } from "@/domain/port-helpers";
 import {
   AutomationEditorUnitItem,
   BoardUnitItem,
+  ControlSurfaceUnitItem,
   NoteInputPortUnitItem,
   PortStuff,
   UnitAddingItem,
@@ -20,24 +25,20 @@ import { CatalogKey } from "@/domain/unit-entries";
 import { unitIdHelper } from "@/domain/unit-id-helper";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
-import { resultOf } from "@lib/utils/general-helper";
 import { commonGetters } from "@/store/common-getters";
-
-const unitWindowInitialSizes = {
-  sequencerWindow: { width: 1000, height: 600 },
-  keyboardWindow: { width: 480, height: 154 },
-  automationEditorWindow: { width: 900, height: 220 },
-  general: {
-    targetHeight: 280,
-  },
-};
+import { builtinAppItems } from "@/domain/builtin-app-entries";
+import { appConfig } from "@/common/app-config";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
     const viewSize = store.state.unitStuffs[windowId]?.viewSize;
     if (viewSize) {
-      const { targetHeight } = unitWindowInitialSizes.general;
-      const scale = targetHeight / viewSize.height;
+      const baseHeight = 220;
+      const maxWidth = 440;
+      let scale = Math.min(baseHeight / viewSize.height);
+      if (viewSize.width * scale > maxWidth) {
+        scale = maxWidth / viewSize.width;
+      }
       return {
         width: viewSize.width * scale,
         height: viewSize.height * scale,
@@ -46,41 +47,45 @@ const helpers = {
       return { width: 300, height: 200 };
     }
   },
-  createInitialWIndowSpec(
+  getInitialWindowSpecAttrs(windowId: string): {
+    contentSize: Size;
+    pinned?: boolean;
+    freeRatio?: boolean;
+  } {
+    const appItem = builtinAppItems.find((item) => item.windowId === windowId);
+    if (appItem) {
+      return {
+        contentSize: appItem.windowInitialSize,
+        freeRatio: appItem.windowFreeRatio,
+        pinned: true,
+      };
+    } else {
+      return { contentSize: helpers.getGeneralUnitInitialSize(windowId) };
+    }
+  },
+  createInitialWindowSpec(
     windowId: string,
     status: WindowStatus,
     deskAreaRect: DOMRect,
   ) {
-    const isSequencer = windowId === windowIds.sequencer;
-    const isKeyboard = windowId === windowIds.keyboard;
-    const isAutomationEditor = windowId === windowIds.automationEditor;
-
     let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
-    let contentSize = resultOf(() => {
-      if (isSequencer) {
-        return unitWindowInitialSizes.sequencerWindow;
-      } else if (isKeyboard) {
-        return unitWindowInitialSizes.keyboardWindow;
-      } else if (isAutomationEditor) {
-        return unitWindowInitialSizes.automationEditorWindow;
-      } else {
-        return helpers.getGeneralUnitInitialSize(windowId);
-      }
-    });
+    const { contentSize, freeRatio, pinned } =
+      helpers.getInitialWindowSpecAttrs(windowId);
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
     const newWindowSpec: WindowSpec = {
       position,
       contentSize,
       status,
-      ...(isSequencer ? { freeRatio: true, pinned: true } : {}),
-      ...(isKeyboard ? { pinned: true } : {}),
-      ...(isAutomationEditor ? { freeRatio: true, pinned: true } : {}),
+      ...stripUndefined({ freeRatio, pinned }),
     };
     return newWindowSpec;
   },
   _getNextPortCardPosition() {
     const items = store.state.unitItems.filter(
-      (it) => it.type === "noteInput" || it.type === "automationEditor",
+      (it) =>
+        it.type === "noteInput" ||
+        it.type === "automationEditor" ||
+        it.type === "controlSurface",
     );
     const lastItem = items.at(-1);
     return lastItem
@@ -101,6 +106,13 @@ const helpers = {
     );
     const cardPosition = helpers._getNextPortCardPosition();
     return { type: "automationEditor", unitId, cardPosition };
+  },
+  createControlSurfaceUnit(): ControlSurfaceUnitItem {
+    return {
+      type: "controlSurface",
+      unitId: "controlSurface",
+      cardPosition: helpers._getNextPortCardPosition(),
+    };
   },
 };
 
@@ -138,15 +150,31 @@ export const actions = {
     if (!exists) {
       const deskArea = getDeskAreaElement();
       const deskAreaRect = deskArea.getBoundingClientRect();
-      const windowSpec = helpers.createInitialWIndowSpec(
+      const windowSpec = helpers.createInitialWindowSpec(
         windowId,
         status,
         deskAreaRect,
       );
       windowSystem.add(windowId, windowSpec);
       windowSystem.setCurrentWindow(windowId);
+
+      if (windowId === windowIds.controlSurface) {
+        const csUnitItem = commonGetters.getControlSurfaceUnitItem();
+        if (!csUnitItem) {
+          const newUnit = helpers.createControlSurfaceUnit();
+          store.setUnitItems((prev) => [...prev, newUnit]);
+        }
+      }
     }
     windowSystem.setStatus(windowId, status);
+  },
+  setWindowContentSize(windowId: string, newSize: Size) {
+    store.patchWindowSpecs((prev) => ({
+      [windowId]: {
+        ...prev[windowId],
+        contentSize: newSize,
+      },
+    }));
   },
   setCurrentNoteChannelId(noteChannelId: string) {
     store.setCurrentNoteChannelId(noteChannelId);
@@ -177,7 +205,11 @@ export const actions = {
   setPreviewDestPosition(position: Point | null) {
     store.setPreviewDestPosition(position);
   },
-  toggleWire(sourcePortKey: string, destPortKey: string) {
+  toggleWire(
+    sourcePortKey: string,
+    destPortKey: string,
+    connectingByDrag?: boolean,
+  ) {
     const connectionKey = getForwardDirectionWireConnectionKey(
       sourcePortKey,
       destPortKey,
@@ -187,6 +219,17 @@ export const actions = {
       actionsInternal.removeWires([connectionKey]);
     } else {
       store.setWireConnectionKeys((prev) => [...prev, connectionKey]);
+
+      if (
+        connectingByDrag &&
+        appConfig.showAutomationTargetParameterSelectionMenuOnConnection
+      ) {
+        const { sourcePortKey } = decodeWireConnectionKey(connectionKey);
+        const portStuff = store.state.portStuffs[sourcePortKey];
+        if (portStuff.subtype === "automation") {
+          store.setConfigTargetWireKey(connectionKey);
+        }
+      }
     }
   },
   setUnitPickerVisible(visible: boolean) {

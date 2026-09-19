@@ -3,6 +3,7 @@ import { createPianoRollUnit } from "@lib/piano-roll";
 import { HostAppProvider, ReactUnitFrame } from "wafer-host/react";
 import { hostSystem } from "@/domain/host-system-instance";
 import { createAutomationEditorUnit } from "@lib/automation-editor";
+import { createControlSurfaceUnit } from "@lib/control-surface";
 
 const PageRootUnitsDev = () => {
   return (
@@ -19,10 +20,16 @@ const PageRootUnitsDev = () => {
           unitTemplateFn={createKeyboardUnit}
         />
       )}
-      {true && (
+      {false && (
         <ReactUnitFrame
           unitId="automationEditorDev"
           unitTemplateFn={createAutomationEditorUnit}
+        />
+      )}
+      {true && (
+        <ReactUnitFrame
+          unitId="controlSurfaceDev"
+          unitTemplateFn={createControlSurfaceUnit}
         />
       )}
     </div>

@@ -18,10 +18,15 @@ const AutomationSwitcherMenu = ({
   setParameterId: (id: string | null) => void;
   automationParameterSpecs: AutomationParameterSpec[];
 }) => {
+  const closeMenu = () => store.setConfigTargetWireKey(null);
+
+  const wrapSetParameterId = (id: string | null) => {
+    setParameterId(id);
+    closeMenu();
+  };
+
   const baseDivRef = useRef<HTMLDivElement>(null);
-  useHandleClickOutside(baseDivRef, () => {
-    store.setConfigTargetWireKey(null);
-  });
+  useHandleClickOutside(baseDivRef, closeMenu);
   return (
     <div ref={baseDivRef} className="flex-v bg-#777e p-2">
       <div
@@ -29,7 +34,7 @@ const AutomationSwitcherMenu = ({
           "cursor-pointer hover:bg-white/10",
           !currentParameterId && "!bg-#8af",
         )}
-        onClick={() => setParameterId(null)}
+        onClick={() => wrapSetParameterId(null)}
       >
         --
       </div>
@@ -40,7 +45,7 @@ const AutomationSwitcherMenu = ({
             "px-1 py-0.75 cursor-pointer hover:bg-white/10",
             spec.id === currentParameterId && "!bg-#8af",
           )}
-          onClick={() => setParameterId(spec.id)}
+          onClick={() => wrapSetParameterId(spec.id)}
         >
           {/* {i + 1}. */}
           {spec.id}

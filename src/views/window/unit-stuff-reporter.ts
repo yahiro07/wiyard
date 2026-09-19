@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 import { HsUnitInstance } from "wafer-host/core";
 import { buildUnitStuffLoaded } from "@/domain/unit-stuff-builder";
 import { actions } from "@/store/actions";
+import { store } from "@/store/store";
 
 export function useUnitStuffReporter(unitId: string) {
   const unsubscribeSizeRef = useRef<() => void>(null);
@@ -24,7 +25,8 @@ export function useUnitStuffReporter(unitId: string) {
 
       unsubscribeSizeRef.current = unitInstance.subscribeViewSize(
         (viewSize) => {
-          actions.setUnitStuff(unitId, { ...unitStuffLoaded, viewSize });
+          const latestUnitStuff = store.state.unitStuffs[unitId];
+          actions.setUnitStuff(unitId, { ...latestUnitStuff, viewSize });
         },
       );
     },
