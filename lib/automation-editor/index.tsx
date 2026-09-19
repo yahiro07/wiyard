@@ -195,7 +195,7 @@ function createEditInputActions(accessor: StorePointsAccessor) {
 
       const operations = {
         toggleCurved() {
-          if (editMode === "edit" && latestPoint !== store.state.points[0]) {
+          if (latestPoint !== store.state.points[0]) {
             const newPoint = { ...latestPoint, curved: !latestPoint.curved };
             pointsMutations.replacePoint(latestPoint, newPoint);
             latestPoint = newPoint;
