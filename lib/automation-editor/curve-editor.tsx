@@ -6,7 +6,10 @@ import { createDragSessionEx } from "@lib/utils/drag-session";
 import { resultOf } from "@lib/utils/general-helper";
 import { clampValue, mapUnaryTo } from "@lib/utils/number-helper";
 import { CurveSegment, KnotPoint } from "./types";
-import { curveMapperQuadratic_buildSegments } from "./curve-mapper-quadratic";
+import {
+  curveMapperQuadratic_buildSegments,
+  curveMapperQuadratic_ensureEndPoints,
+} from "./curve-mapper-quadratic";
 
 type StoreSetterFn<T> = (value: T | ((prev: T) => T)) => void;
 
@@ -14,30 +17,7 @@ type SetPointsFn = StoreSetterFn<KnotPoint[]>;
 
 const knotHelpers = {
   mapPointsDisplayLayerPoints(points: KnotPoint[]) {
-    const polyPoints = resultOf(() => {
-      //add end points at x=0 and x=1
-      const firstP = points.at(0);
-      const lastP = points.at(-1);
-      const noOp =
-        !firstP ||
-        !lastP ||
-        (firstP &&
-          lastP &&
-          lastP !== firstP &&
-          firstP.x < 0.01 &&
-          lastP.x > 0.99);
-      if (noOp) return points;
-
-      const newPoints = [...points];
-      if (firstP.x > 0.01) {
-        newPoints.unshift({ x: 0, y: firstP.y, curved: false });
-      }
-      if (lastP.x < 0.99) {
-        newPoints.push({ x: 1, y: lastP.y, curved: false });
-      }
-      return newPoints;
-    });
-    return polyPoints;
+    return curveMapperQuadratic_ensureEndPoints(points);
   },
   mapCoord(p: Point, areaSize: Size, paddingY: number): Point {
     const y0 = paddingY;
