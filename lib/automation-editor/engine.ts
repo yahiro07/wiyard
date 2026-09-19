@@ -1,6 +1,6 @@
 import { ClockHandlers, UnitInterface } from "wafer-host/unit-types";
 import { KnotPoint, LoopBars } from "./types";
-import { curveMapperQuadraticPointSample_getCurveValueAt } from "./curve-mapper-quadratic-point-sample";
+import { curveMapperQuadraticPointSampleA_getCurveValueAt } from "./curve-mapper-quadratic-point-sample-a";
 
 type AutomationEngine = {
   setPoints(points: KnotPoint[]): void;
@@ -9,7 +9,7 @@ type AutomationEngine = {
 };
 
 function getCurveValue(points: KnotPoint[], pos: number): number {
-  return curveMapperQuadraticPointSample_getCurveValueAt(points, pos);
+  return curveMapperQuadraticPointSampleA_getCurveValueAt(points, pos);
 }
 
 export function createAutomationEngine(

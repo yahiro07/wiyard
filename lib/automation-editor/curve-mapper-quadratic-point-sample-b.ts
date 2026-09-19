@@ -100,7 +100,7 @@ function quadraticYAtX(p0: Point, p1: Point, p2: Point, pos: number): number {
   return bezier2(p0.y, p1.y, p2.y, t);
 }
 
-export function curveMapperQuadraticPointSample_getCurveValueAt(
+export function curveMapperQuadraticPointSampleB_getCurveValueAt(
   points: KnotPoint[],
   pos: number,
 ): number {
