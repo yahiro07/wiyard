@@ -1,5 +1,5 @@
-import { catalog } from "@/domain/unit-entries";
+import { allCatalogItems } from "@/domain/unit-entries";
 
-export const showcaseEntries = Object.values(catalog).filter(
+export const showcaseEntries = allCatalogItems.filter(
   (item) => item.catalogKey !== "fluoritePianoRoll",
 );

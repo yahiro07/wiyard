@@ -10,7 +10,17 @@
     "noEmit": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@lib/window-system": ["./lib/window-system/index.ts"],
+      "@lib/piano-roll": ["./lib/piano-roll/index.tsx"],
+      "@lib/utils/*": ["./lib/utils/*"],
+      "@lib/port-units": ["./lib/port-units/index.ts"],
+      "@lib/keyboard": ["./lib/keyboard/index.tsx"],
+      "@lib/contract": ["./lib/contract/index.ts"],
+      "@lib/components/*": ["./lib/components/*"],
+      "@lib/automation-editor": ["./lib/automation-editor/index.tsx"],
+      "@lib/control-surface": ["./lib/control-surface/index.tsx"],
+      "@lib/wafer-ex": ["./lib/wafer-ex/index.ts"]
     }
   },
   "include": ["src"]

@@ -6,7 +6,7 @@ if (1) {
 }
 
 export const uiColors = {
-  destAreaBg: "#6a7282",
+  deskAreaBg: "#6a7282",
   // destAreaBg: "#4a5565",
 };
 

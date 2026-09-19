@@ -10,10 +10,10 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
     return [
       `${waferUnitsBase}/fluorite-piano-roll/`,
       //
+      `${waferUnitsBase}/graphite-drum-machine/`,
+
       `${waferCustomUnitsBase}/js808/`,
       `${waferCustomUnitsBase}/webaudio-tinysynth-mini/`,
-      `${waferUnitsBase}/sunset-delay/`,
-      `${waferUnitsBase}/graphite-drum-machine/`,
       `${waferCustomUnitsBase}/super-oscillator/`,
       `${waferCustomUnitsBase}/midi-synth/`,
       `${waferCustomUnitsBase}/webaudio-synth-v2/`,
@@ -28,6 +28,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferCustomUnitsBase}/web-audio-mixer/`,
       `${waferCustomUnitsBase}/vue-audio-mixer/`,
 
+      `${waferUnitsBase}/sunset-delay/`,
       `${waferUnitsBase}/sunset-chorus-mini/`,
       `${waferUnitsBase}/lofi2/`,
       `${waferCustomUnitsBase}/darkwave/`,
@@ -40,27 +41,38 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
     const waferUnitsLocalDistDir = toAbsolutePath("../../wafer-units/dist");
     const waferCustomUnitsLocalDir = toAbsolutePath("../../wafer-custom-units");
     return [
+      `file://${waferUnitsLocalDistDir}/fluorite-piano-roll/`,
+      //
+      `file://${waferUnitsLocalDistDir}/graphite-drum-machine/`,
+      `file://${waferUnitsLocalDistDir}/techno-beat-machine/`,
+      `file://${waferCustomUnitsLocalDir}/ts/dist/js808/`,
+      `file://${waferCustomUnitsLocalDir}/js/shiny-drum-machine/`,
+      `file://${waferUnitsLocalDistDir}/bs03/`,
+
       `file://${waferCustomUnitsLocalDir}/js/webaudio-tinysynth-mini/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/super-oscillator/`,
       `file://${waferCustomUnitsLocalDir}/js/midi-synth/`,
       `file://${waferCustomUnitsLocalDir}/js/webaudio-synth-v2/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/js808/`,
-      `file://${waferCustomUnitsLocalDir}/js/shiny-drum-machine/`,
+      `file://${waferCustomUnitsLocalDir}/ts/dist/react-synth/`,
+      `file://${waferCustomUnitsLocalDir}/ts/dist/poly-synth/`,
+      `file://${waferCustomUnitsLocalDir}/ts/dist/model-1/`,
+      `file://${waferUnitsLocalDistDir}/sirius/`,
+      `file://${waferUnitsLocalDistDir}/luna/`,
+      `file://${waferUnitsLocalDistDir}/altair-xm/`,
 
-      `file://${waferUnitsLocalDistDir}/fluorite-piano-roll/`,
+      `file://${waferUnitsLocalDistDir}/multi-lfo/`,
+      `file://${waferUnitsLocalDistDir}/step-automator/`,
 
-      `file://${waferCustomUnitsLocalDir}/js/web-audio-mixer/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/vue-audio-mixer/`,
-
-      `file://${waferCustomUnitsLocalDir}/ts/dist/beatmaker/`,
+      `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
       `file://${waferUnitsLocalDistDir}/sunset-chorus-mini/`,
       `file://${waferUnitsLocalDistDir}/lofi2/`,
       `file://${waferCustomUnitsLocalDir}/js/darkwave/`,
 
-      `file://${waferCustomUnitsLocalDir}/ts/dist/react-synth/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/poly-synth/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/model-1/`,
+      `file://${waferCustomUnitsLocalDir}/js/web-audio-mixer/`,
+      `file://${waferCustomUnitsLocalDir}/ts/dist/vue-audio-mixer/`,
+      // `file://${waferCustomUnitsLocalDir}/webaudio-spectrum/`,
+      `file://${waferUnitsLocalDistDir}/waveform-checker/`,
     ];
   }
 }

@@ -1,34 +1,69 @@
-import { IconType } from "react-icons";
+import { createPianoRollUnit } from "@lib/piano-roll";
+import {
+  createNoteInputPortUnit,
+  createSpeakerPortUnit,
+} from "@lib/port-units";
 import { ReactUnitTemplateFn } from "wafer-host/react";
 import { UnitInventorySpec } from "wafer-host/vite-plugin";
 import { Icons } from "@/common/icons";
-import { createNoteInputPortUnit } from "@/units/note-input-port";
-import { createSpeakerPortUnit } from "@/units/speaker-port";
 import unitInventories from "../unit-inventories.json";
+import { createKeyboardUnit } from "@lib/keyboard";
+import { createAutomationEditorUnit } from "@lib/automation-editor";
+import { createControlSurfaceUnit } from "@lib/control-surface";
 
 export type CatalogKey = keyof typeof unitInventories;
 
-const catalog = unitInventories as Record<
-  CatalogKey,
-  UnitInventorySpec & { catalogKey: CatalogKey }
->;
+type CatalogItem = UnitInventorySpec & { catalogKey: CatalogKey };
 
-export { catalog };
+const catalog = unitInventories as Record<CatalogKey, CatalogItem>;
 
-type InternalUnitSpec = {
-  factory: ReactUnitTemplateFn;
-  iconComponent: IconType;
+export const allCatalogItems = Object.values(catalog);
+
+export function getCatalogItem(
+  catalogKey: CatalogKey,
+): CatalogItem | undefined {
+  return catalog[catalogKey];
+}
+
+const fallbackCatalogItem = {
+  name: "Unknown Unit",
+  thumbnailUrl: "/assets/unknown-unit.png",
+};
+export function getCatalogItemWithFallback(catalogKey: CatalogKey): {
+  name: string;
+  thumbnailUrl?: string;
+} {
+  return catalog[catalogKey] ?? fallbackCatalogItem;
+}
+
+export type InternalUnitKey =
+  | "speakerPort"
+  | "noteInputPort"
+  | "pianoRoll"
+  | "keyboard"
+  | "automationEditor"
+  | "controlSurface";
+
+export const interUnitFactories: Record<InternalUnitKey, ReactUnitTemplateFn> =
+  {
+    speakerPort: createSpeakerPortUnit,
+    noteInputPort: createNoteInputPortUnit,
+    pianoRoll: createPianoRollUnit,
+    keyboard: createKeyboardUnit,
+    automationEditor: createAutomationEditorUnit,
+    controlSurface: createControlSurfaceUnit,
+  };
+
+export const internalUnitCardIcons = {
+  speakerPort: Icons.ArrowRightToBracket,
+  noteInputPort: Icons.ArrowRightFromBracket,
+  automationChannel: Icons.ArrowRightFromBracket,
+  controlSurface: Icons.DirectionRight,
 };
 
-export const internalUnitSpecs = {
-  speakerPort: {
-    factory: createSpeakerPortUnit,
-    iconComponent: Icons.ArrowRightToBracket,
-  },
-  noteInputPort: {
-    factory: createNoteInputPortUnit,
-    iconComponent: Icons.ArrowRightFromBracket,
-  },
-} satisfies Record<string, InternalUnitSpec>;
+export type UnitClassKey = CatalogKey | InternalUnitKey;
 
-export type InternalUnitKey = keyof typeof internalUnitSpecs;
+export const builtinUnitIds = {
+  keyboard: "keyboard",
+  controlSurface: "controlSurface",
+};

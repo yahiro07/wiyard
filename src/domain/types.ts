@@ -1,38 +1,57 @@
+import { Point, Size } from "@lib/utils/common-types";
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
-import { Point } from "@/domain/common-types";
-import { CatalogKey, InternalUnitKey } from "@/domain/unit-entries";
+import { CatalogKey, UnitClassKey } from "@/domain/unit-entries";
+import { AutomationParameterSpec } from "wafer-host/unit-types";
 
-//instrument and effects, placed on board area
 export type BoardUnitItem = {
   type: "board";
   unitId: string;
   catalogKey: CatalogKey;
   cardPosition: Point;
-  windowPosition: Point;
 };
 
-//note input port and speaker output port, used for input/output of the board area
-export type EdgeUnitItem = {
-  type: "edge";
+export type NoteInputPortUnitItem = {
+  type: "noteInput";
   unitId: string;
-  noteChannelId: string;
-  internalUnitKey: InternalUnitKey;
+  sequencerClassKey: UnitClassKey;
   cardPosition: Point;
-  windowPosition: Point;
 };
 
-//units placed on board area
-export type StageUnitItem = BoardUnitItem | EdgeUnitItem;
-
-//sequencer units, internally managed and not displayed on the board
-export type OffStageUnitItem = {
-  type: "offStage";
+export type SpeakerPortUnitItem = {
+  type: "speaker";
   unitId: string;
-  noteChannelId: string;
-  catalogKey: CatalogKey;
+  cardPosition: Point;
 };
 
-export type UnitItem = BoardUnitItem | EdgeUnitItem | OffStageUnitItem;
+export type AutomationEditorUnitItem = {
+  type: "automationEditor";
+  unitId: string;
+  //first unit card represents multiple automation editor and show their all ports
+  cardPosition: Point;
+};
+
+export type ControlSurfaceUnitItem = {
+  type: "controlSurface";
+  unitId: string;
+  cardPosition: Point;
+};
+
+export type UnitItem =
+  | BoardUnitItem
+  | NoteInputPortUnitItem
+  | SpeakerPortUnitItem
+  | AutomationEditorUnitItem
+  | ControlSurfaceUnitItem;
+
+export const windowIds = {
+  pianoRoll: "pianoRollWIndow",
+  keyboard: "keyboardWindow",
+  automationEditor: "automationEditorWindow",
+  controlSurface: "controlSurfaceWindow",
+};
+
+//unitId for board units, or value of windowIds for builtin app units
+export type WindowId = string;
 
 export type UnitPortSpec = {
   direction: HsPortDirection;
@@ -46,6 +65,9 @@ export type UnitStuff = {
   status: "loading" | "loaded" | "error";
   inputPortSpecs?: UnitPortSpec[];
   outputPortSpecs?: UnitPortSpec[];
+  viewSize?: Size;
+  automationParameterSpecs?: AutomationParameterSpec[];
+  outputPortsOptInFlags?: Record<string, boolean>;
 };
 
 export type PortStuff = {
@@ -59,14 +81,4 @@ export type PortStuff = {
 export type UnitAddingItem = {
   catalogKey: CatalogKey;
   position: Point;
-};
-
-//derived item types, not hold in store
-
-export type WireStuff = {
-  connectionKey: string; //${sourcePortKey}-${destinationPortKey}
-  sourcePortKey: string;
-  destinationPortKey: string;
-  sourceUnitId: string;
-  destinationUnitId: string;
 };
