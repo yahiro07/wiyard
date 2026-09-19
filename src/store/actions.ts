@@ -7,6 +7,7 @@ import { Point, Size } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
 import { boardSize, getDeskAreaElement } from "@/common/constants";
 import {
+  decodeWireConnectionKey,
   filterUnitRelatedWires,
   getForwardDirectionWireConnectionKey,
 } from "@/domain/port-helpers";
@@ -213,6 +214,11 @@ export const actions = {
       actionsInternal.removeWires([connectionKey]);
     } else {
       store.setWireConnectionKeys((prev) => [...prev, connectionKey]);
+      const { sourcePortKey } = decodeWireConnectionKey(connectionKey);
+      const portStuff = store.state.portStuffs[sourcePortKey];
+      if (portStuff.subtype === "automation") {
+        store.setConfigTargetWireKey(connectionKey);
+      }
     }
   },
   setUnitPickerVisible(visible: boolean) {
