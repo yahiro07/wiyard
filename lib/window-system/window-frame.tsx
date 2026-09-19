@@ -64,7 +64,7 @@ const EvacuatedBar = ({
       <div
         className={cz(
           "flex-c cursor-pointer relative justify-end px-2",
-          "bg-gray-600/50 rounded-6px",
+          "bg-gray-500/50 rounded-6px",
           "h-28px",
         )}
         style={{ width: windowCoordVm.windowBounds.width }}
@@ -123,7 +123,7 @@ const TopBar = ({
     <div
       className={cz(
         "flex-c relative justify-between px-1.5",
-        isCurrent ? "bg-#68c/96" : "bg-gray-600/92",
+        isCurrent ? "bg-#68c/96" : "bg-gray-500/92",
       )}
       style={{ height: windowTitleBarHeight }}
       onPointerDown={(e) =>
