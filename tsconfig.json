@@ -19,7 +19,8 @@
       "@lib/contract": ["./lib/contract/index.ts"],
       "@lib/components/*": ["./lib/components/*"],
       "@lib/automation-editor": ["./lib/automation-editor/index.tsx"],
-      "@lib/control-surface": ["./lib/control-surface/index.tsx"]
+      "@lib/control-surface": ["./lib/control-surface/index.tsx"],
+      "@lib/wafer-ex": ["./lib/wafer-ex/index.ts"]
     }
   },
   "include": ["src"]

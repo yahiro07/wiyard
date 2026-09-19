@@ -1,6 +1,9 @@
-import { useEffect } from "react";
-import { HostAppProvider } from "wafer-host/react";
-import { hostSystem } from "@/domain/host-system-instance";
+import { useEffect, useMemo } from "react";
+import {
+  HostAppProvider,
+  useSequencerTickDriverRunner,
+} from "wafer-host/react";
+import { hostSystem, sequencerTickDriver } from "@/domain/host-system-instance";
 import { setupAutoPersistenceTask } from "@/periphery/auto-persistence-task";
 import { useMidiInputHandling } from "@/periphery/midi-input-handling";
 import { useSetupSongKeySupport } from "@/periphery/song-key-support";
@@ -10,6 +13,7 @@ import { PageRoot } from "@/views/desk/page-root";
 import { useSetupUnitPortMasking } from "@/periphery/unit-port-masking-support";
 import { ErrorBoundary } from "react-error-boundary";
 import { FallbackRender } from "@/periphery/fallback-render";
+import { mapKnobGainDb } from "@lib/utils/volume-curve";
 
 const EffectsHookBox = () => {
   useMidiInputHandling();
@@ -22,12 +26,18 @@ const EffectsHookBox = () => {
 
 const AppInner = () => {
   const { playing, bpm, masterVolume } = store.useSnapshot();
+  const masterGain = useMemo(
+    () => mapKnobGainDb(masterVolume, 0.5),
+    [masterVolume],
+  );
+  useSequencerTickDriverRunner({ sequencerTickDriver, playing, bpm });
   return (
     <HostAppProvider
       hostSystem={hostSystem}
       playing={playing}
       bpm={bpm}
-      masterGain={masterVolume}
+      masterGain={masterGain}
+      manualClocking
     >
       <PageRoot />
       <EffectsHookBox />
