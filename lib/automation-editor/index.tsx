@@ -108,11 +108,6 @@ function createPointsMutations(accessor: StorePointsAccessor) {
         prev.map((p) => (p === target ? po : p)).sort((a, b) => a.x - b.x),
       );
     },
-    toggleCurved(po: KnotPoint) {
-      accessor.setPoints((prev) =>
-        prev.map((p) => (p === po ? { ...p, curved: !p.curved } : p)),
-      );
-    },
     removePoint(po: KnotPoint) {
       accessor.setPoints((prev) => {
         return prev.filter((p) => p !== po);
@@ -186,6 +181,26 @@ function createEditInputActions(accessor: StorePointsAccessor) {
       }
       const bounds = helpers.xBoundsFor(accessor.getPoints(), latestPoint);
 
+      const operations = {
+        toggleCurved() {
+          if (editMode === "edit" && latestPoint !== store.state.points[0]) {
+            const newPoint = { ...latestPoint, curved: !latestPoint.curved };
+            pointsMutations.replacePoint(latestPoint, newPoint);
+            latestPoint = newPoint;
+          }
+        },
+        updatePosition(pos: Point) {
+          const newPoint = { x: pos.x, y: pos.y, curved: latestPoint.curved };
+          pointsMutations.replacePoint(latestPoint, newPoint);
+          latestPoint = newPoint;
+        },
+        remove() {
+          if (editMode === "edit") {
+            pointsMutations.removePoint(latestPoint);
+          }
+        },
+      };
+
       ds.run({
         onMove(inputPos) {
           const pos = resultOf(() => {
@@ -195,19 +210,13 @@ function createEditInputActions(accessor: StorePointsAccessor) {
               y: normPos.y,
             };
           });
-          const newPoint = { x: pos.x, y: pos.y, curved: latestPoint.curved };
-          pointsMutations.replacePoint(latestPoint, newPoint);
-          latestPoint = newPoint;
+          operations.updatePosition(pos);
         },
         onTap() {
-          if (latestPoint === store.state.points[0]) return;
-          //toggle knot kind of the point
-          pointsMutations.toggleCurved(latestPoint);
+          operations.remove();
         },
         onHold() {
-          if (editMode === "edit") {
-            pointsMutations.removePoint(latestPoint);
-          }
+          operations.toggleCurved();
         },
       });
     },
