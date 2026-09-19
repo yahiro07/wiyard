@@ -1,1 +1,1 @@
-export const windowTitleBarHeight = 34;
+export const windowTitleBarHeight = 32;

@@ -1,7 +1,7 @@
-import { FaWindowMinimize } from "react-icons/fa6";
-import { MdClose } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
+import { TbMinus } from "react-icons/tb";
 
 export const Icons = {
-  Minimize: FaWindowMinimize,
-  Close: MdClose,
+  Close: IoClose,
+  Minus: TbMinus,
 };

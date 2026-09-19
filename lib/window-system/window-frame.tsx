@@ -9,6 +9,7 @@ import {
   useWindowCoordViewModel,
   WindowCoordViewModel,
 } from "./window-view-models";
+import { IconType } from "react-icons";
 
 const ResizeAnchor = ({
   anchor,
@@ -63,7 +64,7 @@ const EvacuatedBar = ({
       <div
         className={cz(
           "flex-c cursor-pointer relative justify-end px-2",
-          "bg-gray-600/70",
+          "bg-gray-600/50 rounded-6px",
           "h-28px",
         )}
         style={{ width: windowCoordVm.windowBounds.width }}
@@ -74,6 +75,31 @@ const EvacuatedBar = ({
         <div className="absolute-full flex-c pointer-events-none">{title}</div>
       </div>
     </div>
+  );
+};
+
+const WindowControlButton = ({
+  onClick,
+  icon: IConComponent,
+  iconSize,
+}: {
+  onClick: () => void;
+  icon: IconType;
+  iconSize: number;
+}) => {
+  return (
+    <button
+      type="button"
+      className={cz("cursor-pointer w-28px h-36px flex-c")}
+      onPointerDown={(e) => {
+        onClick();
+        e.stopPropagation();
+      }}
+    >
+      <div className={cz("w-16px h-16px rounded-full bg-white/50 flex-c")}>
+        <IConComponent size={iconSize} />
+      </div>
+    </button>
   );
 };
 
@@ -96,7 +122,7 @@ const TopBar = ({
     // <div className="absolute w-full" style={{ top: -windowTitleBarHeight }}>
     <div
       className={cz(
-        "flex-c relative justify-between px-2",
+        "flex-c relative justify-between px-1.5",
         isCurrent ? "bg-#68c/96" : "bg-gray-600/92",
       )}
       style={{ height: windowTitleBarHeight }}
@@ -104,30 +130,27 @@ const TopBar = ({
         windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
       }
     >
-      {topBarInnerControls ?? <div />}
-      <div className={cz("flex-ha gap-2")}>
-        <button
-          type="button"
-          className="cursor-pointer"
-          onPointerDown={(e) => {
-            toggleMinimized?.();
-            e.stopPropagation();
-          }}
+      <div className="flex-ha gap-2">
+        <div
+          className={cz(
+            "flex-ha",
+            "[&>button>div>svg]:(opacity-0)",
+            "[&:hover>button>div>svg]:(opacity-100)",
+          )}
         >
-          <Icons.Minimize size={18} />
-        </button>
-        <button
-          type="button"
-          className="cursor-pointer"
-          onPointerDown={(e) => {
-            closeWindow();
-            e.stopPropagation();
-          }}
-        >
-          <Icons.Close size={24} />
-        </button>
+          <WindowControlButton
+            onClick={closeWindow}
+            icon={Icons.Close}
+            iconSize={14}
+          />
+          <WindowControlButton
+            onClick={toggleMinimized}
+            icon={Icons.Minus}
+            iconSize={14}
+          />
+        </div>
+        {topBarInnerControls}
       </div>
-
       <div className="absolute-full flex-c pointer-events-none font-500">
         {title}
       </div>
@@ -181,7 +204,7 @@ const WindowFrameView = ({
         }}
       >
         <div
-          className="relative"
+          className="relative rounded-6px overflow-hidden"
           style={{ width: windowBounds.width, height: windowBounds.height }}
           onPointerDown={(e) =>
             windowFrameHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
