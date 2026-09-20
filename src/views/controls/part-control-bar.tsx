@@ -8,7 +8,7 @@ import {
 } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
-import { store } from "@/store/store";
+import { store, windowSystem } from "@/store/store";
 import { PlaybackButton } from "@/views/controls/control-buttons";
 import { getSortOrder } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
@@ -65,6 +65,7 @@ type PartItem =
       solo: boolean;
       cardPosition: Point;
       channelActive: boolean;
+      destinationUnitId?: string;
       destinationUnitCatalogItem?: CatalogItemForDisplay;
     };
 
@@ -133,6 +134,7 @@ function usePartItems(): PartItem[] {
             solo: soloPlaybackUnitId === sequencerUnitId,
             cardPosition: item.cardPosition,
             channelActive: currentNoteChannelId === item.unitId,
+            destinationUnitId,
             destinationUnitCatalogItem,
           };
         }
@@ -152,9 +154,16 @@ const partItemHandlers = {
   onCardClick(partItem: PartItem) {
     if (partItem.type === "board") {
       actions.setWindowStatus(partItem.unitId, "visible");
+      windowSystem.setCurrentWindow(partItem.unitId);
     } else {
       actions.setWindowStatus(windowIds.pianoRoll, "visible");
       actions.setCurrentNoteChannelId(partItem.noteChannelId);
+      if (partItem.destinationUnitId) {
+        actions.setWindowStatus(partItem.destinationUnitId, "visible");
+        windowSystem.setCurrentWindow(partItem.destinationUnitId);
+      } else {
+        windowSystem.setCurrentWindow(windowIds.pianoRoll);
+      }
     }
   },
 };
