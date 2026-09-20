@@ -21,6 +21,7 @@ const IconButton = ({
         "text-#fff cursor-pointer hover:opacity-80",
         active && "!text-#0cf",
         (disabled || disabledDisplayOnly) && "!opacity-30",
+        disabled && "pointer-events-none",
       )}
       onClick={onClick}
       disabled={disabled}
@@ -48,13 +49,19 @@ export const windowTitleBarControlComponents = {
   },
   ClockActiveButton({
     active,
+    disabled,
     onClick,
   }: {
     active: boolean;
+    disabled?: boolean;
     onClick: () => void;
   }) {
     return (
-      <IconButton disabledDisplayOnly={!active} onClick={onClick}>
+      <IconButton
+        disabled={disabled}
+        disabledDisplayOnly={!active}
+        onClick={onClick}
+      >
         <Icons.Power size={16} />
       </IconButton>
     );

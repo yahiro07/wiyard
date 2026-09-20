@@ -129,7 +129,7 @@ const PianoRollPanel = () => {
 };
 
 export const PianoRollWindow = () => {
-  const { currentNoteChannelId, soloPlaybackUnitId, projectLoading } =
+  const { currentNoteChannelId, soloPlaybackUnitId, playing, projectLoading } =
     store.useSnapshot();
   const sequencerUnitId =
     notePortGetters.getSequencerUnitId(currentNoteChannelId);
@@ -140,7 +140,12 @@ export const PianoRollWindow = () => {
       topBarInnerControls={
         <windowTitleBarControlComponents.SoloPlaybackButton
           active={soloPlaybackUnitId === sequencerUnitId}
-          disabled={projectLoading}
+          disabled={
+            projectLoading ||
+            playing ||
+            (soloPlaybackUnitId !== null &&
+              soloPlaybackUnitId !== sequencerUnitId)
+          }
           onClick={() => {
             actions.toggleSoloPlayback(sequencerUnitId);
           }}
