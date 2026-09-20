@@ -18,7 +18,7 @@ const DockCleanupButton = ({
   return (
     <button
       type="button"
-      className={cz("cursor-pointer w-26px h-26px flex-c")}
+      className={cz("cursor-pointer p-1 hover:opacity-80")}
       style={{ transform: `rotate(${iconAngle}deg)` }}
       onClick={onClick}
     >
@@ -30,16 +30,16 @@ const DockCleanupButton = ({
 const DockCleanupButtons = () => {
   return (
     <div className="flex-ha">
-      <DockCleanupButton
+      {/* <DockCleanupButton
         onClick={actions.minimizeAll}
         icon={Icons.WindowMinimize}
         iconSize={16}
         iconAngle={-90}
-      />
+      /> */}
       <DockCleanupButton
         onClick={actions.closeAll}
         icon={Icons.Broom}
-        iconSize={16}
+        iconSize={20}
       />
     </div>
   );
