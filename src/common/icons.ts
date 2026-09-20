@@ -11,8 +11,8 @@ import { IoMdShare } from "react-icons/io";
 import { IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
 import { PiPianoKeysFill, PiTrash } from "react-icons/pi";
+import { RiFlashlightFill } from "react-icons/ri";
 import { TbAppsFilled } from "react-icons/tb";
-import { TiFlash } from "react-icons/ti";
 
 export const Icons = {
   ArrowRightFromBracket: FaArrowRightFromBracket,
@@ -31,5 +31,5 @@ export const Icons = {
   Apps: TbAppsFilled,
   Share: IoMdShare,
   Power: FaPowerOff,
-  Flash: TiFlash,
+  Flash: RiFlashlightFill,
 };

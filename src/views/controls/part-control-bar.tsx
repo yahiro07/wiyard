@@ -94,7 +94,7 @@ export const PartControlBarRoot = () => {
   const partItems = usePartItems();
   return (
     <>
-      <div className="absolute-left-center z-1 ml-74px">
+      <div className="absolute-left-center z-1 ml-2">
         <div className={cz("min-h-140px py-2 px-1 bg-#ccc flex-vc gap-3")}>
           <div className="flex-c">
             <PlaybackButton />
@@ -102,21 +102,23 @@ export const PartControlBarRoot = () => {
           <div className="flex-v gap-3">
             {partItems.map((item) => (
               <div key={item.unitId} className="flex-ha gap-1">
-                <div className="w-20px h-20px flex-c bg-#ddd text-sm">
+                <div className="w-40px h-40px flex-c bg-#ddd text-sm">
                   {item.label}
                 </div>
-                <IconButton
-                  icon={Icons.Power}
-                  size={16}
-                  active={item.clockingActive}
-                  onClick={() => actions.toggleUnitClockingFlag(item.unitId)}
-                />
-                <IconButton
-                  icon={Icons.Flash}
-                  size={16}
-                  active={item.solo}
-                  onClick={() => actions.toggleSoloPlayback(item.unitId)}
-                />
+                <div className="flex-v gap-1">
+                  <IconButton
+                    icon={Icons.Power}
+                    size={17}
+                    active={item.clockingActive}
+                    onClick={() => actions.toggleUnitClockingFlag(item.unitId)}
+                  />
+                  <IconButton
+                    icon={Icons.Flash}
+                    size={17}
+                    active={item.solo}
+                    onClick={() => actions.toggleSoloPlayback(item.unitId)}
+                  />
+                </div>
               </div>
             ))}
           </div>
