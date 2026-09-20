@@ -17,6 +17,7 @@ export type ProjectStoreStates = {
   bpm: number;
   sight: FieldSight;
   keyName: KeyName;
+  unitClockingFlags: Record<string, boolean>;
 };
 
 export type ProjectData = {

@@ -35,7 +35,8 @@ const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
 };
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const { soloPlaybackUnitId, projectLoading } = store.useSnapshot();
+  const { soloPlaybackUnitId, projectLoading, unitClockingFlags } =
+    store.useSnapshot();
   const { unitId, catalogKey } = unitItem;
 
   const catalogItem = getCatalogItem(catalogKey);
@@ -59,13 +60,29 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
             </div>
           ) : undefined}
           {isPlaybackCapable && (
-            <windowTitleBarControlComponents.SoloPlaybackButton
-              active={unitId === soloPlaybackUnitId}
-              disabled={projectLoading}
-              onClick={() => {
-                actions.toggleSoloPlayback(unitId);
-              }}
-            />
+            <div className="flex-ha gap-3">
+              <windowTitleBarControlComponents.SoloPlaybackButton
+                active={unitId === soloPlaybackUnitId}
+                disabled={projectLoading}
+                onClick={() => {
+                  actions.toggleSoloPlayback(unitId);
+                }}
+              />
+            </div>
+          )}
+        </>
+      }
+      topBarInnerControls2={
+        <>
+          {isPlaybackCapable && (
+            <div className="flex-ha gap-3">
+              <windowTitleBarControlComponents.ClockActiveButton
+                active={unitClockingFlags[unitId] !== false}
+                onClick={() => {
+                  actions.toggleUnitClockingFlag(unitId);
+                }}
+              />
+            </div>
           )}
         </>
       }

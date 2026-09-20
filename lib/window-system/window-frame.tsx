@@ -107,6 +107,7 @@ const TopBar = ({
   closeWindow,
   toggleMinimized,
   topBarInnerControls,
+  topBarInnerControls2,
 }: {
   windowCoordVm: WindowCoordViewModel;
   title: string;
@@ -114,6 +115,7 @@ const TopBar = ({
   closeWindow: () => void;
   toggleMinimized: () => void;
   topBarInnerControls?: ReactNode;
+  topBarInnerControls2?: ReactNode;
 }) => {
   return (
     // <div className="absolute w-full" style={{ top: -windowTitleBarHeight }}>
@@ -148,6 +150,9 @@ const TopBar = ({
         </div>
         {topBarInnerControls}
       </div>
+      <div className="px-3px" onPointerDown={(e) => e.stopPropagation()}>
+        {topBarInnerControls2}
+      </div>
       <div className="absolute-full flex-c pointer-events-none font-500">
         {title}
       </div>
@@ -166,6 +171,7 @@ const WindowFrameView = ({
   windowStatus,
   toggleMinimized,
   topBarInnerControls,
+  topBarInnerControls2,
 }: {
   title: string;
   windowCoordVm: WindowCoordViewModel;
@@ -176,6 +182,7 @@ const WindowFrameView = ({
   windowStatus: WindowStatus;
   toggleMinimized: () => void;
   topBarInnerControls?: ReactNode;
+  topBarInnerControls2?: ReactNode;
 }) => {
   const { contentSize, windowBounds } = windowCoordVm;
   const displayed = !evacuated && windowStatus === "visible";
@@ -214,6 +221,7 @@ const WindowFrameView = ({
             closeWindow={closeWindow}
             toggleMinimized={toggleMinimized}
             topBarInnerControls={topBarInnerControls}
+            topBarInnerControls2={topBarInnerControls2}
           />
           <div
             className="bg-white text-black h-full"
@@ -237,11 +245,13 @@ export const WindowFrame = ({
   title,
   children,
   topBarInnerControls,
+  topBarInnerControls2,
 }: {
   id: string;
   title: string;
   children: ReactNode;
   topBarInnerControls?: ReactNode;
+  topBarInnerControls2?: ReactNode;
 }) => {
   const { windowsEvacuated, currentWindowId, windowSpecs } =
     storeSlice.useSnapshot();
@@ -258,6 +268,7 @@ export const WindowFrame = ({
       windowStatus={windowSpec?.status ?? "none"}
       toggleMinimized={() => actions.toggleWindowMinimized(id)}
       topBarInnerControls={topBarInnerControls}
+      topBarInnerControls2={topBarInnerControls2}
     />
   );
 };

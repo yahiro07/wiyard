@@ -31,6 +31,7 @@ export type StoreState = {
   bpm: number;
   sight: FieldSight;
   keyName: KeyName;
+  unitClockingFlags: Record<string, boolean>;
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
@@ -69,6 +70,7 @@ const blankStoreState: StoreState = {
   bpm: 120,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
+  unitClockingFlags: {},
   //
   midiInEnabled: false,
   masterVolume: 0.5,

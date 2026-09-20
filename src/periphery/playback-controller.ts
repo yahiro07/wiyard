@@ -3,7 +3,8 @@ import { store } from "@/store/store";
 import { useEffect } from "react";
 
 export function usePlaybackController() {
-  const { soloPlaybackUnitId, bpm, playing } = store.useSnapshot();
+  const { soloPlaybackUnitId, bpm, playing, unitClockingFlags } =
+    store.useSnapshot();
   useEffect(() => {
     if (bpm) {
       sequencerTickDriver?.setBpm(bpm);
@@ -13,16 +14,20 @@ export function usePlaybackController() {
   useEffect(() => {
     if (soloPlaybackUnitId || playing) {
       if (soloPlaybackUnitId) {
-        sequencerTickDriver.setUnitClockingFlags({
-          [soloPlaybackUnitId]: true,
+        sequencerTickDriver.setSceneClockingSpec({
+          flags: { [soloPlaybackUnitId]: true },
+          fallbackValue: false,
         });
       } else {
-        sequencerTickDriver.setUnitClockingFlags(null);
+        sequencerTickDriver.setSceneClockingSpec({
+          flags: unitClockingFlags,
+          fallbackValue: true,
+        });
       }
       sequencerTickDriver.start();
     } else {
-      sequencerTickDriver.setUnitClockingFlags(null);
+      sequencerTickDriver.setSceneClockingSpec(null);
       sequencerTickDriver.stop();
     }
-  }, [soloPlaybackUnitId, playing]);
+  }, [soloPlaybackUnitId, playing, unitClockingFlags]);
 }

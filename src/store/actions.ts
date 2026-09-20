@@ -354,6 +354,15 @@ export const actions = {
       store.setSoloPlaybackUnitId(nextSequencerUnitId);
     }
   },
+  toggleUnitClockingFlag(unitId: string) {
+    store.produceUnitClockingFlags((draft) => {
+      if (draft[unitId] === undefined) {
+        draft[unitId] = false;
+      } else {
+        draft[unitId] = !draft[unitId];
+      }
+    });
+  },
   selectAutomationChannel(automationChannelId: string) {
     store.setCurrentAutomationChannelId(automationChannelId);
   },
