@@ -121,43 +121,46 @@ const TopBar = ({
     // <div className="absolute w-full" style={{ top: -windowTitleBarHeight }}>
     <div
       className={cz(
-        "flex-c relative justify-between px-1.5",
+        "flex-c relative justify-between",
         isCurrent ? "bg-#68c/96" : "bg-gray-500/92",
       )}
       style={{ height: windowTitleBarHeight }}
-      onPointerDown={(e) =>
-        windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
-      }
     >
-      <div className="flex-ha gap-2" onPointerDown={(e) => e.stopPropagation()}>
-        <div
-          className={cz(
-            "flex-ha",
-            "[&>button>div>svg]:(opacity-0)",
-            "[&:hover>button>div>svg]:(opacity-100)",
-          )}
-        >
-          <WindowControlButton
-            onClick={closeWindow}
-            icon={Icons.Close}
-            iconSize={14}
-          />
-          <WindowControlButton
-            onClick={toggleMinimized}
-            icon={Icons.Minus}
-            iconSize={14}
-          />
-        </div>
-        {topBarInnerControls}
+      <div
+        className={cz(
+          "flex-ha pl-1",
+          "[&>button>div>svg]:(opacity-0)",
+          "[&:hover>button>div>svg]:(opacity-100)",
+        )}
+      >
+        <WindowControlButton
+          onClick={closeWindow}
+          icon={Icons.Close}
+          iconSize={14}
+        />
+        <WindowControlButton
+          onClick={toggleMinimized}
+          icon={Icons.Minus}
+          iconSize={14}
+        />
       </div>
-      <div className="px-3px" onPointerDown={(e) => e.stopPropagation()}>
-        {topBarInnerControls2}
-      </div>
+      {topBarInnerControls && (
+        <div className="flex-ha gap-2 pl-1.5">{topBarInnerControls}</div>
+      )}
+      <div
+        className="grow h-full"
+        onPointerDown={(e) =>
+          windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
+        }
+      />
+      {topBarInnerControls2 && (
+        <div className="pr-2">{topBarInnerControls2}</div>
+      )}
+
       <div className="absolute-full flex-c pointer-events-none font-500">
         {title}
       </div>
     </div>
-    // </div>
   );
 };
 

@@ -5,21 +5,19 @@ import { actions, storeSlice } from "./store";
 export const WindowDock = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <div className="absolute-left-center z-1">
-        <div
-          className={cz(
-            "w-60px min-h-140px m-2 flex-vc gap-2 py-6",
-            // "h-55px min-w-140px m-2 flex-c gap-2 px-6",
-          )}
-          style={{
-            background: "#fff1",
-            backdropFilter: "blur(3px)",
-            border: "solid 1px #fff4",
-            borderRadius: "12px",
-          }}
-        >
-          {children}
-        </div>
+      <div
+        className={cz(
+          "w-60px min-h-140px m-2 flex-vc gap-2 py-6",
+          // "h-55px min-w-140px m-2 flex-c gap-2 px-6",
+        )}
+        style={{
+          background: "#fff1",
+          backdropFilter: "blur(3px)",
+          border: "solid 1px #fff4",
+          borderRadius: "12px",
+        }}
+      >
+        {children}
       </div>
     </>
   );
