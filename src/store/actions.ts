@@ -331,9 +331,9 @@ export const actions = {
     store.toggleMidiInEnabled();
   },
   togglePlayback() {
-    if (!store.state.playing && store.state.soloPlaybackUnitId) {
-      store.setSoloPlaybackUnitId(null);
-    }
+    // if (!store.state.playing && store.state.soloPlaybackUnitId) {
+    //   store.setSoloPlaybackUnitId(null);
+    // }
     store.togglePlaying();
   },
   toggleSoloPlayback(unitId: string) {
@@ -342,6 +342,9 @@ export const actions = {
     // }
     store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
   },
+  toggleSoloModeUnit(unitId: string) {
+    store.setSoloModeUnitId((prev) => (prev === unitId ? null : unitId));
+  },
   selectNoteChannel(nextNoteChannelId: string) {
     const sequencerUnitId = notePortGetters.getSequencerUnitId(
       store.state.currentNoteChannelId,
@@ -349,9 +352,12 @@ export const actions = {
     store.setCurrentNoteChannelId(nextNoteChannelId);
 
     if (store.state.soloPlaybackUnitId === sequencerUnitId) {
+      store.setSoloPlaybackUnitId(null);
+    }
+    if (store.state.soloModeUnitId === sequencerUnitId) {
       const nextSequencerUnitId =
         notePortGetters.getSequencerUnitId(nextNoteChannelId);
-      store.setSoloPlaybackUnitId(nextSequencerUnitId);
+      store.setSoloModeUnitId(nextSequencerUnitId);
     }
   },
   toggleUnitClockingFlag(unitId: string) {

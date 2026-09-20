@@ -7,8 +7,9 @@ import { sharedUrlSupport } from "@/project/shared-url-support";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { MidiInButtonContainer } from "@/views/controls/midi-in-button";
+import { MainPlaybackButton } from "@/views/controls/playback-buttons";
 
-const ControlButton = ({
+export const ControlButton = ({
   text,
   children,
   onClick,
@@ -62,18 +63,6 @@ const _PickerLaunchButton = () => {
 //     />
 //   );
 // };
-
-export const PlaybackButton = () => {
-  const { playing, projectLoading, soloPlaybackUnitId } = store.useSnapshot();
-  return (
-    <ControlButton
-      active={playing}
-      disabled={projectLoading || soloPlaybackUnitId !== null}
-      onClick={actions.togglePlayback}
-      children={<Icons.Play />}
-    />
-  );
-};
 
 const BpmInput = () => {
   const { bpm } = store.useSnapshot();
@@ -141,7 +130,7 @@ export const ControlButtons = () => {
       <div className="invisible">
         <SecondBarButton />
       </div>
-      <PlaybackButton />
+      <MainPlaybackButton />
       <BpmInput />
       <MasterVolumeInput />
       <MidiInButtonContainer />

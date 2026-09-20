@@ -9,7 +9,7 @@ import {
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
-import { PlaybackButton } from "@/views/controls/control-buttons";
+import { MainPlaybackButton } from "@/views/controls/playback-buttons";
 import { getSortOrder } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { cz } from "@lib/utils/cz";
@@ -175,7 +175,7 @@ export const PartControlBarRoot = () => {
       <div className="absolute-left-center z-1 ml-2">
         <div className={cz("min-h-140px py-3 px-1.5 bg-#ccc flex-vc gap-3")}>
           <div className="flex-c">
-            <PlaybackButton />
+            <MainPlaybackButton />
           </div>
           <div className="flex-v gap-3">
             {partItems.map((item) => (

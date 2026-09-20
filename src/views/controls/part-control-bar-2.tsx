@@ -8,13 +8,13 @@ import {
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
-import { PlaybackButton } from "@/views/controls/control-buttons";
 import { getSortOrder } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { cz } from "@lib/utils/cz";
 import { isDefined, resultOf } from "@lib/utils/general-helper";
 import { useMemo } from "react";
 import { TapHoldButtonFrame } from "@lib/components/headless/tap-hold-button";
+import { MainPlaybackButton } from "@/views/controls/playback-buttons";
 
 type PartItem =
   | {
@@ -57,7 +57,7 @@ function usePartItems(): PartItem[] {
   const {
     unitItems,
     unitClockingFlags,
-    soloPlaybackUnitId,
+    soloModeUnitId,
     currentNoteChannelId,
     wireConnectionKeys,
   } = store.useSnapshot();
@@ -71,7 +71,7 @@ function usePartItems(): PartItem[] {
               catalogItem: getCatalogItemWithFallback(item.catalogKey),
               unitId: item.unitId,
               clockingActive: unitClockingFlags[item.unitId],
-              solo: soloPlaybackUnitId === item.unitId,
+              solo: soloModeUnitId === item.unitId,
               cardPosition: item.cardPosition,
             };
           }
@@ -100,7 +100,7 @@ function usePartItems(): PartItem[] {
             noteChannelId: item.unitId,
             sequencerIndex: index,
             clockingActive: unitClockingFlags[sequencerUnitId],
-            solo: soloPlaybackUnitId === sequencerUnitId,
+            solo: soloModeUnitId === sequencerUnitId,
             cardPosition: item.cardPosition,
             channelActive: currentNoteChannelId === item.unitId,
             destinationUnitId,
@@ -113,7 +113,7 @@ function usePartItems(): PartItem[] {
   }, [
     unitItems,
     unitClockingFlags,
-    soloPlaybackUnitId,
+    soloModeUnitId,
     currentNoteChannelId,
     wireConnectionKeys,
   ]);
@@ -121,15 +121,15 @@ function usePartItems(): PartItem[] {
 
 const partItemHandlers = {
   onCardTap(partItem: PartItem) {
-    const isSoloMode = !!store.useSnapshot().soloPlaybackUnitId;
+    const isSoloMode = !!store.state.soloModeUnitId;
     if (isSoloMode) {
-      actions.toggleSoloPlayback(partItem.unitId);
+      actions.toggleSoloModeUnit(partItem.unitId);
     } else {
       actions.toggleUnitClockingFlag(partItem.unitId);
     }
   },
   onCardHold(partItem: PartItem) {
-    actions.toggleSoloPlayback(partItem.unitId);
+    actions.toggleSoloModeUnit(partItem.unitId);
   },
 };
 
@@ -185,7 +185,7 @@ const PartItemButtonView = ({
 };
 
 const PartItemButton = ({ item }: { item: PartItem }) => {
-  const isSoloMode = !!store.useSnapshot().soloPlaybackUnitId;
+  const isSoloMode = !!store.useSnapshot().soloModeUnitId;
   return (
     <TapHoldButtonFrame
       onTap={() => partItemHandlers.onCardTap(item)}
@@ -242,7 +242,7 @@ export const PartControlBarRoot2 = () => {
           className={cz("min-h-140px py-3 px-1.5 bg-gray-500 flex-vc gap-3")}
         >
           <div className="flex-c">
-            <PlaybackButton />
+            <MainPlaybackButton />
           </div>
           <div className="flex-v gap-3">
             {partItems.map((item) => (
