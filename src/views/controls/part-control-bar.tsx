@@ -88,7 +88,7 @@ function usePartItems(): PartItem[] {
   const {
     unitItems,
     unitClockingFlags,
-    soloPlaybackUnitId,
+    soloModeUnitId,
     currentNoteChannelId,
     wireConnectionKeys,
   } = store.useSnapshot();
@@ -102,7 +102,7 @@ function usePartItems(): PartItem[] {
               catalogItem: getCatalogItemWithFallback(item.catalogKey),
               unitId: item.unitId,
               clockingActive: unitClockingFlags[item.unitId],
-              solo: soloPlaybackUnitId === item.unitId,
+              solo: soloModeUnitId === item.unitId,
               cardPosition: item.cardPosition,
             };
           }
@@ -131,7 +131,7 @@ function usePartItems(): PartItem[] {
             noteChannelId: item.unitId,
             sequencerIndex: index,
             clockingActive: unitClockingFlags[sequencerUnitId],
-            solo: soloPlaybackUnitId === sequencerUnitId,
+            solo: soloModeUnitId === sequencerUnitId,
             cardPosition: item.cardPosition,
             channelActive: currentNoteChannelId === item.unitId,
             destinationUnitId,
@@ -144,7 +144,7 @@ function usePartItems(): PartItem[] {
   }, [
     unitItems,
     unitClockingFlags,
-    soloPlaybackUnitId,
+    soloModeUnitId,
     currentNoteChannelId,
     wireConnectionKeys,
   ]);
@@ -227,7 +227,7 @@ export const PartControlBarRoot = () => {
                     icon={Icons.Flash}
                     size={17}
                     active={item.solo}
-                    onClick={() => actions.toggleSoloPlayback(item.unitId)}
+                    onClick={() => actions.toggleSoloModeUnit(item.unitId)}
                   />
                 </div>
               </div>
