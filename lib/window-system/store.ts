@@ -68,6 +68,21 @@ export const actions = {
       status === "visible" ? "minimized" : status,
     );
   },
+  unMinimizeAll() {
+    actionsInternal.mapWindowStatusAll((status) =>
+      status === "minimized" ? "visible" : status,
+    );
+  },
+  toggleMinimizeAll() {
+    const someVisible = Object.values(storeSlice.get().windowSpecs).some(
+      (spec) => spec.status === "visible",
+    );
+    if (someVisible) {
+      actions.minimizeAll();
+    } else {
+      actions.unMinimizeAll();
+    }
+  },
   closeAll() {
     actionsInternal.mapWindowStatusAll(() => "none");
   },

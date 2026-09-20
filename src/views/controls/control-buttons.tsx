@@ -5,7 +5,7 @@ import { NumberSlider } from "@/components/number-slider";
 import { UpperLabel } from "@/components/upper-label";
 import { sharedUrlSupport } from "@/project/shared-url-support";
 import { actions } from "@/store/actions";
-import { store, windowSystem } from "@/store/store";
+import { store } from "@/store/store";
 import { MidiInButtonContainer } from "@/views/controls/midi-in-button";
 
 const ControlButton = ({
@@ -49,19 +49,19 @@ const _PickerLaunchButton = () => {
   );
 };
 
-const _WindowEvacuationButton = () => {
-  // const { windowSpecs } = store.useSnapshot();
-  // const hasWindow = Object.values(windowSpecs).some(
-  //   (spec) => spec.status === "visible",
-  // );
-  return (
-    <ControlButton
-      onClick={windowSystem.toggleEvacuate}
-      // disabled={!hasWindow}
-      children={<Icons.Desktop />}
-    />
-  );
-};
+// const _WindowEvacuationButton = () => {
+//   // const { windowSpecs } = store.useSnapshot();
+//   // const hasWindow = Object.values(windowSpecs).some(
+//   //   (spec) => spec.status === "visible",
+//   // );
+//   return (
+//     <ControlButton
+//       onClick={windowSystem.toggleEvacuate}
+//       // disabled={!hasWindow}
+//       children={<Icons.Desktop />}
+//     />
+//   );
+// };
 
 export const PlaybackButton = () => {
   const { playing, projectLoading, soloPlaybackUnitId } = store.useSnapshot();

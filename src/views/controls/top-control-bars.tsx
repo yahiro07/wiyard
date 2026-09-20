@@ -9,7 +9,7 @@ import { ProjectButtons } from "@/views/controls/project-buttons";
 export const TopBar = () => {
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.currentTarget === e.target) {
-      windowSystem.toggleEvacuate();
+      windowSystem.toggleMinimizeAll();
     }
   };
   return (
