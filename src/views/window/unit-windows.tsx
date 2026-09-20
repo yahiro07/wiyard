@@ -12,8 +12,7 @@ import { sourceNoteChannelGetters } from "@/store/source-note-channel-getters";
 import { store, windowSystem } from "@/store/store";
 import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
-import { windowTitleBarControlComponents } from "@/views/window/components/window-title-bar-controls";
-import { actions } from "@/store/actions";
+import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(
@@ -35,8 +34,6 @@ const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
 };
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const { soloPlaybackUnitId, projectLoading, playing, unitClockingFlags } =
-    store.useSnapshot();
   const { unitId, catalogKey } = unitItem;
 
   const catalogItem = getCatalogItem(catalogKey);
@@ -61,36 +58,26 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           ) : undefined}
           {isPlaybackCapable && (
             <div className="flex-ha gap-3">
-              <windowTitleBarControlComponents.SoloPlaybackButton
-                active={unitId === soloPlaybackUnitId}
-                disabled={
-                  projectLoading ||
-                  playing ||
-                  (soloPlaybackUnitId !== null && soloPlaybackUnitId !== unitId)
-                }
-                onClick={() => {
-                  actions.toggleSoloPlayback(unitId);
-                }}
-              />
+              <UnitWindowTitleBarPlaybackButtonContainer unitId={unitId} />
             </div>
           )}
         </>
       }
-      topBarInnerControls2={
-        <>
-          {isPlaybackCapable && (
-            <div className="flex-ha gap-3">
-              <windowTitleBarControlComponents.ClockActiveButton
-                active={unitClockingFlags[unitId] !== false}
-                disabled={soloPlaybackUnitId !== null}
-                onClick={() => {
-                  actions.toggleUnitClockingFlag(unitId);
-                }}
-              />
-            </div>
-          )}
-        </>
-      }
+      // topBarInnerControls2={
+      //   <>
+      //     {isPlaybackCapable && (
+      //       <div className="flex-ha gap-3">
+      //         <windowTitleBarControlComponents.ClockActiveButton
+      //           active={unitClockingFlags[unitId] !== false}
+      //           disabled={soloPlaybackUnitId !== null}
+      //           onClick={() => {
+      //             actions.toggleUnitClockingFlag(unitId);
+      //           }}
+      //         />
+      //       </div>
+      //     )}
+      //   </>
+      // }
     >
       {catalogItem ? (
         <UnitFrameScaled

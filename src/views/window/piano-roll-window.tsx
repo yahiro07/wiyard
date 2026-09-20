@@ -14,16 +14,10 @@ import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { WindowFrame } from "@lib/window-system";
 import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
-import { windowTitleBarControlComponents } from "@/views/window/components/window-title-bar-controls";
+import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 
 const NoteChannelListColumn = () => {
-  const {
-    currentNoteChannelId,
-    unitClockingFlags,
-    projectLoading,
-    playing,
-    soloPlaybackUnitId,
-  } = store.useSnapshot();
+  const { currentNoteChannelId } = store.useSnapshot();
   const noteChannelIds = notePortGetters.useNoteChannelIds();
 
   const canAdd = noteChannelIds.length < 4;
@@ -40,7 +34,6 @@ const NoteChannelListColumn = () => {
   return (
     <div className="w-50px bg-gray-700/60 flex-v gap-2 py-2 text-white pb-3">
       {noteChannelIds.map((id, index) => {
-        const sequencerUnitId = notePortGetters.getSequencerUnitId(id);
         return (
           <div className="flex-ha gap-2">
             <button
@@ -55,17 +48,6 @@ const NoteChannelListColumn = () => {
             >
               {index + 1}
             </button>
-            {false && (
-              <windowTitleBarControlComponents.ClockActiveButton
-                active={unitClockingFlags[sequencerUnitId] !== false}
-                disabled={
-                  projectLoading || playing || soloPlaybackUnitId !== null
-                }
-                onClick={() => {
-                  actions.toggleUnitClockingFlag(sequencerUnitId);
-                }}
-              />
-            )}
           </div>
         );
       })}
@@ -152,13 +134,7 @@ const PianoRollPanel = () => {
 };
 
 export const PianoRollWindow = () => {
-  const {
-    currentNoteChannelId,
-    soloPlaybackUnitId,
-    playing,
-    projectLoading,
-    unitClockingFlags,
-  } = store.useSnapshot();
+  const { currentNoteChannelId } = store.useSnapshot();
   const sequencerUnitId =
     notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
@@ -167,25 +143,14 @@ export const PianoRollWindow = () => {
       title="piano roll"
       topBarInnerControls={
         <div className="flex-ha gap-3">
-          <windowTitleBarControlComponents.SoloPlaybackButton
-            active={soloPlaybackUnitId === sequencerUnitId}
-            disabled={
-              projectLoading ||
-              playing ||
-              (soloPlaybackUnitId !== null &&
-                soloPlaybackUnitId !== sequencerUnitId)
-            }
-            onClick={() => {
-              actions.toggleSoloPlayback(sequencerUnitId);
-            }}
-          />
-          <windowTitleBarControlComponents.ClockActiveButton
+          <UnitWindowTitleBarPlaybackButtonContainer unitId={sequencerUnitId} />
+          {/* <windowTitleBarControlComponents.ClockActiveButton
             active={unitClockingFlags[sequencerUnitId] !== false}
             disabled={projectLoading || soloPlaybackUnitId !== null}
             onClick={() => {
               actions.toggleUnitClockingFlag(sequencerUnitId);
             }}
-          />
+          /> */}
         </div>
       }
     >

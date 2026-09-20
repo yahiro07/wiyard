@@ -23,6 +23,12 @@ export const notePortGetters = {
       [unitItems],
     );
   },
+  getNoteInputPortIndex(noteChannelId: string) {
+    const items = store.state.unitItems.filter(
+      (item) => item.type === "noteInput",
+    );
+    return items.findIndex((item) => item.unitId === noteChannelId);
+  },
   useNoteInputPortIndex(noteChannelId: string) {
     const noteInputPortUnitItems = notePortGetters.useNoteInputPortUnitItems();
     return useMemo(() => {

@@ -20,7 +20,7 @@ const pickerItemHandlers = {
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {
         actions.setUnitPickerVisible(false);
-        windowSystem.setEvacuate(true);
+        windowSystem.minimizeAll();
       },
       onMove(pos) {
         actions.setUnitAddingItem({ catalogKey, position: pos });

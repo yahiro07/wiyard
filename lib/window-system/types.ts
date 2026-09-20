@@ -15,8 +15,9 @@ export type WindowSystem = {
   setStatus(id: string, status: WindowStatus): void;
   setCurrentWindow(id: string): void;
   remove(id: string): void;
-  setEvacuate(evacuated: boolean): void;
-  toggleEvacuate(): void;
+  unMinimizeAll(): void;
+  minimizeAll(): void;
+  toggleMinimizeAll(): void;
   has(id: string): boolean;
 };
 

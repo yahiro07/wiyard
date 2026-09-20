@@ -17,3 +17,9 @@ export function tryParseJsonOrNull<T>(text: string): T | null {
     return null;
   }
 }
+
+export function isDefined<T>() {
+  return (value: T | undefined): value is T => {
+    return value !== undefined;
+  };
+}

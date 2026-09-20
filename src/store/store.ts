@@ -55,6 +55,7 @@ export type StoreState = {
   loadedFromSharedUrl: boolean;
   configTargetWireKey: string | null;
   soloPlaybackUnitId: string | null;
+  soloModeUnitId: string | null;
 };
 
 const blankStoreState: StoreState = {
@@ -94,6 +95,7 @@ const blankStoreState: StoreState = {
   loadedFromSharedUrl: false,
   configTargetWireKey: null,
   soloPlaybackUnitId: null,
+  soloModeUnitId: null,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
