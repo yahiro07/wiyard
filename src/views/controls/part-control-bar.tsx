@@ -95,15 +95,28 @@ export const PartControlBarRoot = () => {
   return (
     <>
       <div className="absolute-left-center z-1 ml-2">
-        <div className={cz("min-h-140px py-2 px-1 bg-#ccc flex-vc gap-3")}>
+        <div className={cz("min-h-140px py-3 px-1.5 bg-#ccc flex-vc gap-3")}>
           <div className="flex-c">
             <PlaybackButton />
           </div>
           <div className="flex-v gap-3">
             {partItems.map((item) => (
               <div key={item.unitId} className="flex-ha gap-1">
-                <div className="w-40px h-40px flex-c bg-#ddd text-sm">
-                  {item.label}
+                <div
+                  className={cz(
+                    "w-40px h-40px flex-c bg-#ddd text-sm",
+                    "rounded-8px overflow-hidden",
+                  )}
+                >
+                  {item.catalogItem?.thumbnailUrl ? (
+                    <img
+                      src={item.catalogItem.thumbnailUrl}
+                      alt={item.label}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div>{item.label}</div>
+                  )}
                 </div>
                 <div className="flex-v gap-1">
                   <IconButton
