@@ -157,7 +157,7 @@ export const PianoRollWindow = () => {
     soloPlaybackUnitId,
     playing,
     projectLoading,
-    unitClockingFlags,
+    // unitClockingFlags,
   } = store.useSnapshot();
   const sequencerUnitId =
     notePortGetters.getSequencerUnitId(currentNoteChannelId);
@@ -179,13 +179,13 @@ export const PianoRollWindow = () => {
               actions.toggleSoloPlayback(sequencerUnitId);
             }}
           />
-          <windowTitleBarControlComponents.ClockActiveButton
+          {/* <windowTitleBarControlComponents.ClockActiveButton
             active={unitClockingFlags[sequencerUnitId] !== false}
             disabled={projectLoading || soloPlaybackUnitId !== null}
             onClick={() => {
               actions.toggleUnitClockingFlag(sequencerUnitId);
             }}
-          />
+          /> */}
         </div>
       }
     >
