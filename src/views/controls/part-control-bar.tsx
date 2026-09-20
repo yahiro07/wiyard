@@ -34,8 +34,8 @@ const IconButton = ({
     <button
       type="button"
       className={cz(
-        "text-#aaa cursor-pointer hover:opacity-80",
-        active && "!text-#8af",
+        "text-#99a cursor-pointer hover:opacity-80",
+        active && "!text-#7af",
         disabled && "!opacity-30",
         disabled && "pointer-events-none",
       )}
@@ -173,7 +173,12 @@ export const PartControlBarRoot = () => {
   return (
     <>
       <div className="absolute-left-center z-1 ml-2">
-        <div className={cz("min-h-140px py-3 px-1.5 bg-#ccc flex-vc gap-3")}>
+        <div
+          className={cz(
+            "min-h-140px pt-4 pb-6 px-1.5 bg-gray-500 flex-vc gap-4",
+            "rounded-10px",
+          )}
+        >
           <div className="flex-c">
             <MainPlaybackButton />
           </div>
@@ -219,13 +224,13 @@ export const PartControlBarRoot = () => {
                 <div className="flex-v gap-1">
                   <IconButton
                     icon={Icons.Power}
-                    size={17}
+                    size={16}
                     active={item.clockingActive}
                     onClick={() => actions.toggleUnitClockingFlag(item.unitId)}
                   />
                   <IconButton
                     icon={Icons.Flash}
-                    size={17}
+                    size={16}
                     active={item.solo}
                     onClick={() => actions.toggleSoloModeUnit(item.unitId)}
                   />
