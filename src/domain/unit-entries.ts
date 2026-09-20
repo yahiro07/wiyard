@@ -25,14 +25,18 @@ export function getCatalogItem(
   return catalog[catalogKey];
 }
 
+export type CatalogItemForDisplay = {
+  name: string;
+  thumbnailUrl?: string;
+};
+
 const fallbackCatalogItem = {
   name: "Unknown Unit",
   thumbnailUrl: "/assets/unknown-unit.png",
 };
-export function getCatalogItemWithFallback(catalogKey: CatalogKey): {
-  name: string;
-  thumbnailUrl?: string;
-} {
+export function getCatalogItemWithFallback(
+  catalogKey: CatalogKey,
+): CatalogItemForDisplay {
   return catalog[catalogKey] ?? fallbackCatalogItem;
 }
 

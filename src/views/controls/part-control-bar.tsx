@@ -1,6 +1,10 @@
 import { Icons } from "@/common/icons";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
-import { CatalogItem, getCatalogItem } from "@/domain/unit-entries";
+import { windowIds } from "@/domain/types";
+import {
+  CatalogItemForDisplay,
+  getCatalogItemWithFallback,
+} from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
@@ -42,19 +46,33 @@ const IconButton = ({
   );
 };
 
-type PartItem = {
-  type: "board" | "builtinSequencer";
-  catalogItem?: CatalogItem;
-  label: string;
-  unitId: string;
-  clockingActive: boolean;
-  solo: boolean;
-  cardPosition: Point;
-};
+type PartItem =
+  | {
+      type: "board";
+      catalogItem: CatalogItemForDisplay;
+      unitId: string;
+      clockingActive: boolean;
+      solo: boolean;
+      cardPosition: Point;
+    }
+  | {
+      type: "builtinSequencer";
+      unitId: string;
+      noteChannelId: string;
+      sequencerIndex: number;
+      clockingActive: boolean;
+      solo: boolean;
+      cardPosition: Point;
+      channelActive: boolean;
+    };
 
 function usePartItems(): PartItem[] {
-  const { unitItems, unitClockingFlags, soloPlaybackUnitId } =
-    store.useSnapshot();
+  const {
+    unitItems,
+    unitClockingFlags,
+    soloPlaybackUnitId,
+    currentNoteChannelId,
+  } = store.useSnapshot();
   return useMemo(() => {
     const items = unitItems
       .map((item) => {
@@ -62,8 +80,7 @@ function usePartItems(): PartItem[] {
           if (unitPlaybackCapabilityFlags[item.catalogKey]) {
             return {
               type: "board" as const,
-              catalogItem: getCatalogItem(item.catalogKey),
-              label: item.catalogKey.charAt(0),
+              catalogItem: getCatalogItemWithFallback(item.catalogKey),
               unitId: item.unitId,
               clockingActive: unitClockingFlags[item.unitId],
               solo: soloPlaybackUnitId === item.unitId,
@@ -78,17 +95,30 @@ function usePartItems(): PartItem[] {
           return {
             type: "builtinSequencer" as const,
             unitId: sequencerUnitId,
-            label: `n${index + 1}`,
+            noteChannelId: item.unitId,
+            sequencerIndex: index,
             clockingActive: unitClockingFlags[sequencerUnitId],
             solo: soloPlaybackUnitId === sequencerUnitId,
             cardPosition: item.cardPosition,
+            channelActive: currentNoteChannelId === item.unitId,
           };
         }
       })
       .filter(isDefined());
     return items.sort(getSortOrder((item) => item.cardPosition.y));
-  }, [unitItems, unitClockingFlags, soloPlaybackUnitId]);
+  }, [unitItems, unitClockingFlags, soloPlaybackUnitId, currentNoteChannelId]);
 }
+
+const partItemHandlers = {
+  onCardClick(partItem: PartItem) {
+    if (partItem.type === "board") {
+      actions.setWindowStatus(partItem.unitId, "visible");
+    } else {
+      actions.setWindowStatus(windowIds.pianoRoll, "visible");
+      actions.setCurrentNoteChannelId(partItem.noteChannelId);
+    }
+  },
+};
 
 export const PartControlBarRoot = () => {
   const partItems = usePartItems();
@@ -107,15 +137,23 @@ export const PartControlBarRoot = () => {
                     "w-40px h-40px flex-c bg-#ddd text-sm",
                     "rounded-8px overflow-hidden",
                   )}
+                  onClick={() => partItemHandlers.onCardClick(item)}
                 >
-                  {item.catalogItem?.thumbnailUrl ? (
+                  {item.type === "board" ? (
                     <img
                       src={item.catalogItem.thumbnailUrl}
-                      alt={item.label}
+                      alt={item.catalogItem.name}
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div>{item.label}</div>
+                    <div
+                      className={cz(
+                        item.channelActive &&
+                          "w-full h-full border-l-#8af border-l-4px flex-c border-r-4px border-r-#0000",
+                      )}
+                    >
+                      {item.sequencerIndex + 1}
+                    </div>
                   )}
                 </div>
                 <div className="flex-v gap-1">
