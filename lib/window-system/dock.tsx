@@ -1,6 +1,49 @@
 import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { actions, storeSlice } from "./store";
+import { IconType } from "react-icons";
+import { Icons } from "./icons";
+
+const DockCleanupButton = ({
+  onClick,
+  icon: IConComponent,
+  iconSize,
+  iconAngle,
+}: {
+  onClick: () => void;
+  icon: IconType;
+  iconSize: number;
+  iconAngle?: number;
+}) => {
+  return (
+    <button
+      type="button"
+      className={cz("cursor-pointer w-26px h-26px flex-c")}
+      style={{ transform: `rotate(${iconAngle}deg)` }}
+      onClick={onClick}
+    >
+      <IConComponent size={iconSize} />
+    </button>
+  );
+};
+
+const DockCleanupButtons = () => {
+  return (
+    <div className="flex-ha">
+      <DockCleanupButton
+        onClick={actions.minimizeAll}
+        icon={Icons.WindowMinimize}
+        iconSize={16}
+        iconAngle={-90}
+      />
+      <DockCleanupButton
+        onClick={actions.closeAll}
+        icon={Icons.Broom}
+        iconSize={16}
+      />
+    </div>
+  );
+};
 
 export const WindowDock = ({ children }: { children: ReactNode }) => {
   return (
@@ -17,6 +60,7 @@ export const WindowDock = ({ children }: { children: ReactNode }) => {
           borderRadius: "12px",
         }}
       >
+        <DockCleanupButtons />
         {children}
       </div>
     </>
