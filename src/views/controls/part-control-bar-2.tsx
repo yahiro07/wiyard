@@ -14,6 +14,7 @@ import { Point } from "@lib/utils/common-types";
 import { cz } from "@lib/utils/cz";
 import { isDefined, resultOf } from "@lib/utils/general-helper";
 import { useMemo } from "react";
+import { TapHoldButtonFrame } from "@lib/components/headless/tap-hold-button";
 
 type PartItem =
   | {
@@ -119,12 +120,33 @@ function usePartItems(): PartItem[] {
 }
 
 const partItemHandlers = {
-  onCardClick(partItem: PartItem) {
-    actions.toggleUnitClockingFlag(partItem.unitId);
+  onCardTap(partItem: PartItem) {
+    const isSoloMode = !!store.useSnapshot().soloPlaybackUnitId;
+    if (isSoloMode) {
+      actions.toggleSoloPlayback(partItem.unitId);
+    } else {
+      actions.toggleUnitClockingFlag(partItem.unitId);
+    }
+  },
+  onCardHold(partItem: PartItem) {
+    actions.toggleSoloPlayback(partItem.unitId);
   },
 };
 
-const PartItemButton = ({ item }: { item: PartItem }) => {
+const PartItemButtonView = ({
+  imageUrl,
+  indexLabel,
+  indexActive,
+  darken,
+  iconType,
+}: {
+  imageUrl?: string;
+  indexLabel?: string;
+  indexActive?: boolean;
+  darken?: boolean;
+  iconType?: "power" | "flash";
+}) => {
+  const IconComponent = iconType === "power" ? Icons.Power : Icons.Flash;
   return (
     <div
       className={cz(
@@ -134,48 +156,80 @@ const PartItemButton = ({ item }: { item: PartItem }) => {
       style={{
         boxShadow: "0 0 0.5px 0.5px #0008",
       }}
-      onClick={() => partItemHandlers.onCardClick(item)}
     >
-      {item.type === "board" ? (
-        <img
-          src={item.catalogItem.thumbnailUrl}
-          alt={item.catalogItem.name}
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <>
-          <div className="relative h-full">
-            {item.destinationUnitCatalogItem && (
-              <img
-                src={item.destinationUnitCatalogItem.thumbnailUrl}
-                alt={item.destinationUnitCatalogItem.name}
-                className="w-full h-full object-cover"
-              />
-            )}
-            <div
-              className={cz(
-                "absolute top-0 left-0 w-10px h-full flex-c text-10px",
-                "bg-#fffc text-#888",
-                item.channelActive && "!bg-#9bf text-#fff",
-              )}
-            >
-              {item.sequencerIndex + 1}
-            </div>
-          </div>
-        </>
+      {imageUrl && (
+        <img className="w-full h-full object-cover" src={imageUrl} />
       )}
-      {!item.clockingActive && <div className="absolute-full bg-#0006" />}
-      {item.clockingActive && (
+      {indexLabel && (
+        <div
+          className={cz(
+            "absolute top-0 left-0 w-10px h-full flex-c text-10px",
+            "bg-#fffc text-#888",
+            indexActive && "!bg-#9bf text-#fff",
+          )}
+        >
+          {indexLabel}
+        </div>
+      )}
+      {darken && <div className="absolute-full bg-#0006" />}
+      {iconType && (
         <div className={cz("absolute-full flex-c", "bg-#0004")}>
-          <Icons.Power
+          <IconComponent
             className="text-16px text-#fff"
-            style={{
-              filter: "drop-shadow(0px 0px 1px #0004)",
-            }}
+            style={{ filter: "drop-shadow(0px 0px 1px #0004)" }}
           />
         </div>
       )}
     </div>
+  );
+};
+
+const PartItemButton = ({ item }: { item: PartItem }) => {
+  const isSoloMode = !!store.useSnapshot().soloPlaybackUnitId;
+  return (
+    <TapHoldButtonFrame
+      onTap={() => partItemHandlers.onCardTap(item)}
+      onHold={() => partItemHandlers.onCardHold(item)}
+    >
+      {!isSoloMode && (
+        <>
+          {item.type === "board" ? (
+            <PartItemButtonView
+              imageUrl={item.catalogItem.thumbnailUrl}
+              darken={!item.clockingActive}
+              iconType={item.clockingActive ? "power" : undefined}
+            />
+          ) : (
+            <PartItemButtonView
+              imageUrl={item.destinationUnitCatalogItem?.thumbnailUrl}
+              indexLabel={(item.sequencerIndex + 1).toString()}
+              indexActive={item.channelActive}
+              darken={!item.clockingActive}
+              iconType={item.clockingActive ? "power" : undefined}
+            />
+          )}
+        </>
+      )}
+      {isSoloMode && (
+        <>
+          {item.type === "board" ? (
+            <PartItemButtonView
+              imageUrl={item.catalogItem.thumbnailUrl}
+              darken={!item.solo}
+              iconType={item.solo ? "flash" : undefined}
+            />
+          ) : (
+            <PartItemButtonView
+              imageUrl={item.destinationUnitCatalogItem?.thumbnailUrl}
+              indexLabel={(item.sequencerIndex + 1).toString()}
+              indexActive={item.channelActive}
+              darken={!item.solo}
+              iconType={item.solo ? "flash" : undefined}
+            />
+          )}
+        </>
+      )}
+    </TapHoldButtonFrame>
   );
 };
 

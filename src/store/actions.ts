@@ -337,9 +337,9 @@ export const actions = {
     store.togglePlaying();
   },
   toggleSoloPlayback(unitId: string) {
-    if (unitId && store.state.playing) {
-      store.setPlaying(false);
-    }
+    // if (unitId && store.state.playing) {
+    //   store.setPlaying(false);
+    // }
     store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
   },
   selectNoteChannel(nextNoteChannelId: string) {
