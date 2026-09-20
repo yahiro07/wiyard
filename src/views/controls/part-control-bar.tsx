@@ -1,4 +1,5 @@
 import { Icons } from "@/common/icons";
+import { decodeWireConnectionKey } from "@/domain/port-helpers";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 import { windowIds } from "@/domain/types";
 import {
@@ -12,7 +13,7 @@ import { PlaybackButton } from "@/views/controls/control-buttons";
 import { getSortOrder } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { cz } from "@lib/utils/cz";
-import { isDefined } from "@lib/utils/general-helper";
+import { isDefined, resultOf } from "@lib/utils/general-helper";
 import { useMemo } from "react";
 import { IconType } from "react-icons";
 
@@ -64,7 +65,23 @@ type PartItem =
       solo: boolean;
       cardPosition: Point;
       channelActive: boolean;
+      destinationUnitCatalogItem?: CatalogItemForDisplay;
     };
+
+const helpers = {
+  getFirstNoteDestinationUnitId(
+    noteChannelId: string,
+    wireConnectionKeys: string[],
+  ): string | undefined {
+    return wireConnectionKeys
+      .map((key) => {
+        const { sourceUnitId, destinationUnitId } =
+          decodeWireConnectionKey(key);
+        return sourceUnitId === noteChannelId ? destinationUnitId : undefined;
+      })
+      .filter(isDefined())[0];
+  },
+};
 
 function usePartItems(): PartItem[] {
   const {
@@ -72,6 +89,7 @@ function usePartItems(): PartItem[] {
     unitClockingFlags,
     soloPlaybackUnitId,
     currentNoteChannelId,
+    wireConnectionKeys,
   } = store.useSnapshot();
   return useMemo(() => {
     const items = unitItems
@@ -92,6 +110,20 @@ function usePartItems(): PartItem[] {
             item.unitId,
           );
           const index = notePortGetters.getNoteInputPortIndex(item.unitId);
+          const destinationUnitId = helpers.getFirstNoteDestinationUnitId(
+            item.unitId,
+            wireConnectionKeys,
+          );
+          const destinationUnitCatalogItem = resultOf(() => {
+            if (destinationUnitId) {
+              const unitItem = unitItems.find(
+                (unit) => unit.unitId === destinationUnitId,
+              );
+              if (unitItem?.type === "board") {
+                return getCatalogItemWithFallback(unitItem.catalogKey);
+              }
+            }
+          });
           return {
             type: "builtinSequencer" as const,
             unitId: sequencerUnitId,
@@ -101,12 +133,19 @@ function usePartItems(): PartItem[] {
             solo: soloPlaybackUnitId === sequencerUnitId,
             cardPosition: item.cardPosition,
             channelActive: currentNoteChannelId === item.unitId,
+            destinationUnitCatalogItem,
           };
         }
       })
       .filter(isDefined());
     return items.sort(getSortOrder((item) => item.cardPosition.y));
-  }, [unitItems, unitClockingFlags, soloPlaybackUnitId, currentNoteChannelId]);
+  }, [
+    unitItems,
+    unitClockingFlags,
+    soloPlaybackUnitId,
+    currentNoteChannelId,
+    wireConnectionKeys,
+  ]);
 }
 
 const partItemHandlers = {
@@ -135,7 +174,7 @@ export const PartControlBarRoot = () => {
                 <div
                   className={cz(
                     "w-40px h-40px flex-c bg-#ddd text-sm",
-                    "rounded-8px overflow-hidden",
+                    "rounded-8px overflow-hidden cursor-pointer",
                   )}
                   onClick={() => partItemHandlers.onCardClick(item)}
                 >
@@ -146,14 +185,26 @@ export const PartControlBarRoot = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div
-                      className={cz(
-                        item.channelActive &&
-                          "w-full h-full border-l-#8af border-l-4px flex-c border-r-4px border-r-#0000",
-                      )}
-                    >
-                      {item.sequencerIndex + 1}
-                    </div>
+                    <>
+                      <div className="relative h-full">
+                        {item.destinationUnitCatalogItem && (
+                          <img
+                            src={item.destinationUnitCatalogItem.thumbnailUrl}
+                            alt={item.destinationUnitCatalogItem.name}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                        <div
+                          className={cz(
+                            "absolute top-0 left-0 w-10px h-full flex-c text-10px",
+                            "bg-#fffc text-#888",
+                            item.channelActive && "!bg-#9bf text-#fff",
+                          )}
+                        >
+                          {item.sequencerIndex + 1}
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
                 <div className="flex-v gap-1">
