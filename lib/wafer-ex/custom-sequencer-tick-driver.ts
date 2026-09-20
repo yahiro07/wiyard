@@ -7,11 +7,16 @@ import {
 } from "wafer-host/core";
 import { sortUnitsForClocking } from "./sort-units-for-clocking";
 
+type SceneClockingSpec = {
+  flags: Record<string, boolean>; //unitId --> on/off
+  fallbackValue: boolean;
+};
+
 export type CustomSequencerTickDriver = {
   setBpm(bpm: number): void;
   start(): void;
   stop(): void;
-  setUnitClockingFlags(attrs: Record<string, boolean> | null): void;
+  setSceneClockingSpec(spec: SceneClockingSpec | null): void;
 };
 
 export function createCustomSequencerTickDriver(
@@ -21,13 +26,15 @@ export function createCustomSequencerTickDriver(
     sequencerTickDriverHelper;
   const core = createSequencerTickDriverCore(hostSystem.audioContext, 25, 100);
   let tickFrameIndex = 0;
-  let unitClockingFlags: Record<string, boolean> | null;
+  let sceneClockingSpec: SceneClockingSpec | null;
   let running = false;
 
   const getTargetUnits = () => {
     const units = hostSystem.getAllUnits().filter((unit) => {
-      if (!unitClockingFlags) return true;
-      return unitClockingFlags[unit.unitId] === true;
+      if (!sceneClockingSpec) return true;
+      const flag = sceneClockingSpec.flags[unit.unitId];
+      if (flag !== undefined) return flag;
+      return sceneClockingSpec.fallbackValue;
     });
     const connectionRules = hostSystem.getConnectionRules() as ConnectionRule[];
     sortUnitsForClocking(units, connectionRules);
@@ -61,8 +68,8 @@ export function createCustomSequencerTickDriver(
         running = false;
       }
     },
-    setUnitClockingFlags(flags: Record<string, boolean>) {
-      unitClockingFlags = flags;
+    setSceneClockingSpec(spec) {
+      sceneClockingSpec = spec;
     },
   };
 }

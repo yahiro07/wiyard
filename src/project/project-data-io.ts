@@ -25,6 +25,7 @@ const helpers = {
         bpm: 1,
         sight: 1,
         keyName: 1,
+        unitClockingFlags: 1,
       },
       { skipUndefined: true },
     );

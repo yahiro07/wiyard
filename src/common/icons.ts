@@ -3,6 +3,7 @@ import { CgPiano } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
+  FaPowerOff,
   FaWindowMinimize,
 } from "react-icons/fa6";
 import { FiMenu } from "react-icons/fi";
@@ -28,4 +29,5 @@ export const Icons = {
   Timeline: MdOutlineViewTimeline,
   Apps: TbAppsFilled,
   Share: IoMdShare,
+  Power: FaPowerOff,
 };

@@ -331,10 +331,37 @@ export const actions = {
     store.toggleMidiInEnabled();
   },
   togglePlayback() {
+    if (!store.state.playing && store.state.soloPlaybackUnitId) {
+      store.setSoloPlaybackUnitId(null);
+    }
     store.togglePlaying();
   },
-  selectNoteChannel(noteChannelId: string) {
-    store.setCurrentNoteChannelId(noteChannelId);
+  toggleSoloPlayback(unitId: string) {
+    if (unitId && store.state.playing) {
+      store.setPlaying(false);
+    }
+    store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
+  },
+  selectNoteChannel(nextNoteChannelId: string) {
+    const sequencerUnitId = notePortGetters.getSequencerUnitId(
+      store.state.currentNoteChannelId,
+    );
+    store.setCurrentNoteChannelId(nextNoteChannelId);
+
+    if (store.state.soloPlaybackUnitId === sequencerUnitId) {
+      const nextSequencerUnitId =
+        notePortGetters.getSequencerUnitId(nextNoteChannelId);
+      store.setSoloPlaybackUnitId(nextSequencerUnitId);
+    }
+  },
+  toggleUnitClockingFlag(unitId: string) {
+    store.produceUnitClockingFlags((draft) => {
+      if (draft[unitId] === undefined) {
+        draft[unitId] = false;
+      } else {
+        draft[unitId] = !draft[unitId];
+      }
+    });
   },
   selectAutomationChannel(automationChannelId: string) {
     store.setCurrentAutomationChannelId(automationChannelId);
