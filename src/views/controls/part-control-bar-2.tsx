@@ -137,7 +137,6 @@ const PartItemButtonView = ({
   imageUrl,
   indexLabel,
   indexActive,
-  darken,
   iconType,
 }: {
   imageUrl?: string;
@@ -152,10 +151,9 @@ const PartItemButtonView = ({
       className={cz(
         "w-48px h-32px flex-c bg-#ddd text-sm relative",
         "rounded-1px overflow-hidden cursor-pointer",
+        // "bd-#000c",
       )}
-      style={{
-        boxShadow: "0 0 0.5px 0.5px #0008",
-      }}
+      style={{ boxShadow: "0 0 0.7px 0.7px #0008" }}
     >
       {imageUrl && (
         <img className="w-full h-full object-cover" src={imageUrl} />
@@ -171,15 +169,24 @@ const PartItemButtonView = ({
           {indexLabel}
         </div>
       )}
-      {darken && <div className="absolute-full bg-#0006" />}
-      {iconType && (
-        <div className={cz("absolute-full flex-c", "bg-#0004")}>
-          <IconComponent
-            className="text-16px text-#fff"
-            style={{ filter: "drop-shadow(0px 0px 1px #0004)" }}
-          />
+      {/* {darken && <div className="absolute-full bg-#0006" />} */}
+      <div className={cz("absolute-full flex-h")}>
+        <div
+          className={cz(
+            "bg-#888 w-14px flex-va pt-3px relative",
+            "text-#fff line-height-1",
+            indexActive && "!bg-#8ae",
+            !indexLabel && "!flex-c pb-1",
+          )}
+        >
+          {iconType && <IconComponent className="text-11px" />}
+          {indexLabel && (
+            <div className="absolute-bottom-center text-11px mb-6px">
+              {indexLabel}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
@@ -239,7 +246,10 @@ export const PartControlBarRoot2 = () => {
     <>
       <div className="absolute-left-center z-1 ml-2">
         <div
-          className={cz("min-h-140px py-3 px-1.5 bg-gray-500 flex-vc gap-3")}
+          className={cz(
+            "min-h-140px pt-4 pb-6 px-1.5 bg-gray-500 flex-vc gap-3",
+            "rounded-10px",
+          )}
         >
           <div className="flex-c">
             <MainPlaybackButton />
