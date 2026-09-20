@@ -211,7 +211,10 @@ const WindowFrameView = ({
         }}
       >
         <div
-          className="relative rounded-6px overflow-hidden"
+          className={cz(
+            "relative rounded-6px overflow-hidden bd-gray-500/40",
+            isCurrent && "!bd-#68c/50",
+          )}
           style={{ width: windowBounds.width, height: windowBounds.height }}
           onPointerDown={(e) =>
             windowFrameHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
