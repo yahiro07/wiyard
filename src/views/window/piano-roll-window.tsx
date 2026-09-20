@@ -17,8 +17,15 @@ import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
 import { windowTitleBarControlComponents } from "@/views/window/components/window-title-bar-controls";
 
 const NoteChannelListColumn = () => {
-  const { currentNoteChannelId } = store.useSnapshot();
+  const {
+    currentNoteChannelId,
+    unitClockingFlags,
+    projectLoading,
+    playing,
+    soloPlaybackUnitId,
+  } = store.useSnapshot();
   const noteChannelIds = notePortGetters.useNoteChannelIds();
+
   const canAdd = noteChannelIds.length < 4;
   const canDelete = noteChannelIds.length > 1;
 
@@ -32,20 +39,36 @@ const NoteChannelListColumn = () => {
   };
   return (
     <div className="w-50px bg-gray-700/60 flex-v gap-2 py-2 text-white pb-3">
-      {noteChannelIds.map((id, index) => (
-        <button
-          key={id}
-          type="button"
-          className={cz(
-            "w-40px h-30px bg-gray-300/50 flex-c text-white cursor-pointer",
-            "font-bold text-sm",
-            id === currentNoteChannelId && "!bg-#8ae/70",
-          )}
-          onClick={() => actions.selectNoteChannel(id)}
-        >
-          {index + 1}
-        </button>
-      ))}
+      {noteChannelIds.map((id, index) => {
+        const sequencerUnitId = notePortGetters.getSequencerUnitId(id);
+        return (
+          <div className="flex-ha gap-2">
+            <button
+              key={id}
+              type="button"
+              className={cz(
+                "w-40px h-30px bg-gray-300/50 flex-c text-white cursor-pointer",
+                "font-bold text-sm",
+                id === currentNoteChannelId && "!bg-#8ae/70",
+              )}
+              onClick={() => actions.selectNoteChannel(id)}
+            >
+              {index + 1}
+            </button>
+            {false && (
+              <windowTitleBarControlComponents.ClockActiveButton
+                active={unitClockingFlags[sequencerUnitId] !== false}
+                disabled={
+                  projectLoading || playing || soloPlaybackUnitId !== null
+                }
+                onClick={() => {
+                  actions.toggleUnitClockingFlag(sequencerUnitId);
+                }}
+              />
+            )}
+          </div>
+        );
+      })}
       {canAdd && (
         <button
           className="w-40px flex-c mt-1 cursor-pointer hover:opacity-80"
@@ -129,8 +152,13 @@ const PianoRollPanel = () => {
 };
 
 export const PianoRollWindow = () => {
-  const { currentNoteChannelId, soloPlaybackUnitId, playing, projectLoading } =
-    store.useSnapshot();
+  const {
+    currentNoteChannelId,
+    soloPlaybackUnitId,
+    playing,
+    projectLoading,
+    unitClockingFlags,
+  } = store.useSnapshot();
   const sequencerUnitId =
     notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
@@ -138,18 +166,27 @@ export const PianoRollWindow = () => {
       id={windowIds.pianoRoll}
       title="piano roll"
       topBarInnerControls={
-        <windowTitleBarControlComponents.SoloPlaybackButton
-          active={soloPlaybackUnitId === sequencerUnitId}
-          disabled={
-            projectLoading ||
-            playing ||
-            (soloPlaybackUnitId !== null &&
-              soloPlaybackUnitId !== sequencerUnitId)
-          }
-          onClick={() => {
-            actions.toggleSoloPlayback(sequencerUnitId);
-          }}
-        />
+        <div className="flex-ha gap-3">
+          <windowTitleBarControlComponents.SoloPlaybackButton
+            active={soloPlaybackUnitId === sequencerUnitId}
+            disabled={
+              projectLoading ||
+              playing ||
+              (soloPlaybackUnitId !== null &&
+                soloPlaybackUnitId !== sequencerUnitId)
+            }
+            onClick={() => {
+              actions.toggleSoloPlayback(sequencerUnitId);
+            }}
+          />
+          <windowTitleBarControlComponents.ClockActiveButton
+            active={unitClockingFlags[sequencerUnitId] !== false}
+            disabled={projectLoading || soloPlaybackUnitId !== null}
+            onClick={() => {
+              actions.toggleUnitClockingFlag(sequencerUnitId);
+            }}
+          />
+        </div>
       }
     >
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
