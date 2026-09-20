@@ -46,7 +46,10 @@ export const WindowDockItemView = ({
         {title && (
           <div
             className={cz(
-              "absolute-left-center w-auto whitespace-nowrap ml-44px py-0.5",
+              "w-auto whitespace-nowrap py-0.5",
+              0
+                ? "absolute-left-center ml-44px"
+                : "absolute-right-center mr-44px",
               "bg-#606068cc rounded-6px px-2 text-15px",
               "invisible opacity-0 group-hover:visible group-hover:opacity-100",
               "transition-opacity duration-200",
