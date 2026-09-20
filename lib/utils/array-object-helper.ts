@@ -72,3 +72,10 @@ export function literalIncludedIn<K extends string>(
 ): literal is K {
   return array.includes(literal);
 }
+
+export function getSortOrder<T>(
+  fn: (item: T) => number,
+  order: "asc" | "desc" = "asc",
+) {
+  return (a: T, b: T) => (fn(a) - fn(b)) * (order === "asc" ? 1 : -1);
+}

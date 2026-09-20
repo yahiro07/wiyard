@@ -16,6 +16,7 @@ import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
 import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { AutomationEditorWindow } from "@/views/window/automation-editor-window";
 import { ControlSurfaceWindow } from "@/views/window/control-surface-window";
+import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 
 const GraphEditPlane = () => {
   const { sight } = store.useSnapshot();
@@ -52,6 +53,7 @@ const FrontWindowsPlane = () => {
       <AutomationEditorWindow />
       <ControlSurfaceWindow />
       <KeyboardWindow />
+      <PartControlBarRoot />
       <DockRoot />
       <SecondBar />
     </>

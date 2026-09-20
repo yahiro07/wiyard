@@ -13,7 +13,7 @@ import { createControlSurfaceUnit } from "@lib/control-surface";
 
 export type CatalogKey = keyof typeof unitInventories;
 
-type CatalogItem = UnitInventorySpec & { catalogKey: CatalogKey };
+export type CatalogItem = UnitInventorySpec & { catalogKey: CatalogKey };
 
 const catalog = unitInventories as Record<CatalogKey, CatalogItem>;
 

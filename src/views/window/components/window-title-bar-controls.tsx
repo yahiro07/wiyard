@@ -66,4 +66,23 @@ export const windowTitleBarControlComponents = {
       </IconButton>
     );
   },
+  SoloButton({
+    active,
+    disabled,
+    onClick,
+  }: {
+    active: boolean;
+    disabled?: boolean;
+    onClick: () => void;
+  }) {
+    return (
+      <IconButton
+        disabled={disabled}
+        disabledDisplayOnly={!active}
+        onClick={onClick}
+      >
+        <Icons.Flash size={16} />
+      </IconButton>
+    );
+  },
 };

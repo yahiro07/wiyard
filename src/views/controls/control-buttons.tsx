@@ -63,7 +63,7 @@ const _WindowEvacuationButton = () => {
   );
 };
 
-const PlaybackButton = () => {
+export const PlaybackButton = () => {
   const { playing, projectLoading, soloPlaybackUnitId } = store.useSnapshot();
   return (
     <ControlButton
