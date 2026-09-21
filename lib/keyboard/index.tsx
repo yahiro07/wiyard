@@ -13,6 +13,7 @@ export const createKeyboardUnit: ReactUnitTemplateFn = (unitInterface) => {
   const store = createStore({
     notes: [] as number[],
     octave: 0, //-2~+2
+    viewActive: false,
   });
 
   const actions = {
@@ -45,6 +46,9 @@ export const createKeyboardUnit: ReactUnitTemplateFn = (unitInterface) => {
       noteOn: actions.noteOn,
       noteOff: actions.noteOff,
     },
+    unitCallbacks: {
+      setViewActive: store.setViewActive,
+    },
     persistence: {
       emitStateBytes() {
         return new Uint8Array([store.state.octave + 100]);
@@ -57,43 +61,49 @@ export const createKeyboardUnit: ReactUnitTemplateFn = (unitInterface) => {
     },
   });
 
-  return {
-    RenderUi() {
-      const { notes, octave } = store.useSnapshot();
-      const activeNotes = useMemo(() => {
-        return notes.map((noteNumber) => noteNumber - octave * 12);
-      }, [notes, octave]);
-      const labelOctaveIndex = 3 + octave;
-      return (
-        <div className="w-480px h-154px flex-c px-1 bg-#b0b0b0">
-          <div className="flex-v gap-2.5">
-            <OctaveShifter octave={octave} setOctave={actions.setOctave} />
-            <div className="flex-h touch-none" data-keyboard-root>
-              <KeyboardOctaveBlock
-                baseNoteNumber={48}
-                activeNotes={activeNotes}
-                noteOn={actions.noteOn}
-                noteOff={actions.noteOff}
-                rootLabel={`C${labelOctaveIndex}`}
-              />
-              <KeyboardOctaveBlock
-                baseNoteNumber={60}
-                activeNotes={activeNotes}
-                noteOn={actions.noteOn}
-                noteOff={actions.noteOff}
-                rootLabel={`C${labelOctaveIndex + 1}`}
-              />
-              <KeyboardTopKey
-                noteNumber={72}
-                activeNotes={activeNotes}
-                noteOn={actions.noteOn}
-                noteOff={actions.noteOff}
-                rootLabel={`C${labelOctaveIndex + 2}`}
-              />
-            </div>
+  const App = () => {
+    const { notes, octave } = store.useSnapshot();
+    const activeNotes = useMemo(() => {
+      return notes.map((noteNumber) => noteNumber - octave * 12);
+    }, [notes, octave]);
+    const labelOctaveIndex = 3 + octave;
+    return (
+      <div className="w-480px h-154px flex-c px-1 bg-#b0b0b0">
+        <div className="flex-v gap-2.5">
+          <OctaveShifter octave={octave} setOctave={actions.setOctave} />
+          <div className="flex-h touch-none" data-keyboard-root>
+            <KeyboardOctaveBlock
+              baseNoteNumber={48}
+              activeNotes={activeNotes}
+              noteOn={actions.noteOn}
+              noteOff={actions.noteOff}
+              rootLabel={`C${labelOctaveIndex}`}
+            />
+            <KeyboardOctaveBlock
+              baseNoteNumber={60}
+              activeNotes={activeNotes}
+              noteOn={actions.noteOn}
+              noteOff={actions.noteOff}
+              rootLabel={`C${labelOctaveIndex + 1}`}
+            />
+            <KeyboardTopKey
+              noteNumber={72}
+              activeNotes={activeNotes}
+              noteOn={actions.noteOn}
+              noteOff={actions.noteOff}
+              rootLabel={`C${labelOctaveIndex + 2}`}
+            />
           </div>
         </div>
-      );
+      </div>
+    );
+  };
+
+  return {
+    RenderUi() {
+      const { viewActive } = store.useSnapshot();
+      if (!viewActive) return null;
+      return <App />;
     },
   };
 };
