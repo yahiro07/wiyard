@@ -1,5 +1,6 @@
 import { linearInterpolate } from "@lib/utils/number-helper";
 import { KnobFrame } from "@lib/components/headless/knob-frame";
+import { cz } from "@lib/utils/cz";
 
 export const Knob = ({
   value,
@@ -9,6 +10,7 @@ export const Knob = ({
   step = 0.01,
   onClick,
   disabled,
+  smaller,
 }: {
   value: number;
   onChange: (value: number) => void;
@@ -17,6 +19,7 @@ export const Knob = ({
   step?: number;
   onClick?: () => void;
   disabled?: boolean;
+  smaller?: boolean;
 }) => {
   const tickAngle = linearInterpolate(value, min, max, -135, 135);
   return (
@@ -29,7 +32,10 @@ export const Knob = ({
       onTap={onClick}
     >
       <div
-        className="w-28px h-28px rounded-full relative bg-gray-500"
+        className={cz(
+          "rounded-full relative bg-gray-500",
+          !smaller ? "w-26px h-26px" : "w-24px h-24px",
+        )}
         style={{ opacity: disabled ? 0.5 : 1 }}
       >
         <div

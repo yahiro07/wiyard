@@ -92,7 +92,7 @@ export const DeskArea = () => {
       <GraphEditPlane />
       <FrontWindowsPlane />
       <UnitConnectionsRoot />
-      <div className="absolute top-0 right-0 m-6px mt-4.5">
+      <div className="absolute top-0 right-0 m-6px mt-4">
         <ControlButtonsInField />
       </div>
     </div>
