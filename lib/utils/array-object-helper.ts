@@ -52,7 +52,7 @@ export function mapObjectValues<T, R>(
   );
 }
 
-export function typedAssign<T extends object>(target: T, attrs: Partial<T>) {
+export function assignTyped<T extends object>(target: T, attrs: Partial<T>) {
   return Object.assign(target, attrs);
 }
 

@@ -1,5 +1,5 @@
 import { KeyName } from "@lib/contract";
-import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
+import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
@@ -129,7 +129,7 @@ const defaultStoreState: StoreState = {
 
 if (1) {
   // store.setSequencerWindowVisible(true);
-  typedAssign(defaultStoreState, {
+  assignTyped(defaultStoreState, {
     ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,

@@ -1,4 +1,4 @@
-import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
+import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
 import { tryParseJson, tryParseJsonOrNull } from "@lib/utils/general-helper";
 import { appEnvs } from "@/common/app-config";
 import { projectDataIo } from "@/project/project-data-io";
@@ -145,7 +145,7 @@ export const appPersistence = {
 };
 if (appEnvs.isDevelopment && 0) {
   //bypass persistence load for debug
-  typedAssign(appPersistence, {
+  assignTyped(appPersistence, {
     async load() {
       store.setAutoPersistenceEnabled(true);
     },
