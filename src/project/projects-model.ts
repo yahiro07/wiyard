@@ -13,8 +13,8 @@ import {
 import { store } from "@/store/store";
 
 export type ProjectsModel = {
-  exportProject(): void;
-  importProject(): void;
+  exportProject(): Promise<void>;
+  importProject(): Promise<void>;
   loadBlankProject(): void;
   loadDemoProject(): void;
 };
