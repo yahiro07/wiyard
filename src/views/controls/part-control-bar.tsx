@@ -101,7 +101,7 @@ function usePartItems(): PartItem[] {
               type: "board" as const,
               catalogItem: getCatalogItemWithFallback(item.catalogKey),
               unitId: item.unitId,
-              clockingActive: unitClockingFlags[item.unitId],
+              clockingActive: !(unitClockingFlags[item.unitId] === false),
               solo: soloModeUnitId === item.unitId,
               cardPosition: item.cardPosition,
             };
@@ -130,7 +130,7 @@ function usePartItems(): PartItem[] {
             unitId: sequencerUnitId,
             noteChannelId: item.unitId,
             sequencerIndex: index,
-            clockingActive: unitClockingFlags[sequencerUnitId],
+            clockingActive: !(unitClockingFlags[sequencerUnitId] === false),
             solo: soloModeUnitId === sequencerUnitId,
             cardPosition: item.cardPosition,
             channelActive: currentNoteChannelId === item.unitId,
@@ -170,6 +170,7 @@ const partItemHandlers = {
 
 export const PartControlBarRoot = () => {
   const partItems = usePartItems();
+  if (partItems.length === 0) return;
   return (
     <>
       <div className="absolute-left-center z-1 ml-2">
@@ -200,7 +201,7 @@ export const PartControlBarRoot = () => {
                     />
                   ) : (
                     <>
-                      <div className="relative h-full">
+                      <div className="relative w-full h-full">
                         {item.destinationUnitCatalogItem && (
                           <img
                             src={item.destinationUnitCatalogItem.thumbnailUrl}
