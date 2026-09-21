@@ -48,6 +48,16 @@ const GraphEditPlane = () => {
   );
 };
 
+const InFieldControlUi = () => {
+  const { settingsPanelVisible } = store.useSnapshot();
+  if (settingsPanelVisible) return;
+  return (
+    <div className="absolute top-0 right-0 m-6px mt-4">
+      <ControlButtonsInField />
+    </div>
+  );
+};
+
 const FrontWindowsPlane = () => {
   return (
     <>
@@ -59,9 +69,7 @@ const FrontWindowsPlane = () => {
       {1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}
       <DockRoot />
       <SecondBar />
-      <div className="absolute top-0 right-0 m-6px mt-4">
-        <ControlButtonsInField />
-      </div>
+      <InFieldControlUi />
       <SettingsPanelRoot />
     </>
   );

@@ -3,9 +3,11 @@ import { useRef } from "react";
 
 const SettingsPanel = () => {
   return (
-    <div className="w-300px bg-#ccc p-2 text-#444 m-2 min-h-400px">
-      <h3>Settings</h3>
-      <div>aaa</div>
+    <div className="w-300px m-2">
+      <div className="flex-ha px-2 h-30px text-white bg-gray-500 font-500">
+        <h3>Settings</h3>
+      </div>
+      <div className="bg-#ccc p-2 text-#444 min-h-350px">aaa</div>
     </div>
   );
 };
