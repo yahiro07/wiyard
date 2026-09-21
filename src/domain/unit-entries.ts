@@ -62,7 +62,7 @@ export const internalUnitCardIcons = {
   speakerPort: Icons.ArrowRightToBracket,
   noteInputPort: Icons.ArrowRightFromBracket,
   automationChannel: Icons.ArrowRightFromBracket,
-  controlSurface: Icons.DirectionRight,
+  controlSurface: Icons.Control,
 };
 
 export type UnitClassKey = CatalogKey | InternalUnitKey;
