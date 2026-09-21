@@ -23,7 +23,7 @@ export const TopBar = () => {
       <div className="pt-2">
         <ControlButtons />
       </div>
-      <div className="pt-2">
+      <div className="pt-0">
         <ControlButtonsRight />
       </div>
       <div className="absolute-full pointer-events-none text-xl font-500 flex-ha pl-2">

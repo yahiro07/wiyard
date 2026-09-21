@@ -18,6 +18,7 @@ import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { DockRoot } from "@/views/window/dock-root";
+import { ControlButtonsInField } from "@/views/controls/control-buttons";
 
 const GraphEditPlane = () => {
   const { sight } = store.useSnapshot();
@@ -91,6 +92,9 @@ export const DeskArea = () => {
       <GraphEditPlane />
       <FrontWindowsPlane />
       <UnitConnectionsRoot />
+      <div className="absolute top-0 right-0 m-6px mt-4.5">
+        <ControlButtonsInField />
+      </div>
     </div>
   );
 };

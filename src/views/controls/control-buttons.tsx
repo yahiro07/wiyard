@@ -157,6 +157,13 @@ export const ControlButtonsRight = () => {
     <div className="flex-h gap-2">
       <ShareUrlButton />
       <GithubLinkButton />
+    </div>
+  );
+};
+
+export const ControlButtonsInField = () => {
+  return (
+    <div className="flex-h gap-2">
       <SightZoomInput />
     </div>
   );
