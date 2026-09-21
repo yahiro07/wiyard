@@ -36,6 +36,7 @@ type StoreState = {
   destinationParameterPathsMap: { [key in SlotId]?: string[] };
   controlChangeAssignTargetSlotId: SlotId | null;
   draggingSlotId: SlotId | null;
+  viewActive: boolean;
 };
 
 const defaultStoreState: StoreState = {
@@ -50,6 +51,7 @@ const defaultStoreState: StoreState = {
   destinationParameterPathsMap: {},
   controlChangeAssignTargetSlotId: null,
   draggingSlotId: null,
+  viewActive: false,
 };
 
 function createActions(store: Store<StoreState>) {
@@ -403,6 +405,9 @@ function createDrivers(
             store.assign({ controlChangeAssignMap });
           }
         },
+        setViewActive(viewActive: boolean) {
+          store.setViewActive(viewActive);
+        },
       },
       persistence: {
         emitState() {
@@ -475,7 +480,9 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
   drivers.completeSetup();
   return {
     RenderUi() {
+      const { viewActive } = store.useSnapshot();
       useEffect(drivers.setupSynchronization, []);
+      if (!viewActive) return null;
       return <ui.App />;
     },
   };

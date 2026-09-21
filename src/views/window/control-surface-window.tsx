@@ -12,6 +12,7 @@ import { decodeWireConnectionKey } from "@/domain/port-helpers";
 import { hostSystem } from "@/domain/host-system-instance";
 import { MessageToUnit } from "@lib/contract";
 import { sizeOp } from "@lib/utils/geometry-helper";
+import { commonGetters } from "@/store/common-getters";
 
 const controlSurfaceHooks = {
   useAffectViewSizeChange() {
@@ -61,6 +62,7 @@ export const ControlSurfaceWindow = () => {
   useLayoutEffect(reporter.reportLoadStart, []);
   controlSurfaceHooks.useAffectViewSizeChange();
   controlSurfaceHooks.useReportDestinationParameterPaths();
+  const viewActive = commonGetters.useWindowVisible(windowIds.controlSurface);
 
   return (
     <WindowFrame id={windowIds.controlSurface} title="control surface">
@@ -69,6 +71,7 @@ export const ControlSurfaceWindow = () => {
           unitId={builtinUnitIds.controlSurface}
           unitTemplateFn={interUnitFactories.controlSurface}
           onUnitInstanceLoaded={reporter.reportLoaded}
+          viewActive={viewActive}
         />
       </ScalerBoxAutoSized>
     </WindowFrame>
