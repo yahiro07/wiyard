@@ -9,6 +9,8 @@ import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
 import { hostSystem } from "@/domain/host-system-instance";
 import { builtinUnitIds } from "@/domain/unit-entries";
+import { defaultData2 } from "@/project/default-data-2";
+import { projectsModel } from "@/project/projects-model";
 
 type AppSessionStates = {
   midiInEnabled: boolean;
@@ -127,6 +129,7 @@ export const appPersistence = {
 
           store.setAutoPersistenceEnabled(true);
         } else {
+          projectsModel.loadProject(defaultData2.starter);
           store.setAutoPersistenceEnabled(true);
         }
       } catch (error: any) {

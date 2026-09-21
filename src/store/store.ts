@@ -14,7 +14,7 @@ import {
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { blankScene, defaultScene } from "@/project/default-data";
+import { blankScene } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 
 export type StoreState = {
@@ -124,13 +124,13 @@ export const projectResetterStates: Partial<StoreState> = {
 
 const defaultStoreState: StoreState = {
   ...blankStoreState,
-  ...defaultScene.storeStates,
+  ...blankScene.storeStates,
 };
 
-if (1) {
+if (0) {
   // store.setSequencerWindowVisible(true);
   assignTyped(defaultStoreState, {
-    ...blankScene.storeStates,
+    // ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
   });
