@@ -4,6 +4,7 @@ import { CgPiano } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
+  FaGithub,
   FaPowerOff,
   FaWindowMinimize,
 } from "react-icons/fa6";
@@ -36,4 +37,5 @@ export const Icons = {
   Flash: RiFlashlightFill,
   Control: AiOutlineControl,
   Graph: VscGraphLine,
+  Github: FaGithub,
 };

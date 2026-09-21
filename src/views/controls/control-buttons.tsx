@@ -26,7 +26,7 @@ export const ControlButton = ({
     <button
       type="button"
       className={cz(
-        "flex-c text-2xl w-40px h-30px cursor-pointer",
+        "flex-c text-2xl w-30px h-30px cursor-pointer",
         disabled && "opacity-30 pointer-events-none",
         active && "text-#0cf",
         "hover:opacity-80",
@@ -124,9 +124,20 @@ const ShareUrlButton = () => {
   );
 };
 
+const GithubLinkButton = () => {
+  return (
+    <ControlButton
+      onClick={() =>
+        window.open("https://github.com/yahiro07/wireboard", "_blank")
+      }
+      children={<Icons.Github size={24} />}
+    />
+  );
+};
+
 export const ControlButtons = () => {
   return (
-    <div className="flex-ha gap-4">
+    <div className="flex-ha gap-5">
       <div className="invisible">
         <SecondBarButton />
       </div>
@@ -145,6 +156,7 @@ export const ControlButtonsRight = () => {
   return (
     <div className="flex-h gap-2">
       <ShareUrlButton />
+      <GithubLinkButton />
       <SightZoomInput />
     </div>
   );
