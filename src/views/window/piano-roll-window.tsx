@@ -9,6 +9,7 @@ import { store } from "@/store/store";
 import { WindowFrame } from "@lib/window-system";
 import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
 import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
+import { commonGetters } from "@/store/common-getters";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
@@ -74,7 +75,9 @@ const SequencerUnitItemView = ({
   notePortUnitItem: NoteInputPortUnitItem;
 }) => {
   const { currentNoteChannelId } = store.useSnapshot();
-  const displayed = notePortUnitItem.unitId === currentNoteChannelId;
+  const windowVisible = commonGetters.useWindowVisible(windowIds.pianoRoll);
+  const displayed =
+    windowVisible && notePortUnitItem.unitId === currentNoteChannelId;
   const internalUnitFactory =
     interUnitFactories[notePortUnitItem.sequencerClassKey];
   const sequencerUnitId = notePortGetters.getSequencerUnitId(
