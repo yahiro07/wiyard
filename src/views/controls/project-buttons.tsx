@@ -3,8 +3,8 @@ import { projectsModel } from "@/project/projects-model";
 import { store } from "@/store/store";
 import { useRef } from "react";
 import { useHandleClickOutside } from "@lib/utils/use-handle-click-outside";
-import { blankScene, defaultScene } from "@/project/default-data";
-import { defaultData2 } from "@/project/default-data-2";
+import { blankScene } from "@/project/default-data";
+import { defaultData2, defaultData2S } from "@/project/default-data-2";
 
 const ProjectButton = ({
   text,
@@ -79,7 +79,9 @@ export const ProjectButtons = () => {
       />
       <ProjectButton
         text="demo"
-        onClick={withClose(() => projectsModel.loadProject(defaultScene))}
+        onClick={withClose(() =>
+          projectsModel.loadProjectDataText(defaultData2S.demo1),
+        )}
       />
       <ProjectButton
         text="import"

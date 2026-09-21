@@ -17,6 +17,7 @@ export type ProjectsModel = {
   exportProject(): Promise<void>;
   importProject(): Promise<void>;
   loadProject(projectData: ProjectData): void;
+  loadProjectDataText(projectDataText: string): void;
   debugDumpProjectData(): void;
 };
 
@@ -70,9 +71,16 @@ function createProjectsModel(): ProjectsModel {
     loadProject(projectData: ProjectData) {
       void projectDataIo.applyProjectData(projectData);
     },
+    loadProjectDataText(projectDataText: string) {
+      const projectData = projectDataTextSupport.parseProjectDataText(
+        projectDataText,
+        false,
+      );
+      void projectDataIo.applyProjectData(projectData);
+    },
     debugDumpProjectData() {
       const projectData = projectDataIo.emitProjectData();
-      if (1) {
+      if (0) {
         projectData.storeStates.windowSpecs = {
           [windowIds.keyboard]:
             projectData.storeStates.windowSpecs[windowIds.keyboard],
