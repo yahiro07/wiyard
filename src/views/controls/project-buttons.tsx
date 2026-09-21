@@ -21,8 +21,8 @@ const ProjectButton = ({
     <button
       type="button"
       className={cz(
-        "flex-c h-32px cursor-pointer",
-        "w-66px bg-#707078 rounded",
+        "flex-c h-30px cursor-pointer",
+        "w-60px bg-#707078 rounded text-15px",
         disabled && "opacity-30 pointer-events-none",
         active && "text-#0cf",
         "hover:opacity-80",
