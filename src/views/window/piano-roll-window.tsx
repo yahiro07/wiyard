@@ -35,9 +35,8 @@ const NoteChannelListColumn = () => {
     <div className="w-50px bg-gray-700/60 flex-v gap-2 py-2 text-white pb-3">
       {noteChannelIds.map((id, index) => {
         return (
-          <div className="flex-ha gap-2">
+          <div className="flex-ha gap-2" key={id}>
             <button
-              key={id}
               type="button"
               className={cz(
                 "w-40px h-30px bg-gray-300/50 flex-c text-white cursor-pointer",
