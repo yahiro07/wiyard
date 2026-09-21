@@ -13,6 +13,7 @@ import { store, windowSystem } from "@/store/store";
 import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
+import { commonGetters } from "@/store/common-getters";
 
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(
@@ -43,6 +44,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const sourceNoteChannelIndex =
     sourceNoteChannelGetters.useUnitSourceActiveNoteChannelIndex(unitId);
   const isPlaybackCapable = unitPlaybackCapabilityFlags[catalogKey] ?? false;
+  const viewActive = commonGetters.useWindowVisible(unitId);
 
   return (
     <WindowFrame
@@ -86,6 +88,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           onIframeMounted={onIframeMounted}
           onUnitInstanceLoaded={reporter.reportLoaded}
           onLoadFailed={reporter.reportFailure}
+          viewActive={viewActive}
         />
       ) : (
         <div>error: catalog item not found for {catalogKey}</div>
