@@ -5,6 +5,7 @@ import { KnotPoint, LoopBars } from "./types";
 type StoreState = {
   points: KnotPoint[];
   loopBars: LoopBars;
+  viewActive: boolean;
 };
 export type AppStore = Store<StoreState>;
 
@@ -14,7 +15,11 @@ const defaultPoints: KnotPoint[] = [
 ];
 
 export function createAppStore(): AppStore {
-  return createStore<StoreState>({ points: defaultPoints, loopBars: 4 });
+  return createStore<StoreState>({
+    points: defaultPoints,
+    loopBars: 4,
+    viewActive: false,
+  });
 }
 
 export function useStoreAccessor(store: AppStore) {

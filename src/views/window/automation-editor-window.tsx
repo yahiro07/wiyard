@@ -53,6 +53,7 @@ const EditorUnitItemView = ({ unitId }: { unitId: string }) => {
         unitId={unitId}
         unitTemplateFn={interUnitFactories.automationEditor}
         onUnitInstanceLoaded={reporter.reportLoaded}
+        viewActive={displayed}
       />
     </div>
   );
