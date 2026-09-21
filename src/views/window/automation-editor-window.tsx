@@ -85,11 +85,14 @@ const EditorContentSection = () => {
 };
 
 export const AutomationEditorWindow = () => {
+  const windowVisible = commonGetters.useWindowVisible(
+    windowIds.automationEditor,
+  );
   return (
     <WindowFrame id={windowIds.automationEditor} title="automation">
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <div className="h-full flex-h">
-          <ChannelListColumn />
+          {windowVisible && <ChannelListColumn />}
           <EditorContentSection />
         </div>
       </ScalerBoxDW>

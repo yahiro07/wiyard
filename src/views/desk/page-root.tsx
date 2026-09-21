@@ -1,9 +1,9 @@
 import { ScreenScaler } from "@lib/components/headless/screen-scaler";
 import { store } from "@/store/store";
-import { TopBar } from "@/views/controls/top-control-bars";
 import { DeskArea } from "@/views/desk/desk-area";
 import { ErrorDialog } from "@/views/desk/error-dialog";
 import { UnitPickerRoot } from "@/views/desk/unit-picker";
+import { TopBar } from "@/views/controls/top-control-bars";
 
 const ErrorDialogContainer = () => {
   const { projectLoadErrorStatus: errorStatus } = store.useSnapshot();

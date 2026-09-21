@@ -84,7 +84,7 @@ const SequencerUnitItemView = ({
     notePortUnitItem.unitId,
   );
   return (
-    <div className={cz("absolute-full", !displayed && "invisible")}>
+    <div className={cz("absolute-full", !displayed && "hidden")}>
       <ReactUnitFrame
         unitId={sequencerUnitId}
         unitTemplateFn={internalUnitFactory}
@@ -106,9 +106,10 @@ const PianoRollSection = () => {
 };
 
 const PianoRollPanel = () => {
+  const windowVisible = commonGetters.useWindowVisible(windowIds.pianoRoll);
   return (
     <div className="w-full h-full flex-h">
-      <NoteChannelListColumn />
+      {windowVisible && <NoteChannelListColumn />}
       <PianoRollSection />
     </div>
   );

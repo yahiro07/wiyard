@@ -4,11 +4,9 @@ import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
 import { SecondBar } from "@/views/controls/top-control-bars";
 import { CoordDebugLayer } from "@/views/desk/coord-debug-layer";
-import { DockRoot } from "@/views/window/dock-root";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { KeyboardWindow } from "@/views/window/keyboard-window";
 import { PianoRollWindow } from "@/views/window/piano-roll-window";
-import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { UnitWindowsRoot } from "@/views/window/unit-windows";
 import { UnitConnectionsRoot } from "@/views/wiring/connections";
 import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";
@@ -18,6 +16,8 @@ import { AutomationEditorWindow } from "@/views/window/automation-editor-window"
 import { ControlSurfaceWindow } from "@/views/window/control-surface-window";
 import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
+import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
+import { DockRoot } from "@/views/window/dock-root";
 
 const GraphEditPlane = () => {
   const { sight } = store.useSnapshot();
