@@ -26,7 +26,7 @@ export const Knob = ({
       max={max}
       step={step}
       onChange={onChange}
-      onClick={onClick}
+      onTap={onClick}
       // dragDisabled={disabled}
     >
       <div
