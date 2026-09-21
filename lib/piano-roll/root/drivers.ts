@@ -80,6 +80,11 @@ export function setupUnit(
         store.setKeySpec(keySpec);
       },
     },
+    unitCallbacks: {
+      setViewActive(viewActive) {
+        store.setViewActive(viewActive);
+      },
+    },
     persistence: createPersistence(store),
     cleanup: unsubscribeStore,
   });

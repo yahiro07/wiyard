@@ -8,7 +8,7 @@ import { createControlSurfaceUnit } from "@lib/control-surface";
 const PageRootUnitsDev = () => {
   return (
     <div className="h-dvh flex-c">
-      {false && (
+      {true && (
         <ReactUnitFrame
           unitId="pianoRollDev"
           unitTemplateFn={createPianoRollUnit}
@@ -20,7 +20,7 @@ const PageRootUnitsDev = () => {
           unitTemplateFn={createKeyboardUnit}
         />
       )}
-      {true && (
+      {false && (
         <ReactUnitFrame
           unitId="automationEditorDev"
           unitTemplateFn={createAutomationEditorUnit}

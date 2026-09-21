@@ -1,14 +1,8 @@
 import { cz } from "@lib/utils/cz";
-import { ReactNode } from "react";
-import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
+import { ReactUnitFrame } from "wafer-host/react";
 import { Icons } from "@/common/icons";
 import { NoteInputPortUnitItem, windowIds } from "@/domain/types";
-import {
-  CatalogKey,
-  InternalUnitKey,
-  interUnitFactories,
-  getCatalogItem,
-} from "@/domain/unit-entries";
+import { interUnitFactories } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
@@ -82,32 +76,17 @@ const SequencerUnitItemView = ({
   const { currentNoteChannelId } = store.useSnapshot();
   const displayed = notePortUnitItem.unitId === currentNoteChannelId;
   const internalUnitFactory =
-    interUnitFactories[notePortUnitItem.sequencerClassKey as InternalUnitKey];
-  const catalogItem = getCatalogItem(
-    notePortUnitItem.sequencerClassKey as CatalogKey,
-  );
+    interUnitFactories[notePortUnitItem.sequencerClassKey];
   const sequencerUnitId = notePortGetters.getSequencerUnitId(
     notePortUnitItem.unitId,
   );
-  let content: ReactNode;
-  if (internalUnitFactory) {
-    content = (
+  return (
+    <div className={cz("absolute-full", !displayed && "invisible")}>
       <ReactUnitFrame
         unitId={sequencerUnitId}
         unitTemplateFn={internalUnitFactory}
+        viewActive={displayed}
       />
-    );
-  } else if (catalogItem) {
-    content = (
-      <UnitFrameScaled
-        unitId={sequencerUnitId}
-        unitUrl={catalogItem.loaderPageUrl}
-      />
-    );
-  }
-  return (
-    <div className={cz("absolute-full", !displayed && "invisible")}>
-      {content}
     </div>
   );
 };

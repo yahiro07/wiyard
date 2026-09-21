@@ -1,6 +1,6 @@
 import { Point, Size } from "@lib/utils/common-types";
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
-import { CatalogKey, UnitClassKey } from "@/domain/unit-entries";
+import { CatalogKey } from "@/domain/unit-entries";
 import { AutomationParameterSpec } from "wafer-host/unit-types";
 
 export type BoardUnitItem = {
@@ -13,7 +13,7 @@ export type BoardUnitItem = {
 export type NoteInputPortUnitItem = {
   type: "noteInput";
   unitId: string;
-  sequencerClassKey: UnitClassKey;
+  sequencerClassKey: "pianoRoll"; // | UnitClassKey;
   cardPosition: Point;
 };
 
