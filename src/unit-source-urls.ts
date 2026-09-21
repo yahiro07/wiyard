@@ -4,7 +4,7 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r25`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r26`;
     const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r21`;
 
     return [
