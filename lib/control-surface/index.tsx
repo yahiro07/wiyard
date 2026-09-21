@@ -434,9 +434,9 @@ export const createControlSurfaceUnit: ReactUnitTemplateFn = (
       }
       if (wideLayout !== undefined) {
         if (wideLayout) {
-          unitInterface.setViewSize(860, 160);
+          unitInterface.setViewSize({ width: 860, height: 160 });
         } else {
-          unitInterface.setViewSize(444, 264);
+          unitInterface.setViewSize({ width: 444, height: 264 });
         }
       }
     }, true);
