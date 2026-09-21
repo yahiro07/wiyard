@@ -63,6 +63,7 @@ export const UnitPortsColumn = ({
 }) => {
   return (
     <div className="flex-va gap-0.5 min-w-20px">
+      {portSpecs.length % 2 === 0 && <div className="w-20px h-20px" />}
       {portSpecs.map((portSpec) => (
         <PortView
           key={portSpec.portKey}
