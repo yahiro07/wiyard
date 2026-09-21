@@ -328,7 +328,7 @@ const TopBar = () => {
   );
 };
 
-export const PageRoot = () => {
+const PageRootInner = () => {
   const { isPatternView, diatonicLanesEnabled } =
     useAppContext().store.useSnapshot();
   return (
@@ -342,4 +342,10 @@ export const PageRoot = () => {
       {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
     </div>
   );
+};
+
+export const PageRoot = () => {
+  const [{ viewActive }] = useStoreAccess();
+  if (!viewActive) return null;
+  return <PageRootInner />;
 };

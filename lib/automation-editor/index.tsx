@@ -51,6 +51,8 @@ export const createAutomationEditorUnit: ReactUnitTemplateFn = (
   setupDrivers(store, unitInterface);
   return {
     RenderUi() {
+      const { viewActive } = store.useSnapshot();
+      if (!viewActive) return null;
       return <App store={store} />;
     },
   };

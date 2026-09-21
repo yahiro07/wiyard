@@ -10,6 +10,7 @@ import { channelListColumnComponents } from "@/views/window/components/channel-l
 import { cz } from "@lib/utils/cz";
 import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
 import { useLayoutEffect } from "react";
+import { commonGetters } from "@/store/common-getters";
 
 const ChannelListColumn = () => {
   const { currentAutomationChannelId } = store.useSnapshot();
@@ -44,7 +45,10 @@ const ChannelListColumn = () => {
 
 const EditorUnitItemView = ({ unitId }: { unitId: string }) => {
   const { currentAutomationChannelId } = store.useSnapshot();
-  const displayed = unitId === currentAutomationChannelId;
+  const windowVisible = commonGetters.useWindowVisible(
+    windowIds.automationEditor,
+  );
+  const displayed = windowVisible && unitId === currentAutomationChannelId;
   const reporter = useUnitStuffReporter(unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
   return (
@@ -53,6 +57,7 @@ const EditorUnitItemView = ({ unitId }: { unitId: string }) => {
         unitId={unitId}
         unitTemplateFn={interUnitFactories.automationEditor}
         onUnitInstanceLoaded={reporter.reportLoaded}
+        viewActive={displayed}
       />
     </div>
   );
@@ -80,11 +85,14 @@ const EditorContentSection = () => {
 };
 
 export const AutomationEditorWindow = () => {
+  const windowVisible = commonGetters.useWindowVisible(
+    windowIds.automationEditor,
+  );
   return (
     <WindowFrame id={windowIds.automationEditor} title="automation">
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <div className="h-full flex-h">
-          <ChannelListColumn />
+          {windowVisible && <ChannelListColumn />}
           <EditorContentSection />
         </div>
       </ScalerBoxDW>

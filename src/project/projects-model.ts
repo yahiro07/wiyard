@@ -1,6 +1,5 @@
 import { tryParseJson } from "@lib/utils/general-helper";
 import { appEnvs } from "@/common/app-config";
-import { blankScene, defaultScene } from "@/project/default-data";
 import { projectDataIo } from "@/project/project-data-io";
 import { migrateProjectData } from "@/project/project-data-migrator";
 import { raiseProjectLoadingError } from "@/project/project-error";
@@ -11,12 +10,15 @@ import {
   saveProjectJsonToLocalFileSystem,
 } from "@/project/projects-model-helper";
 import { store } from "@/store/store";
+import { projectDataTextSupport } from "@/project/shared-url-support";
+import { windowIds } from "@/domain/types";
 
 export type ProjectsModel = {
   exportProject(): Promise<void>;
   importProject(): Promise<void>;
-  loadBlankProject(): void;
-  loadDemoProject(): void;
+  loadProject(projectData: ProjectData): void;
+  loadProjectDataText(projectDataText: string): void;
+  debugDumpProjectData(): void;
 };
 
 function createProjectsModel(): ProjectsModel {
@@ -66,11 +68,30 @@ function createProjectsModel(): ProjectsModel {
         });
       }
     },
-    loadBlankProject() {
-      void projectDataIo.applyProjectData(blankScene);
+    loadProject(projectData: ProjectData) {
+      void projectDataIo.applyProjectData(projectData);
     },
-    loadDemoProject() {
-      void projectDataIo.applyProjectData(defaultScene);
+    loadProjectDataText(projectDataText: string) {
+      const projectData = projectDataTextSupport.parseProjectDataText(
+        projectDataText,
+        false,
+      );
+      void projectDataIo.applyProjectData(projectData);
+    },
+    debugDumpProjectData() {
+      const projectData = projectDataIo.emitProjectData();
+      if (0) {
+        projectData.storeStates.windowSpecs = {
+          [windowIds.keyboard]:
+            projectData.storeStates.windowSpecs[windowIds.keyboard],
+        };
+        projectData.unitStates = [];
+        console.log(JSON.stringify(projectData, null, 2));
+      } else {
+        const projectDataText =
+          projectDataTextSupport.emitProjectDataText(projectData);
+        console.log(projectDataText);
+      }
     },
   };
 }

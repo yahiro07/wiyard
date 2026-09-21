@@ -1,20 +1,15 @@
 import { cz } from "@lib/utils/cz";
-import { ReactNode } from "react";
-import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
+import { ReactUnitFrame } from "wafer-host/react";
 import { Icons } from "@/common/icons";
 import { NoteInputPortUnitItem, windowIds } from "@/domain/types";
-import {
-  CatalogKey,
-  InternalUnitKey,
-  interUnitFactories,
-  getCatalogItem,
-} from "@/domain/unit-entries";
+import { interUnitFactories } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { WindowFrame } from "@lib/window-system";
 import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
 import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
+import { commonGetters } from "@/store/common-getters";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
@@ -80,34 +75,21 @@ const SequencerUnitItemView = ({
   notePortUnitItem: NoteInputPortUnitItem;
 }) => {
   const { currentNoteChannelId } = store.useSnapshot();
-  const displayed = notePortUnitItem.unitId === currentNoteChannelId;
+  const windowVisible = commonGetters.useWindowVisible(windowIds.pianoRoll);
+  const displayed =
+    windowVisible && notePortUnitItem.unitId === currentNoteChannelId;
   const internalUnitFactory =
-    interUnitFactories[notePortUnitItem.sequencerClassKey as InternalUnitKey];
-  const catalogItem = getCatalogItem(
-    notePortUnitItem.sequencerClassKey as CatalogKey,
-  );
+    interUnitFactories[notePortUnitItem.sequencerClassKey];
   const sequencerUnitId = notePortGetters.getSequencerUnitId(
     notePortUnitItem.unitId,
   );
-  let content: ReactNode;
-  if (internalUnitFactory) {
-    content = (
+  return (
+    <div className={cz("absolute-full", !displayed && "hidden")}>
       <ReactUnitFrame
         unitId={sequencerUnitId}
         unitTemplateFn={internalUnitFactory}
+        viewActive={displayed}
       />
-    );
-  } else if (catalogItem) {
-    content = (
-      <UnitFrameScaled
-        unitId={sequencerUnitId}
-        unitUrl={catalogItem.loaderPageUrl}
-      />
-    );
-  }
-  return (
-    <div className={cz("absolute-full", !displayed && "invisible")}>
-      {content}
     </div>
   );
 };
@@ -124,9 +106,10 @@ const PianoRollSection = () => {
 };
 
 const PianoRollPanel = () => {
+  const windowVisible = commonGetters.useWindowVisible(windowIds.pianoRoll);
   return (
     <div className="w-full h-full flex-h">
-      <NoteChannelListColumn />
+      {windowVisible && <NoteChannelListColumn />}
       <PianoRollSection />
     </div>
   );

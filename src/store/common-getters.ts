@@ -11,4 +11,8 @@ export const commonGetters = {
   getControlSurfaceUnitItem() {
     return store.state.unitItems.find((it) => it.type === "controlSurface");
   },
+  useWindowVisible(windowId: string) {
+    const { windowSpecs } = store.useSnapshot();
+    return windowSpecs[windowId]?.status === "visible";
+  },
 };

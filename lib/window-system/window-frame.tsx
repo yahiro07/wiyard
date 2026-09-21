@@ -220,27 +220,31 @@ const WindowFrameView = ({
             windowFrameHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
           }
         >
-          <TopBar
-            windowCoordVm={windowCoordVm}
-            title={title}
-            isCurrent={isCurrent}
-            closeWindow={closeWindow}
-            toggleMinimized={toggleMinimized}
-            topBarInnerControls={topBarInnerControls}
-            topBarInnerControls2={topBarInnerControls2}
-          />
+          {displayed && (
+            <TopBar
+              windowCoordVm={windowCoordVm}
+              title={title}
+              isCurrent={isCurrent}
+              closeWindow={closeWindow}
+              toggleMinimized={toggleMinimized}
+              topBarInnerControls={topBarInnerControls}
+              topBarInnerControls2={topBarInnerControls2}
+            />
+          )}
           <div
             className="bg-white text-black h-full"
             style={{ width: contentSize.width, height: contentSize.height }}
           >
             {children}
           </div>
-          <>
-            <ResizeAnchor anchor="tl" windowCoordVm={windowCoordVm} />
-            <ResizeAnchor anchor="tr" windowCoordVm={windowCoordVm} />
-            <ResizeAnchor anchor="bl" windowCoordVm={windowCoordVm} />
-            <ResizeAnchor anchor="br" windowCoordVm={windowCoordVm} />
-          </>
+          {displayed && (
+            <>
+              <ResizeAnchor anchor="tl" windowCoordVm={windowCoordVm} />
+              <ResizeAnchor anchor="tr" windowCoordVm={windowCoordVm} />
+              <ResizeAnchor anchor="bl" windowCoordVm={windowCoordVm} />
+              <ResizeAnchor anchor="br" windowCoordVm={windowCoordVm} />
+            </>
+          )}
         </div>
       </div>
     </>

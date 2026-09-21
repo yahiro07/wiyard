@@ -6,7 +6,7 @@ export function NumberSliderBoxView(props: {
 }) {
   return (
     <div
-      className="w-50px h-28px flex-c bg-gray-500 text-white"
+      className="w-44px h-26px flex-c bg-gray-500 text-white"
       style={{ letterSpacing: "0.05em" }}
     >
       {props.value.toFixed(props.fracDigits ?? 2)}

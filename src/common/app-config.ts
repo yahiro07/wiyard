@@ -1,4 +1,4 @@
-import { typedAssign } from "@lib/utils/array-object-helper";
+import { assignTyped } from "@lib/utils/array-object-helper";
 
 declare const __CfPagesUrl: string;
 
@@ -14,7 +14,7 @@ export const appEnvs = {
   appVersionCode: "v260916",
 };
 if (appEnvs.isDevelopment) {
-  typedAssign(appEnvs, {
+  assignTyped(appEnvs, {
     cfPagesUrl: "https://aaabbb123.wireboard.pages.dev",
     cfPagesDeployId: "aaabbb123",
   });

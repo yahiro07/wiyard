@@ -1,4 +1,4 @@
-import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
+import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
 import { tryParseJson, tryParseJsonOrNull } from "@lib/utils/general-helper";
 import { appEnvs } from "@/common/app-config";
 import { projectDataIo } from "@/project/project-data-io";
@@ -9,6 +9,8 @@ import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
 import { hostSystem } from "@/domain/host-system-instance";
 import { builtinUnitIds } from "@/domain/unit-entries";
+import { defaultData2 } from "@/project/default-data-2";
+import { projectsModel } from "@/project/projects-model";
 
 type AppSessionStates = {
   midiInEnabled: boolean;
@@ -127,6 +129,7 @@ export const appPersistence = {
 
           store.setAutoPersistenceEnabled(true);
         } else {
+          projectsModel.loadProject(defaultData2.starter);
           store.setAutoPersistenceEnabled(true);
         }
       } catch (error: any) {
@@ -145,7 +148,7 @@ export const appPersistence = {
 };
 if (appEnvs.isDevelopment && 0) {
   //bypass persistence load for debug
-  typedAssign(appPersistence, {
+  assignTyped(appPersistence, {
     async load() {
       store.setAutoPersistenceEnabled(true);
     },

@@ -1,5 +1,5 @@
 import { KeyName } from "@lib/contract";
-import { pickObjectMembers, typedAssign } from "@lib/utils/array-object-helper";
+import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
 import { Point } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
@@ -14,7 +14,7 @@ import {
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { blankScene, defaultScene } from "@/project/default-data";
+import { blankScene } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 
 export type StoreState = {
@@ -124,13 +124,13 @@ export const projectResetterStates: Partial<StoreState> = {
 
 const defaultStoreState: StoreState = {
   ...blankStoreState,
-  ...defaultScene.storeStates,
+  ...blankScene.storeStates,
 };
 
-if (1) {
+if (0) {
   // store.setSequencerWindowVisible(true);
-  typedAssign(defaultStoreState, {
-    ...blankScene.storeStates,
+  assignTyped(defaultStoreState, {
+    // ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
   });

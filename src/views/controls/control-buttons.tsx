@@ -26,7 +26,7 @@ export const ControlButton = ({
     <button
       type="button"
       className={cz(
-        "flex-c text-2xl w-40px h-30px cursor-pointer",
+        "flex-c text-2xl w-30px h-30px cursor-pointer",
         disabled && "opacity-30 pointer-events-none",
         active && "text-#0cf",
         "hover:opacity-80",
@@ -108,6 +108,7 @@ const SightZoomInput = () => {
         onChange={(v) => store.patchSight({ eyeScaling: v })}
         min={0.1}
         max={2}
+        smaller
       />
     </UpperLabel>
   );
@@ -120,13 +121,24 @@ const ShareUrlButton = () => {
     alert(`shared url copied to clipboard (${url.length}bytes)`);
   };
   return (
-    <ControlButton onClick={onClick} children={<Icons.Share size={24} />} />
+    <ControlButton onClick={onClick} children={<Icons.Share size={26} />} />
+  );
+};
+
+const GithubLinkButton = () => {
+  return (
+    <ControlButton
+      onClick={() =>
+        window.open("https://github.com/yahiro07/wireboard", "_blank")
+      }
+      children={<Icons.Github size={26} />}
+    />
   );
 };
 
 export const ControlButtons = () => {
   return (
-    <div className="flex-ha gap-4">
+    <div className="flex-ha gap-5">
       <div className="invisible">
         <SecondBarButton />
       </div>
@@ -143,8 +155,16 @@ export const ControlButtons = () => {
 
 export const ControlButtonsRight = () => {
   return (
-    <div className="flex-h gap-2">
+    <div className="flex-h gap-2.5">
       <ShareUrlButton />
+      <GithubLinkButton />
+    </div>
+  );
+};
+
+export const ControlButtonsInField = () => {
+  return (
+    <div className="flex-h gap-2">
       <SightZoomInput />
     </div>
   );
