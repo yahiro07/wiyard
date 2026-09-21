@@ -91,10 +91,7 @@ const WindowControlButton = ({
     <button
       type="button"
       className={cz("cursor-pointer w-28px h-36px flex-c")}
-      onPointerDown={(e) => {
-        onClick();
-        e.stopPropagation();
-      }}
+      onClick={onClick}
     >
       <div className={cz("w-16px h-16px rounded-full bg-white/50 flex-c")}>
         <IConComponent size={iconSize} />
@@ -110,6 +107,7 @@ const TopBar = ({
   closeWindow,
   toggleMinimized,
   topBarInnerControls,
+  topBarInnerControls2,
 }: {
   windowCoordVm: WindowCoordViewModel;
   title: string;
@@ -117,45 +115,52 @@ const TopBar = ({
   closeWindow: () => void;
   toggleMinimized: () => void;
   topBarInnerControls?: ReactNode;
+  topBarInnerControls2?: ReactNode;
 }) => {
   return (
     // <div className="absolute w-full" style={{ top: -windowTitleBarHeight }}>
     <div
       className={cz(
-        "flex-c relative justify-between px-1.5",
+        "flex-c relative justify-between",
         isCurrent ? "bg-#68c/96" : "bg-gray-500/92",
       )}
       style={{ height: windowTitleBarHeight }}
-      onPointerDown={(e) =>
-        windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
-      }
     >
-      <div className="flex-ha gap-2">
-        <div
-          className={cz(
-            "flex-ha",
-            "[&>button>div>svg]:(opacity-0)",
-            "[&:hover>button>div>svg]:(opacity-100)",
-          )}
-        >
-          <WindowControlButton
-            onClick={closeWindow}
-            icon={Icons.Close}
-            iconSize={14}
-          />
-          <WindowControlButton
-            onClick={toggleMinimized}
-            icon={Icons.Minus}
-            iconSize={14}
-          />
-        </div>
-        {topBarInnerControls}
+      <div
+        className={cz(
+          "flex-ha pl-1",
+          "[&>button>div>svg]:(opacity-0)",
+          "[&:hover>button>div>svg]:(opacity-100)",
+        )}
+      >
+        <WindowControlButton
+          onClick={closeWindow}
+          icon={Icons.Close}
+          iconSize={14}
+        />
+        <WindowControlButton
+          onClick={toggleMinimized}
+          icon={Icons.Minus}
+          iconSize={14}
+        />
       </div>
+      {topBarInnerControls && (
+        <div className="flex-ha gap-2 pl-1.5">{topBarInnerControls}</div>
+      )}
+      <div
+        className="grow h-full"
+        onPointerDown={(e) =>
+          windowFrameHandlers.handleTitleBarPointerDown(e, windowCoordVm)
+        }
+      />
+      {topBarInnerControls2 && (
+        <div className="pr-2">{topBarInnerControls2}</div>
+      )}
+
       <div className="absolute-full flex-c pointer-events-none font-500">
         {title}
       </div>
     </div>
-    // </div>
   );
 };
 
@@ -169,6 +174,7 @@ const WindowFrameView = ({
   windowStatus,
   toggleMinimized,
   topBarInnerControls,
+  topBarInnerControls2,
 }: {
   title: string;
   windowCoordVm: WindowCoordViewModel;
@@ -179,6 +185,7 @@ const WindowFrameView = ({
   windowStatus: WindowStatus;
   toggleMinimized: () => void;
   topBarInnerControls?: ReactNode;
+  topBarInnerControls2?: ReactNode;
 }) => {
   const { contentSize, windowBounds } = windowCoordVm;
   const displayed = !evacuated && windowStatus === "visible";
@@ -204,7 +211,10 @@ const WindowFrameView = ({
         }}
       >
         <div
-          className="relative rounded-6px overflow-hidden"
+          className={cz(
+            "relative rounded-6px overflow-hidden bd-gray-500/40",
+            isCurrent && "!bd-#68c/50",
+          )}
           style={{ width: windowBounds.width, height: windowBounds.height }}
           onPointerDown={(e) =>
             windowFrameHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
@@ -217,6 +227,7 @@ const WindowFrameView = ({
             closeWindow={closeWindow}
             toggleMinimized={toggleMinimized}
             topBarInnerControls={topBarInnerControls}
+            topBarInnerControls2={topBarInnerControls2}
           />
           <div
             className="bg-white text-black h-full"
@@ -240,11 +251,13 @@ export const WindowFrame = ({
   title,
   children,
   topBarInnerControls,
+  topBarInnerControls2,
 }: {
   id: string;
   title: string;
   children: ReactNode;
   topBarInnerControls?: ReactNode;
+  topBarInnerControls2?: ReactNode;
 }) => {
   const { windowsEvacuated, currentWindowId, windowSpecs } =
     storeSlice.useSnapshot();
@@ -261,6 +274,7 @@ export const WindowFrame = ({
       windowStatus={windowSpec?.status ?? "none"}
       toggleMinimized={() => actions.toggleWindowMinimized(id)}
       topBarInnerControls={topBarInnerControls}
+      topBarInnerControls2={topBarInnerControls2}
     />
   );
 };

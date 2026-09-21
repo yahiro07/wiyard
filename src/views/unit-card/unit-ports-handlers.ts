@@ -40,11 +40,11 @@ const internalHandlers = {
       if (!selfPort) return;
       const targetPorts = Object.values(portStuffs).filter(
         (ps) =>
-          (isPortConnectable(portKey, ps.portKey) &&
-            selfPort.direction === "output" &&
+          isPortConnectable(portKey, ps.portKey) &&
+          ((selfPort.direction === "output" &&
             ps.position.x > selfPort.position.x) ||
-          (selfPort.direction === "input" &&
-            ps.position.x < selfPort.position.x),
+            (selfPort.direction === "input" &&
+              ps.position.x < selfPort.position.x)),
       );
       const nearestPort = helpers.findNearestPort(
         targetPorts,

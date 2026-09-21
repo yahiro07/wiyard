@@ -31,7 +31,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     windowId: windowIds.automationEditor,
     title: "automation",
     dockItemSpec: {
-      icon: Icons.DirectionRight,
+      icon: Icons.Graph,
       bgColor: "#46a",
       fontSize: 28,
     },
@@ -52,7 +52,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     windowId: windowIds.controlSurface,
     title: "control surface",
     dockItemSpec: {
-      icon: Icons.DirectionRight,
+      icon: Icons.Control,
       bgColor: "#46a",
       fontSize: 28,
     },

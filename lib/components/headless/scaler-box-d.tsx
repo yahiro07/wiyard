@@ -11,8 +11,8 @@ const UiScaler: FC<{
 }> = ({ children, scale, originalWidth, originalHeight }) => {
   if (scale === 1)
     return (
-      <div>
-        <div>{children}</div>
+      <div style={{ width: "100%", height: "100%" }}>
+        <div style={{ width: "100%", height: "100%" }}>{children}</div>
       </div>
     );
   return (

@@ -12,7 +12,7 @@ export function useProjectInitialStateFix() {
     for (const item of builtinAppItems) {
       const windowId = item.windowId;
       if (windowSpecs[windowId] === undefined) {
-        actions.setWindowStatus(windowId, "minimized");
+        actions.setWindowStatus(windowId, "none");
       }
     }
   }, [projectLoadedIndex]);

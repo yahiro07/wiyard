@@ -1,25 +1,67 @@
 import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { actions, storeSlice } from "./store";
+import { IconType } from "react-icons";
+import { Icons } from "./icons";
+
+const DockCleanupButton = ({
+  onClick,
+  icon: IConComponent,
+  iconSize,
+  iconAngle,
+}: {
+  onClick: () => void;
+  icon: IconType;
+  iconSize: number;
+  iconAngle?: number;
+}) => {
+  return (
+    <button
+      type="button"
+      className={cz("cursor-pointer p-1 hover:opacity-80")}
+      style={{ transform: `rotate(${iconAngle}deg)` }}
+      onClick={onClick}
+    >
+      <IConComponent size={iconSize} />
+    </button>
+  );
+};
+
+const DockCleanupButtons = () => {
+  return (
+    <div className="flex-ha">
+      {/* <DockCleanupButton
+        onClick={actions.minimizeAll}
+        icon={Icons.WindowMinimize}
+        iconSize={16}
+        iconAngle={-90}
+      /> */}
+      <DockCleanupButton
+        onClick={actions.closeAll}
+        icon={Icons.Broom}
+        iconSize={20}
+      />
+    </div>
+  );
+};
 
 export const WindowDock = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <div className="absolute-left-center z-1">
-        <div
-          className={cz(
-            "w-60px min-h-140px m-2 flex-vc gap-2 py-6",
-            // "h-55px min-w-140px m-2 flex-c gap-2 px-6",
-          )}
-          style={{
-            background: "#fff1",
-            backdropFilter: "blur(3px)",
-            border: "solid 1px #fff4",
-            borderRadius: "12px",
-          }}
-        >
-          {children}
-        </div>
+      <div
+        className={cz(
+          "w-60px min-h-140px m-2 flex-vc gap-2 py-6",
+          // "h-55px min-w-140px m-2 flex-c gap-2 px-6",
+        )}
+        style={{
+          background: "#fff1",
+          backdropFilter: "blur(3px)",
+          border: "solid 1px #fff4",
+          borderRadius: "12px",
+        }}
+      >
+        <DockCleanupButtons />
+        {children}
       </div>
     </>
   );
@@ -48,7 +90,10 @@ export const WindowDockItemView = ({
         {title && (
           <div
             className={cz(
-              "absolute-left-center w-auto whitespace-nowrap ml-44px py-0.5",
+              "w-auto whitespace-nowrap py-0.5",
+              0
+                ? "absolute-left-center ml-44px"
+                : "absolute-right-center mr-44px",
               "bg-#606068cc rounded-6px px-2 text-15px",
               "invisible opacity-0 group-hover:visible group-hover:opacity-100",
               "transition-opacity duration-200",

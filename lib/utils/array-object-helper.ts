@@ -39,6 +39,10 @@ export function pickObjectMembers<T extends {}, K extends keyof T>(
   return destObj;
 }
 
+export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
+
 export function mapObjectValues<T, R>(
   obj: Record<string, T>,
   fn: (value: T, key: string) => R,
@@ -60,4 +64,18 @@ export function stripUndefined<T extends object>(obj: T): T {
     ) as T;
   }
   return obj;
+}
+
+export function literalIncludedIn<K extends string>(
+  literal: K,
+  array: K[],
+): literal is K {
+  return array.includes(literal);
+}
+
+export function getSortOrder<T>(
+  fn: (item: T) => number,
+  order: "asc" | "desc" = "asc",
+) {
+  return (a: T, b: T) => (fn(a) - fn(b)) * (order === "asc" ? 1 : -1);
 }

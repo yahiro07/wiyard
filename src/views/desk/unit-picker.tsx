@@ -20,7 +20,7 @@ const pickerItemHandlers = {
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {
         actions.setUnitPickerVisible(false);
-        windowSystem.setEvacuate(true);
+        windowSystem.minimizeAll();
       },
       onMove(pos) {
         actions.setUnitAddingItem({ catalogKey, position: pos });
@@ -45,7 +45,7 @@ const UnitPicker = () => {
       className="absolute-full flex-c bg-black/50 z-10"
       onPointerDown={() => actions.setUnitPickerVisible(false)}
     >
-      <div className="flex-vc gap-6">
+      <div className="flex-vc gap-6 w-90%">
         <div className="h-20px">{selectedItem?.name}</div>
         <div className="flex-c gap-4 flex-wrap px-6">
           {showcaseEntries.map((item) => {

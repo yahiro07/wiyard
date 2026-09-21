@@ -1,4 +1,5 @@
 import { Point, Rect, Size, Vector } from "@lib/utils/common-types";
+import { roundFloat } from "@lib/utils/number-helper";
 
 type BoundsCornerSpec = "tl" | "tr" | "bl" | "br";
 
@@ -197,6 +198,13 @@ export class BoundsOperator {
     this.right += moveAmount.x;
     this.top += moveAmount.y;
     this.bottom += moveAmount.y;
+    return this;
+  }
+  roundCoord(fracDigits: number) {
+    this.left = roundFloat(this.left, fracDigits);
+    this.right = roundFloat(this.right, fracDigits);
+    this.top = roundFloat(this.top, fracDigits);
+    this.bottom = roundFloat(this.bottom, fracDigits);
     return this;
   }
 }

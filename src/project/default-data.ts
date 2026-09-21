@@ -62,6 +62,7 @@ function createDefaultScene(): ProjectData {
     storeStates: {
       unitItems,
       currentNoteChannelId: "noteInputPort1",
+      currentAutomationChannelId: null,
       wireConnectionKeys,
       wireGains: {},
       wireAutomationParameterIds: {},
@@ -71,6 +72,7 @@ function createDefaultScene(): ProjectData {
       windowsEvacuated: false,
       currentWindowId: null,
       bpm: 120,
+      unitClockingFlags: {},
     },
     unitStates: [],
   };
@@ -102,12 +104,14 @@ function createBlankScene(): ProjectData {
       wireGains: {},
       wireAutomationParameterIds: {},
       currentNoteChannelId: "noteInputPort1",
+      currentAutomationChannelId: null,
       sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
       keyName: "C" as KeyName,
       windowSpecs: {},
       windowsEvacuated: false,
       currentWindowId: null,
       bpm: 120,
+      unitClockingFlags: {},
     },
     unitStates: [],
   };

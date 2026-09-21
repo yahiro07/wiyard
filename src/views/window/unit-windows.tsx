@@ -11,6 +11,8 @@ import {
 import { sourceNoteChannelGetters } from "@/store/source-note-channel-getters";
 import { store, windowSystem } from "@/store/store";
 import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
+import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
+import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(
@@ -32,38 +34,61 @@ const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
 };
 
 const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const catalogItem = getCatalogItem(unitItem.catalogKey);
-  const reporter = useUnitStuffReporter(unitItem.unitId);
+  const { unitId, catalogKey } = unitItem;
+
+  const catalogItem = getCatalogItem(catalogKey);
+  const reporter = useUnitStuffReporter(unitId);
   useLayoutEffect(reporter.reportLoadStart, []);
   const onIframeMounted = useUnitIframeMountedCallback(unitItem);
   const sourceNoteChannelIndex =
-    sourceNoteChannelGetters.useUnitSourceActiveNoteChannelIndex(
-      unitItem.unitId,
-    );
+    sourceNoteChannelGetters.useUnitSourceActiveNoteChannelIndex(unitId);
+  const isPlaybackCapable = unitPlaybackCapabilityFlags[catalogKey] ?? false;
 
   return (
     <WindowFrame
-      id={unitItem.unitId}
-      title={catalogItem?.name ?? unitItem.catalogKey}
+      id={unitId}
+      title={catalogItem?.name ?? catalogKey}
       topBarInnerControls={
-        sourceNoteChannelIndex !== undefined ? (
-          <div className="flex-ha gap-2px">
-            <span className="text-15px">{sourceNoteChannelIndex + 1}</span>
-            <Icons.DirectionRight size={14} />
-          </div>
-        ) : undefined
+        <>
+          {sourceNoteChannelIndex !== undefined ? (
+            <div className="flex-ha gap-2px">
+              <span className="text-15px">{sourceNoteChannelIndex + 1}</span>
+              <Icons.DirectionRight size={14} />
+            </div>
+          ) : undefined}
+          {isPlaybackCapable && (
+            <div className="flex-ha gap-3">
+              <UnitWindowTitleBarPlaybackButtonContainer unitId={unitId} />
+            </div>
+          )}
+        </>
       }
+      // topBarInnerControls2={
+      //   <>
+      //     {isPlaybackCapable && (
+      //       <div className="flex-ha gap-3">
+      //         <windowTitleBarControlComponents.ClockActiveButton
+      //           active={unitClockingFlags[unitId] !== false}
+      //           disabled={soloPlaybackUnitId !== null}
+      //           onClick={() => {
+      //             actions.toggleUnitClockingFlag(unitId);
+      //           }}
+      //         />
+      //       </div>
+      //     )}
+      //   </>
+      // }
     >
       {catalogItem ? (
         <UnitFrameScaled
-          unitId={unitItem.unitId}
+          unitId={unitId}
           unitUrl={catalogItem.loaderPageUrl}
           onIframeMounted={onIframeMounted}
           onUnitInstanceLoaded={reporter.reportLoaded}
           onLoadFailed={reporter.reportFailure}
         />
       ) : (
-        <div>error: catalog item not found for {unitItem.catalogKey}</div>
+        <div>error: catalog item not found for {catalogKey}</div>
       )}
     </WindowFrame>
   );

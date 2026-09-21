@@ -1,9 +1,6 @@
 import { useEffect, useMemo } from "react";
-import {
-  HostAppProvider,
-  useSequencerTickDriverRunner,
-} from "wafer-host/react";
-import { hostSystem, sequencerTickDriver } from "@/domain/host-system-instance";
+import { HostAppProvider } from "wafer-host/react";
+import { hostSystem } from "@/domain/host-system-instance";
 import { setupAutoPersistenceTask } from "@/periphery/auto-persistence-task";
 import { useMidiInputHandling } from "@/periphery/midi-input-handling";
 import { useSetupSongKeySupport } from "@/periphery/song-key-support";
@@ -14,6 +11,7 @@ import { useSetupUnitPortMasking } from "@/periphery/unit-port-masking-support";
 import { ErrorBoundary } from "react-error-boundary";
 import { FallbackRender } from "@/periphery/fallback-render";
 import { mapKnobGainDb } from "@lib/utils/volume-curve";
+import { usePlaybackController } from "@/periphery/playback-controller";
 
 const EffectsHookBox = () => {
   useMidiInputHandling();
@@ -21,6 +19,7 @@ const EffectsHookBox = () => {
   useSetupSongKeySupport();
   useProjectInitialStateFix();
   useSetupUnitPortMasking();
+  usePlaybackController();
   return null;
 };
 
@@ -30,7 +29,6 @@ const AppInner = () => {
     () => mapKnobGainDb(masterVolume, 0.5),
     [masterVolume],
   );
-  useSequencerTickDriverRunner({ sequencerTickDriver, playing, bpm });
   return (
     <HostAppProvider
       hostSystem={hostSystem}

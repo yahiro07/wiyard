@@ -38,7 +38,7 @@ const store = createStore<{
 }>({
   parameterSlots: seqNumbers(8).map((i) => ({
     id: getSlotId(i),
-    enabled: i === 0,
+    enabled: false,
     value: 0.5,
   })),
   wideLayout: false,

@@ -31,6 +31,7 @@ export type StoreState = {
   bpm: number;
   sight: FieldSight;
   keyName: KeyName;
+  unitClockingFlags: Record<string, boolean>;
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
@@ -53,6 +54,8 @@ export type StoreState = {
   projectLoadErrorStatus: ProjectLoadErrorStatus | null;
   loadedFromSharedUrl: boolean;
   configTargetWireKey: string | null;
+  soloPlaybackUnitId: string | null;
+  soloModeUnitId: string | null;
 };
 
 const blankStoreState: StoreState = {
@@ -68,6 +71,7 @@ const blankStoreState: StoreState = {
   bpm: 120,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
+  unitClockingFlags: {},
   //
   midiInEnabled: false,
   masterVolume: 0.5,
@@ -90,6 +94,8 @@ const blankStoreState: StoreState = {
   projectLoadErrorStatus: null,
   loadedFromSharedUrl: false,
   configTargetWireKey: null,
+  soloPlaybackUnitId: null,
+  soloModeUnitId: null,
 };
 
 export const projectResetterStates: Partial<StoreState> = {

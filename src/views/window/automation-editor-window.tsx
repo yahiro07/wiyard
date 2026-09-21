@@ -60,6 +60,16 @@ const EditorUnitItemView = ({ unitId }: { unitId: string }) => {
 
 const EditorContentSection = () => {
   const unitItems = automationChannelGetters.useAutomationEditorUnitItems();
+  if (unitItems.length === 0) {
+    return (
+      <div className="bg-#ccc w-full h-full flex-c">
+        <div className="flex-vc gap-1 p-6">
+          <span>no automation channels</span>
+          <span>create new one by clicking the add button</span>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="flex-grow relative overflow-hidden">
       {unitItems.map((item) => (

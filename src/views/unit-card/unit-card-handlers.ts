@@ -29,7 +29,7 @@ export const unitCardHandlers = {
         },
         onTap() {
           const makeWindowActive = (windowId: string) => {
-            windowSystem.setEvacuate(false);
+            windowSystem.unMinimizeAll();
             actions.setWindowStatus(windowId, "visible");
             windowSystem.setCurrentWindow(windowId);
           };

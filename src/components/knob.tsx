@@ -26,7 +26,7 @@ export const Knob = ({
       max={max}
       step={step}
       onChange={onChange}
-      onClick={onClick}
+      onTap={onClick}
     >
       <div
         className="w-28px h-28px rounded-full relative bg-gray-500"

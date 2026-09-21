@@ -13,7 +13,7 @@ import { createControlSurfaceUnit } from "@lib/control-surface";
 
 export type CatalogKey = keyof typeof unitInventories;
 
-type CatalogItem = UnitInventorySpec & { catalogKey: CatalogKey };
+export type CatalogItem = UnitInventorySpec & { catalogKey: CatalogKey };
 
 const catalog = unitInventories as Record<CatalogKey, CatalogItem>;
 
@@ -25,14 +25,18 @@ export function getCatalogItem(
   return catalog[catalogKey];
 }
 
+export type CatalogItemForDisplay = {
+  name: string;
+  thumbnailUrl?: string;
+};
+
 const fallbackCatalogItem = {
   name: "Unknown Unit",
   thumbnailUrl: "/assets/unknown-unit.png",
 };
-export function getCatalogItemWithFallback(catalogKey: CatalogKey): {
-  name: string;
-  thumbnailUrl?: string;
-} {
+export function getCatalogItemWithFallback(
+  catalogKey: CatalogKey,
+): CatalogItemForDisplay {
   return catalog[catalogKey] ?? fallbackCatalogItem;
 }
 
@@ -58,7 +62,7 @@ export const internalUnitCardIcons = {
   speakerPort: Icons.ArrowRightToBracket,
   noteInputPort: Icons.ArrowRightFromBracket,
   automationChannel: Icons.ArrowRightFromBracket,
-  controlSurface: Icons.DirectionRight,
+  controlSurface: Icons.Control,
 };
 
 export type UnitClassKey = CatalogKey | InternalUnitKey;

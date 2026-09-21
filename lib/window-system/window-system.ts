@@ -21,11 +21,14 @@ export function createWindowSystem(args: {
       }
       actions.removeWindow(id);
     },
-    setEvacuate(evacuated) {
-      actions.setWindowsEvacuated(evacuated);
+    minimizeAll() {
+      actions.minimizeAll();
     },
-    toggleEvacuate() {
-      actions.toggleWindowsEvacuated();
+    unMinimizeAll() {
+      actions.unMinimizeAll();
+    },
+    toggleMinimizeAll() {
+      actions.toggleMinimizeAll();
     },
     has(id) {
       return !!storeSlice.get().windowSpecs[id];

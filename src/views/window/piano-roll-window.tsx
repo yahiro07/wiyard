@@ -14,10 +14,12 @@ import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { WindowFrame } from "@lib/window-system";
 import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
+import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
   const noteChannelIds = notePortGetters.useNoteChannelIds();
+
   const canAdd = noteChannelIds.length < 4;
   const canDelete = noteChannelIds.length > 1;
 
@@ -31,20 +33,23 @@ const NoteChannelListColumn = () => {
   };
   return (
     <div className="w-50px bg-gray-700/60 flex-v gap-2 py-2 text-white pb-3">
-      {noteChannelIds.map((id, index) => (
-        <button
-          key={id}
-          type="button"
-          className={cz(
-            "w-40px h-30px bg-gray-300/50 flex-c text-white cursor-pointer",
-            "font-bold text-sm",
-            id === currentNoteChannelId && "!bg-#8ae/70",
-          )}
-          onClick={() => actions.selectNoteChannel(id)}
-        >
-          {index + 1}
-        </button>
-      ))}
+      {noteChannelIds.map((id, index) => {
+        return (
+          <div className="flex-ha gap-2" key={id}>
+            <button
+              type="button"
+              className={cz(
+                "w-40px h-30px bg-gray-300/50 flex-c text-white cursor-pointer",
+                "font-bold text-sm",
+                id === currentNoteChannelId && "!bg-#8ae/70",
+              )}
+              onClick={() => actions.selectNoteChannel(id)}
+            >
+              {index + 1}
+            </button>
+          </div>
+        );
+      })}
       {canAdd && (
         <button
           className="w-40px flex-c mt-1 cursor-pointer hover:opacity-80"
@@ -128,8 +133,26 @@ const PianoRollPanel = () => {
 };
 
 export const PianoRollWindow = () => {
+  const { currentNoteChannelId } = store.useSnapshot();
+  const sequencerUnitId =
+    notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
-    <WindowFrame id={windowIds.pianoRoll} title="piano roll">
+    <WindowFrame
+      id={windowIds.pianoRoll}
+      title="piano roll"
+      topBarInnerControls={
+        <div className="flex-ha gap-3">
+          <UnitWindowTitleBarPlaybackButtonContainer unitId={sequencerUnitId} />
+          {/* <windowTitleBarControlComponents.ClockActiveButton
+            active={unitClockingFlags[sequencerUnitId] !== false}
+            disabled={projectLoading || soloPlaybackUnitId !== null}
+            onClick={() => {
+              actions.toggleUnitClockingFlag(sequencerUnitId);
+            }}
+          /> */}
+        </div>
+      }
+    >
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <PianoRollPanel />
       </ScalerBoxDW>

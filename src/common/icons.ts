@@ -1,8 +1,10 @@
+import { AiOutlineControl } from "react-icons/ai";
 import { BsArrowRight, BsViewList } from "react-icons/bs";
 import { CgPiano } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
+  FaPowerOff,
   FaWindowMinimize,
 } from "react-icons/fa6";
 import { FiMenu } from "react-icons/fi";
@@ -10,7 +12,9 @@ import { IoMdShare } from "react-icons/io";
 import { IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
 import { PiPianoKeysFill, PiTrash } from "react-icons/pi";
+import { RiFlashlightFill } from "react-icons/ri";
 import { TbAppsFilled } from "react-icons/tb";
+import { VscGraphLine } from "react-icons/vsc";
 
 export const Icons = {
   ArrowRightFromBracket: FaArrowRightFromBracket,
@@ -28,4 +32,8 @@ export const Icons = {
   Timeline: MdOutlineViewTimeline,
   Apps: TbAppsFilled,
   Share: IoMdShare,
+  Power: FaPowerOff,
+  Flash: RiFlashlightFill,
+  Control: AiOutlineControl,
+  Graph: VscGraphLine,
 };

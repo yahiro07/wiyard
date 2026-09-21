@@ -1,4 +1,5 @@
 import { WindowSpec, WindowStatus, WindowSystemStoreSlice } from "./types";
+import { mapObjectValues } from "@lib/utils/array-object-helper";
 
 export const storeSlice: WindowSystemStoreSlice = {} as any;
 
@@ -29,6 +30,13 @@ export const actionsInternal = {
       },
     });
   },
+  mapWindowStatusAll(fn: (status: WindowStatus) => WindowStatus) {
+    const newWindowSpecs = mapObjectValues(
+      storeSlice.get().windowSpecs,
+      (spec) => ({ ...spec, status: fn(spec.status) }) as WindowSpec,
+    );
+    storeSlice.assign({ windowSpecs: newWindowSpecs });
+  },
 };
 
 export const actions = {
@@ -54,5 +62,28 @@ export const actions = {
   },
   setWindowsEvacuated(evacuated: boolean) {
     storeSlice.assign({ windowsEvacuated: evacuated });
+  },
+  minimizeAll() {
+    actionsInternal.mapWindowStatusAll((status) =>
+      status === "visible" ? "minimized" : status,
+    );
+  },
+  unMinimizeAll() {
+    actionsInternal.mapWindowStatusAll((status) =>
+      status === "minimized" ? "visible" : status,
+    );
+  },
+  toggleMinimizeAll() {
+    const someVisible = Object.values(storeSlice.get().windowSpecs).some(
+      (spec) => spec.status === "visible",
+    );
+    if (someVisible) {
+      actions.minimizeAll();
+    } else {
+      actions.unMinimizeAll();
+    }
+  },
+  closeAll() {
+    actionsInternal.mapWindowStatusAll(() => "none");
   },
 };

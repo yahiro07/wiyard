@@ -5,10 +5,11 @@ import { NumberSlider } from "@/components/number-slider";
 import { UpperLabel } from "@/components/upper-label";
 import { sharedUrlSupport } from "@/project/shared-url-support";
 import { actions } from "@/store/actions";
-import { store, windowSystem } from "@/store/store";
+import { store } from "@/store/store";
 import { MidiInButtonContainer } from "@/views/controls/midi-in-button";
+import { MainPlaybackButton } from "@/views/controls/playback-buttons";
 
-const ControlButton = ({
+export const ControlButton = ({
   text,
   children,
   onClick,
@@ -49,31 +50,19 @@ const _PickerLaunchButton = () => {
   );
 };
 
-const _WindowEvacuationButton = () => {
-  // const { windowSpecs } = store.useSnapshot();
-  // const hasWindow = Object.values(windowSpecs).some(
-  //   (spec) => spec.status === "visible",
-  // );
-  return (
-    <ControlButton
-      onClick={windowSystem.toggleEvacuate}
-      // disabled={!hasWindow}
-      children={<Icons.Desktop />}
-    />
-  );
-};
-
-const PlaybackButton = () => {
-  const { playing, projectLoading } = store.useSnapshot();
-  return (
-    <ControlButton
-      active={playing}
-      disabled={projectLoading}
-      onClick={actions.togglePlayback}
-      children={<Icons.Play />}
-    />
-  );
-};
+// const _WindowEvacuationButton = () => {
+//   // const { windowSpecs } = store.useSnapshot();
+//   // const hasWindow = Object.values(windowSpecs).some(
+//   //   (spec) => spec.status === "visible",
+//   // );
+//   return (
+//     <ControlButton
+//       onClick={windowSystem.toggleEvacuate}
+//       // disabled={!hasWindow}
+//       children={<Icons.Desktop />}
+//     />
+//   );
+// };
 
 const BpmInput = () => {
   const { bpm } = store.useSnapshot();
@@ -104,7 +93,7 @@ const SecondBarButton = () => {
   if (loadedFromSharedUrl) return null;
   return (
     <ControlButton
-      onClick={store.toggleSecondBarVisible}
+      onClick={() => store.setSecondBarVisible(true)}
       children={<Icons.Menu size={18} />}
     />
   );
@@ -141,7 +130,7 @@ export const ControlButtons = () => {
       <div className="invisible">
         <SecondBarButton />
       </div>
-      <PlaybackButton />
+      <MainPlaybackButton />
       <BpmInput />
       <MasterVolumeInput />
       <MidiInButtonContainer />

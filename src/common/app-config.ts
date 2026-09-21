@@ -20,7 +20,10 @@ if (appEnvs.isDevelopment) {
   });
 }
 
+type PlacementSide = "left" | "right";
+
 export const appConfig = {
   supportAutomationPorts: true,
   showAutomationTargetParameterSelectionMenuOnConnection: false,
+  dockSide: "right" as PlacementSide,
 };

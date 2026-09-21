@@ -21,7 +21,7 @@ const controlSurfaceHooks = {
       const windowSpec = store.state.windowSpecs[windowIds.controlSurface];
       const currentSize = windowSpec?.contentSize;
       if (currentSize && viewSize) {
-        const modSize = sizeOp.scale(viewSize, 0.8);
+        const modSize = sizeOp.rounded(sizeOp.scale(viewSize, 0.8));
         actions.setWindowContentSize(windowIds.controlSurface, modSize);
       }
     }, [unitStuff]);

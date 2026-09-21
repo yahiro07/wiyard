@@ -28,6 +28,7 @@ import { store, windowSystem } from "@/store/store";
 import { commonGetters } from "@/store/common-getters";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { appConfig } from "@/common/app-config";
+import { sizeOp, vectorOp } from "@lib/utils/geometry-helper";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -39,10 +40,10 @@ const helpers = {
       if (viewSize.width * scale > maxWidth) {
         scale = maxWidth / viewSize.width;
       }
-      return {
+      return sizeOp.rounded({
         width: viewSize.width * scale,
         height: viewSize.height * scale,
-      };
+      });
     } else {
       return { width: 300, height: 200 };
     }
@@ -68,7 +69,10 @@ const helpers = {
     status: WindowStatus,
     deskAreaRect: DOMRect,
   ) {
-    let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+    let position = vectorOp.rounded({
+      x: deskAreaRect.width / 2,
+      y: deskAreaRect.height / 2,
+    });
     const { contentSize, freeRatio, pinned } =
       helpers.getInitialWindowSpecAttrs(windowId);
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
@@ -331,10 +335,43 @@ export const actions = {
     store.toggleMidiInEnabled();
   },
   togglePlayback() {
+    // if (!store.state.playing && store.state.soloPlaybackUnitId) {
+    //   store.setSoloPlaybackUnitId(null);
+    // }
     store.togglePlaying();
   },
-  selectNoteChannel(noteChannelId: string) {
-    store.setCurrentNoteChannelId(noteChannelId);
+  toggleSoloPlayback(unitId: string) {
+    // if (unitId && store.state.playing) {
+    //   store.setPlaying(false);
+    // }
+    store.setSoloPlaybackUnitId((prev) => (prev === unitId ? null : unitId));
+  },
+  toggleSoloModeUnit(unitId: string) {
+    store.setSoloModeUnitId((prev) => (prev === unitId ? null : unitId));
+  },
+  selectNoteChannel(nextNoteChannelId: string) {
+    const sequencerUnitId = notePortGetters.getSequencerUnitId(
+      store.state.currentNoteChannelId,
+    );
+    store.setCurrentNoteChannelId(nextNoteChannelId);
+
+    if (store.state.soloPlaybackUnitId === sequencerUnitId) {
+      store.setSoloPlaybackUnitId(null);
+    }
+    if (store.state.soloModeUnitId === sequencerUnitId) {
+      const nextSequencerUnitId =
+        notePortGetters.getSequencerUnitId(nextNoteChannelId);
+      store.setSoloModeUnitId(nextSequencerUnitId);
+    }
+  },
+  toggleUnitClockingFlag(unitId: string) {
+    store.produceUnitClockingFlags((draft) => {
+      if (draft[unitId] === undefined) {
+        draft[unitId] = false;
+      } else {
+        draft[unitId] = !draft[unitId];
+      }
+    });
   },
   selectAutomationChannel(automationChannelId: string) {
     store.setCurrentAutomationChannelId(automationChannelId);
