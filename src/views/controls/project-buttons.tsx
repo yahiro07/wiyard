@@ -3,6 +3,8 @@ import { projectsModel } from "@/project/projects-model";
 import { store } from "@/store/store";
 import { useRef } from "react";
 import { useHandleClickOutside } from "@lib/utils/use-handle-click-outside";
+import { blankScene, defaultScene } from "@/project/default-data";
+import { defaultData2 } from "@/project/default-data-2";
 
 const ProjectButton = ({
   text,
@@ -45,7 +47,7 @@ export const ProjectButtons = () => {
     withPropagation: true,
     targetMethod: "click",
   });
-  const wrapWithClose = (fn: () => void | Promise<void>) => {
+  const withClose = (fn: () => void | Promise<void>) => {
     return () => {
       const res = fn();
       if (res instanceof Promise) {
@@ -66,20 +68,26 @@ export const ProjectButtons = () => {
       )}
     >
       <ProjectButton
-        text="reset"
-        onClick={wrapWithClose(projectsModel.loadBlankProject)}
+        text="starter"
+        onClick={withClose(() =>
+          projectsModel.loadProject(defaultData2.starter),
+        )}
+      />
+      <ProjectButton
+        text="blank"
+        onClick={withClose(() => projectsModel.loadProject(blankScene))}
       />
       <ProjectButton
         text="demo"
-        onClick={wrapWithClose(projectsModel.loadDemoProject)}
+        onClick={withClose(() => projectsModel.loadProject(defaultScene))}
       />
       <ProjectButton
         text="import"
-        onClick={wrapWithClose(projectsModel.importProject)}
+        onClick={withClose(projectsModel.importProject)}
       />
       <ProjectButton
         text="export"
-        onClick={wrapWithClose(projectsModel.exportProject)}
+        onClick={withClose(projectsModel.exportProject)}
       />
     </div>
   );
