@@ -121,7 +121,7 @@ const ShareUrlButton = () => {
     alert(`shared url copied to clipboard (${url.length}bytes)`);
   };
   return (
-    <ControlButton onClick={onClick} children={<Icons.Share size={24} />} />
+    <ControlButton onClick={onClick} children={<Icons.Share size={26} />} />
   );
 };
 
@@ -131,7 +131,7 @@ const GithubLinkButton = () => {
       onClick={() =>
         window.open("https://github.com/yahiro07/wireboard", "_blank")
       }
-      children={<Icons.Github size={24} />}
+      children={<Icons.Github size={26} />}
     />
   );
 };
@@ -155,7 +155,7 @@ export const ControlButtons = () => {
 
 export const ControlButtonsRight = () => {
   return (
-    <div className="flex-h gap-2">
+    <div className="flex-h gap-2.5">
       <ShareUrlButton />
       <GithubLinkButton />
     </div>
