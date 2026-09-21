@@ -143,6 +143,7 @@ export const windowPlacementHelper = {
     return BoundsOperator.fromRect(originalWindowBounds)
       .move(moveAmount)
       .clampInAreaKeepingSize(checkingBounds)
+      .roundCoord(0)
       .toRect();
   },
 };

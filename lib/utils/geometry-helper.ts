@@ -32,6 +32,9 @@ export const vectorOp = {
       y: clampValue(v.y, re.y, re.y + re.height),
     };
   },
+  rounded(v: Vector) {
+    return { x: Math.round(v.x), y: Math.round(v.y) };
+  },
 };
 
 export const sizeOp = {

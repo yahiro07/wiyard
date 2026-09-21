@@ -28,6 +28,7 @@ import { store, windowSystem } from "@/store/store";
 import { commonGetters } from "@/store/common-getters";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { appConfig } from "@/common/app-config";
+import { sizeOp, vectorOp } from "@lib/utils/geometry-helper";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -39,10 +40,10 @@ const helpers = {
       if (viewSize.width * scale > maxWidth) {
         scale = maxWidth / viewSize.width;
       }
-      return {
+      return sizeOp.rounded({
         width: viewSize.width * scale,
         height: viewSize.height * scale,
-      };
+      });
     } else {
       return { width: 300, height: 200 };
     }
@@ -68,7 +69,10 @@ const helpers = {
     status: WindowStatus,
     deskAreaRect: DOMRect,
   ) {
-    let position = { x: deskAreaRect.width / 2, y: deskAreaRect.height / 2 };
+    let position = vectorOp.rounded({
+      x: deskAreaRect.width / 2,
+      y: deskAreaRect.height / 2,
+    });
     const { contentSize, freeRatio, pinned } =
       helpers.getInitialWindowSpecAttrs(windowId);
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);

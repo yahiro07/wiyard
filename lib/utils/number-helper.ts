@@ -58,3 +58,8 @@ export function safeParseInt(text: string, defaultValue: number) {
 export function inBetween(value: number, min: number, max: number) {
   return min <= value && value <= max;
 }
+
+export function roundFloat(value: number, fracDigits: number = 0) {
+  const k = 10 ** fracDigits;
+  return Math.round(value * k) / k;
+}
