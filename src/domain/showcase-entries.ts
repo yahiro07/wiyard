@@ -16,6 +16,7 @@ export const unitPlaybackCapabilityFlags = Object.fromEntries(
         "js808",
         "technoBeatMachine",
         "bs03",
+        "shinyDrumMachine",
       ]),
   ]),
 );
