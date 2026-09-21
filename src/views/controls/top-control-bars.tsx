@@ -1,4 +1,5 @@
 import { appEnvs } from "@/common/app-config";
+import { projectsModel } from "@/project/projects-model";
 import { store, windowSystem } from "@/store/store";
 import {
   ControlButtons,
@@ -7,10 +8,16 @@ import {
 import { ProjectButtons } from "@/views/controls/project-buttons";
 
 export const TopBar = () => {
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       windowSystem.toggleMinimizeAll();
     }
+  };
+  const handleTitleClick = (e: React.MouseEvent) => {
+    if (appEnvs.isDevelopment) {
+      projectsModel.debugDumpProjectData();
+    }
+    e.stopPropagation();
   };
   return (
     <div
@@ -26,8 +33,13 @@ export const TopBar = () => {
       <div className="pt-0">
         <ControlButtonsRight />
       </div>
-      <div className="absolute-full pointer-events-none text-xl font-500 flex-ha pl-2">
-        Wireboard
+      <div className="absolute-full pointer-events-none flex-ha">
+        <h1
+          className="pointer-events-auto text-xl font-500 pl-2"
+          onClick={handleTitleClick}
+        >
+          Wireboard
+        </h1>
       </div>
     </div>
   );
