@@ -21,9 +21,9 @@ const ErrorDialogContainer = () => {
 };
 
 const PageRootMain = () => {
-  const { uiScaling } = store.useSnapshot();
+  const { settings } = store.useSnapshot();
   return (
-    <ScreenScaler scaling={uiScaling}>
+    <ScreenScaler scaling={settings.uiScaling}>
       <div className="flex-v text-white h-full">
         <TopBar />
         <div className="grow flex-h">
