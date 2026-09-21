@@ -19,6 +19,7 @@ import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { DockRoot } from "@/views/window/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
+import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 
 const GraphEditPlane = () => {
   const { sight } = store.useSnapshot();
@@ -58,6 +59,10 @@ const FrontWindowsPlane = () => {
       {1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}
       <DockRoot />
       <SecondBar />
+      <div className="absolute top-0 right-0 m-6px mt-4">
+        <ControlButtonsInField />
+      </div>
+      <SettingsPanelRoot />
     </>
   );
 };
@@ -92,9 +97,6 @@ export const DeskArea = () => {
       <GraphEditPlane />
       <FrontWindowsPlane />
       <UnitConnectionsRoot />
-      <div className="absolute top-0 right-0 m-6px mt-4">
-        <ControlButtonsInField />
-      </div>
     </div>
   );
 };

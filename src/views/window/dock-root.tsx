@@ -41,7 +41,7 @@ export const DockRoot = () => {
   return (
     <div
       className={cz(
-        "z-1",
+        // "z-1",
         appConfig.dockSide === "left"
           ? "absolute-left-center"
           : "absolute-right-center",

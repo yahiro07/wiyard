@@ -136,6 +136,16 @@ const GithubLinkButton = () => {
   );
 };
 
+const SettingsButton = () => {
+  return (
+    <ControlButton
+      // onClick={() => store.setSettingsPanelVisible(true)}
+      onClick={() => store.toggleSettingsPanelVisible()}
+      children={<Icons.Settings size={28} />}
+    />
+  );
+};
+
 export const ControlButtons = () => {
   return (
     <div className="flex-ha gap-5">
@@ -156,6 +166,7 @@ export const ControlButtons = () => {
 export const ControlButtonsRight = () => {
   return (
     <div className="flex-h gap-2.5">
+      <SettingsButton />
       <ShareUrlButton />
       <GithubLinkButton />
     </div>

@@ -56,6 +56,7 @@ export type StoreState = {
   configTargetWireKey: string | null;
   soloPlaybackUnitId: string | null;
   soloModeUnitId: string | null;
+  settingsPanelVisible: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -96,6 +97,7 @@ const blankStoreState: StoreState = {
   configTargetWireKey: null,
   soloPlaybackUnitId: null,
   soloModeUnitId: null,
+  settingsPanelVisible: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -127,12 +129,13 @@ const defaultStoreState: StoreState = {
   ...blankScene.storeStates,
 };
 
-if (0) {
+if (1) {
   // store.setSequencerWindowVisible(true);
   assignTyped(defaultStoreState, {
     // ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
+    secondBarVisible: true,
   });
 }
 
