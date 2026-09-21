@@ -93,7 +93,7 @@ const SecondBarButton = () => {
   if (loadedFromSharedUrl) return null;
   return (
     <ControlButton
-      onClick={store.toggleSecondBarVisible}
+      onClick={() => store.setSecondBarVisible(true)}
       children={<Icons.Menu size={18} />}
     />
   );
