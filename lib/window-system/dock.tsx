@@ -95,13 +95,13 @@ export const WindowDockItemView = ({
         onClick={onClick}
       >
         {children}
-        {title && false && (
+        {title && (
           <div
             className={cz(
               "w-auto whitespace-nowrap py-0.5",
-              0
-                ? "absolute-left-center ml-44px"
-                : "absolute-right-center mr-44px",
+              // "absolute-left-center ml-44px"
+              // "absolute-right-center mr-44px",
+              "absolute-top-center -mt-34px",
               "bg-#606068cc rounded-6px px-2 text-15px",
               "invisible opacity-0 group-hover:visible group-hover:opacity-100",
               "transition-opacity duration-200",
