@@ -4,6 +4,7 @@ import { DeskArea } from "@/views/desk/desk-area";
 import { ErrorDialog } from "@/views/desk/error-dialog";
 import { UnitPickerRoot } from "@/views/desk/unit-picker";
 import { TopBar } from "@/views/controls/top-control-bars";
+import { BottomBarWithDock } from "@/views/desk/dock-root";
 
 const ErrorDialogContainer = () => {
   const { projectLoadErrorStatus: errorStatus } = store.useSnapshot();
@@ -33,8 +34,9 @@ export const PageRoot = () => {
         <div className="grow flex-h">
           <DeskArea />
         </div>
-        <UnitPickerRoot />
+        <BottomBarWithDock />
       </div>
+      <UnitPickerRoot />
       <ErrorDialogContainer />
     </ScreenScalerContainer>
   );

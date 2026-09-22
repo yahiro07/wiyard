@@ -17,7 +17,7 @@ import { ControlSurfaceWindow } from "@/views/window/control-surface-window";
 import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
-import { DockRoot } from "@/views/window/dock-root";
+import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 
@@ -91,7 +91,7 @@ const FrontWindowsPlane = () => {
       <ControlSurfaceWindow />
       <KeyboardWindow />
       <PartControlBarContainer />
-      <DockRoot />
+      <InnerDockRoot />
       <SecondBar />
       <InFieldControlUi />
       <SettingsPanelRoot />

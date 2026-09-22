@@ -20,10 +20,13 @@ if (appEnvs.isDevelopment) {
   });
 }
 
-type PlacementSide = "left" | "right";
+type DockPlacement = "leftInner" | "rightInner" | "bottomBar";
 
 export const appConfig = {
   supportAutomationPorts: true,
   showAutomationTargetParameterSelectionMenuOnConnection: false,
-  dockSide: "right" as PlacementSide,
+  dockPlacement: "rightInner" as DockPlacement,
 };
+if (appEnvs.isDevelopment) {
+  appConfig.dockPlacement = "bottomBar";
+}
