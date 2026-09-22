@@ -1,6 +1,5 @@
 import { WindowFrame } from "@lib/window-system";
 import { useCallback, useLayoutEffect } from "react";
-import { ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { Icons } from "@/common/icons";
 import { BoardUnitItem, UnitItem } from "@/domain/types";
 import {
@@ -14,6 +13,8 @@ import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 import { commonGetters } from "@/store/common-getters";
+import { renderLog } from "@lib/utils/render-log";
+import { ReactUnitFrameWithLog, UnitFrameScaledWithLog } from "@lib/wafer-ex";
 
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(
@@ -45,6 +46,8 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
     sourceNoteChannelGetters.useUnitSourceActiveNoteChannelIndex(unitId);
   const isPlaybackCapable = unitPlaybackCapabilityFlags[catalogKey] ?? false;
   const viewActive = commonGetters.useWindowVisible(unitId);
+
+  renderLog("BoardUnitWindow", unitId);
 
   return (
     <WindowFrame
@@ -82,7 +85,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
       // }
     >
       {catalogItem ? (
-        <UnitFrameScaled
+        <UnitFrameScaledWithLog
           unitId={unitId}
           unitUrl={catalogItem.loaderPageUrl}
           onIframeMounted={onIframeMounted}
@@ -109,7 +112,7 @@ const EdgeUnitWindow = ({
   useLayoutEffect(reporter.reportLoadStart, []);
 
   return (
-    <ReactUnitFrame
+    <ReactUnitFrameWithLog
       unitId={unitId}
       unitTemplateFn={internalUnitFactory}
       onUnitInstanceLoaded={reporter.reportLoaded}

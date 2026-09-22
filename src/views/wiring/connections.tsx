@@ -1,16 +1,16 @@
 import { HeadlessGain } from "@lib/port-units";
-import { Connection } from "wafer-host/react";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { Fragment } from "react";
 import { connectionsPresenter } from "@/views/wiring/connections-presenter";
 import { builtinUnitIds } from "@/domain/unit-entries";
+import { ConnectionWithLog } from "@lib/wafer-ex";
 
 const InternalSequencerConnections = () => {
   const internalSequencerConnectionSpecs =
     connectionsPresenter.useInternalSequencerConnectionSpecs();
   return internalSequencerConnectionSpecs.map((spec) => (
-    <Connection
+    <ConnectionWithLog
       key={spec.connectionKey}
       source={spec.source}
       destination={spec.destination}
@@ -25,7 +25,7 @@ const BoardItemConnections = () => {
     if ("wireGain" in spec) {
       return (
         <Fragment key={spec.connectionKey}>
-          <Connection
+          <ConnectionWithLog
             source={spec.source}
             destination={`${spec.wireVolumeUnitId}.audioInput`}
           />
@@ -38,7 +38,7 @@ const BoardItemConnections = () => {
       );
     } else {
       return (
-        <Connection
+        <ConnectionWithLog
           key={spec.connectionKey}
           source={spec.source}
           destination={spec.destination}
@@ -53,7 +53,7 @@ const KeyboardConnection = () => {
   const currentSequencerUnitId =
     notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
-    <Connection
+    <ConnectionWithLog
       source={`${builtinUnitIds.keyboard}.noteOutput`}
       destination={`${currentSequencerUnitId}.noteInput`}
     />
@@ -66,7 +66,10 @@ export const UnitConnectionsRoot = () => {
       <InternalSequencerConnections />
       <BoardItemConnections />
       <KeyboardConnection />
-      <Connection source="speakerPort.audioOutput" destination="$output" />
+      <ConnectionWithLog
+        source="speakerPort.audioOutput"
+        destination="$output"
+      />
     </>
   );
 };

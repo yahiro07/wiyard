@@ -3,11 +3,14 @@ import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { wireGetters } from "@/store/wire-getters";
 import { useWireMiddlePoint } from "@/views/wiring/wire-view-helpers";
+import { renderLog } from "@lib/utils/render-log";
 
 const WireKnobContainer = ({ connectionKey }: { connectionKey: string }) => {
   const { wireGains } = store.useSnapshot();
   const pos = useWireMiddlePoint(connectionKey);
   if (!pos) return;
+  renderLog("WireKnobContainer", connectionKey);
+
   const value = wireGains[connectionKey] ?? 0.5;
   return (
     <div

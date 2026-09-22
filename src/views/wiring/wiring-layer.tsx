@@ -10,6 +10,7 @@ import {
 } from "@/domain/port-helpers";
 import { store } from "@/store/store";
 import { resultOf } from "@lib/utils/general-helper";
+import { renderLog } from "@lib/utils/render-log";
 
 function createCurveLinePath(p0: Point, p1: Point) {
   // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
@@ -62,6 +63,9 @@ const Wire = ({
   const destPort = portStuffs[destinationPortKey];
 
   if (!(sourcePort && destPort)) return null;
+
+  renderLog("Wire", wireConnectionKey);
+
   const signalType = sourcePort.subtype;
   const p0 = sourcePort.position;
   const p1 = destPort.position;
@@ -81,7 +85,6 @@ const WiresRoot = () => {
       );
     }
   });
-
   return (
     <g>
       {wireConnectionKeys.map((wireConnectionKey) => {

@@ -12,6 +12,7 @@ import {
   EdgeUnitCardView,
 } from "@/views/unit-card/unit-cards-common";
 import { ControlSurfaceUnitCardRoot } from "@/views/unit-card/control-surface-unit-card";
+import { renderLog } from "@lib/utils/render-log";
 
 const BoardUnitMenuOverlayContainer = ({
   unitItem,
@@ -30,6 +31,8 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const catalogItem = getCatalogItem(unitItem.catalogKey);
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
+
+  renderLog("BoardUnitCard", unitItem.unitId);
   return (
     <div
       ref={portPositionManager.setBaseElement}

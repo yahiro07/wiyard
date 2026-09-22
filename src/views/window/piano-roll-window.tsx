@@ -1,5 +1,4 @@
 import { cz } from "@lib/utils/cz";
-import { ReactUnitFrame } from "wafer-host/react";
 import { Icons } from "@/common/icons";
 import { NoteInputPortUnitItem, windowIds } from "@/domain/types";
 import { interUnitFactories } from "@/domain/unit-entries";
@@ -10,6 +9,7 @@ import { WindowFrame } from "@lib/window-system";
 import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
 import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 import { commonGetters } from "@/store/common-getters";
+import { ReactUnitFrameWithLog } from "@lib/wafer-ex";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
@@ -85,7 +85,7 @@ const SequencerUnitItemView = ({
   );
   return (
     <div className={cz("absolute-full", !displayed && "hidden")}>
-      <ReactUnitFrame
+      <ReactUnitFrameWithLog
         unitId={sequencerUnitId}
         unitTemplateFn={internalUnitFactory}
         viewActive={displayed}
