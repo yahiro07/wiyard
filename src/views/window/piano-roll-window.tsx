@@ -115,26 +115,30 @@ const PianoRollPanel = () => {
   );
 };
 
-export const PianoRollWindow = () => {
+const PianoRollWindowTitleBarButtons = () => {
   const { currentNoteChannelId } = store.useSnapshot();
   const sequencerUnitId =
     notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
-    <WindowFrame
-      id={windowIds.pianoRoll}
-      title="piano roll"
-      topBarInnerControls={
-        <div className="flex-ha gap-3">
-          <UnitWindowTitleBarPlaybackButtonContainer unitId={sequencerUnitId} />
-          {/* <windowTitleBarControlComponents.ClockActiveButton
+    <div className="flex-ha gap-3">
+      <UnitWindowTitleBarPlaybackButtonContainer unitId={sequencerUnitId} />
+      {/* <windowTitleBarControlComponents.ClockActiveButton
             active={unitClockingFlags[sequencerUnitId] !== false}
             disabled={projectLoading || soloPlaybackUnitId !== null}
             onClick={() => {
               actions.toggleUnitClockingFlag(sequencerUnitId);
             }}
           /> */}
-        </div>
-      }
+    </div>
+  );
+};
+
+export const PianoRollWindow = () => {
+  return (
+    <WindowFrame
+      id={windowIds.pianoRoll}
+      title="piano roll"
+      topBarInnerControls={<PianoRollWindowTitleBarButtons />}
     >
       <ScalerBoxDW designWidth={1100} scaleDirection="lower">
         <PianoRollPanel />

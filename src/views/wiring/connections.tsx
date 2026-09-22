@@ -48,18 +48,24 @@ const BoardItemConnections = () => {
   });
 };
 
-export const UnitConnectionsRoot = () => {
+const KeyboardConnection = () => {
   const { currentNoteChannelId } = store.useSnapshot();
   const currentSequencerUnitId =
     notePortGetters.getSequencerUnitId(currentNoteChannelId);
   return (
+    <Connection
+      source={`${builtinUnitIds.keyboard}.noteOutput`}
+      destination={`${currentSequencerUnitId}.noteInput`}
+    />
+  );
+};
+
+export const UnitConnectionsRoot = () => {
+  return (
     <>
       <InternalSequencerConnections />
       <BoardItemConnections />
-      <Connection
-        source={`${builtinUnitIds.keyboard}.noteOutput`}
-        destination={`${currentSequencerUnitId}.noteInput`}
-      />
+      <KeyboardConnection />
       <Connection source="speakerPort.audioOutput" destination="$output" />
     </>
   );

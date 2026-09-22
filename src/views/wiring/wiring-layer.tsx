@@ -9,6 +9,7 @@ import {
   splitConnectionKey,
 } from "@/domain/port-helpers";
 import { store } from "@/store/store";
+import { resultOf } from "@lib/utils/general-helper";
 
 function createCurveLinePath(p0: Point, p1: Point) {
   // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
@@ -72,14 +73,14 @@ const WiresRoot = () => {
     store.useSnapshot();
   const isDragging = draggingPortKey !== null;
 
-  const previewRemovingConnectionKey = (() => {
+  const previewRemovingConnectionKey = resultOf(() => {
     if (draggingPortKey && previewDestPortKey) {
       return getForwardDirectionWireConnectionKey(
         draggingPortKey,
         previewDestPortKey,
       );
     }
-  })();
+  });
 
   return (
     <g>

@@ -1,13 +1,18 @@
+import { ControlSurfaceUnitItem } from "@/domain/types";
 import { internalUnitCardIcons } from "@/domain/unit-entries";
-import { store } from "@/store/store";
 import { unitCardHandlers } from "@/views/unit-card/unit-card-handlers";
-import { EdgeUnitCardView } from "@/views/unit-card/unit-cards-common";
+import {
+  EdgeUnitCardView,
+  useUnitStuff,
+} from "@/views/unit-card/unit-cards-common";
 
-export const ControlSurfaceUnitCardRoot = () => {
-  const { unitItems, unitStuffs } = store.useSnapshot();
-  const unitItem = unitItems.find((item) => item.type === "controlSurface");
-  if (!unitItem) return;
-  const unitStuff = unitStuffs[unitItem.unitId];
+export const ControlSurfaceUnitCardRoot = ({
+  unitItem,
+}: {
+  unitItem: ControlSurfaceUnitItem;
+}) => {
+  const unitStuff = useUnitStuff(unitItem.unitId);
+  if (!unitStuff) return;
   const outputPortSpecs = unitStuff?.outputPortSpecs?.filter(
     (spec) => unitStuff.outputPortsOptInFlags?.[spec.id] ?? true,
   );

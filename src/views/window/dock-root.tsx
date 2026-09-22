@@ -36,8 +36,28 @@ const DockIcon = ({
   );
 };
 
-export const DockRoot = () => {
+const UnitDockItemsView = () => {
   const { unitItems } = store.useSnapshot();
+  return (
+    <>
+      {unitItems
+        .filter((item) => item.type === "board")
+        .map((item) => {
+          const catalogItem = getCatalogItemWithFallback(item.catalogKey);
+          return (
+            <WindowDockItem
+              key={item.unitId}
+              id={item.unitId}
+              title={catalogItem.name}
+              imageUrl={catalogItem.thumbnailUrl}
+            />
+          );
+        })}
+    </>
+  );
+};
+
+export const DockRoot = () => {
   return (
     <div
       className={cz(
@@ -72,21 +92,7 @@ export const DockRoot = () => {
             />
           }
         />
-        <>
-          {unitItems
-            .filter((item) => item.type === "board")
-            .map((item) => {
-              const catalogItem = getCatalogItemWithFallback(item.catalogKey);
-              return (
-                <WindowDockItem
-                  key={item.unitId}
-                  id={item.unitId}
-                  title={catalogItem.name}
-                  imageUrl={catalogItem.thumbnailUrl}
-                />
-              );
-            })}
-        </>
+        <UnitDockItemsView />
         <>
           {builtinAppItems.map((item) => {
             const { windowId, title, dockItemSpec } = item;
