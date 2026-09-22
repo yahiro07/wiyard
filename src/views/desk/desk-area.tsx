@@ -61,6 +61,7 @@ const GraphEditPlane = () => {
         <UnitCardsRoot />
         <UnitPicker_AddingItem />
         {false && <CoordDebugLayer />}
+        <BoardAttachedWindowsPlane />
       </div>
     </FieldSightPlaneWrapper>
   );
@@ -82,7 +83,7 @@ const PartControlBarContainer = () => {
   return <>{1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
 };
 
-const FrontWindowsPlane = () => {
+const BoardAttachedWindowsPlane = () => {
   return (
     <>
       <UnitWindowsRoot />
@@ -90,6 +91,13 @@ const FrontWindowsPlane = () => {
       <AutomationEditorWindow />
       <ControlSurfaceWindow />
       <KeyboardWindow />
+    </>
+  );
+};
+
+const FrontWindowsPlane = () => {
+  return (
+    <>
       <PartControlBarContainer />
       <InnerDockRoot />
       <SecondBar />

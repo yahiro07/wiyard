@@ -70,8 +70,10 @@ const helpers = {
     deskAreaRect: DOMRect,
   ) {
     let position = vectorOp.rounded({
-      x: deskAreaRect.width / 2,
-      y: deskAreaRect.height / 2,
+      // x: deskAreaRect.width / 2,
+      // y: deskAreaRect.height / 2,
+      x: boardSize.width / 2,
+      y: boardSize.height / 2,
     });
     const { contentSize, freeRatio, pinned } =
       helpers.getInitialWindowSpecAttrs(windowId);

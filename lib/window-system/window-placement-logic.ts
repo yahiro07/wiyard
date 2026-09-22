@@ -32,8 +32,9 @@ export const windowBoundsConverter = {
 
 const internalHelper = {
   getDeskAreaBounds(): Rect {
-    const el = getDeskAreaElement();
-    return { x: 0, y: 0, width: el.offsetWidth, height: el.offsetHeight };
+    // const el = getDeskAreaElement();
+    // return { x: 0, y: 0, width: el.offsetWidth, height: el.offsetHeight };
+    return { x: 0, y: 0, width: 4000, height: 2800 };
   },
   computeMaxScaleRatioInDesk(
     contentBounds: Rect,
