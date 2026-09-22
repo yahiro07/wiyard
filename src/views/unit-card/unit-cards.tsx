@@ -1,4 +1,9 @@
-import { BoardUnitItem, UnitItem } from "@/domain/types";
+import {
+  BoardUnitItem,
+  NoteInputPortUnitItem,
+  SpeakerPortUnitItem,
+  UnitItem,
+} from "@/domain/types";
 import { getCatalogItem, internalUnitCardIcons } from "@/domain/unit-entries";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
@@ -13,6 +18,11 @@ import {
 } from "@/views/unit-card/unit-cards-common";
 import { ControlSurfaceUnitCardRoot } from "@/views/unit-card/control-surface-unit-card";
 import { renderLog } from "@lib/utils/render-log";
+import {
+  BoardUnitCardPartControlButton,
+  NoteInputPortUnitCardPartControlButton,
+} from "@/views/unit-card/unit-card-part-control-button";
+import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 
 const BoardUnitMenuOverlayContainer = ({
   unitItem,
@@ -31,6 +41,8 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const catalogItem = getCatalogItem(unitItem.catalogKey);
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
+  const isPlaybackCapable =
+    unitPlaybackCapabilityFlags[unitItem.catalogKey] ?? false;
 
   renderLog("BoardUnitCard", unitItem.unitId);
   return (
@@ -46,22 +58,31 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
             portPositionManager={portPositionManager}
           />
         )}
-        <div
-          className="h-100px bg-white cursor-pointer relative shadow-md rounded-3px overflow-hidden"
-          onPointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
-        >
-          {catalogItem ? (
-            <img
-              src={catalogItem.thumbnailUrl}
-              className="h-full object-contain"
-              alt={catalogItem.name}
-            />
-          ) : (
-            <div className="w-150px h-full text-black flex-c text-sm">
-              error: catalog item not found for {unitItem.catalogKey}
+        <div className="relative">
+          <div
+            className="h-100px bg-white cursor-pointer relative shadow-md rounded-3px overflow-hidden"
+            onPointerDown={(e) =>
+              unitCardHandlers.handlePointerDown(e, unitItem)
+            }
+          >
+            {catalogItem ? (
+              <img
+                src={catalogItem.thumbnailUrl}
+                className="h-full object-contain"
+                alt={catalogItem.name}
+              />
+            ) : (
+              <div className="w-150px h-full text-black flex-c text-sm">
+                error: catalog item not found for {unitItem.catalogKey}
+              </div>
+            )}
+            <BoardUnitMenuOverlayContainer unitItem={unitItem} />
+          </div>
+          {isPlaybackCapable && (
+            <div className="absolute top-0 right-full">
+              <BoardUnitCardPartControlButton unitItem={unitItem} />
             </div>
           )}
-          <BoardUnitMenuOverlayContainer unitItem={unitItem} />
         </div>
         {outputPortSpecs && (
           <UnitPortsColumn
@@ -79,7 +100,11 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   );
 };
 
-const EdgeUnitCard_NoteInputPort = ({ unitItem }: { unitItem: UnitItem }) => {
+const EdgeUnitCard_NoteInputPort = ({
+  unitItem,
+}: {
+  unitItem: NoteInputPortUnitItem;
+}) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
   const { currentNoteChannelId } = store.useSnapshot();
   const notePortIndex = notePortGetters.useNoteInputPortIndex(unitItem.unitId);
@@ -93,11 +118,16 @@ const EdgeUnitCard_NoteInputPort = ({ unitItem }: { unitItem: UnitItem }) => {
       label={`input ${notePortIndex + 1}`}
       iconComponent={internalUnitCardIcons.noteInputPort}
       handlePointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
+      controlUi={<NoteInputPortUnitCardPartControlButton unitItem={unitItem} />}
     />
   );
 };
 
-const EdgeUnitCard_SpeakerPort = ({ unitItem }: { unitItem: UnitItem }) => {
+const EdgeUnitCard_SpeakerPort = ({
+  unitItem,
+}: {
+  unitItem: SpeakerPortUnitItem;
+}) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
   return (
     <EdgeUnitCardView
