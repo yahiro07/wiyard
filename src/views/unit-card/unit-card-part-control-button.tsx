@@ -1,46 +1,60 @@
-import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
-import { BoardUnitItem, NoteInputPortUnitItem } from "@/domain/types";
+import { Icons } from "@/common/icons";
 import { actions } from "@/store/actions";
-import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
-import { windowTitleBarControlComponents } from "@/views/window/components/window-title-bar-controls";
+import { TapHoldButtonFrame } from "@lib/components/headless/tap-hold-button";
+import { cz } from "@lib/utils/cz";
 
-export const BoardUnitCardPartControlButton = ({
-  unitItem,
+const PartControlIconButtonView = ({
+  active,
+  disabled,
+  children,
+  onTap,
+  onHold,
 }: {
-  unitItem: BoardUnitItem;
+  active?: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
+  onTap: () => void;
+  onHold: () => void;
 }) => {
-  const { unitClockingFlags } = store.useSnapshot();
-  const { unitId, catalogKey } = unitItem;
-  const isPlaybackCapable = unitPlaybackCapabilityFlags[catalogKey] ?? false;
-  if (!isPlaybackCapable) return;
   return (
-    <div className="mx-6px">
-      <windowTitleBarControlComponents.ClockActiveButton
-        active={unitClockingFlags[unitId] !== false}
-        onClick={() => {
-          actions.toggleUnitClockingFlag(unitId);
-        }}
-      />
-    </div>
+    <TapHoldButtonFrame onTap={onTap} onHold={onHold} disabled={disabled}>
+      <div
+        className={cz(
+          "text-#fff text-20px cursor-pointer hover:opacity-80 p-1",
+          !active && "!opacity-20",
+        )}
+      >
+        {children}
+      </div>
+    </TapHoldButtonFrame>
   );
 };
 
-export const NoteInputPortUnitCardPartControlButton = ({
-  unitItem,
-}: {
-  unitItem: NoteInputPortUnitItem;
-}) => {
-  const { unitClockingFlags } = store.useSnapshot();
-  const sequencerUnitId = notePortGetters.getSequencerUnitId(unitItem.unitId);
+export const UnitCardPartControlButton = ({ unitId }: { unitId: string }) => {
+  const { unitClockingFlags, soloModeUnitId } = store.useSnapshot();
+  const clockingActive = unitClockingFlags[unitId] !== false;
+  const isSoloMode = !!soloModeUnitId;
+  const isSoloTarget = unitId === soloModeUnitId;
+  const active = isSoloMode ? isSoloTarget : clockingActive;
   return (
-    <div className="mx-6px">
-      <windowTitleBarControlComponents.ClockActiveButton
-        active={unitClockingFlags[sequencerUnitId] !== false}
-        onClick={() => {
-          actions.toggleUnitClockingFlag(sequencerUnitId);
+    <div className="mx-4px -mt-2px">
+      <PartControlIconButtonView
+        active={active}
+        onTap={() => {
+          const isSoloMode = !!store.state.soloModeUnitId;
+          if (isSoloMode) {
+            actions.toggleSoloModeUnit(unitId);
+          } else {
+            actions.toggleUnitClockingFlag(unitId);
+          }
         }}
-      />
+        onHold={() => {
+          actions.toggleSoloModeUnit(unitId);
+        }}
+      >
+        {isSoloMode ? <Icons.Flash /> : <Icons.Power />}
+      </PartControlIconButtonView>
     </div>
   );
 };

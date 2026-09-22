@@ -18,10 +18,7 @@ import {
 } from "@/views/unit-card/unit-cards-common";
 import { ControlSurfaceUnitCardRoot } from "@/views/unit-card/control-surface-unit-card";
 import { renderLog } from "@lib/utils/render-log";
-import {
-  BoardUnitCardPartControlButton,
-  NoteInputPortUnitCardPartControlButton,
-} from "@/views/unit-card/unit-card-part-control-button";
+import { UnitCardPartControlButton } from "@/views/unit-card/unit-card-part-control-button";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 
 const BoardUnitMenuOverlayContainer = ({
@@ -80,7 +77,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           </div>
           {isPlaybackCapable && (
             <div className="absolute top-0 right-full">
-              <BoardUnitCardPartControlButton unitItem={unitItem} />
+              <UnitCardPartControlButton unitId={unitItem.unitId} />
             </div>
           )}
         </div>
@@ -109,6 +106,7 @@ const EdgeUnitCard_NoteInputPort = ({
   const { currentNoteChannelId } = store.useSnapshot();
   const notePortIndex = notePortGetters.useNoteInputPortIndex(unitItem.unitId);
   const isCurrent = unitItem.unitId === currentNoteChannelId;
+  const sequencerUnitId = notePortGetters.getSequencerUnitId(unitItem.unitId);
   return (
     <EdgeUnitCardView
       unitItem={unitItem}
@@ -118,7 +116,7 @@ const EdgeUnitCard_NoteInputPort = ({
       label={`input ${notePortIndex + 1}`}
       iconComponent={internalUnitCardIcons.noteInputPort}
       handlePointerDown={(e) => unitCardHandlers.handlePointerDown(e, unitItem)}
-      controlUi={<NoteInputPortUnitCardPartControlButton unitItem={unitItem} />}
+      controlUi={<UnitCardPartControlButton unitId={sequencerUnitId} />}
     />
   );
 };
