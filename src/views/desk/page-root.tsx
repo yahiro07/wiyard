@@ -20,10 +20,14 @@ const ErrorDialogContainer = () => {
   );
 };
 
-const PageRootMain = () => {
-  const { uiScaling } = store.useSnapshot();
+const ScreenScalerContainer = ({ children }: { children: React.ReactNode }) => {
+  const { settings } = store.useSnapshot();
+  return <ScreenScaler scaling={settings.uiScaling}>{children}</ScreenScaler>;
+};
+
+export const PageRoot = () => {
   return (
-    <ScreenScaler scaling={uiScaling}>
+    <ScreenScalerContainer>
       <div className="flex-v text-white h-full">
         <TopBar />
         <div className="grow flex-h">
@@ -32,10 +36,6 @@ const PageRootMain = () => {
         <UnitPickerRoot />
       </div>
       <ErrorDialogContainer />
-    </ScreenScaler>
+    </ScreenScalerContainer>
   );
-};
-
-export const PageRoot = () => {
-  return <PageRootMain />;
 };

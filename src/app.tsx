@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import { HostAppProvider } from "wafer-host/react";
 import { hostSystem } from "@/domain/host-system-instance";
 import { setupAutoPersistenceTask } from "@/periphery/auto-persistence-task";
@@ -23,7 +23,7 @@ const EffectsHookBox = () => {
   return null;
 };
 
-const AppInner = () => {
+const HostAppProviderWrapper = ({ children }: { children: ReactNode }) => {
   const { playing, bpm, masterVolume } = store.useSnapshot();
   const masterGain = useMemo(
     () => mapKnobGainDb(masterVolume, 0.5),
@@ -37,9 +37,17 @@ const AppInner = () => {
       masterGain={masterGain}
       manualClocking
     >
+      {children}
+    </HostAppProvider>
+  );
+};
+
+const AppInner = () => {
+  return (
+    <HostAppProviderWrapper>
       <PageRoot />
       <EffectsHookBox />
-    </HostAppProvider>
+    </HostAppProviderWrapper>
   );
 };
 

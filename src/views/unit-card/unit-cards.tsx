@@ -12,16 +12,27 @@ import {
   EdgeUnitCardView,
 } from "@/views/unit-card/unit-cards-common";
 import { ControlSurfaceUnitCardRoot } from "@/views/unit-card/control-surface-unit-card";
+import { renderLog } from "@lib/utils/render-log";
 
-const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+const BoardUnitMenuOverlayContainer = ({
+  unitItem,
+}: {
+  unitItem: BoardUnitItem;
+}) => {
   const { menuTargetUnitId } = store.useSnapshot();
   const isMenuTarget = menuTargetUnitId === unitItem.unitId;
+  if (!isMenuTarget) return;
+  return <UnitCardOperationOverlay unitItem={unitItem} />;
+};
+
+const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = getCatalogItem(unitItem.catalogKey);
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
 
+  renderLog("BoardUnitCard", unitItem.unitId);
   return (
     <div
       ref={portPositionManager.setBaseElement}
@@ -50,7 +61,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
               error: catalog item not found for {unitItem.catalogKey}
             </div>
           )}
-          {isMenuTarget && <UnitCardOperationOverlay unitItem={unitItem} />}
+          <BoardUnitMenuOverlayContainer unitItem={unitItem} />
         </div>
         {outputPortSpecs && (
           <UnitPortsColumn
@@ -108,6 +119,10 @@ const UnitCardRoot = ({ unitItem }: { unitItem: UnitItem }) => {
     return <EdgeUnitCard_NoteInputPort unitItem={unitItem} />;
   } else if (unitItem.type === "speaker") {
     return <EdgeUnitCard_SpeakerPort unitItem={unitItem} />;
+  } else if (unitItem.type === "automationEditor") {
+    //rendered separately
+  } else if (unitItem.type === "controlSurface") {
+    return <ControlSurfaceUnitCardRoot unitItem={unitItem} />;
   }
 };
 
@@ -119,7 +134,6 @@ export const UnitCardsRoot = () => {
         <UnitCardRoot key={item.unitId} unitItem={item} />
       ))}
       <AutomationEditorUnitCardRoot />
-      <ControlSurfaceUnitCardRoot />
     </>
   );
 };

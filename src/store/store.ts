@@ -16,6 +16,7 @@ import {
 } from "@/domain/types";
 import { blankScene } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
+import { AppSettings, defaultAppSettings } from "@/common/app-settings";
 
 export type StoreState = {
   //included in project data
@@ -35,7 +36,7 @@ export type StoreState = {
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
-  uiScaling: number;
+  settings: AppSettings;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
@@ -56,6 +57,7 @@ export type StoreState = {
   configTargetWireKey: string | null;
   soloPlaybackUnitId: string | null;
   soloModeUnitId: string | null;
+  settingsPanelVisible: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -75,6 +77,7 @@ const blankStoreState: StoreState = {
   //
   midiInEnabled: false,
   masterVolume: 0.5,
+  settings: defaultAppSettings,
   //
   unitStuffs: {},
   portStuffs: {},
@@ -88,7 +91,6 @@ const blankStoreState: StoreState = {
   projectLoadedIndex: 0,
   projectLoading: false,
   secondBarVisible: false,
-  uiScaling: 1,
   autoPersistenceEnabled: false,
   importedProjectFileName: null,
   projectLoadErrorStatus: null,
@@ -96,6 +98,7 @@ const blankStoreState: StoreState = {
   configTargetWireKey: null,
   soloPlaybackUnitId: null,
   soloModeUnitId: null,
+  settingsPanelVisible: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -127,12 +130,13 @@ const defaultStoreState: StoreState = {
   ...blankScene.storeStates,
 };
 
-if (0) {
+if (1) {
   // store.setSequencerWindowVisible(true);
   assignTyped(defaultStoreState, {
     // ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
+    secondBarVisible: true,
   });
 }
 

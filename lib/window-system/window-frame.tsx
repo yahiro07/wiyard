@@ -10,6 +10,7 @@ import {
   WindowCoordViewModel,
 } from "./window-view-models";
 import { IconType } from "react-icons";
+import { renderLog } from "@lib/utils/render-log";
 
 const ResizeAnchor = ({
   anchor,
@@ -190,7 +191,6 @@ const WindowFrameView = ({
   const { contentSize, windowBounds } = windowCoordVm;
   const displayed = !evacuated && windowStatus === "visible";
   const evacuatedBarVisible = evacuated && windowStatus === "visible";
-
   return (
     <>
       {evacuatedBarVisible && (
@@ -267,6 +267,9 @@ export const WindowFrame = ({
     storeSlice.useSnapshot();
   const windowCoordVm = useWindowCoordViewModel(id);
   const windowSpec = windowSpecs[id];
+
+  renderLog("WindowFrame", id);
+
   return (
     <WindowFrameView
       title={title}

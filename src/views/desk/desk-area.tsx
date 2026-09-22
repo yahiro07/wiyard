@@ -19,11 +19,30 @@ import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { DockRoot } from "@/views/window/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
+import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 
-const GraphEditPlane = () => {
+const WireKnobsContainer = () => {
+  const { settings } = store.useSnapshot();
+  if (!settings.wireVolumeKnobs) return;
+  return <WireKnobsRoot />;
+};
+
+const FieldSightPlaneWrapper = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const { sight } = store.useSnapshot();
   return (
     <FieldSightPlane sight={sight} boardSize={boardSize}>
+      {children}
+    </FieldSightPlane>
+  );
+};
+
+const GraphEditPlane = () => {
+  return (
+    <FieldSightPlaneWrapper>
       <div
         id={domIds.graphEditPlane}
         className="h-full"
@@ -37,14 +56,30 @@ const GraphEditPlane = () => {
         }}
       >
         <WiringLayer />
-        <WireKnobsRoot />
+        <WireKnobsContainer />
         <WireAutomationSwitchersRoot />
         <UnitCardsRoot />
         <UnitPicker_AddingItem />
         {false && <CoordDebugLayer />}
       </div>
-    </FieldSightPlane>
+    </FieldSightPlaneWrapper>
   );
+};
+
+const InFieldControlUi = () => {
+  const { settingsPanelVisible } = store.useSnapshot();
+  if (settingsPanelVisible) return;
+  return (
+    <div className="absolute top-0 right-0 m-6px mt-4">
+      <ControlButtonsInField />
+    </div>
+  );
+};
+
+const PartControlBarContainer = () => {
+  const { settings } = store.useSnapshot();
+  if (!settings.partControlBar) return;
+  return <>{1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
 };
 
 const FrontWindowsPlane = () => {
@@ -55,9 +90,11 @@ const FrontWindowsPlane = () => {
       <AutomationEditorWindow />
       <ControlSurfaceWindow />
       <KeyboardWindow />
-      {1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}
+      <PartControlBarContainer />
       <DockRoot />
       <SecondBar />
+      <InFieldControlUi />
+      <SettingsPanelRoot />
     </>
   );
 };
@@ -92,9 +129,6 @@ export const DeskArea = () => {
       <GraphEditPlane />
       <FrontWindowsPlane />
       <UnitConnectionsRoot />
-      <div className="absolute top-0 right-0 m-6px mt-4">
-        <ControlButtonsInField />
-      </div>
     </div>
   );
 };
