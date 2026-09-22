@@ -22,7 +22,7 @@ import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 
 const GraphEditPlane = () => {
-  const { sight } = store.useSnapshot();
+  const { sight, settings } = store.useSnapshot();
   return (
     <FieldSightPlane sight={sight} boardSize={boardSize}>
       <div
@@ -38,7 +38,7 @@ const GraphEditPlane = () => {
         }}
       >
         <WiringLayer />
-        <WireKnobsRoot />
+        {settings.wireVolumeKnobs && <WireKnobsRoot />}
         <WireAutomationSwitchersRoot />
         <UnitCardsRoot />
         <UnitPicker_AddingItem />
@@ -59,6 +59,7 @@ const InFieldControlUi = () => {
 };
 
 const FrontWindowsPlane = () => {
+  const { settings } = store.useSnapshot();
   return (
     <>
       <UnitWindowsRoot />
@@ -66,7 +67,9 @@ const FrontWindowsPlane = () => {
       <AutomationEditorWindow />
       <ControlSurfaceWindow />
       <KeyboardWindow />
-      {1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}
+      {settings.partControlBar && (
+        <>{1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>
+      )}
       <DockRoot />
       <SecondBar />
       <InFieldControlUi />

@@ -76,6 +76,29 @@ const UiScalingSelectorButtons = () => {
   );
 };
 
+const CommonFeaturesRows = () => {
+  const { settings } = store.useSnapshot();
+
+  return (
+    <>
+      <CheckBoxLine
+        label="Wire volume knob"
+        checked={settings.wireVolumeKnobs}
+        onChange={(value) =>
+          settingsActions.setSettingValue("wireVolumeKnobs", value)
+        }
+      />
+      <CheckBoxLine
+        label="Part control bar"
+        checked={settings.partControlBar}
+        onChange={(value) =>
+          settingsActions.setSettingValue("partControlBar", value)
+        }
+      />
+    </>
+  );
+};
+
 const SettingsPanel = () => {
   return (
     <div className="w-340px m-2">
@@ -92,8 +115,7 @@ const SettingsPanel = () => {
             <SettingRow header="Common Features" />
             <div className="ml-3">
               <div className="flex-v gap-1 mt-1">
-                <CheckBoxLine label="Wire volume knob" checked={false} />
-                <CheckBoxLine label="Part control bar" checked={false} />
+                <CommonFeaturesRows />
               </div>
             </div>
           </div>
