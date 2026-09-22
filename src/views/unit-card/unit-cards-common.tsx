@@ -5,6 +5,7 @@ import { store } from "@/store/store";
 import { useUnitCardPortPositionManager } from "@/views/unit-card/unit-card-port-position-manager";
 import { UnitPortsColumn } from "@/views/unit-card/unit-ports";
 import { cz } from "@lib/utils/cz";
+import { ReactNode } from "react";
 import { IconType } from "react-icons";
 
 export function useUnitStuff(unitId: string) {
@@ -49,6 +50,7 @@ export const EdgeUnitCardView = ({
   iconComponent: IconComponent,
   label,
   handlePointerDown,
+  controlUi,
 }: {
   unitItem: UnitItem;
   inputPortSpecs?: UnitPortSpec[];
@@ -57,6 +59,7 @@ export const EdgeUnitCardView = ({
   iconComponent: IconType;
   label: string;
   handlePointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
+  controlUi?: ReactNode;
 }) => {
   const isNoteInputPort = unitItem.type === "noteInput";
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
@@ -73,22 +76,28 @@ export const EdgeUnitCardView = ({
             portPositionManager={portPositionManager}
           />
         )}
-        <div
-          className={cz(
-            "w-90px h-90px bg-white/10 flex-c relative shadow-md rounded-6px",
-            isNoteInputPort &&
-              "border-l border-l-6 border-l-transparent cursor-pointer",
-            highlighted && "!border-l-#8ae",
-          )}
-          onPointerDown={handlePointerDown}
-        >
-          <IconComponent size={50} className="mb-3" />
-          {label && (
-            <div className="absolute-full flex-va justify-end text-[13px] font-500 pb-1">
-              {label}
-            </div>
+        <div className="relative">
+          <div
+            className={cz(
+              "w-90px h-90px bg-white/10 flex-c relative shadow-md rounded-6px relative",
+              isNoteInputPort &&
+                "border-l border-l-6 border-l-transparent cursor-pointer",
+              highlighted && "!border-l-#8ae",
+            )}
+            onPointerDown={handlePointerDown}
+          >
+            <IconComponent size={50} className="mb-3" />
+            {label && (
+              <div className="absolute-full flex-va justify-end text-[13px] font-500 pb-1">
+                {label}
+              </div>
+            )}
+          </div>
+          {controlUi && (
+            <div className="absolute top-0 right-90px">{controlUi}</div>
           )}
         </div>
+
         {outputPortSpecs && (
           <UnitPortsColumn
             portSpecs={outputPortSpecs}
