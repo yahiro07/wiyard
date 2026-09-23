@@ -22,6 +22,7 @@ import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
 import { graphAreaSize } from "@/project/default-data";
 import { WiringLayer } from "@/views/wiring/wiring-layer";
+import { desktopTheme } from "@/common/desktop-theme";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();
@@ -43,15 +44,13 @@ const FieldSightPlaneWrapper = ({
 };
 
 const BoardBackground = () => {
-  const bgImageUrl = "/dev/bg/bg18.jpg";
-  if (1) {
-    const bgColor = "#006";
-    const bgMix = 0.3;
-    return (
-      <div
-        className="absolute-full pointer-events-none"
-        style={{ background: bgColor }}
-      >
+  const { bgColor, bgImageUrl, bgMix } = desktopTheme;
+  return (
+    <div
+      className="absolute-full pointer-events-none"
+      style={{ background: bgColor }}
+    >
+      {bgImageUrl && (
         <div
           className="w-full h-full"
           style={{
@@ -61,27 +60,9 @@ const BoardBackground = () => {
             opacity: bgMix,
           }}
         />
-      </div>
-    );
-  } else {
-    const bgCoverColor = "#006";
-    const bgCoverOpacity = 0.7;
-    return (
-      <div
-        className="absolute-full pointer-events-none"
-        style={{
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundImage: `url(${bgImageUrl})`,
-        }}
-      >
-        <div
-          className="w-full h-full"
-          style={{ background: bgCoverColor, opacity: bgCoverOpacity }}
-        />
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 };
 
 const BoardAttachedWindowsPlane = () => {
@@ -102,11 +83,7 @@ const BoardAttachedWindowsPlane = () => {
 };
 
 const GraphBackgroundPlane = () => {
-  const configs = {
-    // graphBgColor: "#fff2",
-    // graphBgColor: "#444",
-    graphBgColor: "#0044",
-  };
+  const { graphBgColor, graphBgOpacity } = desktopTheme;
   return (
     <div
       className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -115,7 +92,8 @@ const GraphBackgroundPlane = () => {
         top: 0,
         width: graphAreaSize.width,
         height: graphAreaSize.height,
-        background: configs.graphBgColor,
+        background: graphBgColor,
+        opacity: graphBgOpacity,
         borderRadius: "12px",
       }}
     />
