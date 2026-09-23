@@ -49,7 +49,7 @@ const GraphEditPlane = () => {
         style={{
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
-          backgroundImage: "url(/public/dev/bg/bg5.jpg)",
+          backgroundImage: "url(/public/dev/bg/bg11.avif)",
         }}
       >
         <WiringLayer />
@@ -125,11 +125,11 @@ export const DeskArea = () => {
           actions.setMenuTargetUnit(null);
         }
       }}
-      // onWheel={(e) => {
-      // if (checkSightTarget(e)) {
-      // sightHandlers.onWheel(e.nativeEvent);
-      // }
-      // }}
+      onWheel={(e) => {
+        if (store.state.settings.mouseWheelZoom && checkSightTarget(e)) {
+          sightHandlers.onWheel(e.nativeEvent);
+        }
+      }}
     >
       <GraphEditPlane />
       <FrontWindowsPlane />

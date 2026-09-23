@@ -95,6 +95,13 @@ const CommonFeaturesRows = () => {
           settingsActions.setSettingValue("partControlBar", value)
         }
       />
+      <CheckBoxLine
+        label="Mouse wheel zoom"
+        checked={settings.mouseWheelZoom}
+        onChange={(value) =>
+          settingsActions.setSettingValue("mouseWheelZoom", value)
+        }
+      />
     </>
   );
 };
