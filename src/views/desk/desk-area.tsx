@@ -47,12 +47,9 @@ const GraphEditPlane = () => {
         id={domIds.graphEditPlane}
         className="h-full"
         style={{
-          // background: uiColors.deskAreaBg,
-          background: "#36383a",
-          backgroundImage: `url(https://i.imgur.com/tfiVPzS.png)`,
-          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          backgroundSize: "280px",
+          backgroundSize: "cover",
+          backgroundImage: "url(/public/dev/bg/bg5.jpg)",
         }}
       >
         <WiringLayer />
