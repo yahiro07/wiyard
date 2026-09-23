@@ -20,6 +20,7 @@ import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
+import { DebugOverlay } from "@/views/desk/debug-overlay";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();
@@ -41,7 +42,7 @@ const FieldSightPlaneWrapper = ({
 };
 
 const BoardBackground = () => {
-  const bgImageUrl = "/public/dev/bg/bg18.jpg";
+  const bgImageUrl = "/dev/bg/bg18.jpg";
   if (1) {
     const bgColor = "#006";
     const bgMix = 0.3;
@@ -104,6 +105,23 @@ const GraphBackgroundPlane = () => {
   );
 };
 
+const BoardAttachedWindowsPlane = () => {
+  const { boardSize } = store.useSnapshot();
+  return (
+    <div
+      style={{
+        transform: `translate(${boardSize.width / 2}px, ${boardSize.height / 2}px)`,
+      }}
+    >
+      <UnitWindowsRoot />
+      <PianoRollWindow />
+      <AutomationEditorWindow />
+      <ControlSurfaceWindow />
+      <KeyboardWindow />
+    </div>
+  );
+};
+
 const DeskBoardPlane = () => {
   return (
     <FieldSightPlaneWrapper>
@@ -136,18 +154,6 @@ const PartControlBarContainer = () => {
   const { settings } = store.useSnapshot();
   if (!settings.partControlBar) return;
   return <>{1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
-};
-
-const BoardAttachedWindowsPlane = () => {
-  return (
-    <>
-      <UnitWindowsRoot />
-      <PianoRollWindow />
-      <AutomationEditorWindow />
-      <ControlSurfaceWindow />
-      <KeyboardWindow />
-    </>
-  );
 };
 
 const FrontWindowsPlane = () => {
@@ -192,6 +198,7 @@ export const DeskArea = () => {
       <DeskBoardPlane />
       <FrontWindowsPlane />
       <UnitConnectionsRoot />
+      <DebugOverlay />
     </div>
   );
 };

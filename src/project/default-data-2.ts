@@ -61,8 +61,8 @@ export const defaultData2 = {
       windowSpecs: {
         keyboardWindow: {
           position: {
-            x: 629,
-            y: 600,
+            x: 0,
+            y: 150,
           },
           contentSize: {
             width: 480,

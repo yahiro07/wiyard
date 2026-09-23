@@ -5,8 +5,8 @@ import { ProjectData, projectsConstants } from "@/project/project-types";
 
 export const defaultBoardSize = { width: 4000, height: 2800 };
 
-const ox = 2000 - 500;
-const oy = 1400 - 350;
+const ox = 0;
+const oy = 0;
 
 function createDefaultScene(): ProjectData {
   const unitItems: UnitItem[] = [

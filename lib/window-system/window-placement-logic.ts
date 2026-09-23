@@ -28,8 +28,8 @@ export const windowBoundsConverter = {
 
 const internalHelper = {
   getDeskBoardBounds(): Rect {
-    const boardSize = storeSlice.get().boardSize;
-    return { x: 0, y: 0, width: boardSize.width, height: boardSize.height };
+    const { width: w, height: h } = storeSlice.get().boardSize;
+    return { x: -w / 2, y: -h / 2, width: w, height: h };
   },
   computeMaxScaleRatioInDesk(
     contentBounds: Rect,

@@ -28,7 +28,7 @@ import { store, windowSystem } from "@/store/store";
 import { commonGetters } from "@/store/common-getters";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { appConfig } from "@/common/app-config";
-import { sizeOp, vectorOp } from "@lib/utils/geometry-helper";
+import { sizeOp } from "@lib/utils/geometry-helper";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -69,13 +69,7 @@ const helpers = {
     status: WindowStatus,
     _deskAreaRect: DOMRect,
   ) {
-    const boardSize = store.state.boardSize;
-    let position = vectorOp.rounded({
-      // x: deskAreaRect.width / 2,
-      // y: deskAreaRect.height / 2,
-      x: boardSize.width / 2,
-      y: boardSize.height / 2,
-    });
+    const position = { x: 0, y: 0 };
     const { contentSize, freeRatio, pinned } =
       helpers.getInitialWindowSpecAttrs(windowId);
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);

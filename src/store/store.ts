@@ -151,6 +151,7 @@ const windowSliceKeys: (keyof StoreState)[] = [
   "windowSpecs",
   "currentWindowId",
   "windowsEvacuated",
+  "boardSize",
 ];
 export const windowSystem = createWindowSystem({
   storeSlice: {
