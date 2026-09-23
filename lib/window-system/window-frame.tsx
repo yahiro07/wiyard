@@ -212,7 +212,8 @@ const WindowFrameView = ({
       >
         <div
           className={cz(
-            "relative rounded-6px overflow-hidden bd-gray-500/40",
+            "relative bd-gray-500/40",
+            "rounded-6px overflow-hidden",
             isCurrent && "!bd-#68c/50",
           )}
           style={{ width: windowBounds.width, height: windowBounds.height }}
@@ -233,7 +234,10 @@ const WindowFrameView = ({
           )}
           <div
             className="bg-white text-black h-full"
-            style={{ width: contentSize.width, height: contentSize.height }}
+            style={{
+              width: contentSize.width - 2,
+              height: contentSize.height - 2,
+            }}
           >
             {children}
           </div>
