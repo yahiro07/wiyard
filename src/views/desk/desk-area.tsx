@@ -183,7 +183,6 @@ const ForegroundUiPlane = () => {
 };
 
 function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
-  console.log("checkSightTarget", e.currentTarget, e.target);
   return (
     e.target === e.currentTarget ||
     (e.target as HTMLElement).id === domIds.boardPlane

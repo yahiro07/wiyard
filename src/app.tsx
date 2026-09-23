@@ -14,10 +14,10 @@ import { mapKnobGainDb } from "@lib/utils/volume-curve";
 import { usePlaybackController } from "@/periphery/playback-controller";
 
 function useUpdateDebugValues() {
-  const { windowSpecs } = store.useSnapshot();
+  const { unitAddingItem } = store.useSnapshot();
   useEffect(() => {
-    store.setDebugObject(windowSpecs);
-  }, [windowSpecs]);
+    store.setDebugObject(unitAddingItem);
+  }, [unitAddingItem]);
 }
 
 const EffectsHookBox = () => {
