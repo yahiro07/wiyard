@@ -1,5 +1,13 @@
 import { defaultBoardSize } from "@/project/default-data";
 import { ProjectData } from "@/project/project-types";
+import { Point } from "@lib/utils/common-types";
+
+function fixCardPosition(pos: Point) {
+  return {
+    x: pos.x - 2000,
+    y: pos.y - 1400,
+  };
+}
 
 export const defaultData2 = {
   starter: {
@@ -12,44 +20,44 @@ export const defaultData2 = {
           type: "noteInput",
           unitId: "noteInputPort1",
           sequencerClassKey: "pianoRoll",
-          cardPosition: {
+          cardPosition: fixCardPosition({
             x: 1750,
             y: 1250,
-          },
+          }),
         },
         {
           type: "speaker",
           unitId: "speakerPort",
-          cardPosition: {
+          cardPosition: fixCardPosition({
             x: 2380,
             y: 1250,
-          },
+          }),
         },
         {
           type: "controlSurface",
           unitId: "controlSurface",
-          cardPosition: {
+          cardPosition: fixCardPosition({
             x: 1550,
             y: 1350,
-          },
+          }),
         },
         {
           type: "board",
           unitId: "sirius_1",
           catalogKey: "sirius",
-          cardPosition: {
+          cardPosition: fixCardPosition({
             x: 2050,
             y: 1250,
-          },
+          }),
         },
         {
           type: "board",
           unitId: "graphiteDrumMachine_1",
           catalogKey: "graphiteDrumMachine",
-          cardPosition: {
+          cardPosition: fixCardPosition({
             x: 2050,
             y: 1080,
-          },
+          }),
         },
       ],
       wireConnectionKeys: [

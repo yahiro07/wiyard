@@ -84,28 +84,6 @@ const BoardBackground = () => {
   }
 };
 
-const GraphBackgroundPlane = () => {
-  const { boardSize } = store.useSnapshot();
-  const configs = {
-    // graphBgColor: "#fff2",
-    // graphBgColor: "#444",
-    graphBgColor: "#0044",
-  };
-  return (
-    <div
-      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-      style={{
-        left: boardSize.width / 2,
-        top: boardSize.height / 2,
-        width: graphAreaSize.width,
-        height: graphAreaSize.height,
-        background: configs.graphBgColor,
-        borderRadius: "12px",
-      }}
-    />
-  );
-};
-
 const BoardAttachedWindowsPlane = () => {
   const { boardSize } = store.useSnapshot();
   return (
@@ -123,9 +101,36 @@ const BoardAttachedWindowsPlane = () => {
   );
 };
 
-const GraphEditPlane = () => {
+const GraphBackgroundPlane = () => {
+  const configs = {
+    // graphBgColor: "#fff2",
+    // graphBgColor: "#444",
+    graphBgColor: "#0044",
+  };
   return (
-    <div id={domIds.graphEditPlane}>
+    <div
+      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      style={{
+        left: 0,
+        top: 0,
+        width: graphAreaSize.width,
+        height: graphAreaSize.height,
+        background: configs.graphBgColor,
+        borderRadius: "12px",
+      }}
+    />
+  );
+};
+
+const GraphEditPlane = () => {
+  const { boardSize } = store.useSnapshot();
+  return (
+    <div
+      id={domIds.graphEditPlane}
+      style={{
+        transform: `translate(${boardSize.width / 2}px, ${boardSize.height / 2}px)`,
+      }}
+    >
       <GraphBackgroundPlane />
       <WiringLayer />
       <WireKnobsContainer />
