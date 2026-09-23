@@ -1,6 +1,6 @@
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { useState } from "react";
-import { getGraphEditPlaneElement } from "@/common/constants";
+import { domGetters } from "@/common/constants";
 import { showcaseEntries } from "@/domain/showcase-entries";
 import { UnitAddingItem } from "@/domain/types";
 import {
@@ -16,7 +16,7 @@ const pickerItemHandlers = {
     e: React.PointerEvent<HTMLDivElement>,
     catalogKey: CatalogKey,
   ) {
-    const coordinateBaseElement = getGraphEditPlaneElement();
+    const coordinateBaseElement = domGetters.getGraphEditPlane();
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {
         actions.setUnitPickerVisible(false);

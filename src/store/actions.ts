@@ -5,7 +5,6 @@ import {
 } from "@lib/utils/array-object-helper";
 import { Point, Size } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
-import { getDeskAreaElement } from "@/common/constants";
 import {
   decodeWireConnectionKey,
   filterUnitRelatedWires,
@@ -64,11 +63,7 @@ const helpers = {
       return { contentSize: helpers.getGeneralUnitInitialSize(windowId) };
     }
   },
-  createInitialWindowSpec(
-    windowId: string,
-    status: WindowStatus,
-    _deskAreaRect: DOMRect,
-  ) {
+  createInitialWindowSpec(windowId: string, status: WindowStatus) {
     const position = { x: 0, y: 0 };
     const { contentSize, freeRatio, pinned } =
       helpers.getInitialWindowSpecAttrs(windowId);
@@ -150,13 +145,7 @@ export const actions = {
   setWindowStatus(windowId: string, status: WindowStatus) {
     const exists = windowSystem.has(windowId);
     if (!exists) {
-      const deskArea = getDeskAreaElement();
-      const deskAreaRect = deskArea.getBoundingClientRect();
-      const windowSpec = helpers.createInitialWindowSpec(
-        windowId,
-        status,
-        deskAreaRect,
-      );
+      const windowSpec = helpers.createInitialWindowSpec(windowId, status);
       windowSystem.add(windowId, windowSpec);
       windowSystem.setCurrentWindow(windowId);
 

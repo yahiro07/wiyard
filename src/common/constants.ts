@@ -1,12 +1,17 @@
 export const domIds = {
-  deskArea: "domDeskArea",
+  // deskArea: "domDeskArea",
+  boardPlane: "domBoardPlane",
   graphEditPlane: "domGraphEditPlane",
 };
 
-export function getGraphEditPlaneElement() {
-  return document.getElementById(domIds.graphEditPlane) as HTMLElement;
-}
-
-export function getDeskAreaElement() {
-  return document.getElementById(domIds.deskArea) as HTMLElement;
-}
+export const domGetters = {
+  // getDomDeskArea(){
+  //   return document.getElementById(domIds.deskArea) as HTMLElement;
+  // },
+  getDomBoardPlane() {
+    return document.getElementById(domIds.boardPlane) as HTMLElement;
+  },
+  getGraphEditPlane() {
+    return document.getElementById(domIds.graphEditPlane) as HTMLElement;
+  },
+};
