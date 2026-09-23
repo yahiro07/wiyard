@@ -17,6 +17,7 @@ import {
 import { blankScene, defaultBoardSize } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
+import { uiConstants } from "@/common/constants";
 
 export type StoreState = {
   //included in project data
@@ -165,7 +166,7 @@ export const windowSystem = createWindowSystem({
 export const sightHandlers = createFieldSightHandlers(
   () => store.state.sight,
   (attrs) => store.patchSight(attrs),
-  { minScaling: 0.125, maxScaling: 2 },
+  { minScaling: uiConstants.minScaling, maxScaling: uiConstants.maxScaling },
 );
 
 if (import.meta.hot) {

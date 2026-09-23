@@ -23,6 +23,7 @@ import { DebugOverlay } from "@/views/desk/debug-overlay";
 import { graphAreaSize } from "@/project/default-data";
 import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { desktopTheme } from "@/common/desktop-theme";
+import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();
@@ -132,7 +133,7 @@ const DeskBoardPlane = () => {
   );
 };
 
-const InFieldControlUi = () => {
+const _InFieldControlUi = () => {
   const { settingsPanelVisible } = store.useSnapshot();
   if (settingsPanelVisible) return;
   return (
@@ -154,7 +155,8 @@ const ForegroundUiPlane = () => {
       <PartControlBarContainer />
       <InnerDockRoot />
       <SecondBar />
-      <InFieldControlUi />
+      {/* <InFieldControlUi /> */}
+      <ScalingGaugeContainer />
       <SettingsPanelRoot />
     </>
   );

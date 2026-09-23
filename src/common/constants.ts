@@ -1,5 +1,10 @@
 import { getHtmlElementById } from "@lib/utils/dom-helper";
 
+export const uiConstants = {
+  minScaling: 0.1,
+  maxScaling: 2,
+};
+
 export const domIds = {
   // deskArea: "domDeskArea",
   boardPlane: "domBoardPlane",
