@@ -41,7 +41,7 @@ const FieldSightPlaneWrapper = ({
 };
 
 const BoardBackground = () => {
-  const bgImageUrl = "/public/dev/bg/bg22.jpg";
+  const bgImageUrl = "/public/dev/bg/bg18.jpg";
   if (1) {
     const bgColor = "#006";
     const bgMix = 0.3;
@@ -82,11 +82,33 @@ const BoardBackground = () => {
   }
 };
 
+const GraphBackgroundPlane = () => {
+  const configs = {
+    // graphBgColor: "#fff2",
+    // graphBgColor: "#444",
+    graphBgColor: "#0044",
+  };
+  return (
+    <div
+      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      style={{
+        left: boardSize.width / 2,
+        top: boardSize.height / 2,
+        width: 1400,
+        height: 800,
+        background: configs.graphBgColor,
+        borderRadius: "12px",
+      }}
+    />
+  );
+};
+
 const DeskBoardPlane = () => {
   return (
     <FieldSightPlaneWrapper>
       <div id={domIds.graphEditPlane} className="h-full">
         <BoardBackground />
+        <GraphBackgroundPlane />
         <WiringLayer />
         <WireKnobsContainer />
         <WireAutomationSwitchersRoot />
