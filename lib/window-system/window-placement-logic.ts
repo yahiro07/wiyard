@@ -134,12 +134,10 @@ export const windowPlacementHelper = {
   updatePosition(originalWindowBounds: Rect, moveAmount: Vector) {
     const deskAreaBounds = internalHelper.getDeskAreaBounds();
     const checkingBounds = {
-      x: deskAreaBounds.x - originalWindowBounds.width * 0.75,
+      x: deskAreaBounds.x,
       y: deskAreaBounds.y,
-      width: deskAreaBounds.width + originalWindowBounds.width * 1.5,
-      height:
-        deskAreaBounds.height +
-        (originalWindowBounds.height - windowTitleBarHeight),
+      width: deskAreaBounds.width,
+      height: deskAreaBounds.height,
     };
     return BoundsOperator.fromRect(originalWindowBounds)
       .move(moveAmount)
