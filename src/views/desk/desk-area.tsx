@@ -123,17 +123,25 @@ const BoardAttachedWindowsPlane = () => {
   );
 };
 
+const GraphEditPlane = () => {
+  return (
+    <>
+      <GraphBackgroundPlane />
+      <WiringLayer />
+      <WireKnobsContainer />
+      <WireAutomationSwitchersRoot />
+      <UnitCardsRoot />
+      <UnitPicker_AddingItem />
+    </>
+  );
+};
+
 const DeskBoardPlane = () => {
   return (
     <FieldSightPlaneWrapper>
       <div id={domIds.graphEditPlane} className="h-full">
         <BoardBackground />
-        <GraphBackgroundPlane />
-        <WiringLayer />
-        <WireKnobsContainer />
-        <WireAutomationSwitchersRoot />
-        <UnitCardsRoot />
-        <UnitPicker_AddingItem />
+        <GraphEditPlane />
         {false && <CoordDebugLayer />}
         <BoardAttachedWindowsPlane />
       </div>
