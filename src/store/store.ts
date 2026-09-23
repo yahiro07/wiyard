@@ -141,7 +141,7 @@ if (1) {
     // ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
-    secondBarVisible: true,
+    // secondBarVisible: true,
   });
 }
 
