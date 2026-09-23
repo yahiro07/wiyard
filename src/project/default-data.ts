@@ -4,6 +4,7 @@ import { UnitItem } from "@/domain/types";
 import { ProjectData, projectsConstants } from "@/project/project-types";
 
 export const defaultBoardSize = { width: 4000, height: 2800 };
+export const graphAreaSize = { width: 1400, height: 800 };
 
 const ox = 0;
 const oy = 0;

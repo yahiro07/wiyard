@@ -21,6 +21,7 @@ import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
+import { graphAreaSize } from "@/project/default-data";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();
@@ -96,8 +97,8 @@ const GraphBackgroundPlane = () => {
       style={{
         left: boardSize.width / 2,
         top: boardSize.height / 2,
-        width: 1400,
-        height: 800,
+        width: graphAreaSize.width,
+        height: graphAreaSize.height,
         background: configs.graphBgColor,
         borderRadius: "12px",
       }}
