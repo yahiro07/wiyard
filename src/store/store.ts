@@ -61,6 +61,7 @@ export type StoreState = {
   soloModeUnitId: string | null;
   settingsPanelVisible: boolean;
   debugObject: object | null;
+  graphAreaFloatUp: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -104,6 +105,7 @@ const blankStoreState: StoreState = {
   soloModeUnitId: null,
   settingsPanelVisible: false,
   debugObject: null,
+  graphAreaFloatUp: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {

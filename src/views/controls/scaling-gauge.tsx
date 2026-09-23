@@ -33,22 +33,20 @@ export const ScalingGaugeContainer = () => {
   const { sight } = store.useSnapshot();
   const scaling = sight.eyeScaling;
   return (
-    <div className="absolute-right-center mr-2">
-      <div
-        className={cz(
-          "w-36px h-90px bg-gray-500 flex-va justify-between",
-          "text-white cursor-pointer hover:opacity-90",
-        )}
-        onPointerDown={handleScalingGaugePointerDown}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div>↑</div>
-        <div className="relative flex-vc">
-          <Icons.Zoom />
-          <div className="text-8px">{Math.round(scaling * 100)}%</div>
-        </div>
-        <div>↓</div>
+    <div
+      className={cz(
+        "w-36px h-90px bg-gray-500 flex-va justify-between",
+        "text-white cursor-pointer hover:opacity-90",
+      )}
+      onPointerDown={handleScalingGaugePointerDown}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div>↑</div>
+      <div className="relative flex-vc">
+        <Icons.Zoom />
+        <div className="text-8px">{Math.round(scaling * 100)}%</div>
       </div>
+      <div>↓</div>
     </div>
   );
 };
