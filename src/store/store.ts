@@ -117,6 +117,7 @@ export const projectResetterStates: Partial<StoreState> = {
   bpm: 120,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
+  boardSize: defaultBoardSize,
   //
   unitStuffs: {},
   portStuffs: {},

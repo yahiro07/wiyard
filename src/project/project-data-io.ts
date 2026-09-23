@@ -26,6 +26,7 @@ const helpers = {
         sight: 1,
         keyName: 1,
         unitClockingFlags: 1,
+        boardSize: 1,
       },
       { skipUndefined: true },
     );

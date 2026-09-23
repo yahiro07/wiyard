@@ -76,6 +76,7 @@ function createDefaultScene(): ProjectData {
       currentWindowId: null,
       bpm: 120,
       unitClockingFlags: {},
+      boardSize: defaultBoardSize,
     },
     unitStates: [],
   };
@@ -115,6 +116,7 @@ function createBlankScene(): ProjectData {
       currentWindowId: null,
       bpm: 120,
       unitClockingFlags: {},
+      boardSize: defaultBoardSize,
     },
     unitStates: [],
   };
