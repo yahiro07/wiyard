@@ -16,7 +16,7 @@ const pickerItemHandlers = {
     e: React.PointerEvent<HTMLDivElement>,
     catalogKey: CatalogKey,
   ) {
-    const coordinateBaseElement = domGetters.getGraphEditPlane();
+    const coordinateBaseElement = domGetters.getDomBoardPlane();
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {
         actions.setUnitPickerVisible(false);

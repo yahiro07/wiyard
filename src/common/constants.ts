@@ -1,3 +1,5 @@
+import { getHtmlElementById } from "@lib/utils/dom-helper";
+
 export const domIds = {
   // deskArea: "domDeskArea",
   boardPlane: "domBoardPlane",
@@ -6,12 +8,12 @@ export const domIds = {
 
 export const domGetters = {
   // getDomDeskArea(){
-  //   return document.getElementById(domIds.deskArea) as HTMLElement;
+  //   return getHtmlElementById(domIds.deskArea);
   // },
   getDomBoardPlane() {
-    return document.getElementById(domIds.boardPlane) as HTMLElement;
+    return getHtmlElementById(domIds.boardPlane);
   },
   getGraphEditPlane() {
-    return document.getElementById(domIds.graphEditPlane) as HTMLElement;
+    return getHtmlElementById(domIds.graphEditPlane);
   },
 };

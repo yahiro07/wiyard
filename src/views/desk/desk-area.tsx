@@ -125,21 +125,21 @@ const BoardAttachedWindowsPlane = () => {
 
 const GraphEditPlane = () => {
   return (
-    <>
+    <div id={domIds.graphEditPlane}>
       <GraphBackgroundPlane />
       <WiringLayer />
       <WireKnobsContainer />
       <WireAutomationSwitchersRoot />
       <UnitCardsRoot />
       <UnitPicker_AddingItem />
-    </>
+    </div>
   );
 };
 
 const DeskBoardPlane = () => {
   return (
     <FieldSightPlaneWrapper>
-      <div id={domIds.graphEditPlane} className="h-full">
+      <div id={domIds.boardPlane} className="h-full">
         <BoardBackground />
         <GraphEditPlane />
         {false && <CoordDebugLayer />}
@@ -180,7 +180,7 @@ const FrontWindowsPlane = () => {
 function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
   return (
     e.target === e.currentTarget ||
-    (e.target as HTMLElement).id === domIds.graphEditPlane
+    (e.target as HTMLElement).id === domIds.boardPlane
   );
 }
 
