@@ -161,7 +161,7 @@ export const appPersistence = {
     }
   },
 };
-if (appEnvs.isDevelopment && 1) {
+if (appEnvs.isDevelopment && 0) {
   //bypass persistence load for debug
   assignTyped(appPersistence, {
     async load() {
