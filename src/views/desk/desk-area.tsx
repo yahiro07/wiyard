@@ -40,18 +40,53 @@ const FieldSightPlaneWrapper = ({
   );
 };
 
-const GraphEditPlane = () => {
-  return (
-    <FieldSightPlaneWrapper>
+const BoardBackground = () => {
+  const bgImageUrl = "/public/dev/bg/bg22.jpg";
+  if (1) {
+    const bgColor = "#006";
+    const bgMix = 0.3;
+    return (
       <div
-        id={domIds.graphEditPlane}
-        className="h-full"
+        className="absolute-full pointer-events-none"
+        style={{ background: bgColor }}
+      >
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundImage: `url(${bgImageUrl})`,
+            opacity: bgMix,
+          }}
+        />
+      </div>
+    );
+  } else {
+    const bgCoverColor = "#006";
+    const bgCoverOpacity = 0.7;
+    return (
+      <div
+        className="absolute-full pointer-events-none"
         style={{
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
-          backgroundImage: "url(/public/dev/bg/bg11.avif)",
+          backgroundImage: `url(${bgImageUrl})`,
         }}
       >
+        <div
+          className="w-full h-full"
+          style={{ background: bgCoverColor, opacity: bgCoverOpacity }}
+        />
+      </div>
+    );
+  }
+};
+
+const DeskBoardPlane = () => {
+  return (
+    <FieldSightPlaneWrapper>
+      <div id={domIds.graphEditPlane} className="h-full">
+        <BoardBackground />
         <WiringLayer />
         <WireKnobsContainer />
         <WireAutomationSwitchersRoot />
@@ -68,7 +103,7 @@ const InFieldControlUi = () => {
   const { settingsPanelVisible } = store.useSnapshot();
   if (settingsPanelVisible) return;
   return (
-    <div className="absolute top-0 right-0 m-6px mt-4">
+    <div className="absolute-right-center m-6px">
       <ControlButtonsInField />
     </div>
   );
@@ -131,7 +166,7 @@ export const DeskArea = () => {
         }
       }}
     >
-      <GraphEditPlane />
+      <DeskBoardPlane />
       <FrontWindowsPlane />
       <UnitConnectionsRoot />
     </div>
