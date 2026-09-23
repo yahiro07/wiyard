@@ -1,7 +1,6 @@
 import { Point } from "@lib/utils/common-types";
 import { cz } from "@lib/utils/cz";
 import { HsPortSubtype } from "wafer-host/core";
-import { boardSize } from "@/common/constants";
 import { uiConstants, wireColors } from "@/common/theme";
 import {
   getForwardDirectionWireConnectionKey,
@@ -141,6 +140,7 @@ const DragPreviewWire2 = () => {
 };
 
 export const WiringLayer = () => {
+  const { boardSize } = store.useSnapshot();
   const width = boardSize.width;
   const height = boardSize.height;
   const viewBox = `0 0 ${width} ${height}`;

@@ -25,6 +25,7 @@ export type WindowSliceState = {
   windowSpecs: Record<string, WindowSpec>;
   currentWindowId: string | null;
   windowsEvacuated: boolean;
+  boardSize: Size;
 };
 
 export type WindowSystemStoreSlice = {

@@ -5,7 +5,7 @@ import {
 } from "@lib/utils/array-object-helper";
 import { Point, Size } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
-import { boardSize, getDeskAreaElement } from "@/common/constants";
+import { getDeskAreaElement } from "@/common/constants";
 import {
   decodeWireConnectionKey,
   filterUnitRelatedWires,
@@ -67,8 +67,9 @@ const helpers = {
   createInitialWindowSpec(
     windowId: string,
     status: WindowStatus,
-    deskAreaRect: DOMRect,
+    _deskAreaRect: DOMRect,
   ) {
+    const boardSize = store.state.boardSize;
     let position = vectorOp.rounded({
       // x: deskAreaRect.width / 2,
       // y: deskAreaRect.height / 2,
@@ -87,6 +88,7 @@ const helpers = {
     return newWindowSpec;
   },
   _getNextPortCardPosition() {
+    const boardSize = store.state.boardSize;
     const items = store.state.unitItems.filter(
       (it) =>
         it.type === "noteInput" ||

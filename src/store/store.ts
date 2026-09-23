@@ -1,6 +1,6 @@
 import { KeyName } from "@lib/contract";
 import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
-import { Point } from "@lib/utils/common-types";
+import { Point, Size } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
@@ -14,7 +14,7 @@ import {
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { blankScene } from "@/project/default-data";
+import { blankScene, defaultBoardSize } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
 
@@ -33,6 +33,7 @@ export type StoreState = {
   sight: FieldSight;
   keyName: KeyName;
   unitClockingFlags: Record<string, boolean>;
+  boardSize: Size;
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
@@ -74,6 +75,7 @@ const blankStoreState: StoreState = {
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
   unitClockingFlags: {},
+  boardSize: defaultBoardSize,
   //
   midiInEnabled: false,
   masterVolume: 0.5,

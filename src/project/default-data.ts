@@ -3,6 +3,8 @@ import { appEnvs } from "@/common/app-config";
 import { UnitItem } from "@/domain/types";
 import { ProjectData, projectsConstants } from "@/project/project-types";
 
+export const defaultBoardSize = { width: 4000, height: 2800 };
+
 const ox = 2000 - 500;
 const oy = 1400 - 350;
 

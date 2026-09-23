@@ -1,4 +1,4 @@
-import { boardSize, domIds } from "@/common/constants";
+import { domIds } from "@/common/constants";
 import { FieldSightPlane } from "@/components/field-sight-plane";
 import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
@@ -32,7 +32,7 @@ const FieldSightPlaneWrapper = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { sight } = store.useSnapshot();
+  const { sight, boardSize } = store.useSnapshot();
   return (
     <FieldSightPlane sight={sight} boardSize={boardSize}>
       {children}
@@ -83,6 +83,7 @@ const BoardBackground = () => {
 };
 
 const GraphBackgroundPlane = () => {
+  const { boardSize } = store.useSnapshot();
   const configs = {
     // graphBgColor: "#fff2",
     // graphBgColor: "#444",
