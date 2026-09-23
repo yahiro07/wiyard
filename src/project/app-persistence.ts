@@ -161,10 +161,12 @@ export const appPersistence = {
     }
   },
 };
-if (appEnvs.isDevelopment && 0) {
+if (appEnvs.isDevelopment && 1) {
   //bypass persistence load for debug
   assignTyped(appPersistence, {
     async load() {
+      console.log("apply starter project");
+      projectsModel.loadProject(defaultData2.starter);
       store.setAutoPersistenceEnabled(true);
     },
     // save() {},
