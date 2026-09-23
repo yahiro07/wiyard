@@ -59,6 +59,7 @@ export type StoreState = {
   soloPlaybackUnitId: string | null;
   soloModeUnitId: string | null;
   settingsPanelVisible: boolean;
+  debugObject: object | null;
 };
 
 const blankStoreState: StoreState = {
@@ -101,6 +102,7 @@ const blankStoreState: StoreState = {
   soloPlaybackUnitId: null,
   soloModeUnitId: null,
   settingsPanelVisible: false,
+  debugObject: null,
 };
 
 export const projectResetterStates: Partial<StoreState> = {

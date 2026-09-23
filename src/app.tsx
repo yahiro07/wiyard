@@ -13,6 +13,13 @@ import { FallbackRender } from "@/periphery/fallback-render";
 import { mapKnobGainDb } from "@lib/utils/volume-curve";
 import { usePlaybackController } from "@/periphery/playback-controller";
 
+function useUpdateDebugValues() {
+  const { windowSpecs } = store.useSnapshot();
+  useEffect(() => {
+    store.setDebugObject(windowSpecs);
+  }, [windowSpecs]);
+}
+
 const EffectsHookBox = () => {
   useMidiInputHandling();
   useEffect(setupAutoPersistenceTask, []);
@@ -20,6 +27,7 @@ const EffectsHookBox = () => {
   useProjectInitialStateFix();
   useSetupUnitPortMasking();
   usePlaybackController();
+  useUpdateDebugValues();
   return null;
 };
 
