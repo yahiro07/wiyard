@@ -127,6 +127,7 @@ const GraphEditPlane = () => {
   return (
     <div
       id={domIds.graphEditPlane}
+      className="pointer-events-skip-self"
       style={{
         transform: `translate(${boardSize.width / 2}px, ${boardSize.height / 2}px)`,
       }}
