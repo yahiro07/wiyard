@@ -11,7 +11,6 @@ import { UnitWindowsRoot } from "@/views/window/unit-windows";
 import { UnitConnectionsRoot } from "@/views/wiring/connections";
 import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";
 import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
-import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { AutomationEditorWindow } from "@/views/window/automation-editor-window";
 import { ControlSurfaceWindow } from "@/views/window/control-surface-window";
 import { PartControlBarRoot } from "@/views/controls/part-control-bar";
@@ -22,6 +21,7 @@ import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
 import { graphAreaSize } from "@/project/default-data";
+import { WiringLayer } from "@/views/wiring/wiring-layer";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();
@@ -127,7 +127,6 @@ const GraphEditPlane = () => {
   return (
     <div
       id={domIds.graphEditPlane}
-      className="pointer-events-skip-self"
       style={{
         transform: `translate(${boardSize.width / 2}px, ${boardSize.height / 2}px)`,
       }}
@@ -145,7 +144,7 @@ const GraphEditPlane = () => {
 const DeskBoardPlane = () => {
   return (
     <FieldSightPlaneWrapper>
-      <div id={domIds.boardPlane} className="h-full">
+      <div id={domIds.boardPlane} className="size-full">
         <BoardBackground />
         <GraphEditPlane />
         {false && <CoordDebugLayer />}
@@ -171,7 +170,7 @@ const PartControlBarContainer = () => {
   return <>{1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
 };
 
-const FrontWindowsPlane = () => {
+const ForegroundUiPlane = () => {
   return (
     <>
       <PartControlBarContainer />
@@ -184,9 +183,11 @@ const FrontWindowsPlane = () => {
 };
 
 function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
+  console.log("checkSightTarget", e.currentTarget, e.target);
   return (
     e.target === e.currentTarget ||
     (e.target as HTMLElement).id === domIds.boardPlane
+    // (e.target as HTMLElement).dataset.boardPanTarget === "true"
   );
 }
 
@@ -211,7 +212,7 @@ export const DeskArea = () => {
       }}
     >
       <DeskBoardPlane />
-      <FrontWindowsPlane />
+      <ForegroundUiPlane />
       <UnitConnectionsRoot />
       <DebugOverlay />
     </div>

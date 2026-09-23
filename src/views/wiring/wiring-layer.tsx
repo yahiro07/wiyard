@@ -144,7 +144,7 @@ export const WiringLayer = () => {
   const viewBox = `${-w / 2} ${-h / 2} ${w} ${h}`;
   return (
     <svg
-      className="absolute"
+      className="absolute pointer-events-none"
       viewBox={viewBox}
       style={{
         left: -w / 2,
