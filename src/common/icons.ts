@@ -11,11 +11,12 @@ import {
 } from "react-icons/fa6";
 import { FiMenu } from "react-icons/fi";
 import { IoMdSettings, IoMdShare } from "react-icons/io";
-import { IoPlaySharp } from "react-icons/io5";
+import { IoMove, IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
 import {
   PiMusicNoteFill,
   PiPianoKeysFill,
+  PiResize,
   PiTagSimple,
   PiTrash,
 } from "react-icons/pi";
@@ -50,4 +51,6 @@ export const Icons = {
   Zoom: TbZoom,
   StackForward: TbStackForward,
   MusicalNotes: PiMusicNoteFill,
+  Move: IoMove,
+  Resize: PiResize,
 };

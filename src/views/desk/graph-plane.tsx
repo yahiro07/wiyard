@@ -1,5 +1,6 @@
 import { desktopTheme } from "@/common/desktop-theme";
 import { domIds } from "@/common/dom-ids";
+import { Icons } from "@/common/icons";
 import { store } from "@/store/store";
 import { graphPlaneHandlers } from "@/views/desk/graph-plane-handlers";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
@@ -29,14 +30,21 @@ const WireKnobsContainer = () => {
 };
 
 const GraphPlaneControlButtons = () => {
+  const buttonClass = "hover:opacity-80";
   return (
     <div className="absolute top-0 right-0 m-2">
       <div className="flex-h gap-2">
-        <button onPointerDown={graphPlaneHandlers.handleMoveButtonPointerDown}>
-          MV
+        <button
+          className={buttonClass}
+          onPointerDown={graphPlaneHandlers.handleMoveButtonPointerDown}
+        >
+          <Icons.Move size={20} />
         </button>
-        <button onPointerDown={graphPlaneHandlers.handleScaleButtonPointerDown}>
-          SCL
+        <button
+          className={buttonClass}
+          onPointerDown={graphPlaneHandlers.handleScaleButtonPointerDown}
+        >
+          <Icons.Resize size={24} />
         </button>
       </div>
     </div>
