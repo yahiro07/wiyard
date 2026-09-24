@@ -1,4 +1,5 @@
 import { GraphSpec } from "@/domain/types";
+import { cardPlacementHelper } from "@/store/card-placement-helper";
 import { store } from "@/store/store";
 import { startDragSession } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
@@ -8,24 +9,39 @@ const graphActions = {
   patchGraphSpec<K extends keyof GraphSpec>(key: K, value: GraphSpec[K]) {
     store.patchGraphSpec({ [key]: value });
   },
+  patchGraphSpecWithCheck<K extends keyof GraphSpec>(
+    key: K,
+    value: GraphSpec[K],
+  ) {
+    const { graphSpec, unitItems } = store.state;
+    const newGraphSpec = { ...graphSpec, [key]: value };
+    const valid = cardPlacementHelper.checkAllCardsInGraphPlane(
+      unitItems,
+      newGraphSpec,
+    );
+    if (!valid) return;
+    store.patchGraphSpec({ [key]: value });
+  },
 };
 
 export const graphPlaneHandlers = {
   handleMoveButtonPointerDown(e: React.PointerEvent<HTMLElement>) {
+    const { graphSpec } = store.state;
     const { contentOffset: originalOffset, contentScaling: scaling } =
-      store.state.graphSpec;
+      graphSpec;
     startDragSession(e, {
       onMove(_, delta) {
         const newOffset = vectorOp.snapped(
           vectorOp.add(originalOffset, vectorOp.scale(delta, 1 / scaling)),
           10,
         );
-        graphActions.patchGraphSpec("contentOffset", newOffset);
+        graphActions.patchGraphSpecWithCheck("contentOffset", newOffset);
       },
     });
   },
   handleScaleButtonPointerDown(e: React.PointerEvent<HTMLElement>) {
-    const originalScaling = store.state.graphSpec.contentScaling;
+    const { graphSpec } = store.state;
+    const { contentScaling: originalScaling } = graphSpec;
     startDragSession(e, {
       onMove(_, delta) {
         const newScaling = clampValue(
@@ -33,7 +49,7 @@ export const graphPlaneHandlers = {
           0.4,
           1.4,
         );
-        graphActions.patchGraphSpec("contentScaling", newScaling);
+        graphActions.patchGraphSpecWithCheck("contentScaling", newScaling);
       },
     });
   },
@@ -45,7 +61,7 @@ export const graphPlaneHandlers = {
           width: (originalSize.width / 2 + delta.x) * 2,
           height: (originalSize.height / 2 + delta.y) * 2,
         };
-        graphActions.patchGraphSpec("planeSize", newSize);
+        graphActions.patchGraphSpecWithCheck("planeSize", newSize);
       },
     });
   },
