@@ -10,12 +10,13 @@ import { ScalerBoxDW } from "@lib/components/headless/scaler-box-d";
 import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 import { commonGetters } from "@/store/common-getters";
 import { ReactUnitFrameWithLog } from "@lib/wafer-ex";
+import { appConfig } from "@/common/app-config";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
   const noteChannelIds = notePortGetters.useNoteChannelIds();
 
-  const canAdd = noteChannelIds.length < 4;
+  const canAdd = noteChannelIds.length < appConfig.maxNoteChannels;
   const canDelete = noteChannelIds.length > 1;
 
   const handleRemove = () => {

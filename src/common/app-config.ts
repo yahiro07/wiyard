@@ -1,16 +1,21 @@
 import { appEnvs } from "@/common/app-envs";
+import { assignTyped } from "@lib/utils/array-object-helper";
 
 type DockPlacement = "leftInner" | "rightInner" | "bottomBar";
 
 export const appConfig = {
   supportAutomationPorts: true,
   showAutomationTargetParameterSelectionMenuOnConnection: false,
-  dockPlacement: "rightInner" as DockPlacement,
+  dockPlacement: "bottomBar" as DockPlacement,
   minScaling: 0.1,
   maxScaling: 2,
-  showWireConnectionPreviewFloatingWireEnd: false,
+  showWireConnectionPreviewFloatingWireEnd: true,
+  maxNoteChannels: 4,
+  maxAutomationChannels: 4,
 };
+
 if (appEnvs.isDevelopment) {
-  appConfig.dockPlacement = "bottomBar";
-  appConfig.showWireConnectionPreviewFloatingWireEnd = true;
+  assignTyped(appConfig, {
+    maxNoteChannels: 12,
+  });
 }
