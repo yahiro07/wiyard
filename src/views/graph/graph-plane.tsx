@@ -2,7 +2,7 @@ import { desktopTheme } from "@/common/desktop-theme";
 import { domIds } from "@/common/dom-ids";
 import { Icons } from "@/common/icons";
 import { store } from "@/store/store";
-import { graphPlaneHandlers } from "@/views/desk/graph-plane-handlers";
+import { graphPlaneHandlers } from "@/views/graph/graph-plane-handlers";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";

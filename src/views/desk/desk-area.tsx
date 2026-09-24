@@ -20,7 +20,7 @@ import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
 import { domIds } from "@/common/dom-ids";
 import { featureFlags } from "@/common/app-config";
-import { GraphPlaneRoot } from "@/views/desk/graph-plane";
+import { GraphPlaneRoot } from "@/views/graph/graph-plane";
 import { cz } from "@lib/utils/cz";
 
 const FieldSightPlaneWrapper = ({
