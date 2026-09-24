@@ -165,6 +165,8 @@ if (appEnvs.isDevelopment && 0) {
   //bypass persistence load for debug
   assignTyped(appPersistence, {
     async load() {
+      console.log("apply starter project");
+      projectsModel.loadProject(defaultData2.starter);
       store.setAutoPersistenceEnabled(true);
     },
     // save() {},

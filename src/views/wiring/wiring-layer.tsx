@@ -1,7 +1,5 @@
 import { Point } from "@lib/utils/common-types";
-import { cz } from "@lib/utils/cz";
 import { HsPortSubtype } from "wafer-host/core";
-import { boardSize } from "@/common/constants";
 import { uiConstants, wireColors } from "@/common/theme";
 import {
   getForwardDirectionWireConnectionKey,
@@ -141,16 +139,23 @@ const DragPreviewWire2 = () => {
 };
 
 export const WiringLayer = () => {
-  const width = boardSize.width;
-  const height = boardSize.height;
-  const viewBox = `0 0 ${width} ${height}`;
+  const { boardSize } = store.useSnapshot();
+  const { width: w, height: h } = boardSize;
+  const viewBox = `${-w / 2} ${-h / 2} ${w} ${h}`;
   return (
-    <div className={cz("absolute-full overflow-hidden pointer-events-none")}>
-      <svg viewBox={viewBox} style={{ width, height }}>
-        <WiresRoot />
-        <DragPreviewWire />
-        <DragPreviewWire2 />
-      </svg>
-    </div>
+    <svg
+      className="absolute pointer-events-none"
+      viewBox={viewBox}
+      style={{
+        left: -w / 2,
+        top: -h / 2,
+        width: w,
+        height: h,
+      }}
+    >
+      <WiresRoot />
+      <DragPreviewWire />
+      <DragPreviewWire2 />
+    </svg>
   );
 };

@@ -1,6 +1,6 @@
 import { KeyName } from "@lib/contract";
 import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
-import { Point } from "@lib/utils/common-types";
+import { Point, Size } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
@@ -14,9 +14,10 @@ import {
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { blankScene } from "@/project/default-data";
+import { blankScene, defaultBoardSize } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
+import { uiConstants } from "@/common/constants";
 
 export type StoreState = {
   //included in project data
@@ -33,6 +34,7 @@ export type StoreState = {
   sight: FieldSight;
   keyName: KeyName;
   unitClockingFlags: Record<string, boolean>;
+  boardSize: Size;
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
@@ -58,6 +60,7 @@ export type StoreState = {
   soloPlaybackUnitId: string | null;
   soloModeUnitId: string | null;
   settingsPanelVisible: boolean;
+  debugObject: object | null;
 };
 
 const blankStoreState: StoreState = {
@@ -74,6 +77,7 @@ const blankStoreState: StoreState = {
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
   unitClockingFlags: {},
+  boardSize: defaultBoardSize,
   //
   midiInEnabled: false,
   masterVolume: 0.5,
@@ -99,6 +103,7 @@ const blankStoreState: StoreState = {
   soloPlaybackUnitId: null,
   soloModeUnitId: null,
   settingsPanelVisible: false,
+  debugObject: null,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -113,6 +118,7 @@ export const projectResetterStates: Partial<StoreState> = {
   bpm: 120,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
+  boardSize: defaultBoardSize,
   //
   unitStuffs: {},
   portStuffs: {},
@@ -136,7 +142,7 @@ if (1) {
     // ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
-    secondBarVisible: true,
+    // secondBarVisible: true,
   });
 }
 
@@ -147,6 +153,7 @@ const windowSliceKeys: (keyof StoreState)[] = [
   "windowSpecs",
   "currentWindowId",
   "windowsEvacuated",
+  "boardSize",
 ];
 export const windowSystem = createWindowSystem({
   storeSlice: {
@@ -159,7 +166,7 @@ export const windowSystem = createWindowSystem({
 export const sightHandlers = createFieldSightHandlers(
   () => store.state.sight,
   (attrs) => store.patchSight(attrs),
-  { minScaling: 0.125, maxScaling: 2 },
+  { minScaling: uiConstants.minScaling, maxScaling: uiConstants.maxScaling },
 );
 
 if (import.meta.hot) {

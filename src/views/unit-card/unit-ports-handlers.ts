@@ -1,7 +1,7 @@
 import { Point } from "@lib/utils/common-types";
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
-import { getGraphEditPlaneElement } from "@/common/constants";
+import { domGetters } from "@/common/constants";
 import { uiConfigs } from "@/common/theme";
 import { isPortConnectable, splitConnectionKey } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
@@ -69,7 +69,7 @@ export const handlePortPointerDown = (
   e0: React.PointerEvent<HTMLDivElement>,
   portKey: string,
 ) => {
-  const coordinateBaseElement = getGraphEditPlaneElement();
+  const coordinateBaseElement = domGetters.getGraphEditPlane();
   const { portStuffs } = store.state;
   const selfPort = portStuffs[portKey];
   const targetPorts = Object.values(portStuffs).filter(

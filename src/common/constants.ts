@@ -1,14 +1,24 @@
-export const boardSize = { width: 4000, height: 2800 };
+import { getHtmlElementById } from "@lib/utils/dom-helper";
+
+export const uiConstants = {
+  minScaling: 0.1,
+  maxScaling: 2,
+};
 
 export const domIds = {
-  deskArea: "domDeskArea",
+  // deskArea: "domDeskArea",
+  boardPlane: "domBoardPlane",
   graphEditPlane: "domGraphEditPlane",
 };
 
-export function getGraphEditPlaneElement() {
-  return document.getElementById(domIds.graphEditPlane) as HTMLElement;
-}
-
-export function getDeskAreaElement() {
-  return document.getElementById(domIds.deskArea) as HTMLElement;
-}
+export const domGetters = {
+  // getDomDeskArea(){
+  //   return getHtmlElementById(domIds.deskArea);
+  // },
+  getDomBoardPlane() {
+    return getHtmlElementById(domIds.boardPlane);
+  },
+  getGraphEditPlane() {
+    return getHtmlElementById(domIds.graphEditPlane);
+  },
+};

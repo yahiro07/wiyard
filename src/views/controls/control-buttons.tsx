@@ -157,6 +157,7 @@ export const ControlButtons = () => {
       <MasterVolumeInput />
       <MidiInButtonContainer />
       {/* <PickerLaunchButton /> */}
+      <ShareUrlButton />
       <SecondBarButton />
       {/* <WindowEvacuationButton /> */}
     </div>
@@ -167,7 +168,6 @@ export const ControlButtonsRight = () => {
   return (
     <div className="flex-h gap-2.5">
       <SettingsButton />
-      <ShareUrlButton />
       <GithubLinkButton />
     </div>
   );

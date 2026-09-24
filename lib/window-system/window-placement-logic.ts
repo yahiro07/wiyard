@@ -3,11 +3,7 @@ import { rectOp, vectorOp } from "@lib/utils/geometry-helper";
 import { clampValue } from "@lib/utils/number-helper";
 import { BoundsOperator, getOppositeCorner } from "./bounds-operator";
 import { windowTitleBarHeight } from "./constants";
-
-export function getDeskAreaElement() {
-  //todo: pass desk area element from app to window system
-  return document.getElementById("domDeskArea") as HTMLElement;
-}
+import { storeSlice } from "./store";
 
 export type BoundsAnchor = "tl" | "tr" | "bl" | "br";
 
@@ -31,10 +27,9 @@ export const windowBoundsConverter = {
 };
 
 const internalHelper = {
-  getDeskAreaBounds(): Rect {
-    // const el = getDeskAreaElement();
-    // return { x: 0, y: 0, width: el.offsetWidth, height: el.offsetHeight };
-    return { x: 0, y: 0, width: 4000, height: 2800 };
+  getDeskBoardBounds(): Rect {
+    const { width: w, height: h } = storeSlice.get().boardSize;
+    return { x: -w / 2, y: -h / 2, width: w, height: h };
   },
   computeMaxScaleRatioInDesk(
     contentBounds: Rect,
@@ -77,7 +72,7 @@ export const windowPlacementHelper = {
     anchorMoveAmount: Vector,
     options: { contentAspectRatioSpec?: number | null; minContentSize?: Size },
   ): Rect | null {
-    const deskAreaBounds = internalHelper.getDeskAreaBounds();
+    const deskAreaBounds = internalHelper.getDeskBoardBounds();
     if (!options.contentAspectRatioSpec) {
       const bo = BoundsOperator.fromRect(originalWindowBounds);
       const originalPoint = bo.getCorner(anchor);
@@ -132,14 +127,12 @@ export const windowPlacementHelper = {
     }
   },
   updatePosition(originalWindowBounds: Rect, moveAmount: Vector) {
-    const deskAreaBounds = internalHelper.getDeskAreaBounds();
+    const deskAreaBounds = internalHelper.getDeskBoardBounds();
     const checkingBounds = {
-      x: deskAreaBounds.x - originalWindowBounds.width * 0.75,
+      x: deskAreaBounds.x,
       y: deskAreaBounds.y,
-      width: deskAreaBounds.width + originalWindowBounds.width * 1.5,
-      height:
-        deskAreaBounds.height +
-        (originalWindowBounds.height - windowTitleBarHeight),
+      width: deskAreaBounds.width,
+      height: deskAreaBounds.height,
     };
     return BoundsOperator.fromRect(originalWindowBounds)
       .move(moveAmount)

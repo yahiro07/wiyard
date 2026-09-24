@@ -35,7 +35,10 @@ export const FieldSightPlane = ({
   return (
     <div
       ref={baseDivRef}
-      className={cz("w-full h-full relative overflow-hidden", className)}
+      className={cz(
+        "w-full h-full relative overflow-hidden pointer-events-none",
+        className,
+      )}
     >
       <div
         style={{
@@ -47,6 +50,7 @@ export const FieldSightPlane = ({
         }}
       >
         <div
+          className="pointer-events-auto"
           style={{
             width: boardSize.width,
             height: boardSize.height,

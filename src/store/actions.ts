@@ -5,7 +5,6 @@ import {
 } from "@lib/utils/array-object-helper";
 import { Point, Size } from "@lib/utils/common-types";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
-import { boardSize, getDeskAreaElement } from "@/common/constants";
 import {
   decodeWireConnectionKey,
   filterUnitRelatedWires,
@@ -28,7 +27,7 @@ import { store, windowSystem } from "@/store/store";
 import { commonGetters } from "@/store/common-getters";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { appConfig } from "@/common/app-config";
-import { sizeOp, vectorOp } from "@lib/utils/geometry-helper";
+import { sizeOp } from "@lib/utils/geometry-helper";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -64,17 +63,8 @@ const helpers = {
       return { contentSize: helpers.getGeneralUnitInitialSize(windowId) };
     }
   },
-  createInitialWindowSpec(
-    windowId: string,
-    status: WindowStatus,
-    deskAreaRect: DOMRect,
-  ) {
-    let position = vectorOp.rounded({
-      // x: deskAreaRect.width / 2,
-      // y: deskAreaRect.height / 2,
-      x: boardSize.width / 2,
-      y: boardSize.height / 2,
-    });
+  createInitialWindowSpec(windowId: string, status: WindowStatus) {
+    const position = { x: 0, y: 0 };
     const { contentSize, freeRatio, pinned } =
       helpers.getInitialWindowSpecAttrs(windowId);
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
@@ -87,6 +77,7 @@ const helpers = {
     return newWindowSpec;
   },
   _getNextPortCardPosition() {
+    const boardSize = store.state.boardSize;
     const items = store.state.unitItems.filter(
       (it) =>
         it.type === "noteInput" ||
@@ -154,13 +145,7 @@ export const actions = {
   setWindowStatus(windowId: string, status: WindowStatus) {
     const exists = windowSystem.has(windowId);
     if (!exists) {
-      const deskArea = getDeskAreaElement();
-      const deskAreaRect = deskArea.getBoundingClientRect();
-      const windowSpec = helpers.createInitialWindowSpec(
-        windowId,
-        status,
-        deskAreaRect,
-      );
+      const windowSpec = helpers.createInitialWindowSpec(windowId, status);
       windowSystem.add(windowId, windowSpec);
       windowSystem.setCurrentWindow(windowId);
 

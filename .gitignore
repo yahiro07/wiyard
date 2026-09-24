@@ -7,3 +7,4 @@ src/unit-inventories.json
 .vscode/settings.json
 *.code-workspace
 Makefile
+public/dev/
