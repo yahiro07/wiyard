@@ -26,6 +26,7 @@ import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 import { cz } from "@lib/utils/cz";
 import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
 import { domIds } from "@/common/dom-ids";
+import { featureFlags } from "@/common/app-config";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();
@@ -157,11 +158,13 @@ const DeskAreaRightSideControls = () => {
   return (
     <div className="absolute-right-center mr-2">
       <div className="flex-va gap-2">
-        <GraphFloatUpButton />
+        {featureFlags.graphAreaFloatUp && <GraphFloatUpButton />}
         <ScalingGaugeContainer />
-        <div className="invisible">
-          <GraphFloatUpButton />
-        </div>
+        {featureFlags.graphAreaFloatUp && (
+          <div className="invisible">
+            <GraphFloatUpButton />
+          </div>
+        )}
       </div>
     </div>
   );

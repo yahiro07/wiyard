@@ -19,3 +19,7 @@ if (appEnvs.isDevelopment) {
     maxNoteChannels: 12,
   });
 }
+
+export const featureFlags = {
+  graphAreaFloatUp: false,
+};
