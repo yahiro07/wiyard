@@ -35,6 +35,16 @@ export const builtinAppItems: BuiltinAppItem[] = [
     windowFreeRatio: true,
   },
   {
+    windowId: windowIds.controlSurface,
+    title: "control surface",
+    dockItemSpec: {
+      icon: builtinAppIcons.controlSurface,
+      bgColor: "#46a",
+      fontSize: 28,
+    },
+    windowInitialSize: { width: 800, height: 400 },
+  },
+  {
     windowId: windowIds.automationEditor,
     title: "automation",
     dockItemSpec: {
@@ -54,15 +64,5 @@ export const builtinAppItems: BuiltinAppItem[] = [
       fontSize: 28,
     },
     windowInitialSize: { width: 480, height: 154 },
-  },
-  {
-    windowId: windowIds.controlSurface,
-    title: "control surface",
-    dockItemSpec: {
-      icon: builtinAppIcons.controlSurface,
-      bgColor: "#46a",
-      fontSize: 28,
-    },
-    windowInitialSize: { width: 800, height: 400 },
   },
 ];
