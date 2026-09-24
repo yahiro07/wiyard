@@ -66,8 +66,10 @@ export const GraphPlane = () => {
   const { graphAreaFloatUp, graphSpec } = store.useSnapshot();
   const { planeSize, contentOffset, contentScaling } = graphSpec;
   const scale = contentScaling;
-  const trX = planeSize.width / 2 + contentOffset.x;
-  const trY = planeSize.height / 2 + contentOffset.y;
+  const tr1x = planeSize.width / 2;
+  const tr1y = planeSize.height / 2;
+  const tr2x = contentOffset.x * scale;
+  const tr2y = contentOffset.y * scale;
   return (
     <div
       id={domIds.graphEditPlane}
@@ -84,14 +86,22 @@ export const GraphPlane = () => {
       >
         <div
           style={{
-            transform: `scale(${scale}) translate(${trX}px, ${trY}px)`,
+            transform: `translate(${tr1x}px, ${tr1y}px)`,
+            transformOrigin: "top left",
           }}
         >
-          <WiringLayer />
-          <WireKnobsContainer />
-          <WireAutomationSwitchersRoot />
-          <UnitCardsRoot />
-          <UnitPicker_AddingItem />
+          <div
+            style={{
+              transform: `translate(${tr2x}px, ${tr2y}px) scale(${scale})`,
+              transformOrigin: "top left",
+            }}
+          >
+            <WiringLayer />
+            <WireKnobsContainer />
+            <WireAutomationSwitchersRoot />
+            <UnitCardsRoot />
+            <UnitPicker_AddingItem />
+          </div>
         </div>
       </div>
       <GraphPlaneControlButtons />

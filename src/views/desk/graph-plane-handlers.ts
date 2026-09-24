@@ -16,9 +16,9 @@ export const graphPlaneHandlers = {
       store.state.graphSpec;
     startDragSession(e, {
       onMove(_, delta) {
-        const newOffset = vectorOp.add(
-          originalOffset,
-          vectorOp.scale(delta, 1 / scaling),
+        const newOffset = vectorOp.snapped(
+          vectorOp.add(originalOffset, vectorOp.scale(delta, 1 / scaling)),
+          10,
         );
         graphActions.patchGraphSpec("contentOffset", newOffset);
       },
