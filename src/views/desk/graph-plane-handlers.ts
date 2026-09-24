@@ -11,7 +11,7 @@ const graphActions = {
 };
 
 export const graphPlaneHandlers = {
-  handleMoveButtonPointerDown(e: React.PointerEvent<HTMLButtonElement>) {
+  handleMoveButtonPointerDown(e: React.PointerEvent<HTMLElement>) {
     const { contentOffset: originalOffset, contentScaling: scaling } =
       store.state.graphSpec;
     startDragSession(e, {
@@ -24,7 +24,7 @@ export const graphPlaneHandlers = {
       },
     });
   },
-  handleScaleButtonPointerDown(e: React.PointerEvent<HTMLButtonElement>) {
+  handleScaleButtonPointerDown(e: React.PointerEvent<HTMLElement>) {
     const originalScaling = store.state.graphSpec.contentScaling;
     startDragSession(e, {
       onMove(_, delta) {
@@ -34,6 +34,18 @@ export const graphPlaneHandlers = {
           1.4,
         );
         graphActions.patchGraphSpec("contentScaling", newScaling);
+      },
+    });
+  },
+  handlePlaneResizeAnchorPointerDown(e: React.PointerEvent<HTMLElement>) {
+    const { planeSize: originalSize } = store.state.graphSpec;
+    startDragSession(e, {
+      onMove(_, delta) {
+        const newSize = {
+          width: (originalSize.width / 2 + delta.x) * 2,
+          height: (originalSize.height / 2 + delta.y) * 2,
+        };
+        graphActions.patchGraphSpec("planeSize", newSize);
       },
     });
   },

@@ -44,4 +44,4 @@ export const desktopThemes = {
   },
 } satisfies Record<string, DesktopTheme>;
 
-export const desktopTheme = desktopThemes.theme2;
+export const desktopTheme = desktopThemes.theme3;

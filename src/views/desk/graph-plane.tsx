@@ -13,7 +13,7 @@ const GraphPlaneBackground = () => {
   const { graphBgColor, graphBgOpacity } = desktopTheme;
   return (
     <div
-      className="size-full pointer-events-none"
+      className="size-full pointer-events-none rounded-12px"
       style={{
         background: graphBgColor,
         opacity: graphBgOpacity,
@@ -30,14 +30,27 @@ const WireKnobsContainer = () => {
 
 const GraphPlaneControlButtons = () => {
   return (
-    <div className="flex-h gap-2">
-      <button onPointerDown={graphPlaneHandlers.handleMoveButtonPointerDown}>
-        MV
-      </button>
-      <button onPointerDown={graphPlaneHandlers.handleScaleButtonPointerDown}>
-        SCL
-      </button>
+    <div className="absolute top-0 right-0 m-2">
+      <div className="flex-h gap-2">
+        <button onPointerDown={graphPlaneHandlers.handleMoveButtonPointerDown}>
+          MV
+        </button>
+        <button onPointerDown={graphPlaneHandlers.handleScaleButtonPointerDown}>
+          SCL
+        </button>
+      </div>
     </div>
+  );
+};
+
+const GraphPlaneResizeAnchor = () => {
+  return (
+    <button className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2">
+      <div
+        className={cz("w-20px h-20px", "cursor-nwse-resize")}
+        onPointerDown={graphPlaneHandlers.handlePlaneResizeAnchorPointerDown}
+      />
+    </button>
   );
 };
 
@@ -51,28 +64,30 @@ export const GraphPlane = () => {
     <div
       id={domIds.graphEditPlane}
       data-board-pan-target="true"
-      className={cz(
-        "relative rounded-12px overflow-hidden pointer-events-auto",
-        graphAreaFloatUp && "z-1",
-      )}
+      className={cz("relative pointer-events-auto", graphAreaFloatUp && "z-1")}
       style={{ width: planeSize.width, height: planeSize.height }}
     >
       <GraphPlaneBackground />
       <div
-        className="absolute-full pointer-events-none children-pointer-events-auto"
-        style={{
-          transform: `scale(${scale}) translate(${trX}px, ${trY}px)`,
-        }}
+        className={cz(
+          "absolute-full pointer-events-none children-pointer-events-auto",
+          "overflow-hidden",
+        )}
       >
-        <WiringLayer />
-        <WireKnobsContainer />
-        <WireAutomationSwitchersRoot />
-        <UnitCardsRoot />
-        <UnitPicker_AddingItem />
+        <div
+          style={{
+            transform: `scale(${scale}) translate(${trX}px, ${trY}px)`,
+          }}
+        >
+          <WiringLayer />
+          <WireKnobsContainer />
+          <WireAutomationSwitchersRoot />
+          <UnitCardsRoot />
+          <UnitPicker_AddingItem />
+        </div>
       </div>
-      <div className="absolute top-0 right-0 m-2">
-        <GraphPlaneControlButtons />
-      </div>
+      <GraphPlaneControlButtons />
+      <GraphPlaneResizeAnchor />
     </div>
   );
 };
