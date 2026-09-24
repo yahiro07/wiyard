@@ -23,10 +23,10 @@ export const desktopThemes = {
   },
   theme2: {
     bgColor: "#000",
-    bgImageUrl: "/dev/bg/bg3.jpg",
-    bgMix: 0.8,
-    graphBgColor: "#004",
-    graphBgOpacity: 0.4,
+    bgImageUrl: "/dev/bg/bg15.jpg",
+    bgMix: 1,
+    graphBgColor: "#112",
+    graphBgOpacity: 0.2,
   },
   theme3: {
     bgColor: "#000",
@@ -44,4 +44,4 @@ export const desktopThemes = {
   },
 } satisfies Record<string, DesktopTheme>;
 
-export const desktopTheme = desktopThemes.theme1;
+export const desktopTheme = desktopThemes.theme2;
