@@ -8,13 +8,18 @@ import { createFieldSightHandlers } from "@/components/field-sight-handlers";
 import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
+  GraphSpec,
   PortStuff,
   UnitAddingItem,
   UnitItem,
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { blankScene, defaultBoardSize } from "@/project/default-data";
+import {
+  blankScene,
+  defaultBoardSize,
+  defaultGraphSpec,
+} from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
 import { appConfig } from "@/common/app-config";
@@ -35,6 +40,7 @@ export type StoreState = {
   keyName: KeyName;
   unitClockingFlags: Record<string, boolean>;
   boardSize: Size;
+  graphSpec: GraphSpec;
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
@@ -79,6 +85,7 @@ const blankStoreState: StoreState = {
   keyName: "C",
   unitClockingFlags: {},
   boardSize: defaultBoardSize,
+  graphSpec: defaultGraphSpec,
   //
   midiInEnabled: false,
   masterVolume: 0.5,

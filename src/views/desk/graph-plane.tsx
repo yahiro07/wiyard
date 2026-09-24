@@ -1,6 +1,5 @@
 import { desktopTheme } from "@/common/desktop-theme";
 import { domIds } from "@/common/dom-ids";
-import { graphAreaSize } from "@/project/default-data";
 import { store } from "@/store/store";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
@@ -29,7 +28,8 @@ const WireKnobsContainer = () => {
 };
 
 export const GraphEditPlane = () => {
-  const { graphAreaFloatUp } = store.useSnapshot();
+  const { graphAreaFloatUp, graphSpec } = store.useSnapshot();
+  const { planeSize } = graphSpec;
   return (
     <div
       id={domIds.graphEditPlane}
@@ -39,15 +39,15 @@ export const GraphEditPlane = () => {
         graphAreaFloatUp && "z-1",
       )}
       style={{
-        width: graphAreaSize.width,
-        height: graphAreaSize.height,
+        width: planeSize.width,
+        height: planeSize.height,
       }}
     >
       <GraphBackgroundPlane />
       <div
         className="absolute-full pointer-events-none children-pointer-events-auto"
         style={{
-          transform: `translate(${graphAreaSize.width / 2}px, ${graphAreaSize.height / 2}px)`,
+          transform: `translate(${planeSize.width / 2}px, ${planeSize.height / 2}px)`,
         }}
       >
         <WiringLayer />

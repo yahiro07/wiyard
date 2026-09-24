@@ -82,3 +82,9 @@ export type UnitAddingItem = {
   catalogKey: CatalogKey;
   position: Point;
 };
+
+export type GraphSpec = {
+  contentOffset: Point;
+  contentScaling: number;
+  planeSize: Size;
+};
