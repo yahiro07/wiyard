@@ -1,5 +1,4 @@
 import { pickObjectMembers } from "@lib/utils/array-object-helper";
-import { appEnvs } from "@/common/app-config";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
   ProjectData,
@@ -7,6 +6,7 @@ import {
   projectsConstants,
 } from "@/project/project-types";
 import { projectResetterStates, store } from "@/store/store";
+import { appEnvs } from "@/common/app-envs";
 
 const helpers = {
   filterStoreStateFields(storeStates: ProjectStoreStates) {

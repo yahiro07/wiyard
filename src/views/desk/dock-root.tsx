@@ -122,7 +122,6 @@ export const InnerDockRoot = () => {
   return (
     <div
       className={cz(
-        // "z-1",
         appConfig.dockPlacement === "leftInner"
           ? "absolute-left-center"
           : "absolute-right-center",

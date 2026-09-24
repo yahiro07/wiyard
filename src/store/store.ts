@@ -17,7 +17,7 @@ import {
 import { blankScene, defaultBoardSize } from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
-import { uiConstants } from "@/common/constants";
+import { appConfig } from "@/common/app-config";
 
 export type StoreState = {
   //included in project data
@@ -61,6 +61,7 @@ export type StoreState = {
   soloModeUnitId: string | null;
   settingsPanelVisible: boolean;
   debugObject: object | null;
+  graphAreaFloatUp: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -104,6 +105,7 @@ const blankStoreState: StoreState = {
   soloModeUnitId: null,
   settingsPanelVisible: false,
   debugObject: null,
+  graphAreaFloatUp: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -166,7 +168,7 @@ export const windowSystem = createWindowSystem({
 export const sightHandlers = createFieldSightHandlers(
   () => store.state.sight,
   (attrs) => store.patchSight(attrs),
-  { minScaling: uiConstants.minScaling, maxScaling: uiConstants.maxScaling },
+  { minScaling: appConfig.minScaling, maxScaling: appConfig.maxScaling },
 );
 
 if (import.meta.hot) {

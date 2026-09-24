@@ -1,4 +1,3 @@
-import { domIds } from "@/common/constants";
 import { FieldSightPlane } from "@/components/field-sight-plane";
 import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
@@ -24,6 +23,10 @@ import { graphAreaSize } from "@/project/default-data";
 import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { desktopTheme } from "@/common/desktop-theme";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
+import { cz } from "@lib/utils/cz";
+import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
+import { domIds } from "@/common/dom-ids";
+import { featureFlags } from "@/common/app-config";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();
@@ -87,7 +90,8 @@ const GraphBackgroundPlane = () => {
   const { graphBgColor, graphBgOpacity } = desktopTheme;
   return (
     <div
-      className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      className="absolute -translate-x-1/2 -translate-y-1/2"
+      data-board-pan-target="true"
       style={{
         left: 0,
         top: 0,
@@ -102,10 +106,11 @@ const GraphBackgroundPlane = () => {
 };
 
 const GraphEditPlane = () => {
-  const { boardSize } = store.useSnapshot();
+  const { boardSize, graphAreaFloatUp } = store.useSnapshot();
   return (
     <div
       id={domIds.graphEditPlane}
+      className={cz("relative", graphAreaFloatUp && "z-1")}
       style={{
         transform: `translate(${boardSize.width / 2}px, ${boardSize.height / 2}px)`,
       }}
@@ -149,6 +154,22 @@ const PartControlBarContainer = () => {
   return <>{1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
 };
 
+const DeskAreaRightSideControls = () => {
+  return (
+    <div className="absolute-right-center mr-2">
+      <div className="flex-va gap-2">
+        {featureFlags.graphAreaFloatUp && <GraphFloatUpButton />}
+        <ScalingGaugeContainer />
+        {featureFlags.graphAreaFloatUp && (
+          <div className="invisible">
+            <GraphFloatUpButton />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const ForegroundUiPlane = () => {
   return (
     <>
@@ -156,17 +177,19 @@ const ForegroundUiPlane = () => {
       <InnerDockRoot />
       <SecondBar />
       {/* <InFieldControlUi /> */}
-      <ScalingGaugeContainer />
+      <DeskAreaRightSideControls />
       <SettingsPanelRoot />
     </>
   );
 };
 
 function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
+  const targetEl = e.target as HTMLElement;
+  // console.log("checkSightTarget", targetEl);
   return (
-    e.target === e.currentTarget ||
-    (e.target as HTMLElement).id === domIds.boardPlane
-    // (e.target as HTMLElement).dataset.boardPanTarget === "true"
+    targetEl === e.currentTarget ||
+    targetEl.id === domIds.boardPlane ||
+    targetEl.dataset.boardPanTarget === "true"
   );
 }
 
@@ -182,6 +205,7 @@ export const DeskArea = () => {
         if (checkSightTarget(e)) {
           sightHandlers.onPointerDown(e.nativeEvent);
           actions.setMenuTargetUnit(null);
+          e.stopPropagation();
         }
       }}
       onWheel={(e) => {

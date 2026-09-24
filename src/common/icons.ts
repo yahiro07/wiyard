@@ -13,9 +13,14 @@ import { FiMenu } from "react-icons/fi";
 import { IoMdSettings, IoMdShare } from "react-icons/io";
 import { IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
-import { PiPianoKeysFill, PiTagSimple, PiTrash } from "react-icons/pi";
+import {
+  PiMusicNoteFill,
+  PiPianoKeysFill,
+  PiTagSimple,
+  PiTrash,
+} from "react-icons/pi";
 import { RiFlashlightFill } from "react-icons/ri";
-import { TbAppsFilled, TbZoom } from "react-icons/tb";
+import { TbAppsFilled, TbStackForward, TbZoom } from "react-icons/tb";
 import { VscGraphLine } from "react-icons/vsc";
 
 export const Icons = {
@@ -43,4 +48,6 @@ export const Icons = {
   Check: FaCheck,
   Tag: PiTagSimple,
   Zoom: TbZoom,
+  StackForward: TbStackForward,
+  MusicalNotes: PiMusicNoteFill,
 };

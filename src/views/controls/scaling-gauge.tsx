@@ -1,4 +1,4 @@
-import { uiConstants } from "@/common/constants";
+import { appConfig } from "@/common/app-config";
 import { Icons } from "@/common/icons";
 import { store } from "@/store/store";
 import { cz } from "@lib/utils/cz";
@@ -12,8 +12,8 @@ const handleScalingGaugePointerDown = (e: React.PointerEvent) => {
       const deltaY = delta.y;
       const newScaling = clampValue(
         originalSight.eyeScaling - deltaY / 100,
-        uiConstants.minScaling,
-        uiConstants.maxScaling,
+        appConfig.minScaling,
+        appConfig.maxScaling,
       );
       const scaleDiff = newScaling / originalSight.eyeScaling;
       store.patchSight({
@@ -33,22 +33,20 @@ export const ScalingGaugeContainer = () => {
   const { sight } = store.useSnapshot();
   const scaling = sight.eyeScaling;
   return (
-    <div className="absolute-right-center mr-2">
-      <div
-        className={cz(
-          "w-36px h-90px bg-gray-500 flex-va justify-between",
-          "text-white cursor-pointer hover:opacity-90",
-        )}
-        onPointerDown={handleScalingGaugePointerDown}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div>↑</div>
-        <div className="relative flex-vc">
-          <Icons.Zoom />
-          <div className="text-8px">{Math.round(scaling * 100)}%</div>
-        </div>
-        <div>↓</div>
+    <div
+      className={cz(
+        "w-36px h-90px bg-gray-500 flex-va justify-between",
+        "text-white cursor-pointer hover:opacity-90",
+      )}
+      onPointerDown={handleScalingGaugePointerDown}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div>↑</div>
+      <div className="relative flex-vc">
+        <Icons.Zoom />
+        <div className="text-8px">{Math.round(scaling * 100)}%</div>
       </div>
+      <div>↓</div>
     </div>
   );
 };

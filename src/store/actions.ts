@@ -249,7 +249,7 @@ export const actions = {
     const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
       store.state.unitItems,
     );
-    if (existingPorts.length >= 4) return;
+    if (existingPorts.length >= appConfig.maxNoteChannels) return;
     const newPort = helpers.createNoteChannelPort();
     store.setUnitItems((prev) => [...prev, newPort]);
     store.setCurrentNoteChannelId(newPort.unitId);
@@ -258,7 +258,7 @@ export const actions = {
     const existingUnits = store.state.unitItems.filter(
       (it) => it.type === "automationEditor",
     );
-    if (existingUnits.length >= 4) return;
+    if (existingUnits.length >= appConfig.maxAutomationChannels) return;
     const newUnit = helpers.createAutomationEditorUnit();
     store.setUnitItems((prev) => [...prev, newUnit]);
     store.setCurrentAutomationChannelId(newUnit.unitId);

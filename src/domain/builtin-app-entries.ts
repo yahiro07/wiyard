@@ -15,14 +15,21 @@ type BuiltinAppItem = {
   windowFreeRatio?: boolean;
 };
 
+export const builtinAppIcons = {
+  pianoRoll: Icons.MusicalNotes,
+  automation: Icons.Graph,
+  keyboard: Icons.Piano,
+  controlSurface: Icons.Control,
+};
+
 export const builtinAppItems: BuiltinAppItem[] = [
   {
     windowId: windowIds.pianoRoll,
     title: "piano roll",
     dockItemSpec: {
-      icon: Icons.Timeline,
+      icon: builtinAppIcons.pianoRoll,
       bgColor: "#46a",
-      fontSize: 28,
+      fontSize: 26,
     },
     windowInitialSize: { width: 1000, height: 600 },
     windowFreeRatio: true,
@@ -31,9 +38,9 @@ export const builtinAppItems: BuiltinAppItem[] = [
     windowId: windowIds.automationEditor,
     title: "automation",
     dockItemSpec: {
-      icon: Icons.Graph,
+      icon: builtinAppIcons.automation,
       bgColor: "#46a",
-      fontSize: 28,
+      fontSize: 23,
     },
     windowInitialSize: { width: 900, height: 220 },
     windowFreeRatio: true,
@@ -42,7 +49,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     windowId: windowIds.keyboard,
     title: "keyboard",
     dockItemSpec: {
-      icon: Icons.Piano,
+      icon: builtinAppIcons.keyboard,
       bgColor: "#46a",
       fontSize: 28,
     },
@@ -52,7 +59,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     windowId: windowIds.controlSurface,
     title: "control surface",
     dockItemSpec: {
-      icon: Icons.Control,
+      icon: builtinAppIcons.controlSurface,
       bgColor: "#46a",
       fontSize: 28,
     },

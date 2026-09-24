@@ -1,7 +1,7 @@
 import { KeyName } from "@lib/contract";
-import { appEnvs } from "@/common/app-config";
 import { UnitItem } from "@/domain/types";
 import { ProjectData, projectsConstants } from "@/project/project-types";
+import { appEnvs } from "@/common/app-envs";
 
 export const defaultBoardSize = { width: 4000, height: 2800 };
 export const graphAreaSize = { width: 1400, height: 800 };

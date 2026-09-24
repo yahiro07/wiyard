@@ -1,11 +1,11 @@
 import { cz } from "@lib/utils/cz";
 import { useCallback } from "react";
-import { uiConstants, wireColors } from "@/common/theme";
 import { isPortConnectable } from "@/domain/port-helpers";
 import { UnitPortSpec } from "@/domain/types";
 import { store } from "@/store/store";
 import { UnitCardPortPositionManager } from "@/views/unit-card/unit-card-port-position-manager";
 import { handlePortPointerDown } from "@/views/unit-card/unit-ports-handlers";
+import { wireColors } from "@/common/appearance";
 
 const PortView = ({
   portSpec,
@@ -35,7 +35,7 @@ const PortView = ({
     <div
       ref={refCallback}
       className="w-20px h-20px flex-c cursor-pointer relative"
-      style={{ opacity: active ? 1 : uiConstants.dimmedWireOpacity }}
+      style={{ opacity: active ? 1 : wireColors.dimmedWireOpacity }}
       onPointerDown={(e) => handlePortPointerDown(e, portSpec.portKey)}
     >
       <div

@@ -1,6 +1,5 @@
 import { Point } from "@lib/utils/common-types";
 import { HsPortSubtype } from "wafer-host/core";
-import { uiConstants, wireColors } from "@/common/theme";
 import {
   getForwardDirectionWireConnectionKey,
   getPortDirectionFromPortKey,
@@ -9,6 +8,7 @@ import {
 import { store } from "@/store/store";
 import { resultOf } from "@lib/utils/general-helper";
 import { renderLog } from "@lib/utils/render-log";
+import { wireColors } from "@/common/appearance";
 
 function createCurveLinePath(p0: Point, p1: Point) {
   // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
@@ -42,7 +42,7 @@ const WireView = ({
       stroke={color}
       strokeWidth="3"
       fill="none"
-      opacity={weaken ? uiConstants.dimmedWireOpacity : 1}
+      opacity={weaken ? wireColors.dimmedWireOpacity : 1}
     />
   );
 };

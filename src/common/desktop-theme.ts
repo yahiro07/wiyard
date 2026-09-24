@@ -35,6 +35,13 @@ export const desktopThemes = {
     graphBgColor: "#0086",
     graphBgOpacity: 1,
   },
+  theme4: {
+    bgColor: "#fff",
+    bgImageUrl: "/dev/bg/bg22.jpg",
+    bgMix: 0.8,
+    graphBgColor: "#fff",
+    graphBgOpacity: 0.2,
+  },
 } satisfies Record<string, DesktopTheme>;
 
-export const desktopTheme = desktopThemes.theme3;
+export const desktopTheme = desktopThemes.theme1;

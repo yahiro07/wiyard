@@ -11,11 +11,12 @@ import { cz } from "@lib/utils/cz";
 import { useUnitStuffReporter } from "@/views/window/unit-stuff-reporter";
 import { useLayoutEffect } from "react";
 import { commonGetters } from "@/store/common-getters";
+import { appConfig } from "@/common/app-config";
 
 const ChannelListColumn = () => {
   const { currentAutomationChannelId } = store.useSnapshot();
   const channelIds = automationChannelGetters.useAutomationChannelIds();
-  const canAdd = channelIds.length < 4;
+  const canAdd = channelIds.length < appConfig.maxAutomationChannels;
   const canDelete = channelIds.length > 0;
 
   const handleRemove = () => {
