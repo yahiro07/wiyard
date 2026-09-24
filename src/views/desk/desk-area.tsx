@@ -1,4 +1,3 @@
-import { domIds } from "@/common/constants";
 import { FieldSightPlane } from "@/components/field-sight-plane";
 import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
@@ -26,6 +25,7 @@ import { desktopTheme } from "@/common/desktop-theme";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 import { cz } from "@lib/utils/cz";
 import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
+import { domIds } from "@/common/dom-ids";
 
 const WireKnobsContainer = () => {
   const { settings } = store.useSnapshot();

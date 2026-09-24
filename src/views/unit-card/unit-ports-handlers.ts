@@ -1,12 +1,12 @@
 import { Point } from "@lib/utils/common-types";
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
-import { domGetters } from "@/common/constants";
-import { uiConfigs } from "@/common/theme";
 import { isPortConnectable, splitConnectionKey } from "@/domain/port-helpers";
 import { PortStuff } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
+import { domGetters } from "@/common/dom-ids";
+import { appConfig } from "@/common/app-config";
 
 const helpers = {
   findNearestPort(portStuffsArray: PortStuff[], pos: Point) {
@@ -82,7 +82,7 @@ export const handlePortPointerDown = (
     },
     onMove(pos: Point) {
       const nearestPort = helpers.findNearestPort(targetPorts, pos);
-      if (uiConfigs.showWireConnectionPreviewFloatingWireEnd) {
+      if (appConfig.showWireConnectionPreviewFloatingWireEnd) {
         if (nearestPort && nearestPort !== selfPort) {
           actions.setPreviewDestPortKey(nearestPort.portKey);
           actions.setPreviewDestPosition(null);

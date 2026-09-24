@@ -1,6 +1,5 @@
 import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
 import { tryParseJson, tryParseJsonOrNull } from "@lib/utils/general-helper";
-import { appEnvs } from "@/common/app-config";
 import { projectDataIo } from "@/project/project-data-io";
 import { migrateProjectData } from "@/project/project-data-migrator";
 import { raiseProjectLoadingError } from "@/project/project-error";
@@ -12,6 +11,7 @@ import { builtinUnitIds } from "@/domain/unit-entries";
 import { defaultData2 } from "@/project/default-data-2";
 import { projectsModel } from "@/project/projects-model";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
+import { appEnvs } from "@/common/app-envs";
 
 type AppSessionStates = {
   midiInEnabled: boolean;

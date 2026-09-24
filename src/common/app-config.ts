@@ -1,24 +1,4 @@
-import { assignTyped } from "@lib/utils/array-object-helper";
-
-declare const __CfPagesUrl: string;
-
-function extractPageBuildId(url: string): string {
-  return url.replace("https://", "").split(".")[0];
-}
-
-export const appEnvs = {
-  isDevelopment: import.meta.env.DEV,
-  isProduction: import.meta.env.PROD,
-  cfPagesUrl: __CfPagesUrl,
-  cfPagesDeployId: extractPageBuildId(__CfPagesUrl),
-  appVersionCode: "v260916",
-};
-if (appEnvs.isDevelopment) {
-  assignTyped(appEnvs, {
-    cfPagesUrl: "https://aaabbb123.wireboard.pages.dev",
-    cfPagesDeployId: "aaabbb123",
-  });
-}
+import { appEnvs } from "@/common/app-envs";
 
 type DockPlacement = "leftInner" | "rightInner" | "bottomBar";
 
@@ -26,7 +6,11 @@ export const appConfig = {
   supportAutomationPorts: true,
   showAutomationTargetParameterSelectionMenuOnConnection: false,
   dockPlacement: "rightInner" as DockPlacement,
+  minScaling: 0.1,
+  maxScaling: 2,
+  showWireConnectionPreviewFloatingWireEnd: false,
 };
 if (appEnvs.isDevelopment) {
   appConfig.dockPlacement = "bottomBar";
+  appConfig.showWireConnectionPreviewFloatingWireEnd = true;
 }

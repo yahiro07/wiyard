@@ -1,6 +1,5 @@
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { useState } from "react";
-import { domGetters } from "@/common/constants";
 import { showcaseEntries } from "@/domain/showcase-entries";
 import { UnitAddingItem } from "@/domain/types";
 import {
@@ -11,6 +10,7 @@ import {
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 import { Point } from "@lib/utils/common-types";
+import { domGetters } from "@/common/dom-ids";
 
 const pickerItemHandlers = {
   handlePointerDown(

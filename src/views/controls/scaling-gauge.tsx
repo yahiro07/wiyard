@@ -1,4 +1,4 @@
-import { uiConstants } from "@/common/constants";
+import { appConfig } from "@/common/app-config";
 import { Icons } from "@/common/icons";
 import { store } from "@/store/store";
 import { cz } from "@lib/utils/cz";
@@ -12,8 +12,8 @@ const handleScalingGaugePointerDown = (e: React.PointerEvent) => {
       const deltaY = delta.y;
       const newScaling = clampValue(
         originalSight.eyeScaling - deltaY / 100,
-        uiConstants.minScaling,
-        uiConstants.maxScaling,
+        appConfig.minScaling,
+        appConfig.maxScaling,
       );
       const scaleDiff = newScaling / originalSight.eyeScaling;
       store.patchSight({

@@ -1,5 +1,4 @@
 import { tryParseJson } from "@lib/utils/general-helper";
-import { appEnvs } from "@/common/app-config";
 import { projectDataIo } from "@/project/project-data-io";
 import { migrateProjectData } from "@/project/project-data-migrator";
 import { raiseProjectLoadingError } from "@/project/project-error";
@@ -12,6 +11,7 @@ import {
 import { store } from "@/store/store";
 import { projectDataTextSupport } from "@/project/shared-url-support";
 import { windowIds } from "@/domain/types";
+import { appEnvs } from "@/common/app-envs";
 
 export type ProjectsModel = {
   exportProject(): Promise<void>;

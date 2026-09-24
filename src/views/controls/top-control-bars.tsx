@@ -1,4 +1,4 @@
-import { appEnvs } from "@/common/app-config";
+import { appEnvs } from "@/common/app-envs";
 import { projectsModel } from "@/project/projects-model";
 import { store, windowSystem } from "@/store/store";
 import {
