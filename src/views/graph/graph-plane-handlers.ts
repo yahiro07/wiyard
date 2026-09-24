@@ -54,12 +54,21 @@ export const graphPlaneHandlers = {
     });
   },
   handlePlaneResizeAnchorPointerDown(e: React.PointerEvent<HTMLElement>) {
-    const { planeSize: originalSize } = store.state.graphSpec;
+    const {
+      graphSpec: { planeSize: originalSize },
+      boardSize,
+    } = store.state;
+    const wMin = 400;
+    const hMin = 400;
+    const wMax = boardSize.width;
+    const hMax = boardSize.height;
     startDragSession(e, {
       onMove(_, delta) {
+        const tw = originalSize.width / 2 + delta.x * 2;
+        const th = originalSize.height / 2 + delta.y * 2;
         const newSize = {
-          width: (originalSize.width / 2 + delta.x) * 2,
-          height: (originalSize.height / 2 + delta.y) * 2,
+          width: clampValue(tw, wMin, wMax),
+          height: clampValue(th, hMin, hMax),
         };
         graphActions.patchGraphSpecWithCheck("planeSize", newSize);
       },
