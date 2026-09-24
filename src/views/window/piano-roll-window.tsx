@@ -11,6 +11,7 @@ import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/play
 import { commonGetters } from "@/store/common-getters";
 import { ReactUnitFrameWithLog } from "@lib/wafer-ex";
 import { appConfig } from "@/common/app-config";
+import { builtinAppIcons } from "@/domain/builtin-app-entries";
 
 const NoteChannelListColumn = () => {
   const { currentNoteChannelId } = store.useSnapshot();
@@ -147,7 +148,7 @@ export const PianoRollWindow = () => {
         </ScalerBoxDW>
       </WindowFrame>
       <WindowFrameSideTab id={windowIds.pianoRoll}>
-        <Icons.Timeline size={30} />
+        <builtinAppIcons.pianoRoll size={26} />
       </WindowFrameSideTab>
     </>
   );
