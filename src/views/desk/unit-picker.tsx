@@ -22,11 +22,13 @@ const pickerItemHandlers = {
 
     const getCardPosition = (domPosition: Point) => {
       const {
-        graphSpec: { planeSize },
+        graphSpec: { planeSize, contentOffset, contentScaling },
       } = store.state;
+      const relX = domPosition.x - planeSize.width / 2;
+      const relY = domPosition.y - planeSize.height / 2;
       const pos = {
-        x: domPosition.x - planeSize.width / 2,
-        y: domPosition.y - planeSize.height / 2,
+        x: relX / contentScaling - contentOffset.x,
+        y: relY / contentScaling - contentOffset.y,
       };
       return cardPlacementHelper.clampCardPositionInGraphPlane(pos);
     };
