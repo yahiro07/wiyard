@@ -3,36 +3,25 @@ import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
 import { SecondBar } from "@/views/controls/top-control-bars";
 import { CoordDebugLayer } from "@/views/desk/coord-debug-layer";
-import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { KeyboardWindow } from "@/views/window/keyboard-window";
 import { PianoRollWindow } from "@/views/window/piano-roll-window";
 import { UnitWindowsRoot } from "@/views/window/unit-windows";
 import { UnitConnectionsRoot } from "@/views/wiring/connections";
-import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";
-import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
 import { AutomationEditorWindow } from "@/views/window/automation-editor-window";
 import { ControlSurfaceWindow } from "@/views/window/control-surface-window";
 import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
-import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
 import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
-import { graphAreaSize } from "@/project/default-data";
-import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { desktopTheme } from "@/common/desktop-theme";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
-import { cz } from "@lib/utils/cz";
 import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
 import { domIds } from "@/common/dom-ids";
 import { featureFlags } from "@/common/app-config";
-
-const WireKnobsContainer = () => {
-  const { settings } = store.useSnapshot();
-  if (!settings.wireVolumeKnobs) return;
-  return <WireKnobsRoot />;
-};
+import { GraphPlaneRoot } from "@/views/desk/graph-plane";
+import { cz } from "@lib/utils/cz";
 
 const FieldSightPlaneWrapper = ({
   children,
@@ -51,7 +40,7 @@ const BoardBackground = () => {
   const { bgColor, bgImageUrl, bgMix } = desktopTheme;
   return (
     <div
-      className="absolute-full pointer-events-none"
+      className="size-full pointer-events-none"
       style={{ background: bgColor }}
     >
       {bgImageUrl && (
@@ -86,51 +75,18 @@ const BoardAttachedWindowsPlane = () => {
   );
 };
 
-const GraphBackgroundPlane = () => {
-  const { graphBgColor, graphBgOpacity } = desktopTheme;
-  return (
-    <div
-      className="absolute -translate-x-1/2 -translate-y-1/2"
-      data-board-pan-target="true"
-      style={{
-        left: 0,
-        top: 0,
-        width: graphAreaSize.width,
-        height: graphAreaSize.height,
-        background: graphBgColor,
-        opacity: graphBgOpacity,
-        borderRadius: "12px",
-      }}
-    />
-  );
-};
-
-const GraphEditPlane = () => {
-  const { boardSize, graphAreaFloatUp } = store.useSnapshot();
-  return (
-    <div
-      id={domIds.graphEditPlane}
-      className={cz("relative", graphAreaFloatUp && "z-1")}
-      style={{
-        transform: `translate(${boardSize.width / 2}px, ${boardSize.height / 2}px)`,
-      }}
-    >
-      <GraphBackgroundPlane />
-      <WiringLayer />
-      <WireKnobsContainer />
-      <WireAutomationSwitchersRoot />
-      <UnitCardsRoot />
-      <UnitPicker_AddingItem />
-    </div>
-  );
-};
-
 const DeskBoardPlane = () => {
   return (
     <FieldSightPlaneWrapper>
-      <div id={domIds.boardPlane} className="size-full">
+      <div
+        id={domIds.boardPlane}
+        className={cz(
+          "size-full relative bd-red",
+          "[&>div]:(absolute top-0 left-0)",
+        )}
+      >
         <BoardBackground />
-        <GraphEditPlane />
+        <GraphPlaneRoot />
         {false && <CoordDebugLayer />}
         <BoardAttachedWindowsPlane />
       </div>
