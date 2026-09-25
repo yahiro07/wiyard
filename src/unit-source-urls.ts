@@ -31,7 +31,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferUnitsBase}/sunset-delay/`,
       `${waferUnitsBase}/sunset-chorus-mini/`,
       `${waferUnitsBase}/lofi2/`,
-      `${waferCustomUnitsBase}/darkwave/`,
 
       `${waferCustomUnitsBase}/react-synth/`,
       `${waferCustomUnitsBase}/poly-synth/`,
@@ -60,19 +59,46 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/luna/`,
       `file://${waferUnitsLocalDistDir}/altair-xm/`,
 
-      `file://${waferUnitsLocalDistDir}/multi-lfo/`,
       `file://${waferUnitsLocalDistDir}/step-automator/`,
 
       `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
       `file://${waferUnitsLocalDistDir}/sunset-chorus-mini/`,
       `file://${waferUnitsLocalDistDir}/lofi2/`,
-      `file://${waferCustomUnitsLocalDir}/js/darkwave/`,
 
       `file://${waferCustomUnitsLocalDir}/js/web-audio-mixer/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/vue-audio-mixer/`,
       // `file://${waferCustomUnitsLocalDir}/webaudio-spectrum/`,
       `file://${waferUnitsLocalDistDir}/waveform-checker/`,
+
+      `file://${waferUnitsLocalDistDir}/bseq2/`,
+      `file://${waferUnitsLocalDistDir}/tonerio-sequencer/`,
+      `file://${waferUnitsLocalDistDir}/vsc1/`,
+      `file://${waferUnitsLocalDistDir}/orion/`,
+
+      `file://${waferCustomUnitsLocalDir}/js/additive/`,
+      `file://${waferCustomUnitsLocalDir}/js/bl-synth-modular/`,
+      `file://${waferCustomUnitsLocalDir}/ts/dist/cadence/`,
+
+      `file://${waferUnitsLocalDistDir}/channel-strip/`,
+      `file://${waferUnitsLocalDistDir}/fc1/`,
+      `file://${waferUnitsLocalDistDir}/mz1/`,
+      `file://${waferUnitsLocalDistDir}/mz2/`,
+      `file://${waferUnitsLocalDistDir}/noise-mix/`,
+      `file://${waferUnitsLocalDistDir}/crusher/`,
+      `file://${waferUnitsLocalDistDir}/toner-compressor/`,
+      `file://${waferUnitsLocalDistDir}/toner-panner/`,
+      `file://${waferUnitsLocalDistDir}/toner-tilt-eq/`,
+      `file://${waferUnitsLocalDistDir}/toner-3band-eq/`,
+      `file://${waferUnitsLocalDistDir}/toner-reverb/`,
+      `file://${waferUnitsLocalDistDir}/toner-limiter/`,
+      `file://${waferUnitsLocalDistDir}/toner-saturation/`,
+
+      `file://${waferCustomUnitsLocalDir}/js/circular-audio-wave/`,
+      `file://${waferCustomUnitsLocalDir}/js/vissonance/`,
+      `file://${waferCustomUnitsLocalDir}/ts/dist/threejs-audio-reactive-visual/`,
+      `file://${waferCustomUnitsLocalDir}/js/audio-input-effects/`,
+      `file://${waferUnitsLocalDistDir}/tone-wheel/`,
     ];
   }
 }
