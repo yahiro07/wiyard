@@ -1,8 +1,8 @@
-import { GraphSpec, UnitItem } from "@/domain/types";
-import { store } from "@/store/store";
 import { Point, Rect } from "@lib/utils/common-types";
 import { rectOp } from "@lib/utils/geometry-helper";
 import { clampValue } from "@lib/utils/number-helper";
+import { GraphSpec, UnitItem } from "@/domain/types";
+import { store } from "@/store/store";
 
 export const cardPlacementHelper = {
   getGraphPlaneVisibleAreaBounds(graphSpec: GraphSpec): Rect {
@@ -65,5 +65,33 @@ export const cardPlacementHelper = {
       }
     }
     return true;
+  },
+  constrainAllUnitCardsInGraphPlane(
+    uniteItems: UnitItem[],
+    graphSpec: GraphSpec,
+  ): UnitItem[] {
+    const visibleAreaBounds = this.getGraphPlaneVisibleAreaBounds(graphSpec);
+    const replacedItems: Record<string, UnitItem> = {};
+    const getItemSize = (item: UnitItem) => {
+      return item.type === "board"
+        ? { width: 160, height: 100 }
+        : { width: 100, height: 100 };
+    };
+    for (const item of uniteItems) {
+      const size = getItemSize(item);
+      const cardBounds = rectOp.fromCenterAndSize(item.cardPosition, size);
+      if (!rectOp.containsRect(visibleAreaBounds, cardBounds)) {
+        const constrainedBounds = rectOp.constrainInnerRect(
+          visibleAreaBounds,
+          cardBounds,
+        );
+        const newCardPosition = rectOp.center(constrainedBounds);
+        replacedItems[item.unitId] = { ...item, cardPosition: newCardPosition };
+      }
+    }
+    if (Object.keys(replacedItems).length > 0) {
+      return uniteItems.map((item) => replacedItems[item.unitId] || item);
+    }
+    return uniteItems;
   },
 };

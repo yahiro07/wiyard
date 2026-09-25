@@ -2,24 +2,21 @@ import { startDragSession } from "@lib/utils/drag-session";
 import { vectorOp } from "@lib/utils/geometry-helper";
 import { clampValue } from "@lib/utils/number-helper";
 import { GraphSpec } from "@/domain/types";
+import { cardPlacementHelper } from "@/store/card-placement-helper";
 import { store } from "@/store/store";
 
 const graphActions = {
-  patchGraphSpec<K extends keyof GraphSpec>(key: K, value: GraphSpec[K]) {
-    store.patchGraphSpec({ [key]: value });
-  },
-  patchGraphSpecWithCheck<K extends keyof GraphSpec>(
-    key: K,
-    value: GraphSpec[K],
-  ) {
-    // const { graphSpec, unitItems } = store.state;
-    // const newGraphSpec = { ...graphSpec, [key]: value };
-    // const valid = cardPlacementHelper.checkAllCardsInGraphPlane(
-    //   unitItems,
-    //   newGraphSpec,
-    // );
-    // if (!valid) return;
-    store.patchGraphSpec({ [key]: value });
+  patchGraphSpecWithCardsClamped(attrs: Partial<GraphSpec>) {
+    const { graphSpec, unitItems } = store.state;
+    const newGraphSpec = { ...graphSpec, ...attrs };
+    const newUnitItems = cardPlacementHelper.constrainAllUnitCardsInGraphPlane(
+      unitItems,
+      newGraphSpec,
+    );
+    if (newUnitItems !== unitItems) {
+      store.setUnitItems(newUnitItems);
+    }
+    store.patchGraphSpec(attrs);
   },
 };
 
@@ -34,7 +31,9 @@ export const graphPlaneHandlers = {
           vectorOp.add(originalOffset, vectorOp.scale(delta, 1 / scaling)),
           10,
         );
-        graphActions.patchGraphSpecWithCheck("contentOffset", newOffset);
+        graphActions.patchGraphSpecWithCardsClamped({
+          contentOffset: newOffset,
+        });
       },
     });
   },
@@ -48,7 +47,9 @@ export const graphPlaneHandlers = {
           0.4,
           1.4,
         );
-        graphActions.patchGraphSpecWithCheck("contentScaling", newScaling);
+        graphActions.patchGraphSpecWithCardsClamped({
+          contentScaling: newScaling,
+        });
       },
     });
   },
@@ -69,7 +70,7 @@ export const graphPlaneHandlers = {
           width: clampValue(tw, wMin, wMax),
           height: clampValue(th, hMin, hMax),
         };
-        graphActions.patchGraphSpecWithCheck("planeSize", newSize);
+        graphActions.patchGraphSpecWithCardsClamped({ planeSize: newSize });
       },
     });
   },
