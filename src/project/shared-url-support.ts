@@ -3,11 +3,11 @@ import {
   compressTextToBase64,
   decompressTextFromBase64,
 } from "@lib/utils/string-compression";
-import { appEnvs } from "@/common/app-config";
 import { productionFix } from "@/periphery/production-fix-wrapper";
 import { projectDataIo } from "@/project/project-data-io";
 import { raiseProjectLoadingError } from "@/project/project-error";
 import { ProjectData } from "@/project/project-types";
+import { appEnvs } from "@/common/app-envs";
 
 export type SharedUrlSupport = {
   generateSharedUrl(): string;

@@ -2,7 +2,8 @@ import { KeyName } from "@lib/contract";
 import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
 import { FieldSight } from "@/components/field-sight-plane";
-import { UnitItem, WindowId } from "@/domain/types";
+import { GraphSpec, UnitItem, WindowId } from "@/domain/types";
+import { Size } from "@lib/utils/common-types";
 
 export type ProjectStoreStates = {
   unitItems: UnitItem[];
@@ -18,6 +19,8 @@ export type ProjectStoreStates = {
   sight: FieldSight;
   keyName: KeyName;
   unitClockingFlags: Record<string, boolean>;
+  boardSize: Size;
+  graphSpec: GraphSpec;
 };
 
 export type ProjectData = {

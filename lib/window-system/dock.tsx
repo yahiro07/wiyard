@@ -45,14 +45,11 @@ const DockCleanupButtons = () => {
   );
 };
 
-export const WindowDock = ({ children }: { children: ReactNode }) => {
+export const WindowDockMV = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <div
-        className={cz(
-          "w-60px min-h-140px m-2 flex-vc gap-2 py-6",
-          // "h-55px min-w-140px m-2 flex-c gap-2 px-6",
-        )}
+        className={cz("w-60px min-h-140px m-2 flex-vc gap-2 py-6")}
         style={{
           background: "#fff1",
           backdropFilter: "blur(3px)",
@@ -60,6 +57,17 @@ export const WindowDock = ({ children }: { children: ReactNode }) => {
           borderRadius: "12px",
         }}
       >
+        <DockCleanupButtons />
+        {children}
+      </div>
+    </>
+  );
+};
+
+export const WindowDockWH = ({ children }: { children: ReactNode }) => {
+  return (
+    <>
+      <div className={cz("flex-c gap-2")}>
         <DockCleanupButtons />
         {children}
       </div>
@@ -91,9 +99,9 @@ export const WindowDockItemView = ({
           <div
             className={cz(
               "w-auto whitespace-nowrap py-0.5",
-              0
-                ? "absolute-left-center ml-44px"
-                : "absolute-right-center mr-44px",
+              // "absolute-left-center ml-44px"
+              // "absolute-right-center mr-44px",
+              "absolute-top-center -mt-34px",
               "bg-#606068cc rounded-6px px-2 text-15px",
               "invisible opacity-0 group-hover:visible group-hover:opacity-100",
               "transition-opacity duration-200",

@@ -67,4 +67,28 @@ export const windowFrameHandlers = {
     });
     e0.stopPropagation();
   },
+  handleSideTabPointerDown(
+    e0: IPointerEvent,
+    windowCoordVm: WindowCoordViewModel,
+  ) {
+    actions.setCurrentWindowId(windowCoordVm.windowId);
+    const originalWindowBounds = windowCoordVm.windowBounds;
+    startDragSessionEx(
+      e0,
+      {
+        onMove(_, delta) {
+          const bounds = windowPlacementHelper.updatePosition(
+            originalWindowBounds,
+            delta,
+          );
+          windowCoordVm.setWindowBounds(bounds);
+        },
+        onTap() {
+          actions.toggleWindowMinimized(windowCoordVm.windowId);
+        },
+      },
+      { holdDurationTh: 300 },
+    );
+    e0.stopPropagation();
+  },
 };

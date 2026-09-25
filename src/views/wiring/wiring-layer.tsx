@@ -1,14 +1,14 @@
 import { Point } from "@lib/utils/common-types";
-import { cz } from "@lib/utils/cz";
 import { HsPortSubtype } from "wafer-host/core";
-import { boardSize } from "@/common/constants";
-import { uiConstants, wireColors } from "@/common/theme";
 import {
   getForwardDirectionWireConnectionKey,
   getPortDirectionFromPortKey,
   splitConnectionKey,
 } from "@/domain/port-helpers";
 import { store } from "@/store/store";
+import { resultOf } from "@lib/utils/general-helper";
+import { renderLog } from "@lib/utils/render-log";
+import { wireColors } from "@/common/appearance";
 
 function createCurveLinePath(p0: Point, p1: Point) {
   // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
@@ -42,7 +42,7 @@ const WireView = ({
       stroke={color}
       strokeWidth="3"
       fill="none"
-      opacity={weaken ? uiConstants.dimmedWireOpacity : 1}
+      opacity={weaken ? wireColors.dimmedWireOpacity : 1}
     />
   );
 };
@@ -61,6 +61,9 @@ const Wire = ({
   const destPort = portStuffs[destinationPortKey];
 
   if (!(sourcePort && destPort)) return null;
+
+  renderLog("Wire", wireConnectionKey);
+
   const signalType = sourcePort.subtype;
   const p0 = sourcePort.position;
   const p1 = destPort.position;
@@ -72,15 +75,14 @@ const WiresRoot = () => {
     store.useSnapshot();
   const isDragging = draggingPortKey !== null;
 
-  const previewRemovingConnectionKey = (() => {
+  const previewRemovingConnectionKey = resultOf(() => {
     if (draggingPortKey && previewDestPortKey) {
       return getForwardDirectionWireConnectionKey(
         draggingPortKey,
         previewDestPortKey,
       );
     }
-  })();
-
+  });
   return (
     <g>
       {wireConnectionKeys.map((wireConnectionKey) => {
@@ -137,16 +139,23 @@ const DragPreviewWire2 = () => {
 };
 
 export const WiringLayer = () => {
-  const width = boardSize.width;
-  const height = boardSize.height;
-  const viewBox = `0 0 ${width} ${height}`;
+  const { graphSpec } = store.useSnapshot();
+  const { width: w, height: h } = graphSpec.planeSize;
+  const viewBox = `${-w / 2} ${-h / 2} ${w} ${h}`;
   return (
-    <div className={cz("absolute-full overflow-hidden pointer-events-none")}>
-      <svg viewBox={viewBox} style={{ width, height }}>
-        <WiresRoot />
-        <DragPreviewWire />
-        <DragPreviewWire2 />
-      </svg>
-    </div>
+    <svg
+      className="absolute pointer-events-none"
+      viewBox={viewBox}
+      style={{
+        left: -w / 2,
+        top: -h / 2,
+        width: w,
+        height: h,
+      }}
+    >
+      <WiresRoot />
+      <DragPreviewWire />
+      <DragPreviewWire2 />
+    </svg>
   );
 };

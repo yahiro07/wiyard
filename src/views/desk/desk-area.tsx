@@ -1,71 +1,151 @@
-import { boardSize, domIds } from "@/common/constants";
 import { FieldSightPlane } from "@/components/field-sight-plane";
 import { actions } from "@/store/actions";
 import { sightHandlers, store } from "@/store/store";
 import { SecondBar } from "@/views/controls/top-control-bars";
 import { CoordDebugLayer } from "@/views/desk/coord-debug-layer";
-import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { KeyboardWindow } from "@/views/window/keyboard-window";
 import { PianoRollWindow } from "@/views/window/piano-roll-window";
 import { UnitWindowsRoot } from "@/views/window/unit-windows";
 import { UnitConnectionsRoot } from "@/views/wiring/connections";
-import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";
-import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
-import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { AutomationEditorWindow } from "@/views/window/automation-editor-window";
 import { ControlSurfaceWindow } from "@/views/window/control-surface-window";
 import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
-import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
-import { DockRoot } from "@/views/window/dock-root";
+import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
+import { SettingsPanelRoot } from "@/views/desk/settings-panel";
+import { DebugOverlay } from "@/views/desk/debug-overlay";
+import { desktopTheme } from "@/common/desktop-theme";
+import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
+import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
+import { domIds } from "@/common/dom-ids";
+import { GraphPlaneRoot } from "@/views/graph/graph-plane";
+import { cz } from "@lib/utils/cz";
 
-const GraphEditPlane = () => {
-  const { sight } = store.useSnapshot();
+const FieldSightPlaneWrapper = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { sight, boardSize } = store.useSnapshot();
   return (
     <FieldSightPlane sight={sight} boardSize={boardSize}>
-      <div
-        id={domIds.graphEditPlane}
-        className="h-full"
-        style={{
-          // background: uiColors.deskAreaBg,
-          background: "#36383a",
-          backgroundImage: `url(https://i.imgur.com/tfiVPzS.png)`,
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "280px",
-        }}
-      >
-        <WiringLayer />
-        <WireKnobsRoot />
-        <WireAutomationSwitchersRoot />
-        <UnitCardsRoot />
-        <UnitPicker_AddingItem />
-        {false && <CoordDebugLayer />}
-      </div>
+      {children}
     </FieldSightPlane>
   );
 };
 
-const FrontWindowsPlane = () => {
+const BoardBackground = () => {
+  const { bgColor, bgImageUrl, bgMix } = desktopTheme;
   return (
-    <>
+    <div
+      className="size-full pointer-events-none"
+      style={{ background: bgColor }}
+    >
+      {bgImageUrl && (
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundImage: `url(${bgImageUrl})`,
+            opacity: bgMix,
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+const BoardAttachedWindowsPlane = () => {
+  const { boardSize } = store.useSnapshot();
+  return (
+    <div
+      style={{
+        transform: `translate(${boardSize.width / 2}px, ${boardSize.height / 2}px)`,
+      }}
+    >
       <UnitWindowsRoot />
       <PianoRollWindow />
       <AutomationEditorWindow />
       <ControlSurfaceWindow />
       <KeyboardWindow />
-      {1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}
-      <DockRoot />
+    </div>
+  );
+};
+
+const DeskBoardPlane = () => {
+  return (
+    <FieldSightPlaneWrapper>
+      <div
+        id={domIds.boardPlane}
+        className={cz(
+          "size-full relative bd-red",
+          "[&>div]:(absolute top-0 left-0)",
+        )}
+      >
+        <BoardBackground />
+        <GraphPlaneRoot />
+        {false && <CoordDebugLayer />}
+        <BoardAttachedWindowsPlane />
+      </div>
+    </FieldSightPlaneWrapper>
+  );
+};
+
+const _InFieldControlUi = () => {
+  const { settingsPanelVisible } = store.useSnapshot();
+  if (settingsPanelVisible) return;
+  return (
+    <div className="absolute-right-center m-6px">
+      <ControlButtonsInField />
+    </div>
+  );
+};
+
+const PartControlBarContainer = () => {
+  const { settings } = store.useSnapshot();
+  if (!settings.partControlBar) return;
+  return <>{0 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
+};
+
+const DeskAreaRightSideControls = () => {
+  const { settings } = store.useSnapshot();
+  return (
+    <div className="absolute-right-center mr-2">
+      <div className="flex-va gap-2">
+        {settings.graphElevation && <GraphFloatUpButton />}
+        <ScalingGaugeContainer />
+        {settings.graphElevation && (
+          <div className="invisible">
+            <GraphFloatUpButton />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ForegroundUiPlane = () => {
+  return (
+    <>
+      <PartControlBarContainer />
+      <InnerDockRoot />
       <SecondBar />
+      {/* <InFieldControlUi /> */}
+      <DeskAreaRightSideControls />
+      <SettingsPanelRoot />
     </>
   );
 };
 
 function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
+  const targetEl = e.target as HTMLElement;
+  // console.log("checkSightTarget", targetEl);
   return (
-    e.target === e.currentTarget ||
-    (e.target as HTMLElement).id === domIds.graphEditPlane
+    targetEl === e.currentTarget ||
+    targetEl.id === domIds.boardPlane ||
+    targetEl.dataset.boardPanTarget === "true"
   );
 }
 
@@ -75,26 +155,25 @@ export const DeskArea = () => {
     <div
       // if a new project loaded, refresh all dom elements related to units
       key={projectLoadedIndex}
-      id={domIds.deskArea}
+      // id={domIds.deskArea}
       className="grow relative bg-#808488 overflow-hidden"
       onPointerDown={(e) => {
         if (checkSightTarget(e)) {
           sightHandlers.onPointerDown(e.nativeEvent);
           actions.setMenuTargetUnit(null);
+          e.stopPropagation();
         }
       }}
-      // onWheel={(e) => {
-      // if (checkSightTarget(e)) {
-      // sightHandlers.onWheel(e.nativeEvent);
-      // }
-      // }}
+      onWheel={(e) => {
+        if (store.state.settings.mouseWheelZoom && checkSightTarget(e)) {
+          sightHandlers.onWheel(e.nativeEvent);
+        }
+      }}
     >
-      <GraphEditPlane />
-      <FrontWindowsPlane />
+      <DeskBoardPlane />
+      <ForegroundUiPlane />
       <UnitConnectionsRoot />
-      <div className="absolute top-0 right-0 m-6px mt-4">
-        <ControlButtonsInField />
-      </div>
+      <DebugOverlay />
     </div>
   );
 };

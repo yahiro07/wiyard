@@ -3,11 +3,11 @@ import { cz } from "@lib/utils/cz";
 import { useHandleClickOutside } from "@lib/utils/use-handle-click-outside";
 import { useRef } from "react";
 import { AutomationParameterSpec } from "wafer-host/unit-types";
-import { wireColors } from "@/common/theme";
 import { decodeWireConnectionKey } from "@/domain/port-helpers";
 import { store } from "@/store/store";
 import { wireGetters } from "@/store/wire-getters";
 import { useWireMiddlePoint } from "@/views/wiring/wire-view-helpers";
+import { wireColors } from "@/common/appearance";
 
 const AutomationSwitcherMenu = ({
   currentParameterId,

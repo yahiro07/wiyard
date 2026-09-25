@@ -10,6 +10,7 @@ import {
   WindowCoordViewModel,
 } from "./window-view-models";
 import { IconType } from "react-icons";
+import { renderLog } from "@lib/utils/render-log";
 
 const ResizeAnchor = ({
   anchor,
@@ -190,7 +191,6 @@ const WindowFrameView = ({
   const { contentSize, windowBounds } = windowCoordVm;
   const displayed = !evacuated && windowStatus === "visible";
   const evacuatedBarVisible = evacuated && windowStatus === "visible";
-
   return (
     <>
       {evacuatedBarVisible && (
@@ -212,7 +212,8 @@ const WindowFrameView = ({
       >
         <div
           className={cz(
-            "relative rounded-6px overflow-hidden bd-gray-500/40",
+            "relative bd-gray-500/40",
+            "rounded-6px overflow-hidden",
             isCurrent && "!bd-#68c/50",
           )}
           style={{ width: windowBounds.width, height: windowBounds.height }}
@@ -233,7 +234,10 @@ const WindowFrameView = ({
           )}
           <div
             className="bg-white text-black h-full"
-            style={{ width: contentSize.width, height: contentSize.height }}
+            style={{
+              width: contentSize.width - 2,
+              height: contentSize.height - 2,
+            }}
           >
             {children}
           </div>
@@ -267,6 +271,9 @@ export const WindowFrame = ({
     storeSlice.useSnapshot();
   const windowCoordVm = useWindowCoordViewModel(id);
   const windowSpec = windowSpecs[id];
+
+  renderLog("WindowFrame", id);
+
   return (
     <WindowFrameView
       title={title}

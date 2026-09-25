@@ -5,10 +5,12 @@ export const TapHoldButtonFrame = ({
   children,
   onTap,
   onHold,
+  disabled,
 }: {
   children: ReactNode;
   onTap: () => void;
   onHold: () => void;
+  disabled?: boolean;
 }) => {
   const handlePointerDown = (e: React.PointerEvent) => {
     startDragSessionEx(e, {
@@ -17,8 +19,12 @@ export const TapHoldButtonFrame = ({
     });
   };
   return (
-    <div onPointerDown={handlePointerDown} style={{ cursor: "pointer" }}>
+    <button
+      onPointerDown={handlePointerDown}
+      disabled={disabled}
+      style={!disabled ? { cursor: "pointer" } : { pointerEvents: "none" }}
+    >
       {children}
-    </div>
+    </button>
   );
 };

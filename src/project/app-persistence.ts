@@ -1,21 +1,22 @@
-import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
+import { assignTyped, pickObjectMembers } from "@lib/utils/array-object-helper";
 import { tryParseJson, tryParseJsonOrNull } from "@lib/utils/general-helper";
-import { appEnvs } from "@/common/app-config";
+import { appEnvs } from "@/common/app-envs";
+import { AppSettings, defaultAppSettings } from "@/common/app-settings";
+import { hostSystem } from "@/domain/host-system-instance";
+import { builtinUnitIds } from "@/domain/unit-entries";
+import { defaultData2 } from "@/project/default-data-2";
 import { projectDataIo } from "@/project/project-data-io";
 import { migrateProjectData } from "@/project/project-data-migrator";
 import { raiseProjectLoadingError } from "@/project/project-error";
 import { ProjectData } from "@/project/project-types";
+import { projectsModel } from "@/project/projects-model";
 import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
-import { hostSystem } from "@/domain/host-system-instance";
-import { builtinUnitIds } from "@/domain/unit-entries";
-import { defaultData2 } from "@/project/default-data-2";
-import { projectsModel } from "@/project/projects-model";
 
 type AppSessionStates = {
   midiInEnabled: boolean;
   masterVolume: number;
-  uiScaling: number;
+  settings: AppSettings;
 };
 
 type PersistenceData = {
@@ -29,8 +30,22 @@ const helpers = {
     return pickObjectMembers(storeState, {
       midiInEnabled: 1,
       masterVolume: 1,
-      uiScaling: 1,
+      settings: 1,
     });
+  },
+  fixSessionStatesToLoad(sessionStates: AppSessionStates) {
+    const { midiInEnabled, masterVolume, settings } = sessionStates;
+    const settingsKeys = Object.keys(
+      defaultAppSettings,
+    ) as (keyof AppSettings)[];
+    return {
+      midiInEnabled,
+      masterVolume,
+      settings: {
+        ...defaultAppSettings,
+        ...pickObjectMembers(settings, settingsKeys, { skipUndefined: true }),
+      },
+    };
   },
 };
 
@@ -77,7 +92,7 @@ export const appPersistence = {
         if (storageText) {
           const data = tryParseJsonOrNull<PersistenceData>(storageText);
           if (data) {
-            store.assign(helpers.pickSessionStates(data.sessionStates));
+            store.assign(helpers.fixSessionStatesToLoad(data.sessionStates));
             controlSurfaceState = data.controlSurfaceState;
           }
         }
@@ -112,7 +127,7 @@ export const appPersistence = {
           const data = tryParseJson<PersistenceData>(text, () =>
             raiseProjectLoadingError(`failed to parse persistence data json`),
           );
-          store.assign(helpers.pickSessionStates(data.sessionStates));
+          store.assign(helpers.fixSessionStatesToLoad(data.sessionStates));
           controlSurfaceState = data.controlSurfaceState;
 
           const inputProjectData = data.projectData;
@@ -150,6 +165,8 @@ if (appEnvs.isDevelopment && 0) {
   //bypass persistence load for debug
   assignTyped(appPersistence, {
     async load() {
+      console.log("apply starter project");
+      projectsModel.loadProject(defaultData2.starter);
       store.setAutoPersistenceEnabled(true);
     },
     // save() {},

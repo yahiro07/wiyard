@@ -4,6 +4,7 @@ import { DeskArea } from "@/views/desk/desk-area";
 import { ErrorDialog } from "@/views/desk/error-dialog";
 import { UnitPickerRoot } from "@/views/desk/unit-picker";
 import { TopBar } from "@/views/controls/top-control-bars";
+import { BottomBarWithDock } from "@/views/desk/dock-root";
 
 const ErrorDialogContainer = () => {
   const { projectLoadErrorStatus: errorStatus } = store.useSnapshot();
@@ -20,22 +21,23 @@ const ErrorDialogContainer = () => {
   );
 };
 
-const PageRootMain = () => {
-  const { uiScaling } = store.useSnapshot();
+const ScreenScalerContainer = ({ children }: { children: React.ReactNode }) => {
+  const { settings } = store.useSnapshot();
+  return <ScreenScaler scaling={settings.uiScaling}>{children}</ScreenScaler>;
+};
+
+export const PageRoot = () => {
   return (
-    <ScreenScaler scaling={uiScaling}>
+    <ScreenScalerContainer>
       <div className="flex-v text-white h-full">
         <TopBar />
         <div className="grow flex-h">
           <DeskArea />
         </div>
-        <UnitPickerRoot />
+        <BottomBarWithDock />
       </div>
+      <UnitPickerRoot />
       <ErrorDialogContainer />
-    </ScreenScaler>
+    </ScreenScalerContainer>
   );
-};
-
-export const PageRoot = () => {
-  return <PageRootMain />;
 };

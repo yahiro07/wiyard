@@ -1,6 +1,5 @@
 import { createDragSessionEx } from "@lib/utils/drag-session";
 import { useState } from "react";
-import { getGraphEditPlaneElement } from "@/common/constants";
 import { showcaseEntries } from "@/domain/showcase-entries";
 import { UnitAddingItem } from "@/domain/types";
 import {
@@ -10,23 +9,42 @@ import {
 } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
+import { Point } from "@lib/utils/common-types";
+import { domGetters } from "@/common/dom-ids";
+import { cardPlacementHelper } from "@/store/card-placement-helper";
 
 const pickerItemHandlers = {
   handlePointerDown(
     e: React.PointerEvent<HTMLDivElement>,
     catalogKey: CatalogKey,
   ) {
-    const coordinateBaseElement = getGraphEditPlaneElement();
+    const coordinateBaseElement = domGetters.getDomGraphEditPlane();
+
+    const getCardPosition = (domPosition: Point) => {
+      const {
+        graphSpec: { planeSize, contentOffset, contentScaling },
+      } = store.state;
+      const relX = domPosition.x - planeSize.width / 2;
+      const relY = domPosition.y - planeSize.height / 2;
+      const pos = {
+        x: relX / contentScaling - contentOffset.x,
+        y: relY / contentScaling - contentOffset.y,
+      };
+      return cardPlacementHelper.clampCardPositionInGraphPlane(pos);
+    };
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {
         actions.setUnitPickerVisible(false);
         windowSystem.minimizeAll();
       },
       onMove(pos) {
-        actions.setUnitAddingItem({ catalogKey, position: pos });
+        actions.setUnitAddingItem({
+          catalogKey,
+          position: getCardPosition(pos),
+        });
       },
       onUp(pos) {
-        actions.addUnit(catalogKey, pos);
+        actions.addUnit(catalogKey, getCardPosition(pos));
       },
       onEnd() {
         actions.setUnitAddingItem(null);

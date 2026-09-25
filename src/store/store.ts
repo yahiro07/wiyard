@@ -1,6 +1,6 @@
 import { KeyName } from "@lib/contract";
 import { pickObjectMembers, assignTyped } from "@lib/utils/array-object-helper";
-import { Point } from "@lib/utils/common-types";
+import { Point, Size } from "@lib/utils/common-types";
 import { createWindowSystem, WindowSpec } from "@lib/window-system";
 import { createStore, Store } from "snap-store";
 import { UpdatePayload } from "vite";
@@ -8,14 +8,21 @@ import { createFieldSightHandlers } from "@/components/field-sight-handlers";
 import { FieldSight } from "@/components/field-sight-plane";
 import { hostSystem } from "@/domain/host-system-instance";
 import {
+  GraphSpec,
   PortStuff,
   UnitAddingItem,
   UnitItem,
   UnitStuff,
   WindowId,
 } from "@/domain/types";
-import { blankScene } from "@/project/default-data";
+import {
+  blankScene,
+  defaultBoardSize,
+  defaultGraphSpec,
+} from "@/project/default-data";
 import { ProjectLoadErrorStatus } from "@/store/store-types";
+import { AppSettings, defaultAppSettings } from "@/common/app-settings";
+import { appConfig } from "@/common/app-config";
 
 export type StoreState = {
   //included in project data
@@ -32,10 +39,12 @@ export type StoreState = {
   sight: FieldSight;
   keyName: KeyName;
   unitClockingFlags: Record<string, boolean>;
+  boardSize: Size;
+  graphSpec: GraphSpec;
   //included in user's auto persistent data
   midiInEnabled: boolean;
   masterVolume: number;
-  uiScaling: number;
+  settings: AppSettings;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
@@ -56,6 +65,9 @@ export type StoreState = {
   configTargetWireKey: string | null;
   soloPlaybackUnitId: string | null;
   soloModeUnitId: string | null;
+  settingsPanelVisible: boolean;
+  debugObject: object | null;
+  graphAreaElevated: boolean;
 };
 
 const blankStoreState: StoreState = {
@@ -72,9 +84,12 @@ const blankStoreState: StoreState = {
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
   unitClockingFlags: {},
+  boardSize: defaultBoardSize,
+  graphSpec: defaultGraphSpec,
   //
   midiInEnabled: false,
   masterVolume: 0.5,
+  settings: defaultAppSettings,
   //
   unitStuffs: {},
   portStuffs: {},
@@ -88,7 +103,6 @@ const blankStoreState: StoreState = {
   projectLoadedIndex: 0,
   projectLoading: false,
   secondBarVisible: false,
-  uiScaling: 1,
   autoPersistenceEnabled: false,
   importedProjectFileName: null,
   projectLoadErrorStatus: null,
@@ -96,6 +110,9 @@ const blankStoreState: StoreState = {
   configTargetWireKey: null,
   soloPlaybackUnitId: null,
   soloModeUnitId: null,
+  settingsPanelVisible: false,
+  debugObject: null,
+  graphAreaElevated: false,
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -110,6 +127,8 @@ export const projectResetterStates: Partial<StoreState> = {
   bpm: 120,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
+  boardSize: defaultBoardSize,
+  graphSpec: defaultGraphSpec,
   //
   unitStuffs: {},
   portStuffs: {},
@@ -127,12 +146,13 @@ const defaultStoreState: StoreState = {
   ...blankScene.storeStates,
 };
 
-if (0) {
+if (1) {
   // store.setSequencerWindowVisible(true);
   assignTyped(defaultStoreState, {
     // ...blankScene.storeStates,
     // unitPickerVisible: true,
     // uiScaling: 0.9,
+    // secondBarVisible: true,
   });
 }
 
@@ -143,6 +163,7 @@ const windowSliceKeys: (keyof StoreState)[] = [
   "windowSpecs",
   "currentWindowId",
   "windowsEvacuated",
+  "boardSize",
 ];
 export const windowSystem = createWindowSystem({
   storeSlice: {
@@ -155,7 +176,7 @@ export const windowSystem = createWindowSystem({
 export const sightHandlers = createFieldSightHandlers(
   () => store.state.sight,
   (attrs) => store.patchSight(attrs),
-  { minScaling: 0.125, maxScaling: 2 },
+  { minScaling: appConfig.minScaling, maxScaling: appConfig.maxScaling },
 );
 
 if (import.meta.hot) {

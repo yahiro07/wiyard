@@ -1,12 +1,11 @@
 import presetWind4 from "@unocss/preset-wind4";
 import { defineConfig, transformerVariantGroup } from "unocss";
-import { uiColors } from "./src/common/theme";
 
 export default defineConfig({
   transformers: [transformerVariantGroup()],
   presets: [presetWind4()],
-  theme: { colors: uiColors },
-  configDeps: ["./src/components/ui-theme.ts"],
+  // theme: { colors: uiColors },
+  // configDeps: ["./src/components/ui-theme.ts"],
   shortcuts: [
     {
       "flex-h": "flex",
@@ -24,6 +23,8 @@ export default defineConfig({
       "absolute-top-center": "absolute top-0 left-1/2 -translate-x-1/2",
       "absolute-left-center": "absolute left-0 top-1/2 -translate-y-1/2",
       "absolute-right-center": "absolute right-0 top-1/2 -translate-y-1/2",
+      "size-full": "w-full h-full",
+      "children-pointer-events-auto": "[&>*]:pointer-events-auto",
     },
     [/^bd-(.+)$/, ([, c]) => `border border-solid border-${c}`],
   ],
