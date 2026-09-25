@@ -259,7 +259,7 @@ export const PartControlBarRoot = () => {
         <div
           className={cz(
             "min-h-140px pt-4 pb-6 px-1.5 bg-gray-500 flex-vc gap-4",
-            "rounded-10px",
+            "rounded-5px",
           )}
         >
           <div className="flex-c">
