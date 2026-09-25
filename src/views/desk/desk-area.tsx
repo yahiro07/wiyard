@@ -21,6 +21,7 @@ import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
 import { domIds } from "@/common/dom-ids";
 import { GraphPlaneRoot } from "@/views/graph/graph-plane";
 import { cz } from "@lib/utils/cz";
+import { appEnvs } from "@/common/app-envs";
 
 const FieldSightPlaneWrapper = ({
   children,
@@ -173,7 +174,7 @@ export const DeskArea = () => {
       <DeskBoardPlane />
       <ForegroundUiPlane />
       <UnitConnectionsRoot />
-      <DebugOverlay />
+      {appEnvs.isDevelopment && <DebugOverlay />}
     </div>
   );
 };

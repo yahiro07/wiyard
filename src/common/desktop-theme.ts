@@ -15,11 +15,11 @@ export const desktopThemes = {
     graphBgOpacity: 1,
   },
   theme1: {
-    bgColor: "#206",
-    bgImageUrl: "/dev/bg/bg18.jpg",
-    bgMix: 0.3,
+    bgColor: "#000",
+    bgImageUrl: "/images/bg1.avif",
+    bgMix: 1,
     graphBgColor: "#004",
-    graphBgOpacity: 0.25,
+    graphBgOpacity: 0.3,
   },
   theme2: {
     bgColor: "#000",
@@ -41,6 +41,13 @@ export const desktopThemes = {
     bgMix: 0.8,
     graphBgColor: "#fff",
     graphBgOpacity: 0.2,
+  },
+  theme5: {
+    bgColor: "#206",
+    bgImageUrl: "/dev/bg/bg18.jpg",
+    bgMix: 0.3,
+    graphBgColor: "#004",
+    graphBgOpacity: 0.25,
   },
 } satisfies Record<string, DesktopTheme>;
 

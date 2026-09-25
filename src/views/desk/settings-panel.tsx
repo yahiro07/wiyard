@@ -174,28 +174,23 @@ const SettingsPanel = () => {
             <div className="ml-3">
               <div className="flex-v gap-1 mt-1">
                 <CommonFeaturesRows />
-              </div>
-            </div>
-          </div>
-          <div className="flex-v">
-            <SettingRow header="Current Project" />
-            <div className="ml-3">
-              <div className="flex-v gap-1 mt-1">
-                <CheckBoxLine label="Piano roll" checked={false} />
-                <CheckBoxLine label="Automation" checked={false} />
-                <CheckBoxLine label="Control surface" checked={false} />
-                <CheckBoxLine label="Keyboard" checked={false} />
-              </div>
-            </div>
-          </div>
-          <div className="flex-v">
-            <SettingRow header="Appearance" />
-            <div className="ml-3">
-              <div className="flex-v gap-1 mt-1">
                 <AppearanceRows />
               </div>
             </div>
           </div>
+          {false && (
+            <div className="flex-v">
+              <SettingRow header="Current Project" />
+              <div className="ml-3">
+                <div className="flex-v gap-1 mt-1">
+                  <CheckBoxLine label="Piano roll" checked={false} />
+                  <CheckBoxLine label="Automation" checked={false} />
+                  <CheckBoxLine label="Control surface" checked={false} />
+                  <CheckBoxLine label="Keyboard" checked={false} />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
