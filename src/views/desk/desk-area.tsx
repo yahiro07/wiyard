@@ -107,7 +107,7 @@ const _InFieldControlUi = () => {
 const PartControlBarContainer = () => {
   const { settings } = store.useSnapshot();
   if (!settings.partControlBar) return;
-  return <>{1 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
+  return <>{0 ? <PartControlBarRoot2 /> : <PartControlBarRoot />}</>;
 };
 
 const DeskAreaRightSideControls = () => {
