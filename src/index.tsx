@@ -11,6 +11,13 @@ function appPreMount() {
   appPersistence.load();
 }
 
+function suppressBrowserDefaultHandlers() {
+  window.addEventListener("contextmenu", (e) => e.preventDefault());
+  window.addEventListener("dragstart", (e) => {
+    if (e.target instanceof HTMLImageElement) e.preventDefault();
+  });
+}
+
 function start() {
   if (appEnvs.isProduction && productionFix?.isFullyDisabled) {
     alert("this version is disabled dut to a potential crash risk.");
@@ -18,12 +25,12 @@ function start() {
   }
   appPreMount();
   mountAppRoot(<App />);
-  window.addEventListener("contextmenu", (e) => e.preventDefault());
+  suppressBrowserDefaultHandlers();
 }
 
 function startDev() {
   mountAppRoot(<AppUnitsDev />);
-  window.addEventListener("contextmenu", (e) => e.preventDefault());
+  suppressBrowserDefaultHandlers();
 }
 
 if (appEnvs.isDevelopment && location.search.includes("unit-dev")) {
