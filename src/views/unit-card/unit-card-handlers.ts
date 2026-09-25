@@ -3,6 +3,7 @@ import { vectorOp } from "@lib/utils/geometry-helper";
 import { UnitItem, windowIds } from "@/domain/types";
 import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
+import { cardPlacementHelper } from "@/store/card-placement-helper";
 
 type IPointerEvent = React.PointerEvent<HTMLElement>;
 
@@ -14,7 +15,10 @@ export const unitCardHandlers = {
     startDragSessionEx(e0, {
       onMove(_, delta) {
         const newPos = vectorOp.snapped(
-          vectorOp.add(unitOriginalPos, delta),
+          cardPlacementHelper.clampCardPositionInGraphPlane(
+            vectorOp.add(unitOriginalPos, delta),
+            unitItem.type !== "board",
+          ),
           10,
         );
         if (!vectorOp.equals(prevPos, newPos)) {

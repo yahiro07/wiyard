@@ -1,5 +1,5 @@
-import { clampValue, inBetween } from "./number-helper";
 import { Point, Rect, Size, Vector } from "./common-types";
+import { clampValue, inBetween } from "./number-helper";
 
 export const vectorOp = {
   equals(a: Vector, b: Vector) {
@@ -47,6 +47,14 @@ export const sizeOp = {
 };
 
 export const rectOp = {
+  fromCenterAndSize(center: Point, size: Size) {
+    return {
+      x: center.x - size.width / 2,
+      y: center.y - size.height / 2,
+      width: size.width,
+      height: size.height,
+    };
+  },
   center(re: Rect) {
     return { x: re.x + re.width / 2, y: re.y + re.height / 2 };
   },
@@ -70,6 +78,36 @@ export const rectOp = {
       inBetween(po.x, re.x, re.x + re.width) &&
       inBetween(po.y, re.y, re.y + re.height)
     );
+  },
+  constrainInnerRect(outer: Rect, inner: Rect): Rect {
+    const leftLeft = outer.x;
+    const outerRight = outer.x + outer.width;
+    const outerTop = outer.y;
+    const outerBottom = outer.y + outer.height;
+    const innerLeft = inner.x;
+    const innerRight = inner.x + inner.width;
+    const innerTop = inner.y;
+    const innerBottom = inner.y + inner.height;
+    let xm = 0;
+    let ym = 0;
+    if (innerLeft < leftLeft) {
+      xm += leftLeft - innerLeft;
+    }
+    if (innerRight > outerRight) {
+      xm += outerRight - innerRight;
+    }
+    if (innerTop < outerTop) {
+      ym += outerTop - innerTop;
+    }
+    if (innerBottom > outerBottom) {
+      ym += outerBottom - innerBottom;
+    }
+    return {
+      x: inner.x + xm,
+      y: inner.y + ym,
+      width: inner.width,
+      height: inner.height,
+    };
   },
 };
 

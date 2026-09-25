@@ -13,7 +13,7 @@ export const domGetters = {
   getDomBoardPlane() {
     return getHtmlElementById(domIds.boardPlane);
   },
-  getGraphEditPlane() {
+  getDomGraphEditPlane() {
     return getHtmlElementById(domIds.graphEditPlane);
   },
 };

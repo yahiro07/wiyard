@@ -11,20 +11,26 @@ import { actions } from "@/store/actions";
 import { store, windowSystem } from "@/store/store";
 import { Point } from "@lib/utils/common-types";
 import { domGetters } from "@/common/dom-ids";
+import { cardPlacementHelper } from "@/store/card-placement-helper";
 
 const pickerItemHandlers = {
   handlePointerDown(
     e: React.PointerEvent<HTMLDivElement>,
     catalogKey: CatalogKey,
   ) {
-    const coordinateBaseElement = domGetters.getDomBoardPlane();
+    const coordinateBaseElement = domGetters.getDomGraphEditPlane();
 
     const getCardPosition = (domPosition: Point) => {
-      const { boardSize } = store.state;
-      return {
-        x: domPosition.x - boardSize.width / 2,
-        y: domPosition.y - boardSize.height / 2,
+      const {
+        graphSpec: { planeSize, contentOffset, contentScaling },
+      } = store.state;
+      const relX = domPosition.x - planeSize.width / 2;
+      const relY = domPosition.y - planeSize.height / 2;
+      const pos = {
+        x: relX / contentScaling - contentOffset.x,
+        y: relY / contentScaling - contentOffset.y,
       };
+      return cardPlacementHelper.clampCardPositionInGraphPlane(pos);
     };
     createDragSessionEx(e, { coordinateBaseElement }).run({
       onStart() {

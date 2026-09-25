@@ -69,7 +69,7 @@ export const handlePortPointerDown = (
   e0: React.PointerEvent<HTMLDivElement>,
   portKey: string,
 ) => {
-  const coordinateBaseElement = domGetters.getGraphEditPlane();
+  const coordinateBaseElement = domGetters.getDomGraphEditPlane();
   const { portStuffs } = store.state;
   const selfPort = portStuffs[portKey];
   const targetPorts = Object.values(portStuffs).filter(

@@ -139,8 +139,8 @@ const DragPreviewWire2 = () => {
 };
 
 export const WiringLayer = () => {
-  const { boardSize } = store.useSnapshot();
-  const { width: w, height: h } = boardSize;
+  const { graphSpec } = store.useSnapshot();
+  const { width: w, height: h } = graphSpec.planeSize;
   const viewBox = `${-w / 2} ${-h / 2} ${w} ${h}`;
   return (
     <svg

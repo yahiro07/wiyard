@@ -1,10 +1,15 @@
 import { KeyName } from "@lib/contract";
-import { UnitItem } from "@/domain/types";
+import { GraphSpec, UnitItem } from "@/domain/types";
 import { ProjectData, projectsConstants } from "@/project/project-types";
 import { appEnvs } from "@/common/app-envs";
 
 export const defaultBoardSize = { width: 4000, height: 2800 };
-export const graphAreaSize = { width: 1400, height: 800 };
+
+export const defaultGraphSpec: GraphSpec = {
+  contentOffset: { x: 0, y: 0 },
+  contentScaling: 1,
+  planeSize: { width: 1400, height: 800 },
+};
 
 function createBlankScene(): ProjectData {
   const unitItems: UnitItem[] = [
@@ -39,6 +44,7 @@ function createBlankScene(): ProjectData {
       bpm: 120,
       unitClockingFlags: {},
       boardSize: defaultBoardSize,
+      graphSpec: defaultGraphSpec,
     },
     unitStates: [],
   };

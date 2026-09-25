@@ -1,4 +1,4 @@
-import { defaultBoardSize } from "@/project/default-data";
+import { defaultBoardSize, defaultGraphSpec } from "@/project/default-data";
 import { ProjectData } from "@/project/project-types";
 
 export const defaultData2 = {
@@ -77,6 +77,7 @@ export const defaultData2 = {
       keyName: "C",
       unitClockingFlags: {},
       boardSize: defaultBoardSize,
+      graphSpec: defaultGraphSpec,
     },
     unitStates: [],
   },

@@ -14,12 +14,15 @@ export const appConfig = {
   maxAutomationChannels: 4,
 };
 
+export const featureFlags = {
+  graphAreaFloatUp: false,
+};
+
 if (appEnvs.isDevelopment) {
   assignTyped(appConfig, {
     maxNoteChannels: 12,
   });
+  assignTyped(featureFlags, {
+    graphAreaFloatUp: true,
+  });
 }
-
-export const featureFlags = {
-  graphAreaFloatUp: false,
-};

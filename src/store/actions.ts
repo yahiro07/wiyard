@@ -1,10 +1,13 @@
 import { KeyName } from "@lib/contract";
 import {
-  stripUndefined,
   setOrDeleteValue,
+  stripUndefined,
 } from "@lib/utils/array-object-helper";
 import { Point, Size } from "@lib/utils/common-types";
+import { sizeOp } from "@lib/utils/geometry-helper";
 import { WindowSpec, WindowStatus } from "@lib/window-system";
+import { appConfig } from "@/common/app-config";
+import { builtinAppItems } from "@/domain/builtin-app-entries";
 import {
   decodeWireConnectionKey,
   filterUnitRelatedWires,
@@ -22,12 +25,10 @@ import {
 } from "@/domain/types";
 import { CatalogKey } from "@/domain/unit-entries";
 import { unitIdHelper } from "@/domain/unit-id-helper";
+import { cardPlacementHelper } from "@/store/card-placement-helper";
+import { commonGetters } from "@/store/common-getters";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
-import { commonGetters } from "@/store/common-getters";
-import { builtinAppItems } from "@/domain/builtin-app-entries";
-import { appConfig } from "@/common/app-config";
-import { sizeOp } from "@lib/utils/geometry-helper";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -77,7 +78,6 @@ const helpers = {
     return newWindowSpec;
   },
   _getNextPortCardPosition() {
-    const boardSize = store.state.boardSize;
     const items = store.state.unitItems.filter(
       (it) =>
         it.type === "noteInput" ||
@@ -85,9 +85,17 @@ const helpers = {
         it.type === "controlSurface",
     );
     const lastItem = items.at(-1);
-    return lastItem
-      ? { x: lastItem.cardPosition.x, y: lastItem.cardPosition.y + 100 }
-      : { x: boardSize.width / 2, y: boardSize.height / 2 };
+    if (lastItem) {
+      const newPosition = {
+        x: lastItem.cardPosition.x,
+        y: lastItem.cardPosition.y + 100,
+      };
+      return cardPlacementHelper.clampCardPositionInGraphPlane(
+        newPosition,
+        true,
+      );
+    }
+    return { x: 0, y: 0 };
   },
   createNoteChannelPort(): NoteInputPortUnitItem {
     const unitId = unitIdHelper.getNextNoteInputPortUnitId(
