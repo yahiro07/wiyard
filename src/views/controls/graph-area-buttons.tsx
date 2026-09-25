@@ -3,13 +3,13 @@ import { store } from "@/store/store";
 import { cz } from "@lib/utils/cz";
 
 export const GraphFloatUpButton = () => {
-  const { graphAreaFloatUp } = store.useSnapshot();
+  const { graphAreaElevated } = store.useSnapshot();
   return (
     <button
-      onClick={store.toggleGraphAreaFloatUp}
+      onClick={store.toggleGraphAreaElevated}
       className={cz(
-        graphAreaFloatUp ? "opacity-100" : "opacity-50",
-        "hover:opacity-80",
+        graphAreaElevated ? "opacity-100" : "opacity-50",
+        "cursor-pointer hover:opacity-80",
       )}
     >
       <Icons.StackForward size={30} />

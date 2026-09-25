@@ -19,7 +19,6 @@ import { desktopTheme } from "@/common/desktop-theme";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
 import { domIds } from "@/common/dom-ids";
-import { featureFlags } from "@/common/app-config";
 import { GraphPlaneRoot } from "@/views/graph/graph-plane";
 import { cz } from "@lib/utils/cz";
 
@@ -111,12 +110,13 @@ const PartControlBarContainer = () => {
 };
 
 const DeskAreaRightSideControls = () => {
+  const { settings } = store.useSnapshot();
   return (
     <div className="absolute-right-center mr-2">
       <div className="flex-va gap-2">
-        {featureFlags.graphAreaFloatUp && <GraphFloatUpButton />}
+        {settings.graphElevation && <GraphFloatUpButton />}
         <ScalingGaugeContainer />
-        {featureFlags.graphAreaFloatUp && (
+        {settings.graphElevation && (
           <div className="invisible">
             <GraphFloatUpButton />
           </div>

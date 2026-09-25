@@ -11,15 +11,15 @@ export const CheckBoxLine = ({
   onChange?: (checked: boolean) => void;
 }) => {
   return (
-    <div className="flex-ha gap-1">
+    <label className="flex-ha gap-1">
       <button
         className={cz(styles.base, checked && styles.active)}
         onClick={() => onChange?.(!checked)}
       >
         <Icons.Check />
       </button>
-      <label>{label}</label>
-    </div>
+      <span>{label}</span>
+    </label>
   );
 };
 const styles = {

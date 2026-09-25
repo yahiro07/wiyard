@@ -4,3 +4,5 @@ export const wireColors = {
   automation: "#f5b",
   dimmedWireOpacity: 0.15,
 };
+
+export type GraphElevationUnderlay = "solid" | "frosted" | "clear";

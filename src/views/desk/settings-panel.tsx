@@ -1,4 +1,5 @@
 import { AppSettings } from "@/common/app-settings";
+import { GraphElevationUnderlay } from "@/common/appearance";
 import { Icons } from "@/common/icons";
 import { CheckBoxLine } from "@/components/check-box-line";
 import { store } from "@/store/store";
@@ -31,20 +32,28 @@ const SettingRow = ({
 
 const Button = ({
   active,
+  disabled,
   onClick,
   children,
 }: {
   active: boolean;
+  disabled?: boolean;
   onClick: () => void;
   children: ReactNode;
 }) => {
   const styles = {
     base: "px-1 h-28px rounded-3px bg-gray-400 min-w-34px cursor-pointer text-12px font-500",
     active: "!bg-#8ae text-white",
+    disabled: "opacity-30 pointer-events-none",
   };
   return (
     <button
-      className={cz(styles.base, active && styles.active)}
+      className={cz(
+        styles.base,
+        active && styles.active,
+        disabled && styles.disabled,
+      )}
+      disabled={disabled}
       onClick={onClick}
     >
       {children}
@@ -106,6 +115,48 @@ const CommonFeaturesRows = () => {
   );
 };
 
+const AppearanceRows = () => {
+  const { settings } = store.useSnapshot();
+  const setUnderlay = (value: GraphElevationUnderlay) => {
+    settingsActions.setSettingValue("graphElevationUnderlay", value);
+  };
+  const value = settings.graphElevationUnderlay;
+  return (
+    <>
+      <CheckBoxLine
+        label="Graph Elevation"
+        checked={settings.graphElevation}
+        onChange={(value) =>
+          settingsActions.setSettingValue("graphElevation", value)
+        }
+      />
+      <div className="flex-ha gap-1">
+        <div className={cz(!settings.graphElevation && "opacity-30")}>
+          Underlay
+        </div>
+        <Button
+          active={value === "solid"}
+          disabled={!settings.graphElevation}
+          onClick={() => setUnderlay("solid")}
+          children="Solid"
+        />
+        <Button
+          active={value === "frosted"}
+          disabled={!settings.graphElevation}
+          onClick={() => setUnderlay("frosted")}
+          children="Frosted"
+        />
+        <Button
+          active={value === "clear"}
+          disabled={!settings.graphElevation}
+          onClick={() => setUnderlay("clear")}
+          children="Clear"
+        />
+      </div>
+    </>
+  );
+};
+
 const SettingsPanel = () => {
   return (
     <div className="w-340px m-2">
@@ -134,6 +185,14 @@ const SettingsPanel = () => {
                 <CheckBoxLine label="Automation" checked={false} />
                 <CheckBoxLine label="Control surface" checked={false} />
                 <CheckBoxLine label="Keyboard" checked={false} />
+              </div>
+            </div>
+          </div>
+          <div className="flex-v">
+            <SettingRow header="Appearance" />
+            <div className="ml-3">
+              <div className="flex-v gap-1 mt-1">
+                <AppearanceRows />
               </div>
             </div>
           </div>

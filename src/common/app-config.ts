@@ -15,14 +15,11 @@ export const appConfig = {
 };
 
 export const featureFlags = {
-  graphAreaFloatUp: false,
+  // graphAreaElevation: false, //adopted, moved to settings
 };
 
 if (appEnvs.isDevelopment) {
   assignTyped(appConfig, {
     maxNoteChannels: 12,
-  });
-  assignTyped(featureFlags, {
-    graphAreaFloatUp: true,
   });
 }

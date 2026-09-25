@@ -10,16 +10,59 @@ import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
 import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { cz } from "@lib/utils/cz";
 
-const GraphPlaneBackground = () => {
-  const { graphBgColor, graphBgOpacity } = desktopTheme;
+const useGraphAreaElevated = () => {
+  const { settings, graphAreaElevated } = store.useSnapshot();
+  return settings.graphElevation && graphAreaElevated;
+};
+
+const GraphPlaneBackgroundBoardBg = () => {
+  const { boardSize, graphSpec } = store.useSnapshot();
+  const { bgColor, bgImageUrl, bgMix } = desktopTheme;
+
+  const bgTx = graphSpec.planeSize.width / 2 - boardSize.width / 2;
+  const bgTy = graphSpec.planeSize.height / 2 - boardSize.height / 2;
   return (
     <div
-      className="size-full pointer-events-none rounded-12px"
+      className="absolute top-0 left-0"
       style={{
-        background: graphBgColor,
-        opacity: graphBgOpacity,
+        width: boardSize.width,
+        height: boardSize.height,
+        background: bgColor,
+        transform: `translate(${bgTx}px, ${bgTy}px)`,
       }}
-    />
+    >
+      {bgImageUrl && (
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundImage: `url(${bgImageUrl})`,
+            opacity: bgMix,
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+const GraphPlaneBackground = () => {
+  const { settings } = store.useSnapshot();
+  const graphAreaElevated = useGraphAreaElevated();
+  const { graphBgColor, graphBgOpacity } = desktopTheme;
+  return (
+    <div className="size-full pointer-events-none rounded-12px relative overflow-hidden">
+      {graphAreaElevated && settings.graphElevationUnderlay === "solid" && (
+        <GraphPlaneBackgroundBoardBg />
+      )}
+      <div
+        className="absolute-full"
+        style={{
+          background: graphBgColor,
+          opacity: graphBgOpacity,
+        }}
+      />
+    </div>
   );
 };
 
@@ -63,7 +106,9 @@ const GraphPlaneResizeAnchor = () => {
 };
 
 export const GraphPlane = () => {
-  const { graphAreaFloatUp, graphSpec } = store.useSnapshot();
+  const { graphSpec } = store.useSnapshot();
+  const graphAreaElevated = useGraphAreaElevated();
+
   const { planeSize, contentOffset, contentScaling } = graphSpec;
   const scale = contentScaling;
   const tr1x = planeSize.width / 2;
@@ -74,7 +119,7 @@ export const GraphPlane = () => {
     <div
       id={domIds.graphEditPlane}
       data-board-pan-target="true"
-      className={cz("relative pointer-events-auto", graphAreaFloatUp && "z-1")}
+      className={cz("relative pointer-events-auto", graphAreaElevated && "z-1")}
       style={{ width: planeSize.width, height: planeSize.height }}
     >
       <GraphPlaneBackground />
@@ -110,10 +155,47 @@ export const GraphPlane = () => {
   );
 };
 
+const GraphPlaneElevationFrostedGlass = () => {
+  const { boardSize, graphSpec } = store.useSnapshot();
+  const {
+    planeSize: { width, height },
+  } = graphSpec;
+  const cx = boardSize.width / 2;
+  const cy = boardSize.height / 2;
+  return (
+    <div
+      className={cz("absolute z-1")}
+      style={{
+        left: cx - width / 2,
+        top: cy - height / 2,
+        width,
+        height,
+        backdropFilter: "blur(4px)",
+      }}
+    />
+  );
+};
+
+const GraphPlaneElevationFrostedGlassContainer = () => {
+  const { settings, graphAreaElevated } = store.useSnapshot();
+  if (
+    !(
+      settings.graphElevation &&
+      settings.graphElevationUnderlay === "frosted" &&
+      graphAreaElevated
+    )
+  )
+    return;
+  return <GraphPlaneElevationFrostedGlass />;
+};
+
 export const GraphPlaneRoot = () => {
   return (
-    <div className="absolute-full flex-c justify-center pointer-events-none">
-      <GraphPlane />
-    </div>
+    <>
+      <GraphPlaneElevationFrostedGlassContainer />
+      <div className="absolute-full flex-c justify-center pointer-events-none">
+        <GraphPlane />
+      </div>
+    </>
   );
 };
