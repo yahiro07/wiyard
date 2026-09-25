@@ -44,6 +44,7 @@ function createBlankScene(): ProjectData {
       bpm: 120,
       unitClockingFlags: {},
       boardSize: defaultBoardSize,
+      graphSpec: defaultGraphSpec,
     },
     unitStates: [],
   };

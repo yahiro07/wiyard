@@ -27,6 +27,7 @@ const helpers = {
         keyName: 1,
         unitClockingFlags: 1,
         boardSize: 1,
+        graphSpec: 1,
       },
       { skipUndefined: true },
     );
