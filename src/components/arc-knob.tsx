@@ -29,7 +29,7 @@ export const ArcKnob = ({
   min = 0,
   max = 1,
   step = 0.01,
-  onClick,
+  onTap,
   color,
   size = 40,
 }: {
@@ -38,7 +38,7 @@ export const ArcKnob = ({
   min?: number;
   max?: number;
   step?: number;
-  onClick?: () => void;
+  onTap?: () => void;
   color: string;
   size?: number;
 }) => {
@@ -56,7 +56,7 @@ export const ArcKnob = ({
       max={max}
       step={step}
       onChange={onChange}
-      onTap={onClick}
+      onTap={onTap}
     >
       <svg style={{ width: size, height: size }} viewBox="-100 -100 200 200">
         <path
