@@ -1,4 +1,5 @@
-import { Knob } from "@/components/knob";
+import { wireColors } from "@/common/appearance";
+import { ArcKnob } from "@/components/arc-knob";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { WireArrow } from "@/views/wiring/wire-arrow";
@@ -26,16 +27,18 @@ export const WireKnobContainer = ({
         className="absolute -translate-x-1/2 -translate-y-1/2"
         style={{ left: pos.x, top: pos.y }}
       >
-        <div className={cz("w-50px h-50px bd-red")}>
+        <div className={cz("w-50px h-50px")}>
           <div
             className={cz(
               "absolute-full flex-c",
-              !showAlways && "opacity-30 hover:opacity-100 active:opacity-100",
+              !showAlways && "opacity-0 hover:opacity-100 active:opacity-100",
             )}
           >
-            <Knob
+            <ArcKnob
               value={value}
               onChange={(v) => actions.setWireGain(connectionKey, v)}
+              color={wireColors.audio}
+              size={36}
             />
           </div>
         </div>
