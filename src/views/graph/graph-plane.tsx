@@ -55,10 +55,7 @@ const GraphPlaneBackground = () => {
       )}
       <div
         className="absolute-full"
-        style={{
-          background: graphBgColor,
-          opacity: graphBgOpacity,
-        }}
+        style={{ background: graphBgColor, opacity: graphBgOpacity }}
       />
     </div>
   );
@@ -110,7 +107,11 @@ export const GraphPlane = () => {
   return (
     <div
       data-board-pan-target="true"
-      className={cz("relative", graphAreaElevated && "z-1")}
+      className={cz(
+        "relative",
+        graphAreaElevated &&
+          "z-1 pointer-events-auto children-pointer-events-none",
+      )}
       style={{ width: planeSize.width, height: planeSize.height }}
     >
       <GraphPlaneBackground />

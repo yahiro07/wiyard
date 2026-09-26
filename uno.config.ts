@@ -25,6 +25,7 @@ export default defineConfig({
       "absolute-right-center": "absolute right-0 top-1/2 -translate-y-1/2",
       "size-full": "w-full h-full",
       "children-pointer-events-auto": "[&>*]:pointer-events-auto",
+      "children-pointer-events-none": "[&>*]:pointer-events-none",
     },
     [/^bd-(.+)$/, ([, c]) => `border border-solid border-${c}`],
   ],
