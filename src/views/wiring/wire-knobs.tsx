@@ -14,17 +14,33 @@ export const WireKnobContainer = ({
 }: {
   connectionKey: string;
 }) => {
-  const { wireGains, wirePans, settings } = store.useSnapshot();
+  const { wireGains, wirePans } = store.useSnapshot();
   const pos = useWireMiddlePoint(connectionKey);
   if (!pos) return;
   renderLog("WireKnobContainer", connectionKey);
 
   const gainValue = wireGains[connectionKey] ?? 0.5;
   const panValue = wirePans[connectionKey] ?? 0;
+
+  const knobActive = wireGains[connectionKey] !== undefined;
   return (
     <>
-      {settings.wireArrow && <WireArrow connectionKey={connectionKey} />}
-      {settings.wireVolumeKnobs && (
+      {!knobActive && (
+        // <div className=""
+        <WireArrow connectionKey={connectionKey} />
+      )}
+      {!knobActive && (
+        <div
+          className="absolute -translate-x-1/2 -translate-y-1/2"
+          style={{ left: pos.x, top: pos.y }}
+        >
+          <div
+            className="w-24px h-24px"
+            onClick={() => actions.setWireGain(connectionKey, 0.5)}
+          />
+        </div>
+      )}
+      {knobActive && (
         <div
           className="absolute -translate-x-1/2 -translate-y-1/2"
           style={{ left: pos.x, top: pos.y }}
@@ -49,8 +65,8 @@ export const WireKnobContainer = ({
                   <Knob
                     value={gainValue}
                     onChange={(v) => actions.setWireGain(connectionKey, v)}
-                    onTap={() => actions.setWireGain(connectionKey, 0.5)}
-                    size={20}
+                    onTap={() => actions.setWireGain(connectionKey, null)}
+                    size={24}
                   />
                 )}
               </div>

@@ -376,8 +376,10 @@ export const actions = {
   setKeyName(keyName: KeyName) {
     store.setKeyName(keyName);
   },
-  setWireGain(wireConnectionKey: string, value: number) {
-    store.patchWireGains({ [wireConnectionKey]: value });
+  setWireGain(wireConnectionKey: string, value: number | null) {
+    store.produceWireGains((draft) => {
+      setOrDeleteValue(draft, wireConnectionKey, value);
+    });
   },
   setWirePan(wireConnectionKey: string, value: number) {
     store.patchWirePans({ [wireConnectionKey]: value });
