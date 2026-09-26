@@ -9,6 +9,7 @@ export const Knob = ({
   max = 1,
   step = 0.01,
   onTap,
+  onHold,
   disabled,
   size = 26,
 }: {
@@ -18,6 +19,7 @@ export const Knob = ({
   max?: number;
   step?: number;
   onTap?: () => void;
+  onHold?: () => void;
   disabled?: boolean;
   size?: number;
 }) => {
@@ -30,6 +32,7 @@ export const Knob = ({
       step={step}
       onChange={onChange}
       onTap={onTap}
+      onHold={onHold}
     >
       <div
         className={cz("rounded-full relative bg-gray-500")}

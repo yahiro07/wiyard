@@ -1,3 +1,4 @@
+import * as React from "react";
 type Point = { x: number; y: number };
 type Size = { width: number; height: number };
 type Vector = Point;
@@ -131,8 +132,9 @@ export function createDragSessionEx(
   };
   const startPosition = getPos(e0);
 
-  let timerId: NodeJS.Timeout | undefined;
-  let timerId2: NodeJS.Timeout | undefined;
+  type TimerId = ReturnType<typeof setTimeout>;
+  let timerId: TimerId | undefined;
+  let timerId2: TimerId | undefined;
   let started = false;
   let latestPosition = startPosition;
 
