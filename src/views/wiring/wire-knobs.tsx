@@ -23,7 +23,7 @@ export const WireKnobContainer = ({
   const panValue = wirePans[connectionKey] ?? 0;
   return (
     <>
-      {false && <WireArrow connectionKey={connectionKey} />}
+      {settings.wireArrow && <WireArrow connectionKey={connectionKey} />}
       {settings.wireVolumeKnobs && (
         <div
           className="absolute -translate-x-1/2 -translate-y-1/2"
