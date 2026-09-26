@@ -108,7 +108,7 @@ const SightZoomInput = () => {
         onChange={(v) => store.patchSight({ eyeScaling: v })}
         min={0.1}
         max={2}
-        smaller
+        size={24}
       />
     </UpperLabel>
   );

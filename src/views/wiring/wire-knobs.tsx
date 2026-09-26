@@ -50,7 +50,7 @@ export const WireKnobContainer = ({
                     value={gainValue}
                     onChange={(v) => actions.setWireGain(connectionKey, v)}
                     onTap={() => actions.setWireGain(connectionKey, 0.5)}
-                    smaller
+                    size={20}
                   />
                 )}
               </div>
