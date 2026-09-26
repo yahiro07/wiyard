@@ -59,7 +59,7 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
         <div className="relative">
           <div
             className={cz(
-              "relative h-100px max-w-200px bg-#aaa rounded-3px shadow-md overflow-hidden",
+              "relative h-100px min-w-100px max-w-200px bg-#aaa rounded-3px shadow-md overflow-hidden",
               "cursor-pointer",
             )}
             onPointerDown={(e) =>
