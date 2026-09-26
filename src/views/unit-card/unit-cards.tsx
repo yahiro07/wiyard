@@ -20,6 +20,7 @@ import { ControlSurfaceUnitCardRoot } from "@/views/unit-card/control-surface-un
 import { renderLog } from "@lib/utils/render-log";
 import { UnitCardPartControlButton } from "@/views/unit-card/unit-card-part-control-button";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
+import { cz } from "@lib/utils/cz";
 
 const BoardUnitMenuOverlayContainer = ({
   unitItem,
@@ -57,7 +58,10 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
         )}
         <div className="relative">
           <div
-            className="h-100px bg-white cursor-pointer relative shadow-md rounded-3px overflow-hidden"
+            className={cz(
+              "relative h-100px max-w-200px bg-#aaa rounded-3px shadow-md overflow-hidden",
+              "cursor-pointer",
+            )}
             onPointerDown={(e) =>
               unitCardHandlers.handlePointerDown(e, unitItem)
             }
@@ -65,7 +69,8 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
             {catalogItem ? (
               <img
                 src={catalogItem.thumbnailUrl}
-                className="h-full object-contain"
+                className="h-full object-cover"
+                style={{ objectPosition: "left" }}
                 alt={catalogItem.name}
               />
             ) : (
