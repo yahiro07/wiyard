@@ -1,10 +1,10 @@
-import { HeadlessGain } from "@lib/port-units";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { Fragment } from "react";
 import { connectionsPresenter } from "@/views/wiring/connections-presenter";
 import { builtinUnitIds } from "@/domain/unit-entries";
 import { ConnectionWithLog } from "@lib/wafer-ex";
+import { HeadlessPanner } from "@lib/port-units";
 
 const InternalSequencerConnections = () => {
   const internalSequencerConnectionSpecs =
@@ -29,10 +29,11 @@ const BoardItemConnections = () => {
             source={spec.source}
             destination={`${spec.wireVolumeUnitId}.audioInput`}
           />
-          <HeadlessGain
+          <HeadlessPanner
             unitId={spec.wireVolumeUnitId}
             destSpec={spec.destination}
-            gain={spec.wireGain}
+            volume={spec.wireGain}
+            pan={spec.wirePan}
           />
         </Fragment>
       );

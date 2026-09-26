@@ -13,14 +13,15 @@ export const WireKnobContainer = ({
 }: {
   connectionKey: string;
 }) => {
-  const { wireGains, settings } = store.useSnapshot();
+  const { wireGains, wirePans, settings } = store.useSnapshot();
   const pos = useWireMiddlePoint(connectionKey);
   if (!pos) return;
   renderLog("WireKnobContainer", connectionKey);
 
   const showAlways = settings.wireVolumeKnobs;
 
-  const value = wireGains[connectionKey] ?? 0.5;
+  const gainValue = wireGains[connectionKey] ?? 0.5;
+  const panValue = wirePans[connectionKey] ?? 0;
   return (
     <>
       <WireArrow connectionKey={connectionKey} />
@@ -37,18 +38,22 @@ export const WireKnobContainer = ({
           >
             <div className="w-full h-40px flex-c">
               <ArcKnob
-                value={value}
+                value={gainValue}
                 onChange={(v) => actions.setWireGain(connectionKey, v)}
+                onTap={() => actions.setWireGain(connectionKey, 0.5)}
                 color={wireColors.audio}
                 size={36}
               />
             </div>
             <div className="w-full flex-c -mt-1">
               <ArcSliderH
-                value={value}
-                onChange={(v) => actions.setWireGain(connectionKey, v)}
+                value={panValue}
+                onChange={(v) => actions.setWirePan(connectionKey, v)}
+                onTap={() => actions.setWirePan(connectionKey, 0)}
                 color={wireColors.audio}
                 size={32}
+                min={-1}
+                max={1}
               />
             </div>
           </div>

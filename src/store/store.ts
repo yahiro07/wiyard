@@ -29,6 +29,7 @@ export type StoreState = {
   unitItems: UnitItem[];
   wireConnectionKeys: string[];
   wireGains: Record<string, number>; //0~1,center 0.5 for unity gain, store only edited values
+  wirePans: Record<string, number>; //-1~1
   wireAutomationParameterIds: Record<string, string>;
   windowSpecs: Record<WindowId, WindowSpec>;
   currentWindowId: string | null;
@@ -75,6 +76,7 @@ const blankStoreState: StoreState = {
   wireConnectionKeys: [],
   wireAutomationParameterIds: {},
   wireGains: {},
+  wirePans: {},
   windowSpecs: {},
   currentWindowId: null,
   windowsEvacuated: false,
@@ -120,6 +122,7 @@ export const projectResetterStates: Partial<StoreState> = {
   wireConnectionKeys: [],
   wireAutomationParameterIds: {},
   wireGains: {},
+  wirePans: {},
   windowSpecs: {},
   currentWindowId: null,
   windowsEvacuated: false,
