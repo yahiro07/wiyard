@@ -121,6 +121,12 @@ const helpers = {
   },
 };
 
+const removeRecordKeys = (dict: Record<string, any>, keys: string[]) => {
+  for (const key of keys) {
+    delete dict[key];
+  }
+};
+
 export const actionsInternal = {
   patchUnitAttrs(unitId: string, attrs: Partial<{ cardPosition: Point }>) {
     store.setUnitItems((prev) =>
@@ -133,16 +139,12 @@ export const actionsInternal = {
     store.setWireConnectionKeys((prev) =>
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
-    store.produceWireGains((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
-    store.produceWireAutomationParameterIds((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
+    store.produceWireGains((draft) =>
+      removeRecordKeys(draft, wireConnectionKeys),
+    );
+    store.produceWireAutomationParameterIds((draft) =>
+      removeRecordKeys(draft, wireConnectionKeys),
+    );
   },
 };
 
