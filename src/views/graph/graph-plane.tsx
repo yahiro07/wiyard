@@ -51,7 +51,7 @@ const GraphPlaneBackground = () => {
   const graphAreaElevated = useGraphAreaElevated();
   const { graphBgColor, graphBgOpacity } = desktopTheme;
   return (
-    <div className="size-full pointer-events-none rounded-12px relative overflow-hidden">
+    <div className="size-full rounded-12px relative overflow-hidden">
       {graphAreaElevated && settings.graphElevationUnderlay === "solid" && (
         <GraphPlaneBackgroundBoardBg />
       )}
@@ -98,7 +98,7 @@ const GraphPlaneResizeAnchor = () => {
   return (
     <button className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2">
       <div
-        className={cz("w-20px h-20px", "cursor-nwse-resize")}
+        className="w-20px h-20px cursor-nwse-resize"
         onPointerDown={graphPlaneHandlers.handlePlaneResizeAnchorPointerDown}
       />
     </button>
@@ -117,18 +117,12 @@ export const GraphPlane = () => {
   const tr2y = contentOffset.y * scale;
   return (
     <div
-      id={domIds.graphEditPlane}
       data-board-pan-target="true"
-      className={cz("relative pointer-events-auto", graphAreaElevated && "z-1")}
+      className={cz("relative", graphAreaElevated && "z-1")}
       style={{ width: planeSize.width, height: planeSize.height }}
     >
       <GraphPlaneBackground />
-      <div
-        className={cz(
-          "absolute-full pointer-events-none children-pointer-events-auto",
-          "overflow-hidden",
-        )}
-      >
+      <div className="absolute-full overflow-hidden">
         <div
           style={{
             transform: `translate(${tr1x}px, ${tr1y}px)`,
@@ -136,10 +130,12 @@ export const GraphPlane = () => {
           }}
         >
           <div
+            className="h-1px children-pointer-events-auto"
             style={{
               transform: `translate(${tr2x}px, ${tr2y}px) scale(${scale})`,
               transformOrigin: "top left",
             }}
+            id={domIds.graphEditPlane}
           >
             <WiringLayer />
             <WireKnobsContainer />
@@ -149,8 +145,10 @@ export const GraphPlane = () => {
           </div>
         </div>
       </div>
-      <GraphPlaneControlButtons />
-      <GraphPlaneResizeAnchor />
+      <div className="children-pointer-events-auto">
+        <GraphPlaneControlButtons />
+        <GraphPlaneResizeAnchor />
+      </div>
     </div>
   );
 };
@@ -164,7 +162,8 @@ const GraphPlaneElevationFrostedGlass = () => {
   const cy = boardSize.height / 2;
   return (
     <div
-      className={cz("absolute z-1")}
+      data-board-pan-target="true"
+      className="absolute z-1"
       style={{
         left: cx - width / 2,
         top: cy - height / 2,

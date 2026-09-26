@@ -21,15 +21,7 @@ const pickerItemHandlers = {
     const coordinateBaseElement = domGetters.getDomGraphEditPlane();
 
     const getCardPosition = (domPosition: Point) => {
-      const {
-        graphSpec: { planeSize, contentOffset, contentScaling },
-      } = store.state;
-      const relX = domPosition.x - planeSize.width / 2;
-      const relY = domPosition.y - planeSize.height / 2;
-      const pos = {
-        x: relX / contentScaling - contentOffset.x,
-        y: relY / contentScaling - contentOffset.y,
-      };
+      const pos = { x: domPosition.x, y: domPosition.y };
       return cardPlacementHelper.clampCardPositionInGraphPlane(pos);
     };
     createDragSessionEx(e, { coordinateBaseElement }).run({

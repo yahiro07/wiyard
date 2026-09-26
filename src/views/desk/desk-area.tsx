@@ -18,7 +18,6 @@ import { DebugOverlay } from "@/views/desk/debug-overlay";
 import { desktopTheme } from "@/common/desktop-theme";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
-import { domIds } from "@/common/dom-ids";
 import { GraphPlaneRoot } from "@/views/graph/graph-plane";
 import { cz } from "@lib/utils/cz";
 import { appEnvs } from "@/common/app-envs";
@@ -79,7 +78,7 @@ const DeskBoardPlane = () => {
   return (
     <FieldSightPlaneWrapper>
       <div
-        id={domIds.boardPlane}
+        data-board-pan-target="true"
         className={cz(
           "size-full relative bd-red",
           "[&>div]:(absolute top-0 left-0)",
@@ -144,9 +143,7 @@ function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
   const targetEl = e.target as HTMLElement;
   // console.log("checkSightTarget", targetEl);
   return (
-    targetEl === e.currentTarget ||
-    targetEl.id === domIds.boardPlane ||
-    targetEl.dataset.boardPanTarget === "true"
+    targetEl === e.currentTarget || targetEl.dataset.boardPanTarget === "true"
   );
 }
 
