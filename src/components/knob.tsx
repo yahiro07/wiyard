@@ -34,7 +34,7 @@ export const Knob = ({
       <div
         className={cz(
           "rounded-full relative bg-gray-500",
-          !smaller ? "w-26px h-26px" : "w-24px h-24px",
+          !smaller ? "w-26px h-26px" : "w-23px h-23px",
         )}
         style={{ opacity: disabled ? 0.5 : 1 }}
       >

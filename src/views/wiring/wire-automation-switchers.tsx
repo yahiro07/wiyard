@@ -98,7 +98,7 @@ export const AutomationSwitcherContainer = ({
           onClick={onAnchorClick}
         >
           <div
-            className="w-3 h-3"
+            className="w-9px h-9px"
             style={{ backgroundColor: wireColors.automation }}
           />
         </div>
