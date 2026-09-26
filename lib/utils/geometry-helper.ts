@@ -35,6 +35,12 @@ export const vectorOp = {
   rounded(v: Vector) {
     return { x: Math.round(v.x), y: Math.round(v.y) };
   },
+  angle(v: Vector) {
+    return Math.atan2(v.y, v.x);
+  },
+  angleDeg(v: Vector) {
+    return (vectorOp.angle(v) * 180) / Math.PI;
+  },
 };
 
 export const sizeOp = {

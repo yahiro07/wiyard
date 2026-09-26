@@ -1,11 +1,14 @@
 import { Knob } from "@/components/knob";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
-import { wireGetters } from "@/store/wire-getters";
 import { useWireMiddlePoint } from "@/views/wiring/wire-view-helpers";
 import { renderLog } from "@lib/utils/render-log";
 
-const WireKnobContainer = ({ connectionKey }: { connectionKey: string }) => {
+export const WireKnobContainer = ({
+  connectionKey,
+}: {
+  connectionKey: string;
+}) => {
   const { wireGains } = store.useSnapshot();
   const pos = useWireMiddlePoint(connectionKey);
   if (!pos) return;
@@ -21,18 +24,6 @@ const WireKnobContainer = ({ connectionKey }: { connectionKey: string }) => {
         value={value}
         onChange={(v) => actions.setWireGain(connectionKey, v)}
       />
-    </div>
-  );
-};
-
-export const WireKnobsRoot = () => {
-  const connectionKeys =
-    wireGetters.useBoardUnitSubtypedConnectionKeys("audio");
-  return (
-    <div>
-      {connectionKeys.map((key) => (
-        <WireKnobContainer key={key} connectionKey={key} />
-      ))}
     </div>
   );
 };

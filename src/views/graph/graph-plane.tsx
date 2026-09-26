@@ -5,10 +5,8 @@ import { store } from "@/store/store";
 import { graphPlaneHandlers } from "@/views/graph/graph-plane-handlers";
 import { UnitPicker_AddingItem } from "@/views/desk/unit-picker";
 import { UnitCardsRoot } from "@/views/unit-card/unit-cards";
-import { WireAutomationSwitchersRoot } from "@/views/wiring/wire-automation-switchers";
-import { WireKnobsRoot } from "@/views/wiring/wire-knobs";
-import { WiringLayer } from "@/views/wiring/wiring-layer";
 import { cz } from "@lib/utils/cz";
+import { WiringLayersRoot } from "@/views/wiring/wiring-layers-root";
 
 const useGraphAreaElevated = () => {
   const { settings, graphAreaElevated } = store.useSnapshot();
@@ -64,12 +62,6 @@ const GraphPlaneBackground = () => {
       />
     </div>
   );
-};
-
-const WireKnobsContainer = () => {
-  const { settings } = store.useSnapshot();
-  if (!settings.wireVolumeKnobs) return;
-  return <WireKnobsRoot />;
 };
 
 const GraphPlaneControlButtons = () => {
@@ -137,9 +129,7 @@ export const GraphPlane = () => {
             }}
             id={domIds.graphEditPlane}
           >
-            <WiringLayer />
-            <WireKnobsContainer />
-            <WireAutomationSwitchersRoot />
+            <WiringLayersRoot />
             <UnitCardsRoot />
             <UnitPicker_AddingItem />
           </div>

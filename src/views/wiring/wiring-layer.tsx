@@ -40,7 +40,7 @@ const WireView = ({
     <path
       d={path}
       stroke={color}
-      strokeWidth="3"
+      strokeWidth={2.5}
       fill="none"
       opacity={weaken ? wireColors.dimmedWireOpacity : 1}
     />
@@ -138,7 +138,7 @@ const DragPreviewWire2 = () => {
   return <WireView signalType={srcPort.subtype} p0={p0} p1={p1} />;
 };
 
-export const WiringLayer = () => {
+const WiringLayerSvg = ({ children }: { children: React.ReactNode }) => {
   const { graphSpec } = store.useSnapshot();
   const { width: w, height: h } = graphSpec.planeSize;
   const viewBox = `${-w / 2} ${-h / 2} ${w} ${h}`;
@@ -153,9 +153,17 @@ export const WiringLayer = () => {
         height: h,
       }}
     >
+      {children}
+    </svg>
+  );
+};
+
+export const WiringLayer = () => {
+  return (
+    <WiringLayerSvg>
       <WiresRoot />
       <DragPreviewWire />
       <DragPreviewWire2 />
-    </svg>
+    </WiringLayerSvg>
   );
 };

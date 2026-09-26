@@ -40,7 +40,7 @@ const PortView = ({
     >
       <div
         className={cz(
-          "w-11px aspect-square rounded-full",
+          "w-10px aspect-square rounded-full",
           "border border-black/50 border-0.3px",
         )}
         style={{ background: color }}
