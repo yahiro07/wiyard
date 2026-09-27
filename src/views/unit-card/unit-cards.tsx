@@ -36,14 +36,14 @@ const BoardUnitMenuOverlayContainer = ({
 
 const UnitAdapterControlBar = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   return (
-    <div className="w32px h-100px flex-vc gap-3.5 pb-3px">
+    <div className="w36px h-100px flex-vc gap-2.5 pb-3px">
       <div className="flex-vc gap-1px">
-        <div className="text-8px font-500">vol</div>
-        <Knob value={0.5} onChange={() => {}} size={21} />
+        <div className="text-10px font-500">vol</div>
+        <Knob value={0.5} onChange={() => {}} size={23} />
       </div>
       <div className="flex-vc gap-1px">
-        <div className="text-8px font-500">pan</div>
-        <Knob value={0.5} onChange={() => {}} size={21} />
+        <div className="text-10px font-500">pan</div>
+        <Knob value={0.5} onChange={() => {}} size={23} />
       </div>
     </div>
   );

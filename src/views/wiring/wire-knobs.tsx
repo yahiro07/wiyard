@@ -42,7 +42,7 @@ export const WireKnobContainer = ({
                     value={gainValue}
                     onChange={(v) => actions.setWireGain(connectionKey, v)}
                     color={wireColors.audio}
-                    size={32}
+                    size={34}
                   />
                 ) : (
                   <Knob
