@@ -29,7 +29,6 @@ export function createSequencerEngine(
     loopBars: 1,
   };
   const noteOutputPort = unitInterface?.createNoteOutputPort();
-  const sentNoteNumbers: Set<number> = new Set();
   let previewNoteNumber: number | null = null;
 
   const core = {
@@ -45,15 +44,8 @@ export function createSequencerEngine(
             noteNumber,
             time + note.duration * unitDuration * dutyRate,
           );
-          sentNoteNumbers.add(noteNumber);
         }
       }
-    },
-    clearSentNotes() {
-      for (const noteNumber of sentNoteNumbers) {
-        noteOutputPort?.noteOff(noteNumber);
-      }
-      sentNoteNumbers.clear();
     },
   };
 
@@ -75,9 +67,7 @@ export function createSequencerEngine(
     processStep(stepIndex: number, time: number, unitDuration: number) {
       core.processStep(stepIndex, time, unitDuration);
     },
-    stop() {
-      core.clearSentNotes();
-    },
+    stop() {},
     previewNoteOn(pitch: number) {
       if (previewNoteNumber !== null) {
         noteOutputPort?.noteOff(previewNoteNumber);
