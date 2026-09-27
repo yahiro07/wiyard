@@ -76,10 +76,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/vsc1/`,
       `file://${waferUnitsLocalDistDir}/orion/`,
 
-      `file://${waferCustomUnitsLocalDir}/js/additive/`,
-      `file://${waferCustomUnitsLocalDir}/js/bl-synth-modular/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/cadence/`,
-
       `file://${waferUnitsLocalDistDir}/channel-strip/`,
       `file://${waferUnitsLocalDistDir}/fc1/`,
       `file://${waferUnitsLocalDistDir}/mz1/`,
