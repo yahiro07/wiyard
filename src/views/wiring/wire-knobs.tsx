@@ -1,6 +1,6 @@
 import { wireColors } from "@/common/appearance";
 import { ArcKnob } from "@/components/arc-knob";
-import { ArcSliderH } from "@/components/arc-slider";
+import { Knob } from "@/components/knob";
 import { actions } from "@/store/actions";
 import { store } from "@/store/store";
 import { WireArrow } from "@/views/wiring/wire-arrow";
@@ -13,52 +13,49 @@ export const WireKnobContainer = ({
 }: {
   connectionKey: string;
 }) => {
-  const { wireGains, wirePans, settings } = store.useSnapshot();
+  const { wireGains, settings } = store.useSnapshot();
   const pos = useWireMiddlePoint(connectionKey);
   if (!pos) return;
   renderLog("WireKnobContainer", connectionKey);
 
-  const showAlways = settings.wireVolumeKnobs;
-
   const gainValue = wireGains[connectionKey] ?? 0.5;
-  const panValue = wirePans[connectionKey] ?? 0;
+  if (!settings.wireVolumeKnobs) return;
+
   return (
     <>
       <WireArrow connectionKey={connectionKey} />
-      <div
-        className="absolute -translate-x-1/2 -translate-y-1/2"
-        style={{ left: pos.x, top: pos.y }}
-      >
-        <div className={cz("w-50px h-50px")}>
-          <div
-            className={cz(
-              "absolute top-0 left-0 w-full",
-              !showAlways && "opacity-0 hover:opacity-100 active:opacity-100",
-            )}
-          >
-            <div className="w-full h-50px flex-c">
-              <ArcKnob
-                value={gainValue}
-                onChange={(v) => actions.setWireGain(connectionKey, v)}
-                onTap={() => actions.setWireGain(connectionKey, 0.5)}
-                color={wireColors.audio}
-                size={48}
-              />
-            </div>
-            <div className="w-full flex-c -mt-1">
-              <ArcSliderH
-                value={panValue}
-                onChange={(v) => actions.setWirePan(connectionKey, v)}
-                onTap={() => actions.setWirePan(connectionKey, 0)}
-                color={wireColors.audio}
-                size={42}
-                min={-1}
-                max={1}
-              />
+      {
+        <div
+          className="absolute -translate-x-1/2 -translate-y-1/2"
+          style={{ left: pos.x, top: pos.y }}
+        >
+          <div className={cz("w-40px h-40px")}>
+            <div
+              className={cz(
+                "absolute top-0 left-0 w-full",
+                "opacity-0 hover:opacity-100 active:opacity-100",
+              )}
+            >
+              <div className="w-full h-40px flex-c">
+                {1 ? (
+                  <ArcKnob
+                    value={gainValue}
+                    onChange={(v) => actions.setWireGain(connectionKey, v)}
+                    color={wireColors.audio}
+                    size={34}
+                  />
+                ) : (
+                  <Knob
+                    value={gainValue}
+                    onChange={(v) => actions.setWireGain(connectionKey, v)}
+                    size={24}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
     </>
   );
 };

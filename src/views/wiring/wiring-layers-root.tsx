@@ -6,7 +6,7 @@ import { store } from "@/store/store";
 import { WireArrow } from "@/views/wiring/wire-arrow";
 
 const WiringLayerForegroundParts = () => {
-  const { wireConnectionKeys, portStuffs } = store.useSnapshot();
+  const { wireConnectionKeys, portStuffs, settings } = store.useSnapshot();
   return (
     <>
       {wireConnectionKeys.map((connectionKey) => {
@@ -20,7 +20,7 @@ const WiringLayerForegroundParts = () => {
               connectionKey={connectionKey}
             />
           );
-        } else if (sourceSubType === "note") {
+        } else if (sourceSubType === "note" && settings.wireVolumeKnobs) {
           return (
             <WireArrow key={connectionKey} connectionKey={connectionKey} />
           );

@@ -44,6 +44,7 @@ export const defaultData2 = {
           },
         },
       ],
+      unitControlEffects: {},
       wireConnectionKeys: [
         "noteInputPort1.noteOutput>sirius_1.noteInput",
         "sirius_1.audioOutput>speakerPort.audioInput",

@@ -20,6 +20,7 @@ import {
   NoteInputPortUnitItem,
   PortStuff,
   UnitAddingItem,
+  UnitControlEffectItem,
   UnitStuff,
   windowIds,
 } from "@/domain/types";
@@ -29,6 +30,7 @@ import { cardPlacementHelper } from "@/store/card-placement-helper";
 import { commonGetters } from "@/store/common-getters";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -121,6 +123,12 @@ const helpers = {
   },
 };
 
+const removeRecordKeys = (dict: Record<string, any>, keys: string[]) => {
+  for (const key of keys) {
+    delete dict[key];
+  }
+};
+
 export const actionsInternal = {
   patchUnitAttrs(unitId: string, attrs: Partial<{ cardPosition: Point }>) {
     store.setUnitItems((prev) =>
@@ -133,16 +141,12 @@ export const actionsInternal = {
     store.setWireConnectionKeys((prev) =>
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
-    store.produceWireGains((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
-    store.produceWireAutomationParameterIds((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
+    store.produceWireGains((draft) =>
+      removeRecordKeys(draft, wireConnectionKeys),
+    );
+    store.produceWireAutomationParameterIds((draft) =>
+      removeRecordKeys(draft, wireConnectionKeys),
+    );
   },
 };
 
@@ -252,6 +256,11 @@ export const actions = {
       cardPosition: position,
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
+    const isControlEffectEnabled =
+      controlEffectUnitGetters.isUnitControlEffectDefaultEnabled(catalogKey);
+    if (isControlEffectEnabled) {
+      store.patchUnitControlEffects({ [unitId]: { volume: 0.5, pan: 0.5 } });
+    }
   },
   addNoteChannel() {
     const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
@@ -324,6 +333,7 @@ export const actions = {
     actionsInternal.removeWires(wireConnectionKeys);
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
     store.setMenuTargetUnitId(null);
+    store.produceUnitControlEffects((draft) => delete draft[unitId]);
     windowSystem.remove(unitId);
   },
   toggleMidiInEnabled() {
@@ -374,10 +384,27 @@ export const actions = {
   setKeyName(keyName: KeyName) {
     store.setKeyName(keyName);
   },
-  setWireGain(wireConnectionKey: string, value: number) {
-    store.patchWireGains({ [wireConnectionKey]: value });
+  setWireGain(wireConnectionKey: string, value: number | null) {
+    store.produceWireGains((draft) => {
+      setOrDeleteValue(draft, wireConnectionKey, value);
+    });
   },
-  setWirePan(wireConnectionKey: string, value: number) {
-    store.patchWirePans({ [wireConnectionKey]: value });
+  toggleUnitControlEffect(unitId: string) {
+    store.produceUnitControlEffects((draft) => {
+      if (draft[unitId] === undefined) {
+        draft[unitId] = { volume: 0.5, pan: 0.5 };
+      } else {
+        delete draft[unitId];
+      }
+    });
+  },
+  setUnitControlEffectValue<K extends keyof UnitControlEffectItem>(
+    unitId: string,
+    key: K,
+    value: UnitControlEffectItem[K],
+  ) {
+    store.patchUnitControlEffects((prev) => ({
+      [unitId]: { ...prev[unitId], [key]: value },
+    }));
   },
 };

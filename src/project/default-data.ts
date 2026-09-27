@@ -31,6 +31,7 @@ function createBlankScene(): ProjectData {
     formatCode: projectsConstants.formatCode,
     storeStates: {
       unitItems,
+      unitControlEffects: {},
       wireConnectionKeys: [],
       wireGains: {},
       wireAutomationParameterIds: {},

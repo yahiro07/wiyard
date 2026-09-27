@@ -30,7 +30,7 @@ const WireArrowView = ({
         opacity: weaken ? wireColors.dimmedWireOpacity : 1,
       }}
     >
-      <Icons.Play size={20} style={{ transform: "translateX(2.5px)" }} />
+      <Icons.PlayNarrow size={16} style={{ transform: "translateX(1.5px)" }} />
     </div>
   );
 };

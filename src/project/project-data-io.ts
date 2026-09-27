@@ -14,6 +14,7 @@ const helpers = {
       storeStates,
       {
         unitItems: 1,
+        unitControlEffects: 1,
         wireConnectionKeys: 1,
         wireGains: 1,
         wireAutomationParameterIds: 1,

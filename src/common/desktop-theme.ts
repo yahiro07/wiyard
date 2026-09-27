@@ -1,3 +1,5 @@
+import { appEnvs } from "@/common/app-envs";
+
 export type DesktopTheme = {
   bgColor: string;
   bgImageUrl: string | null;
@@ -25,8 +27,8 @@ export const desktopThemes = {
     bgColor: "#000",
     bgImageUrl: "/dev/bg/bg15.jpg",
     bgMix: 1,
-    graphBgColor: "#112",
-    graphBgOpacity: 0.2,
+    graphBgColor: "#144",
+    graphBgOpacity: 0.5,
   },
   theme3: {
     bgColor: "#000",
@@ -51,4 +53,6 @@ export const desktopThemes = {
   },
 } satisfies Record<string, DesktopTheme>;
 
-export const desktopTheme = desktopThemes.theme1;
+export const desktopTheme = appEnvs.isDevelopment
+  ? desktopThemes.theme2
+  : desktopThemes.theme1;

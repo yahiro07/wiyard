@@ -2,6 +2,7 @@ import {
   BoardUnitItem,
   NoteInputPortUnitItem,
   SpeakerPortUnitItem,
+  UnitControlEffectItem,
   UnitItem,
 } from "@/domain/types";
 import { getCatalogItem, internalUnitCardIcons } from "@/domain/unit-entries";
@@ -21,6 +22,8 @@ import { renderLog } from "@lib/utils/render-log";
 import { UnitCardPartControlButton } from "@/views/unit-card/unit-card-part-control-button";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 import { cz } from "@lib/utils/cz";
+import { Knob } from "@/components/knob";
+import { actions } from "@/store/actions";
 
 const BoardUnitMenuOverlayContainer = ({
   unitItem,
@@ -33,8 +36,44 @@ const BoardUnitMenuOverlayContainer = ({
   return <UnitCardOperationOverlay unitItem={unitItem} />;
 };
 
+export const UnitControlEffectBar = ({
+  unitId,
+  unitControlEffect,
+}: {
+  unitId: string;
+  unitControlEffect: UnitControlEffectItem;
+}) => {
+  const { volume, pan } = unitControlEffect;
+  return (
+    <div className="w36px h-100px flex-vc gap-2.5 pb-3px">
+      <div className="flex-vc gap-1px">
+        <div className="text-10px font-500">vol</div>
+        <Knob
+          value={volume}
+          onChange={(v) =>
+            actions.setUnitControlEffectValue(unitId, "volume", v)
+          }
+          // onTap={() => actions.setUnitControlEffectValue(unitId, "volume", 0.5)}
+          size={23}
+        />
+      </div>
+      <div className="flex-vc gap-1px">
+        <div className="text-10px font-500">pan</div>
+        <Knob
+          value={pan}
+          onChange={(v) => actions.setUnitControlEffectValue(unitId, "pan", v)}
+          // onTap={() => actions.setUnitControlEffectValue(unitId, "pan", 0.5)}
+          size={23}
+        />
+      </div>
+    </div>
+  );
+};
+
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const unitStuff = useUnitStuff(unitItem.unitId);
+  const { unitStuffs, unitControlEffects } = store.useSnapshot();
+  const unitStuff = unitStuffs[unitItem.unitId];
+  const unitControlEffect = unitControlEffects[unitItem.unitId];
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = getCatalogItem(unitItem.catalogKey);
   const inputPortSpecs = unitStuff?.inputPortSpecs;
@@ -57,28 +96,36 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
         <div className="relative">
-          <div
-            className={cz(
-              "relative h-100px max-w-200px bg-#aaa rounded-3px shadow-md overflow-hidden",
-              "cursor-pointer",
-            )}
-            onPointerDown={(e) =>
-              unitCardHandlers.handlePointerDown(e, unitItem)
-            }
-          >
-            {catalogItem ? (
-              <img
-                src={catalogItem.thumbnailUrl}
-                className="h-full object-cover"
-                style={{ objectPosition: "left" }}
-                alt={catalogItem.name}
+          <div className="flex-ha rounded-3px shadow-md overflow-hidden bg-#aaa">
+            <div
+              className={cz(
+                "relative h-100px min-w-100px max-w-180px",
+                "cursor-pointer",
+              )}
+              onPointerDown={(e) =>
+                unitCardHandlers.handlePointerDown(e, unitItem)
+              }
+            >
+              {catalogItem ? (
+                <img
+                  src={catalogItem.thumbnailUrl}
+                  className="h-full object-cover"
+                  style={{ objectPosition: "left" }}
+                  alt={catalogItem.name}
+                />
+              ) : (
+                <div className="w-150px h-full text-black flex-c text-sm">
+                  error: catalog item not found for {unitItem.catalogKey}
+                </div>
+              )}
+              <BoardUnitMenuOverlayContainer unitItem={unitItem} />
+            </div>
+            {unitControlEffect && (
+              <UnitControlEffectBar
+                unitId={unitItem.unitId}
+                unitControlEffect={unitControlEffect}
               />
-            ) : (
-              <div className="w-150px h-full text-black flex-c text-sm">
-                error: catalog item not found for {unitItem.catalogKey}
-              </div>
             )}
-            <BoardUnitMenuOverlayContainer unitItem={unitItem} />
           </div>
           {isPlaybackCapable && (
             <div className="absolute top-0 right-full">
