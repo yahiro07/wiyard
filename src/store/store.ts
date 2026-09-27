@@ -120,6 +120,7 @@ const blankStoreState: StoreState = {
 
 export const projectResetterStates: Partial<StoreState> = {
   unitItems: [],
+  unitControlEffects: {},
   wireConnectionKeys: [],
   wireAutomationParameterIds: {},
   wireGains: {},
