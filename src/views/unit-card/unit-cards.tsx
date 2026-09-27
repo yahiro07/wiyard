@@ -21,6 +21,7 @@ import { renderLog } from "@lib/utils/render-log";
 import { UnitCardPartControlButton } from "@/views/unit-card/unit-card-part-control-button";
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 import { cz } from "@lib/utils/cz";
+import { Knob } from "@/components/knob";
 
 const BoardUnitMenuOverlayContainer = ({
   unitItem,
@@ -33,6 +34,21 @@ const BoardUnitMenuOverlayContainer = ({
   return <UnitCardOperationOverlay unitItem={unitItem} />;
 };
 
+const UnitAdapterControlBar = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+  return (
+    <div className="w32px h-100px flex-vc gap-3.5 pb-3px">
+      <div className="flex-vc gap-1px">
+        <div className="text-8px font-500">vol</div>
+        <Knob value={0.5} onChange={() => {}} size={21} />
+      </div>
+      <div className="flex-vc gap-1px">
+        <div className="text-8px font-500">pan</div>
+        <Knob value={0.5} onChange={() => {}} size={21} />
+      </div>
+    </div>
+  );
+};
+
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const unitStuff = useUnitStuff(unitItem.unitId);
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
@@ -41,6 +57,8 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
   const outputPortSpecs = unitStuff?.outputPortSpecs;
   const isPlaybackCapable =
     unitPlaybackCapabilityFlags[unitItem.catalogKey] ?? false;
+
+  const isInstrument = catalogItem?.unitType === "instrument";
 
   renderLog("BoardUnitCard", unitItem.unitId);
   return (
@@ -57,28 +75,31 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
           />
         )}
         <div className="relative">
-          <div
-            className={cz(
-              "relative h-100px min-w-100px max-w-200px bg-#aaa rounded-3px shadow-md overflow-hidden",
-              "cursor-pointer",
-            )}
-            onPointerDown={(e) =>
-              unitCardHandlers.handlePointerDown(e, unitItem)
-            }
-          >
-            {catalogItem ? (
-              <img
-                src={catalogItem.thumbnailUrl}
-                className="h-full object-cover"
-                style={{ objectPosition: "left" }}
-                alt={catalogItem.name}
-              />
-            ) : (
-              <div className="w-150px h-full text-black flex-c text-sm">
-                error: catalog item not found for {unitItem.catalogKey}
-              </div>
-            )}
-            <BoardUnitMenuOverlayContainer unitItem={unitItem} />
+          <div className="flex-ha rounded-3px shadow-md overflow-hidden bg-#aaa">
+            <div
+              className={cz(
+                "relative h-100px min-w-100px max-w-180px",
+                "cursor-pointer",
+              )}
+              onPointerDown={(e) =>
+                unitCardHandlers.handlePointerDown(e, unitItem)
+              }
+            >
+              {catalogItem ? (
+                <img
+                  src={catalogItem.thumbnailUrl}
+                  className="h-full object-cover"
+                  style={{ objectPosition: "left" }}
+                  alt={catalogItem.name}
+                />
+              ) : (
+                <div className="w-150px h-full text-black flex-c text-sm">
+                  error: catalog item not found for {unitItem.catalogKey}
+                </div>
+              )}
+              <BoardUnitMenuOverlayContainer unitItem={unitItem} />
+            </div>
+            {isInstrument && <UnitAdapterControlBar unitItem={unitItem} />}
           </div>
           {isPlaybackCapable && (
             <div className="absolute top-0 right-full">
