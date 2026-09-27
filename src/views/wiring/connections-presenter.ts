@@ -15,7 +15,6 @@ type WireVolumeConnectionSpec = {
   destination: string;
   wireVolumeUnitId: string;
   wireGain: number;
-  wirePan: number;
 };
 
 export const connectionsPresenter = {
@@ -39,7 +38,6 @@ export const connectionsPresenter = {
     const {
       wireConnectionKeys,
       wireGains,
-      wirePans,
       wireAutomationParameterIds,
       portStuffs,
       currentNoteChannelId,
@@ -59,14 +57,12 @@ export const connectionsPresenter = {
           if (subType === "audio") {
             const level = wireGains[connectionKey] ?? 0.5;
             const gain = level * 2;
-            const pan = wirePans[connectionKey] ?? 0;
             return {
               connectionKey,
               source: sourcePortKey,
               destination: destinationPortKey,
               wireVolumeUnitId: getWireVolumeUnitId(connectionKey),
               wireGain: gain,
-              wirePan: pan,
             } satisfies WireVolumeConnectionSpec;
           } else if (subType === "automation") {
             const paramId = wireAutomationParameterIds[connectionKey];
@@ -89,7 +85,6 @@ export const connectionsPresenter = {
     }, [
       wireConnectionKeys,
       wireGains,
-      wirePans,
       wireAutomationParameterIds,
       portStuffs,
       currentNoteChannelId,

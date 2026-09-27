@@ -381,7 +381,4 @@ export const actions = {
       setOrDeleteValue(draft, wireConnectionKey, value);
     });
   },
-  setWirePan(wireConnectionKey: string, value: number) {
-    store.patchWirePans({ [wireConnectionKey]: value });
-  },
 };

@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import { connectionsPresenter } from "@/views/wiring/connections-presenter";
 import { builtinUnitIds } from "@/domain/unit-entries";
 import { ConnectionWithLog } from "@lib/wafer-ex";
-import { HeadlessPanner } from "@lib/port-units";
+import { HeadlessGain } from "@lib/port-units";
 
 const InternalSequencerConnections = () => {
   const internalSequencerConnectionSpecs =
@@ -29,11 +29,10 @@ const BoardItemConnections = () => {
             source={spec.source}
             destination={`${spec.wireVolumeUnitId}.audioInput`}
           />
-          <HeadlessPanner
+          <HeadlessGain
             unitId={spec.wireVolumeUnitId}
             destSpec={spec.destination}
-            volume={spec.wireGain}
-            pan={spec.wirePan}
+            gain={spec.wireGain}
           />
         </Fragment>
       );
