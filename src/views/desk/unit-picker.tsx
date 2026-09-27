@@ -26,22 +26,45 @@ const pickerItemHandlers = {
       const pos = { x: domPosition.x, y: domPosition.y };
       return cardPlacementHelper.clampCardPositionInGraphPlane(pos);
     };
-    createDragSessionEx(e, { coordinateBaseElement }).run({
+
+    let cancelled = false;
+
+    const dragSession = createDragSessionEx(e, { coordinateBaseElement });
+    const keyboardHandlers = {
+      handleKeyDown(e: KeyboardEvent) {
+        if (e.key === "Escape") {
+          cancelled = true;
+          actions.setUnitAddingItem(null);
+        }
+      },
+      setup() {
+        window.addEventListener("keydown", keyboardHandlers.handleKeyDown);
+      },
+      cleanup() {
+        window.removeEventListener("keydown", keyboardHandlers.handleKeyDown);
+      },
+    };
+    keyboardHandlers.setup();
+
+    dragSession.run({
       onStart() {
         actions.setUnitPickerVisible(false);
         windowSystem.minimizeAll();
       },
       onMove(pos) {
+        if (cancelled) return;
         actions.setUnitAddingItem({
           catalogKey,
           position: getCardPosition(pos),
         });
       },
       onUp(pos) {
+        if (cancelled) return;
         actions.addUnit(catalogKey, getCardPosition(pos));
       },
       onEnd() {
         actions.setUnitAddingItem(null);
+        keyboardHandlers.cleanup();
       },
     });
   },
