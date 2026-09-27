@@ -91,13 +91,6 @@ const CommonFeaturesRows = () => {
   return (
     <>
       <CheckBoxLine
-        label="Wire arrow"
-        checked={settings.wireArrow}
-        onChange={(value) =>
-          settingsActions.setSettingValue("wireArrow", value)
-        }
-      />
-      <CheckBoxLine
         label="Wire volume knob"
         checked={settings.wireVolumeKnobs}
         onChange={(value) =>
