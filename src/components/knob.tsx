@@ -8,7 +8,7 @@ export const Knob = ({
   min = 0,
   max = 1,
   step = 0.01,
-  onClick,
+  onTap,
   disabled,
   smaller,
 }: {
@@ -17,7 +17,7 @@ export const Knob = ({
   min?: number;
   max?: number;
   step?: number;
-  onClick?: () => void;
+  onTap?: () => void;
   disabled?: boolean;
   smaller?: boolean;
 }) => {
@@ -29,7 +29,7 @@ export const Knob = ({
       max={max}
       step={step}
       onChange={onChange}
-      onTap={onClick}
+      onTap={onTap}
     >
       <div
         className={cz(
