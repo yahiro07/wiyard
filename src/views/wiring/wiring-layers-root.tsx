@@ -20,7 +20,7 @@ const WiringLayerForegroundParts = () => {
               connectionKey={connectionKey}
             />
           );
-        } else if (sourceSubType === "note" && settings.wireArrow) {
+        } else if (sourceSubType === "note" && settings.wireVolumeKnobs) {
           return (
             <WireArrow key={connectionKey} connectionKey={connectionKey} />
           );
