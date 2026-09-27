@@ -48,7 +48,7 @@ const ControlEffectUnits = () => {
           <HeadlessPanner
             key={controlEffectUnitId}
             unitId={controlEffectUnitId}
-            volume={controlEffect?.volume ?? 0.5}
+            volume={(controlEffect?.volume ?? 0.5) * 2}
             pan={controlEffect?.pan ?? 0}
           />
         );
