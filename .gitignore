@@ -6,5 +6,5 @@ src/unit-inventories.json
 .env
 .vscode/settings.json
 *.code-workspace
-Makefile
+
 public/dev/
