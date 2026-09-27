@@ -76,13 +76,15 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/vsc1/`,
       `file://${waferUnitsLocalDistDir}/orion/`,
 
+      `file://${waferCustomUnitsLocalDir}/ts/dist/sidechain-compressor/`,
+
       `file://${waferUnitsLocalDistDir}/channel-strip/`,
       `file://${waferUnitsLocalDistDir}/fc1/`,
       `file://${waferUnitsLocalDistDir}/mz1/`,
       `file://${waferUnitsLocalDistDir}/mz2/`,
       `file://${waferUnitsLocalDistDir}/noise-mix/`,
       `file://${waferUnitsLocalDistDir}/crusher/`,
-      `file://${waferUnitsLocalDistDir}/toner-compressor/`,
+      // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/toner-panner/`,
       `file://${waferUnitsLocalDistDir}/toner-tilt-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-3band-eq/`,
