@@ -2,6 +2,7 @@ import {
   ConnectionRule,
   createSequencerTickDriverCore,
   HostSystem,
+  HsUnitInstance,
   oxLogger,
   sequencerTickDriverHelper,
 } from "wafer-host/core";
@@ -41,18 +42,40 @@ export function createCustomSequencerTickDriver(
     return units;
   };
 
+  const activeUnitsMap = new Map<string, HsUnitInstance>();
+
   return {
     setBpm: core.setBpm,
     start() {
       if (!running) {
         tickFrameIndex = 0;
         oxLogger.clockingStart();
-        processUnitsStartStop(getTargetUnits(), "start");
+
+        const initialUnits = getTargetUnits();
+        processUnitsStartStop(initialUnits, "start");
+        activeUnitsMap.clear();
+        for (const unit of initialUnits) {
+          activeUnitsMap.set(unit.unitId, unit);
+        }
+
         core.start({
           processScheduling(timeFrom, barFrom, barTo, bpm) {
             oxLogger.clockingFrameStart(tickFrameIndex);
-            const units = getTargetUnits();
-            processUnitsScheduling(units, timeFrom, barFrom, barTo, bpm);
+            const newUnits = getTargetUnits();
+            const newUnitIds = new Set(newUnits.map((unit) => unit.unitId));
+            for (const [_, unit] of activeUnitsMap) {
+              if (!newUnitIds.has(unit.unitId)) {
+                processUnitsStartStop([unit], "stop");
+                activeUnitsMap.delete(unit.unitId);
+              }
+            }
+            for (const unit of newUnits) {
+              if (!activeUnitsMap.has(unit.unitId)) {
+                processUnitsStartStop([unit], "start");
+                activeUnitsMap.set(unit.unitId, unit);
+              }
+            }
+            processUnitsScheduling(newUnits, timeFrom, barFrom, barTo, bpm);
             oxLogger.clockingFrameEnd(tickFrameIndex);
             tickFrameIndex++;
           },
@@ -63,7 +86,9 @@ export function createCustomSequencerTickDriver(
     stop() {
       if (running) {
         core.stop();
-        processUnitsStartStop(getTargetUnits(), "stop");
+        const activeUnits = Array.from(activeUnitsMap.values());
+        processUnitsStartStop(activeUnits, "stop");
+        activeUnitsMap.clear();
         oxLogger.clockingStop();
         running = false;
       }
