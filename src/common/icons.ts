@@ -18,6 +18,7 @@ import {
   PiMusicNoteFill,
   PiPianoKeysFill,
   PiResize,
+  PiSlidersHorizontalFill,
   PiTagSimple,
   PiTrash,
 } from "react-icons/pi";
@@ -55,4 +56,5 @@ export const Icons = {
   Move: IoMove,
   Resize: PiResize,
   PlayNarrow: GiPlayButton,
+  Sliders: PiSlidersHorizontalFill,
 };

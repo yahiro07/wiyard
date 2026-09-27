@@ -10,6 +10,7 @@ import { hostSystem } from "@/domain/host-system-instance";
 import {
   GraphSpec,
   PortStuff,
+  UnitControlEffectItem,
   UnitAddingItem,
   UnitItem,
   UnitStuff,
@@ -27,6 +28,7 @@ import { appConfig } from "@/common/app-config";
 export type StoreState = {
   //included in project data
   unitItems: UnitItem[];
+  unitControlEffects: Record<string, UnitControlEffectItem>;
   wireConnectionKeys: string[];
   wireGains: Record<string, number>; //0~1,center 0.5 for unity gain, store only edited values
   wireAutomationParameterIds: Record<string, string>;
@@ -72,6 +74,7 @@ export type StoreState = {
 
 const blankStoreState: StoreState = {
   unitItems: [],
+  unitControlEffects: {},
   wireConnectionKeys: [],
   wireAutomationParameterIds: {},
   wireGains: {},

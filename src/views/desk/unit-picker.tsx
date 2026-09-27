@@ -12,6 +12,7 @@ import { store, windowSystem } from "@/store/store";
 import { Point } from "@lib/utils/common-types";
 import { domGetters } from "@/common/dom-ids";
 import { cardPlacementHelper } from "@/store/card-placement-helper";
+import { UnitControlEffectBar } from "@/views/unit-card/unit-cards";
 
 const pickerItemHandlers = {
   handlePointerDown(
@@ -88,14 +89,23 @@ const UnitAddingItemView = ({ item }: { item: UnitAddingItem }) => {
   const catalogItem = getCatalogItemWithFallback(item.catalogKey);
   return (
     <div
-      className="absolute -translate-x-1/2 -translate-y-1/2 z-2"
+      className="absolute -translate-x-1/2 -translate-y-1/2 z-2 pointer-events-none"
       style={{ left: item.position.x, top: item.position.y }}
     >
-      <img
-        className="h-100px"
-        src={catalogItem.thumbnailUrl}
-        alt={catalogItem.name}
-      />
+      <div className="h-100px flex-ha rounded-3px shadow-md overflow-hidden bg-#aaa">
+        <img
+          className="h-full min-w-100px max-w-180px object-cover"
+          style={{ objectPosition: "left" }}
+          src={catalogItem.thumbnailUrl}
+          alt={catalogItem.name}
+        />
+        {catalogItem.unitType === "instrument" && (
+          <UnitControlEffectBar
+            unitId=""
+            unitControlEffect={{ volume: 0.5, pan: 0.5 }}
+          />
+        )}
+      </div>
     </div>
   );
 };

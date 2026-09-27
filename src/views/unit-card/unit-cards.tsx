@@ -2,6 +2,7 @@ import {
   BoardUnitItem,
   NoteInputPortUnitItem,
   SpeakerPortUnitItem,
+  UnitControlEffectItem,
   UnitItem,
 } from "@/domain/types";
 import { getCatalogItem, internalUnitCardIcons } from "@/domain/unit-entries";
@@ -22,6 +23,7 @@ import { UnitCardPartControlButton } from "@/views/unit-card/unit-card-part-cont
 import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 import { cz } from "@lib/utils/cz";
 import { Knob } from "@/components/knob";
+import { actions } from "@/store/actions";
 
 const BoardUnitMenuOverlayContainer = ({
   unitItem,
@@ -34,31 +36,50 @@ const BoardUnitMenuOverlayContainer = ({
   return <UnitCardOperationOverlay unitItem={unitItem} />;
 };
 
-const UnitAdapterControlBar = ({ unitItem }: { unitItem: BoardUnitItem }) => {
+export const UnitControlEffectBar = ({
+  unitId,
+  unitControlEffect,
+}: {
+  unitId: string;
+  unitControlEffect: UnitControlEffectItem;
+}) => {
+  const { volume, pan } = unitControlEffect;
   return (
     <div className="w36px h-100px flex-vc gap-2.5 pb-3px">
       <div className="flex-vc gap-1px">
         <div className="text-10px font-500">vol</div>
-        <Knob value={0.5} onChange={() => {}} size={23} />
+        <Knob
+          value={volume}
+          onChange={(v) =>
+            actions.setUnitControlEffectValue(unitId, "volume", v)
+          }
+          onTap={() => actions.setUnitControlEffectValue(unitId, "volume", 0.5)}
+          size={23}
+        />
       </div>
       <div className="flex-vc gap-1px">
         <div className="text-10px font-500">pan</div>
-        <Knob value={0.5} onChange={() => {}} size={23} />
+        <Knob
+          value={pan}
+          onChange={(v) => actions.setUnitControlEffectValue(unitId, "pan", v)}
+          onTap={() => actions.setUnitControlEffectValue(unitId, "pan", 0.5)}
+          size={23}
+        />
       </div>
     </div>
   );
 };
 
 const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
-  const unitStuff = useUnitStuff(unitItem.unitId);
+  const { unitStuffs, unitControlEffects } = store.useSnapshot();
+  const unitStuff = unitStuffs[unitItem.unitId];
+  const unitControlEffect = unitControlEffects[unitItem.unitId];
   const portPositionManager = useUnitCardPortPositionManager(unitItem);
   const catalogItem = getCatalogItem(unitItem.catalogKey);
   const inputPortSpecs = unitStuff?.inputPortSpecs;
   const outputPortSpecs = unitStuff?.outputPortSpecs;
   const isPlaybackCapable =
     unitPlaybackCapabilityFlags[unitItem.catalogKey] ?? false;
-
-  const isInstrument = catalogItem?.unitType === "instrument";
 
   renderLog("BoardUnitCard", unitItem.unitId);
   return (
@@ -99,7 +120,12 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
               )}
               <BoardUnitMenuOverlayContainer unitItem={unitItem} />
             </div>
-            {isInstrument && <UnitAdapterControlBar unitItem={unitItem} />}
+            {unitControlEffect && (
+              <UnitControlEffectBar
+                unitId={unitItem.unitId}
+                unitControlEffect={unitControlEffect}
+              />
+            )}
           </div>
           {isPlaybackCapable && (
             <div className="absolute top-0 right-full">

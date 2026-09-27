@@ -88,3 +88,8 @@ export type GraphSpec = {
   contentScaling: number;
   planeSize: Size;
 };
+
+export type UnitControlEffectItem = {
+  volume: number;
+  pan: number;
+};
