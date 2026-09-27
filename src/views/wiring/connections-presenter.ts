@@ -1,6 +1,12 @@
-import { splitConnectionKey, getWireVolumeUnitId } from "@/domain/port-helpers";
+import {
+  splitConnectionKey,
+  decodeWireConnectionKey,
+} from "@/domain/port-helpers";
+import { BoardUnitItem } from "@/domain/types";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
+import { isDefined } from "@lib/utils/general-helper";
 import { useMemo } from "react";
 
 type ConnectionSpec = {
@@ -9,11 +15,10 @@ type ConnectionSpec = {
   destination: string;
 };
 
-type WireVolumeConnectionSpec = {
+export type WireVolumeConnectionSpec = {
   connectionKey: string;
   source: string;
   destination: string;
-  wireVolumeUnitId: string;
   wireGain: number;
 };
 
@@ -33,6 +38,28 @@ export const connectionsPresenter = {
         })
         .filter(Boolean);
     }, [noteInputPortUnitItems]);
+  },
+  useControlEffectCompatibleUnitItems(): BoardUnitItem[] {
+    const { unitItems } = store.useSnapshot();
+    return unitItems.filter((item) => {
+      if (item.type !== "board") return false;
+      return controlEffectUnitGetters.isUnitControlEffectCompatible(
+        item.catalogKey,
+      );
+    }) as BoardUnitItem[];
+  },
+  useControlEffectUnitConnectionSpecs(): ConnectionSpec[] {
+    const targetUnitItems = this.useControlEffectCompatibleUnitItems();
+    return targetUnitItems
+      .map((item) => {
+        const controlEffectUnitId =
+          controlEffectUnitGetters.getControlEffectUnitId(item.unitId);
+        const source = `${item.unitId}.audioOutput`;
+        const destination = `${controlEffectUnitId}.audioInput`;
+        const connectionKey = `${source}>${destination}`;
+        return { connectionKey, source, destination };
+      })
+      .filter(isDefined());
   },
   useBoardItemConnectionSpecs(): (ConnectionSpec | WireVolumeConnectionSpec)[] {
     const {
@@ -57,11 +84,18 @@ export const connectionsPresenter = {
           if (subType === "audio") {
             const level = wireGains[connectionKey] ?? 0.5;
             const gain = level * 2;
+            let source = sourcePortKey;
+            const { sourceUnitId, sourcePortId, destinationPortKey } =
+              decodeWireConnectionKey(connectionKey);
+            if (sourcePortId === "audioOutput") {
+              source = `${sourceUnitId}_controlEffect.audioOutput`;
+            }
+            const modConnectionKey = `${source}>${destinationPortKey}`;
+
             return {
-              connectionKey,
-              source: sourcePortKey,
+              connectionKey: modConnectionKey,
+              source,
               destination: destinationPortKey,
-              wireVolumeUnitId: getWireVolumeUnitId(connectionKey),
               wireGain: gain,
             } satisfies WireVolumeConnectionSpec;
           } else if (subType === "automation") {

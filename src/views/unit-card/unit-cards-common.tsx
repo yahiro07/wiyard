@@ -1,7 +1,7 @@
 import { Icons } from "@/common/icons";
 import { BoardUnitItem, UnitItem, UnitPortSpec } from "@/domain/types";
-import { getCatalogItem } from "@/domain/unit-entries";
 import { actions } from "@/store/actions";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 import { store } from "@/store/store";
 import { useUnitCardPortPositionManager } from "@/views/unit-card/unit-card-port-position-manager";
 import { UnitPortsColumn } from "@/views/unit-card/unit-ports";
@@ -19,10 +19,11 @@ export const UnitCardOperationOverlay = ({
 }: {
   unitItem: BoardUnitItem;
 }) => {
-  const buttonClass = "mx-1 my-1.5 cursor-pointer";
-  const catalogItem = getCatalogItem(unitItem.catalogKey);
-  const isInstrument = catalogItem?.unitType === "instrument";
+  const isControlEffectCompatible =
+    controlEffectUnitGetters.isUnitControlEffectCompatible(unitItem.catalogKey);
   const closeOverlay = () => actions.setMenuTargetUnit(null);
+  const buttonClass = "mx-1 my-1.5 cursor-pointer";
+
   return (
     <div
       className="absolute-full bg-black/35"
@@ -43,23 +44,21 @@ export const UnitCardOperationOverlay = ({
           <Icons.Trash size={24} />
         </button>
       </div>
-      <div className="absolute top-0 right-0">
-        <button
-          type="button"
-          className={buttonClass}
-          onPointerDown={(e) => {
-            actions.toggleUnitControlEffect(unitItem.unitId);
-            closeOverlay();
-            e.stopPropagation();
-          }}
-        >
-          <Icons.Sliders size={24} />
-        </button>
-      </div>
-      <div className="flex-v h-full">
-        <div className="flex justify-between"></div>
-        {isInstrument && <div className="flex justify-end"></div>}
-      </div>
+      {isControlEffectCompatible && (
+        <div className="absolute top-0 right-0">
+          <button
+            type="button"
+            className={buttonClass}
+            onPointerDown={(e) => {
+              actions.toggleUnitControlEffect(unitItem.unitId);
+              closeOverlay();
+              e.stopPropagation();
+            }}
+          >
+            <Icons.Sliders size={24} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

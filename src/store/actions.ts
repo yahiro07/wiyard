@@ -24,12 +24,13 @@ import {
   UnitStuff,
   windowIds,
 } from "@/domain/types";
-import { CatalogKey, getCatalogItem } from "@/domain/unit-entries";
+import { CatalogKey } from "@/domain/unit-entries";
 import { unitIdHelper } from "@/domain/unit-id-helper";
 import { cardPlacementHelper } from "@/store/card-placement-helper";
 import { commonGetters } from "@/store/common-getters";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
@@ -255,8 +256,9 @@ export const actions = {
       cardPosition: position,
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
-    const catalogItem = getCatalogItem(catalogKey);
-    if (catalogItem?.unitType === "instrument") {
+    const isControlEffectEnabled =
+      controlEffectUnitGetters.isUnitControlEffectDefaultEnabled(catalogKey);
+    if (isControlEffectEnabled) {
       store.patchUnitControlEffects({ [unitId]: { volume: 0.5, pan: 0.5 } });
     }
   },

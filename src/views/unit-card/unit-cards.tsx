@@ -53,7 +53,7 @@ export const UnitControlEffectBar = ({
           onChange={(v) =>
             actions.setUnitControlEffectValue(unitId, "volume", v)
           }
-          onTap={() => actions.setUnitControlEffectValue(unitId, "volume", 0.5)}
+          // onTap={() => actions.setUnitControlEffectValue(unitId, "volume", 0.5)}
           size={23}
         />
       </div>
@@ -62,7 +62,7 @@ export const UnitControlEffectBar = ({
         <Knob
           value={pan}
           onChange={(v) => actions.setUnitControlEffectValue(unitId, "pan", v)}
-          onTap={() => actions.setUnitControlEffectValue(unitId, "pan", 0.5)}
+          // onTap={() => actions.setUnitControlEffectValue(unitId, "pan", 0.5)}
           size={23}
         />
       </div>

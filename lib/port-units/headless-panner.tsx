@@ -65,7 +65,7 @@ export const HeadlessPanner = ({
   pan,
 }: {
   unitId: string;
-  destSpec: string;
+  destSpec?: string;
   volume: number;
   pan: number;
 }) => {

@@ -9,7 +9,7 @@ export const HeadlessGain = ({
   gain,
 }: {
   unitId: string;
-  destSpec: string;
+  destSpec?: string;
   gain: number;
 }) => {
   const [unit, setUnit] = useState<HsUnitInstance | null>(null);

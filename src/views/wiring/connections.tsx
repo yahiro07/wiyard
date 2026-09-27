@@ -1,10 +1,14 @@
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
-import { Fragment } from "react";
-import { connectionsPresenter } from "@/views/wiring/connections-presenter";
+import { useMemo } from "react";
+import {
+  connectionsPresenter,
+  WireVolumeConnectionSpec,
+} from "@/views/wiring/connections-presenter";
 import { builtinUnitIds } from "@/domain/unit-entries";
 import { ConnectionWithLog } from "@lib/wafer-ex";
-import { HeadlessGain } from "@lib/port-units";
+import { HeadlessGain, HeadlessPanner } from "@lib/port-units";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 
 const InternalSequencerConnections = () => {
   const internalSequencerConnectionSpecs =
@@ -18,24 +22,69 @@ const InternalSequencerConnections = () => {
   ));
 };
 
+const ControlEffectConnections = () => {
+  const controlEffectConnectionSpecs =
+    connectionsPresenter.useControlEffectUnitConnectionSpecs();
+  return controlEffectConnectionSpecs.map((spec) => (
+    <ConnectionWithLog
+      key={spec.connectionKey}
+      source={spec.source}
+      destination={spec.destination}
+    />
+  ));
+};
+
+const ControlEffectUnits = () => {
+  const targetUnitItems =
+    connectionsPresenter.useControlEffectCompatibleUnitItems();
+  const { unitControlEffects } = store.useSnapshot();
+  return (
+    <>
+      {targetUnitItems.map((item) => {
+        const controlEffect = unitControlEffects[item.unitId];
+        const controlEffectUnitId =
+          controlEffectUnitGetters.getControlEffectUnitId(item.unitId);
+        return (
+          <HeadlessPanner
+            key={controlEffectUnitId}
+            unitId={controlEffectUnitId}
+            volume={controlEffect?.volume ?? 0.5}
+            pan={controlEffect?.pan ?? 0}
+          />
+        );
+      })}
+    </>
+  );
+};
+
+let seqWireVolumeUnitIndex = 0;
+const WireConnectionWithKnob = ({
+  spec,
+}: {
+  spec: WireVolumeConnectionSpec;
+}) => {
+  const wireVolumeUnitId = useMemo(() => `wg_${seqWireVolumeUnitIndex++}`, []);
+  return (
+    <>
+      <ConnectionWithLog
+        source={spec.source}
+        destination={`${wireVolumeUnitId}.audioInput`}
+      />
+      <HeadlessGain unitId={wireVolumeUnitId} gain={spec.wireGain} />
+      <ConnectionWithLog
+        source={`${wireVolumeUnitId}.audioOutput`}
+        destination={spec.destination}
+      />
+    </>
+  );
+};
+
 const BoardItemConnections = () => {
   const boardItemConnectionSpecs =
     connectionsPresenter.useBoardItemConnectionSpecs();
   return boardItemConnectionSpecs.map((spec) => {
     if ("wireGain" in spec) {
-      return (
-        <Fragment key={spec.connectionKey}>
-          <ConnectionWithLog
-            source={spec.source}
-            destination={`${spec.wireVolumeUnitId}.audioInput`}
-          />
-          <HeadlessGain
-            unitId={spec.wireVolumeUnitId}
-            destSpec={spec.destination}
-            gain={spec.wireGain}
-          />
-        </Fragment>
-      );
+      return <WireConnectionWithKnob key={spec.connectionKey} spec={spec} />;
     } else {
       return (
         <ConnectionWithLog
@@ -64,6 +113,8 @@ export const UnitConnectionsRoot = () => {
   return (
     <>
       <InternalSequencerConnections />
+      <ControlEffectConnections />
+      <ControlEffectUnits />
       <BoardItemConnections />
       <KeyboardConnection />
       <ConnectionWithLog
