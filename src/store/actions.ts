@@ -28,17 +28,20 @@ import { CatalogKey } from "@/domain/unit-entries";
 import { unitIdHelper } from "@/domain/unit-id-helper";
 import { cardPlacementHelper } from "@/store/card-placement-helper";
 import { commonGetters } from "@/store/common-getters";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
-import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 
 const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
     const viewSize = store.state.unitStuffs[windowId]?.viewSize;
     if (viewSize) {
-      const baseHeight = 220;
+      const maxHeight = 220;
       const maxWidth = 440;
-      let scale = Math.min(baseHeight / viewSize.height);
+      let scale = 1;
+      if (viewSize.height > maxHeight) {
+        scale = maxHeight / viewSize.height;
+      }
       if (viewSize.width * scale > maxWidth) {
         scale = maxWidth / viewSize.width;
       }
