@@ -16,7 +16,7 @@ import { usePlaybackController } from "@/periphery/playback-controller";
 function useUpdateDebugValues() {
   const { graphSpec } = store.useSnapshot();
   useEffect(() => {
-    store.setDebugObject(graphSpec);
+    // store.setDebugObject(graphSpec);
   }, [graphSpec]);
 }
 

@@ -79,10 +79,7 @@ const DeskBoardPlane = () => {
     <FieldSightPlaneWrapper>
       <div
         data-board-pan-target="true"
-        className={cz(
-          "size-full relative bd-red",
-          "[&>div]:(absolute top-0 left-0)",
-        )}
+        className={cz("size-full relative", "[&>div]:(absolute top-0 left-0)")}
       >
         <BoardBackground />
         <GraphPlaneRoot />
