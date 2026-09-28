@@ -202,9 +202,10 @@ export const InnerDockRoot = () => {
 };
 
 export const BottomBarWithDock = () => {
+  const { uiTheme } = store.useSnapshot();
   if (appConfig.dockPlacement !== "bottomBar") return;
   return (
-    <div className="py-2.5 bg-gray-600 flex-c">
+    <div className="py-2.5 flex-c" style={{ background: uiTheme.titleBarBg }}>
       <ScalerBoxSC scale={0.9}>
         {false ? <DockContentsCentered /> : <DockContents />}
       </ScalerBoxSC>

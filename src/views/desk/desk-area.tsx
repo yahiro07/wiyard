@@ -13,11 +13,10 @@ import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
 import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
-import { SettingsPanelRoot } from "@/views/desk/settings-panel";
+import { SettingsPanelRoot } from "@/views/settings/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
-import { desktopTheme } from "@/common/desktop-theme";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
-import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
+import { GraphFloatUpButton } from "@/views/controls/graph-float-up-button";
 import { GraphPlaneRoot } from "@/views/graph/graph-plane";
 import { cz } from "@lib/utils/cz";
 import { appEnvs } from "@/common/app-envs";
@@ -36,20 +35,21 @@ const FieldSightPlaneWrapper = ({
 };
 
 const BoardBackground = () => {
-  const { bgColor, bgImageUrl, bgMix } = desktopTheme;
+  const { boardBgColor, boardBgImageUrl, boardBgMix } =
+    store.useSnapshot().uiTheme;
   return (
     <div
       className="size-full pointer-events-none"
-      style={{ background: bgColor }}
+      style={{ background: boardBgColor }}
     >
-      {bgImageUrl && (
+      {boardBgImageUrl && (
         <div
           className="w-full h-full"
           style={{
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            backgroundImage: `url(${bgImageUrl})`,
-            opacity: bgMix,
+            backgroundImage: `url(${boardBgImageUrl})`,
+            opacity: boardBgMix,
           }}
         />
       )}
@@ -145,13 +145,14 @@ function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
 }
 
 export const DeskArea = () => {
-  const { projectLoadedIndex } = store.useSnapshot();
+  const { projectLoadedIndex, uiTheme } = store.useSnapshot();
   return (
     <div
       // if a new project loaded, refresh all dom elements related to units
       key={projectLoadedIndex}
       // id={domIds.deskArea}
-      className="grow relative bg-#808488 overflow-hidden"
+      className="grow relative overflow-hidden"
+      style={{ background: uiTheme.deskAreaBg }}
       onPointerDown={(e) => {
         if (checkSightTarget(e)) {
           sightHandlers.onPointerDown(e.nativeEvent);

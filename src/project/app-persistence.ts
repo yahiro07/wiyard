@@ -1,4 +1,8 @@
-import { assignTyped, pickObjectMembers } from "@lib/utils/array-object-helper";
+import {
+  assignTyped,
+  copyObjectWithOverwrite,
+  pickObjectMembers,
+} from "@lib/utils/array-object-helper";
 import { tryParseJson, tryParseJsonOrNull } from "@lib/utils/general-helper";
 import { appEnvs } from "@/common/app-envs";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
@@ -12,14 +16,16 @@ import { ProjectData } from "@/project/project-types";
 import { projectsModel } from "@/project/projects-model";
 import { sharedUrlSupport } from "@/project/shared-url-support";
 import { store } from "@/store/store";
+import { defaultUiTheme, UiTheme } from "@/common/ui-theme";
 
 type AppSessionStates = {
   midiInEnabled: boolean;
   masterVolume: number;
   settings: AppSettings;
+  uiTheme: UiTheme;
 };
 
-type PersistenceData = {
+export type PersistenceData = {
   projectData: ProjectData;
   sessionStates: AppSessionStates;
   controlSurfaceState: Record<string, any> | null;
@@ -27,24 +33,35 @@ type PersistenceData = {
 
 const helpers = {
   pickSessionStates(storeState: AppSessionStates) {
-    return pickObjectMembers(storeState, {
-      midiInEnabled: 1,
-      masterVolume: 1,
-      settings: 1,
-    });
+    const uiTheme = { ...storeState.uiTheme };
+    if (uiTheme.boardBgImageUrl?.startsWith("data:")) {
+      uiTheme.boardBgImageUrl = "CUSTOM";
+    }
+    return {
+      ...pickObjectMembers(storeState, {
+        midiInEnabled: 1,
+        masterVolume: 1,
+        settings: 1,
+      }),
+      uiTheme,
+    };
   },
   fixSessionStatesToLoad(sessionStates: AppSessionStates) {
-    const { midiInEnabled, masterVolume, settings } = sessionStates;
-    const settingsKeys = Object.keys(
-      defaultAppSettings,
-    ) as (keyof AppSettings)[];
+    const {
+      midiInEnabled,
+      masterVolume,
+      settings,
+      uiTheme: inputUiTheme,
+    } = sessionStates;
+    const uiTheme = { ...inputUiTheme };
+    if (uiTheme.boardBgImageUrl === "CUSTOM") {
+      uiTheme.boardBgImageUrl = localStorage.getItem("boardBgImageUrl") ?? null;
+    }
     return {
       midiInEnabled,
       masterVolume,
-      settings: {
-        ...defaultAppSettings,
-        ...pickObjectMembers(settings, settingsKeys, { skipUndefined: true }),
-      },
+      settings: copyObjectWithOverwrite(defaultAppSettings, settings),
+      uiTheme: copyObjectWithOverwrite(defaultUiTheme, uiTheme),
     };
   },
 };
