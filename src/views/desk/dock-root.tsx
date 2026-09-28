@@ -85,6 +85,24 @@ const BuiltinDockItemsView = ({ target }: { target: "head" | "rest" }) => {
   );
 };
 
+const ElevationButton = () => {
+  const { graphAreaElevated } = store.useSnapshot();
+  return (
+    <WindowDockItemView
+      title="elevation"
+      onClick={actions.toggleGraphAreaElevated}
+      children={
+        <DockIcon
+          icon={Icons.StackForward}
+          bgColor={graphAreaElevated ? "#6bf" : "#909098"}
+          textColor="#fff"
+          fontSize={30}
+        />
+      }
+    />
+  );
+};
+
 const DockContents = () => {
   return (
     <div
@@ -110,6 +128,7 @@ const DockContents = () => {
             />
           }
         />
+        {false && <ElevationButton />}
         <WindowDockItemView
           title="plugin picker"
           onClick={actions.toggleUnitPickerVisible}
