@@ -24,6 +24,7 @@ import {
 import { ProjectLoadErrorStatus } from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
 import { appConfig } from "@/common/app-config";
+import { defaultUiTheme, UiTheme } from "@/common/ui-theme";
 
 export type StoreState = {
   //included in project data
@@ -47,6 +48,7 @@ export type StoreState = {
   midiInEnabled: boolean;
   masterVolume: number;
   settings: AppSettings;
+  uiTheme: UiTheme;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
@@ -93,6 +95,7 @@ const blankStoreState: StoreState = {
   midiInEnabled: false,
   masterVolume: 0.5,
   settings: defaultAppSettings,
+  uiTheme: defaultUiTheme,
   //
   unitStuffs: {},
   portStuffs: {},

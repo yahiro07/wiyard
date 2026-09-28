@@ -1,4 +1,3 @@
-import { uiTheme } from "@/common/ui-theme";
 import { domIds } from "@/common/dom-ids";
 import { Icons } from "@/common/icons";
 import { store } from "@/store/store";
@@ -15,7 +14,7 @@ const useGraphAreaElevated = () => {
 };
 
 const GraphPlaneBackgroundBoardBg = () => {
-  const { boardSize, graphSpec } = store.useSnapshot();
+  const { boardSize, graphSpec, uiTheme } = store.useSnapshot();
   const { boardBgColor, boardBgImageUrl, boardBgMix } = uiTheme;
 
   const bgTx = graphSpec.planeSize.width / 2 - boardSize.width / 2;
@@ -46,7 +45,7 @@ const GraphPlaneBackgroundBoardBg = () => {
 };
 
 const GraphPlaneBackground = () => {
-  const { settings } = store.useSnapshot();
+  const { settings, uiTheme } = store.useSnapshot();
   const graphAreaElevated = useGraphAreaElevated();
   const { graphBgColor, graphBgOpacity } = uiTheme;
   return (

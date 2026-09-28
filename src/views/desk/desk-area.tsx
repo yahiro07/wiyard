@@ -15,7 +15,6 @@ import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
-import { uiTheme } from "@/common/ui-theme";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
 import { GraphPlaneRoot } from "@/views/graph/graph-plane";
@@ -36,7 +35,8 @@ const FieldSightPlaneWrapper = ({
 };
 
 const BoardBackground = () => {
-  const { boardBgColor, boardBgImageUrl, boardBgMix } = uiTheme;
+  const { boardBgColor, boardBgImageUrl, boardBgMix } =
+    store.useSnapshot().uiTheme;
   return (
     <div
       className="size-full pointer-events-none"

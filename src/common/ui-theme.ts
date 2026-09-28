@@ -1,5 +1,3 @@
-import { appEnvs } from "@/common/app-envs";
-
 export type UiTheme = {
   boardBgColor: string;
   boardBgImageUrl: string | null;
@@ -53,6 +51,7 @@ export const uiThemes = {
   },
 } satisfies Record<string, UiTheme>;
 
-export const uiTheme = appEnvs.isDevelopment
-  ? uiThemes.theme5
-  : uiThemes.theme1;
+// export const uiTheme = appEnvs.isDevelopment
+//   ? uiThemes.theme5
+//   : uiThemes.theme1;
+export const defaultUiTheme: UiTheme = uiThemes.theme1;
