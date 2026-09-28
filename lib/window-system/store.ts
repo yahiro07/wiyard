@@ -83,7 +83,9 @@ export const actions = {
   },
   toggleMinimizeAll() {
     const someVisible = Object.entries(storeSlice.get().windowSpecs).some(
-      ([id, spec]) => id !== "pianoRollWindow" && spec.status === "visible",
+      ([_id, spec]) =>
+        //_id !== "pianoRollWindow" &&
+        spec.status === "visible",
     );
     if (someVisible) {
       actions.minimizeAll();
