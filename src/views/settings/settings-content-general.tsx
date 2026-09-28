@@ -3,9 +3,9 @@ import { GraphElevationUnderlay } from "@/common/appearance";
 import { Icons } from "@/common/icons";
 import { CheckBoxLine } from "@/components/check-box-line";
 import { store } from "@/store/store";
+import { Button } from "@/views/settings/components/button";
 import { cz } from "@lib/utils/cz";
-import { useHandleClickOutside } from "@lib/utils/use-handle-click-outside";
-import { ReactNode, useRef } from "react";
+import { ReactNode } from "react";
 
 const settingsActions = {
   setSettingValue<K extends keyof AppSettings>(key: K, value: AppSettings[K]) {
@@ -28,37 +28,6 @@ const SettingRow = ({
       </div>
       <div>{children}</div>
     </div>
-  );
-};
-
-const Button = ({
-  active,
-  disabled,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) => {
-  const styles = {
-    base: "px-1 h-28px rounded-3px bg-gray-400 min-w-34px cursor-pointer text-12px font-500",
-    active: "!bg-#8ae text-white",
-    disabled: "opacity-30 pointer-events-none",
-  };
-  return (
-    <button
-      className={cz(
-        styles.base,
-        active && styles.active,
-        disabled && styles.disabled,
-      )}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </button>
   );
 };
 
@@ -165,72 +134,34 @@ const AppearanceRows = () => {
   );
 };
 
-const SettingsPanel = () => {
+export const SettingsContent_General = () => {
   return (
-    <div className="w-340px m-2">
-      <div className="flex-ha gap-2px px-1.5 h-30px text-white bg-gray-500">
-        <Icons.Settings size={18} />
-        <h3 className="font-500 text-17px">Settings</h3>
-      </div>
-      <div className="bg-#ccc p-3 text-#444 min-h-400px">
-        <div className="flex-v gap-2">
-          <SettingRow header="UI Scaling">
-            <UiScalingSelectorButtons />
-          </SettingRow>
-          <div className="flex-v">
-            <SettingRow header="Common Features" />
-            <div className="ml-3">
-              <div className="flex-v gap-1 mt-1">
-                <CommonFeaturesRows />
-                <AppearanceRows />
-              </div>
-            </div>
+    <div className="flex-v gap-2">
+      <SettingRow header="UI Scaling">
+        <UiScalingSelectorButtons />
+      </SettingRow>
+      <div className="flex-v">
+        <SettingRow header="Common Features" />
+        <div className="ml-3">
+          <div className="flex-v gap-1 mt-1">
+            <CommonFeaturesRows />
+            <AppearanceRows />
           </div>
-          {false && (
-            <div className="flex-v">
-              <SettingRow header="Current Project" />
-              <div className="ml-3">
-                <div className="flex-v gap-1 mt-1">
-                  <CheckBoxLine label="Piano roll" checked={false} />
-                  <CheckBoxLine label="Automation" checked={false} />
-                  <CheckBoxLine label="Control surface" checked={false} />
-                  <CheckBoxLine label="Keyboard" checked={false} />
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
-    </div>
-  );
-};
-
-const SettingsPanelOuter = () => {
-  const baseDivRef = useRef<HTMLDivElement>(null);
-  useHandleClickOutside(
-    baseDivRef,
-    () => {
-      store.setSettingsPanelVisible(false);
-    },
-    {
-      targetMethod: "pointerdown",
-      withStopPropagation: true,
-      excludeButtons: true,
-    },
-  );
-  return (
-    <div ref={baseDivRef}>
-      <SettingsPanel />
-    </div>
-  );
-};
-
-export const SettingsPanelRoot = () => {
-  const { settingsPanelVisible } = store.useSnapshot();
-  if (!settingsPanelVisible) return null;
-  return (
-    <div className="absolute top-0 right-0">
-      <SettingsPanelOuter />
+      {false && (
+        <div className="flex-v">
+          <SettingRow header="Current Project" />
+          <div className="ml-3">
+            <div className="flex-v gap-1 mt-1">
+              <CheckBoxLine label="Piano roll" checked={false} />
+              <CheckBoxLine label="Automation" checked={false} />
+              <CheckBoxLine label="Control surface" checked={false} />
+              <CheckBoxLine label="Keyboard" checked={false} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

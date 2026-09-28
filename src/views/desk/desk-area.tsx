@@ -13,7 +13,7 @@ import { PartControlBarRoot } from "@/views/controls/part-control-bar";
 import { PartControlBarRoot2 } from "@/views/controls/part-control-bar-2";
 import { InnerDockRoot } from "@/views/desk/dock-root";
 import { ControlButtonsInField } from "@/views/controls/control-buttons";
-import { SettingsPanelRoot } from "@/views/desk/settings-panel";
+import { SettingsPanelRoot } from "@/views/settings/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
 import { GraphFloatUpButton } from "@/views/controls/graph-float-up-button";
