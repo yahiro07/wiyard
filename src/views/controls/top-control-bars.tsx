@@ -8,6 +8,8 @@ import {
 import { ProjectButtons } from "@/views/controls/project-buttons";
 
 export const TopBar = () => {
+  const { uiTheme } = store.useSnapshot();
+
   const handleClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       // windowSystem.toggleMinimizeAll();
@@ -21,7 +23,8 @@ export const TopBar = () => {
   };
   return (
     <div
-      className="h-50px bg-gray-600 relative flex-ha px-2 justify-between"
+      className="h-50px relative flex-ha px-2 justify-between"
+      style={{ background: uiTheme.titleBarBg }}
       onClick={handleClick}
     >
       <div className="invisible">

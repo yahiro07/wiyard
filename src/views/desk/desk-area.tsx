@@ -145,13 +145,14 @@ function checkSightTarget(e: React.SyntheticEvent<HTMLDivElement>) {
 }
 
 export const DeskArea = () => {
-  const { projectLoadedIndex } = store.useSnapshot();
+  const { projectLoadedIndex, uiTheme } = store.useSnapshot();
   return (
     <div
       // if a new project loaded, refresh all dom elements related to units
       key={projectLoadedIndex}
       // id={domIds.deskArea}
-      className="grow relative bg-#808488 overflow-hidden"
+      className="grow relative overflow-hidden"
+      style={{ background: uiTheme.deskAreaBg }}
       onPointerDown={(e) => {
         if (checkSightTarget(e)) {
           sightHandlers.onPointerDown(e.nativeEvent);
