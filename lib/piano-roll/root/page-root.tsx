@@ -22,6 +22,7 @@ import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
+import { SideControlBar } from "./side-control-bar";
 
 const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
 
@@ -337,9 +338,16 @@ const PageRootInner = () => {
       style={colorStyle({ bg: uiColors.clPanelBody })}
     >
       <TopBar />
-      {isPatternView && <PatternEditorView />}
-      {!isPatternView && diatonicLanesEnabled && <DiatonicLanesEditorView />}
-      {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
+      <div className="w-full grow flex-h gap-2 overflow-hidden">
+        <div className="grow">
+          {isPatternView && <PatternEditorView />}
+          {!isPatternView && diatonicLanesEnabled && (
+            <DiatonicLanesEditorView />
+          )}
+          {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
+        </div>
+        <SideControlBar />
+      </div>
     </div>
   );
 };

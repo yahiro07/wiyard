@@ -23,7 +23,7 @@ export const EditorCommonLayout = ({
     <div
       className={cz(
         "overflow-hidden relative",
-        "w-full grow",
+        "w-full h-full grow",
         "[&>div]:overflow-hidden",
       )}
       style={{
