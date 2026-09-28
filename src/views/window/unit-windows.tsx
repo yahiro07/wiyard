@@ -15,6 +15,8 @@ import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/play
 import { commonGetters } from "@/store/common-getters";
 import { renderLog } from "@lib/utils/render-log";
 import { ReactUnitFrameWithLog, UnitFrameScaledWithLog } from "@lib/wafer-ex";
+import { useUnitStuff } from "@/views/unit-card/unit-cards-common";
+import { UnitPresetsMenuButton } from "@/views/window/presets-menu";
 
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(
@@ -46,6 +48,7 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
     sourceNoteChannelGetters.useUnitSourceActiveNoteChannelIndex(unitId);
   const isPlaybackCapable = unitPlaybackCapabilityFlags[catalogKey] ?? false;
   const viewActive = commonGetters.useWindowVisible(unitId);
+  const unitStuff = useUnitStuff(unitId);
 
   renderLog("BoardUnitWindow", unitId);
 
@@ -67,6 +70,11 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
             </div>
           )}
         </>
+      }
+      topBarInnerControls2={
+        unitStuff?.presetProvider ? (
+          <UnitPresetsMenuButton presetProvider={unitStuff.presetProvider} />
+        ) : undefined
       }
       // topBarInnerControls2={
       //   <>

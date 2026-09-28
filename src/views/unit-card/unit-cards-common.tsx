@@ -1,5 +1,10 @@
 import { Icons } from "@/common/icons";
-import { BoardUnitItem, UnitItem, UnitPortSpec } from "@/domain/types";
+import {
+  BoardUnitItem,
+  UnitItem,
+  UnitPortSpec,
+  UnitStuff,
+} from "@/domain/types";
 import { actions } from "@/store/actions";
 import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 import { store } from "@/store/store";
@@ -9,7 +14,7 @@ import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
 
-export function useUnitStuff(unitId: string) {
+export function useUnitStuff(unitId: string): UnitStuff | undefined {
   const { unitStuffs } = store.useSnapshot();
   return unitStuffs[unitId];
 }

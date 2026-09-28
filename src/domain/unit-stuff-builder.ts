@@ -56,5 +56,6 @@ export function buildUnitStuffLoaded(unitInstance: HsUnitInstance): UnitStuff {
     outputPortSpecs,
     automationParameterSpecs,
     outputPortsOptInFlags,
+    presetProvider: unitInstance.presetProvider,
   };
 }
