@@ -1,4 +1,4 @@
-import { desktopTheme } from "@/common/desktop-theme";
+import { uiTheme } from "@/common/ui-theme";
 import { domIds } from "@/common/dom-ids";
 import { Icons } from "@/common/icons";
 import { store } from "@/store/store";
@@ -16,7 +16,7 @@ const useGraphAreaElevated = () => {
 
 const GraphPlaneBackgroundBoardBg = () => {
   const { boardSize, graphSpec } = store.useSnapshot();
-  const { bgColor, bgImageUrl, bgMix } = desktopTheme;
+  const { boardBgColor, boardBgImageUrl, boardBgMix } = uiTheme;
 
   const bgTx = graphSpec.planeSize.width / 2 - boardSize.width / 2;
   const bgTy = graphSpec.planeSize.height / 2 - boardSize.height / 2;
@@ -26,18 +26,18 @@ const GraphPlaneBackgroundBoardBg = () => {
       style={{
         width: boardSize.width,
         height: boardSize.height,
-        background: bgColor,
+        background: boardBgColor,
         transform: `translate(${bgTx}px, ${bgTy}px)`,
       }}
     >
-      {bgImageUrl && (
+      {boardBgImageUrl && (
         <div
           className="w-full h-full"
           style={{
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            backgroundImage: `url(${bgImageUrl})`,
-            opacity: bgMix,
+            backgroundImage: `url(${boardBgImageUrl})`,
+            opacity: boardBgMix,
           }}
         />
       )}
@@ -48,7 +48,7 @@ const GraphPlaneBackgroundBoardBg = () => {
 const GraphPlaneBackground = () => {
   const { settings } = store.useSnapshot();
   const graphAreaElevated = useGraphAreaElevated();
-  const { graphBgColor, graphBgOpacity } = desktopTheme;
+  const { graphBgColor, graphBgOpacity } = uiTheme;
   return (
     <div className="size-full rounded-12px relative overflow-hidden">
       {graphAreaElevated && settings.graphElevationUnderlay === "solid" && (
