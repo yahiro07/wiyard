@@ -7,6 +7,10 @@ export const ColorEditButton = ({
   onChange: (color: string) => void;
   size?: number;
 }) => {
+  if (color.length === 4) {
+    const [_, r, g, b] = color.split("");
+    color = `#${r}${r}${g}${g}${b}${b}`;
+  }
   return (
     <div
       className="relative rounded-full overflow-hidden"

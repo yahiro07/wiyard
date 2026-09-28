@@ -32,8 +32,8 @@ export const uiThemes = {
     boardBgColor: "#000",
     boardBgImageUrl: "/dev/bg/bg5.jpg",
     boardBgMix: 1,
-    graphBgColor: "#0086",
-    graphBgOpacity: 1,
+    graphBgColor: "#008",
+    graphBgOpacity: 0.4,
   },
   theme4: {
     boardBgColor: "#fff",
