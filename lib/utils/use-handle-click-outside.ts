@@ -4,8 +4,9 @@ export function useHandleClickOutside(
   ref: React.RefObject<HTMLElement | null>,
   callback: () => void,
   options?: {
-    withPropagation?: boolean;
+    withStopPropagation?: boolean;
     targetMethod?: "click" | "pointerdown";
+    excludeButtons?: boolean;
   },
 ) {
   const targetMethod = options?.targetMethod ?? "pointerdown";
@@ -13,8 +14,15 @@ export function useHandleClickOutside(
     (e: MouseEvent) => {
       const el = ref.current as HTMLElement;
       if (el && !el.contains(e.target as Node)) {
+        if (
+          options?.excludeButtons &&
+          e.target instanceof Element &&
+          e.target.closest("button")
+        ) {
+          return;
+        }
         callback();
-        if (options?.withPropagation) {
+        if (options?.withStopPropagation) {
           e.stopPropagation();
         }
       }

@@ -4,6 +4,7 @@ import { Icons } from "@/common/icons";
 import { CheckBoxLine } from "@/components/check-box-line";
 import { store } from "@/store/store";
 import { cz } from "@lib/utils/cz";
+import { useHandleClickOutside } from "@lib/utils/use-handle-click-outside";
 import { ReactNode, useRef } from "react";
 
 const settingsActions = {
@@ -206,13 +207,17 @@ const SettingsPanel = () => {
 
 const SettingsPanelOuter = () => {
   const baseDivRef = useRef<HTMLDivElement>(null);
-  // useHandleClickOutside(
-  //   baseDivRef,
-  //   () => {
-  //     store.setSettingsPanelVisible(false);
-  //   },
-  //   { targetMethod: "click", withPropagation: true },
-  // );
+  useHandleClickOutside(
+    baseDivRef,
+    () => {
+      store.setSettingsPanelVisible(false);
+    },
+    {
+      targetMethod: "pointerdown",
+      withStopPropagation: true,
+      excludeButtons: true,
+    },
+  );
   return (
     <div ref={baseDivRef}>
       <SettingsPanel />
