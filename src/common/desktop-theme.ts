@@ -54,5 +54,5 @@ export const desktopThemes = {
 } satisfies Record<string, DesktopTheme>;
 
 export const desktopTheme = appEnvs.isDevelopment
-  ? desktopThemes.theme2
+  ? desktopThemes.theme5
   : desktopThemes.theme1;
