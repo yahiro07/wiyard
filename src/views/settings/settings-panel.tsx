@@ -9,7 +9,7 @@ import { useRef } from "react";
 const SettingsPanelTabButtons = () => {
   const { settingsPanelTab } = store.useSnapshot();
   return (
-    <div className="flex-ha gap-1">
+    <div className="flex-ha gap-1.5">
       <Button
         active={settingsPanelTab === "general"}
         onClick={() => store.setSettingsPanelTab("general")}

@@ -22,7 +22,7 @@ import {
   PiTagSimple,
   PiTrash,
 } from "react-icons/pi";
-import { RiFlashlightFill } from "react-icons/ri";
+import { RiFlashlightFill, RiImage2Fill } from "react-icons/ri";
 import { TbAppsFilled, TbStackForward, TbZoom } from "react-icons/tb";
 import { VscGraphLine } from "react-icons/vsc";
 
@@ -57,4 +57,5 @@ export const Icons = {
   Resize: PiResize,
   PlayNarrow: GiPlayButton,
   Sliders: PiSlidersHorizontalFill,
+  Image: RiImage2Fill,
 };

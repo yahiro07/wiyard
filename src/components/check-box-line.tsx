@@ -1,6 +1,23 @@
 import { Icons } from "@/common/icons";
 import { cz } from "@lib/utils/cz";
 
+export const CheckBox = ({
+  checked,
+  onChange,
+}: {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+}) => {
+  return (
+    <button
+      className={cz(styles.base, checked && styles.active)}
+      onClick={() => onChange?.(!checked)}
+    >
+      <Icons.Check />
+    </button>
+  );
+};
+
 export const CheckBoxLine = ({
   label,
   checked,
@@ -12,12 +29,7 @@ export const CheckBoxLine = ({
 }) => {
   return (
     <div className="flex-ha gap-1">
-      <button
-        className={cz(styles.base, checked && styles.active)}
-        onClick={() => onChange?.(!checked)}
-      >
-        <Icons.Check />
-      </button>
+      <CheckBox checked={checked} onChange={onChange} />
       <label>{label}</label>
     </div>
   );

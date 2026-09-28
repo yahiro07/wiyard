@@ -5,7 +5,7 @@ export const ButtonFrame = ({
   onClick,
 }: {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   return (
     <div onClick={onClick} style={{ cursor: "pointer" }}>
