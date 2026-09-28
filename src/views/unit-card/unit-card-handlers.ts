@@ -30,6 +30,7 @@ export const unitCardHandlers = {
       onTap() {
         const makeWindowActive = (windowId: string) => {
           // windowSystem.unMinimizeAll();
+          actions.setGraphAreaElevated(false);
           actions.setWindowStatus(windowId, "visible");
           windowSystem.setCurrentWindow(windowId);
         };

@@ -410,6 +410,9 @@ export const actions = {
       [unitId]: { ...prev[unitId], [key]: value },
     }));
   },
+  setGraphAreaElevated(elevated: boolean) {
+    store.setGraphAreaElevated(elevated);
+  },
   toggleGraphAreaElevated() {
     store.toggleGraphAreaElevated();
   },
