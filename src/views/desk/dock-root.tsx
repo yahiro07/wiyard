@@ -12,6 +12,7 @@ import { store, windowSystem } from "@/store/store";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { getCatalogItemWithFallback } from "@/domain/unit-entries";
 import { appConfig } from "@/common/app-config";
+import { getSortOrder } from "@lib/utils/array-object-helper";
 
 const DockIcon = ({
   icon: IconComponent,
@@ -38,22 +39,28 @@ const DockIcon = ({
 };
 
 const UnitDockItemsView = () => {
-  const { unitItems } = store.useSnapshot();
+  const { unitItems, windowSpecs } = store.useSnapshot();
+  const sortedItems = unitItems
+    .filter((item) => item.type === "board")
+    .sort(
+      getSortOrder((item) => {
+        const windowSpec = windowSpecs[item.unitId];
+        return windowSpec?.position.x ?? 99999;
+      }),
+    );
   return (
     <>
-      {unitItems
-        .filter((item) => item.type === "board")
-        .map((item) => {
-          const catalogItem = getCatalogItemWithFallback(item.catalogKey);
-          return (
-            <WindowDockItem
-              key={item.unitId}
-              id={item.unitId}
-              title={catalogItem.name}
-              imageUrl={catalogItem.thumbnailUrl}
-            />
-          );
-        })}
+      {sortedItems.map((item) => {
+        const catalogItem = getCatalogItemWithFallback(item.catalogKey);
+        return (
+          <WindowDockItem
+            key={item.unitId}
+            id={item.unitId}
+            title={catalogItem.name}
+            imageUrl={catalogItem.thumbnailUrl}
+          />
+        );
+      })}
     </>
   );
 };
