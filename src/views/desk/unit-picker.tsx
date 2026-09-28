@@ -95,11 +95,14 @@ const UnitPicker = () => {
                   e.stopPropagation();
                 }}
               >
-                <img
-                  className="h-80px"
-                  src={item.thumbnailUrl}
-                  alt={item.name}
-                />
+                <div className="h-80px max-w-140px">
+                  <img
+                    className="h-full object-cover"
+                    style={{ objectPosition: "left" }}
+                    src={item.thumbnailUrl}
+                    alt={item.name}
+                  />
+                </div>
               </div>
             );
           })}
