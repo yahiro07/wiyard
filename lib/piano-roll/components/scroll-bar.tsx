@@ -28,10 +28,13 @@ export const ScrollBarH = ({
 }) => {
   const baseDivRef = useRef<HTMLDivElement>(null);
   const size = useDomElementSize(baseDivRef);
-  const dragRange = size?.width ? size.width - 200 : undefined;
   const trackOffsetMax = fullLength - trackLength;
   const trackLeftP = trackOffset / fullLength;
   const trackWidthP = trackLength / fullLength;
+
+  const trackMaxP = trackOffsetMax / fullLength;
+  const dragRange = size?.width ? size.width * trackMaxP : undefined;
+
   return (
     <KnobFrame
       value={trackOffset}
