@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa6";
 import { FiMenu } from "react-icons/fi";
 import { GiPlayButton } from "react-icons/gi";
-import { IoMdSettings, IoMdShare } from "react-icons/io";
+import { IoIosArrowDown, IoMdSettings, IoMdShare } from "react-icons/io";
 import { IoMove, IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
 import {
@@ -58,4 +58,5 @@ export const Icons = {
   PlayNarrow: GiPlayButton,
   Sliders: PiSlidersHorizontalFill,
   Image: RiImage2Fill,
+  ArrowDown: IoIosArrowDown,
 };

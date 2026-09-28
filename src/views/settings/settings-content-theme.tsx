@@ -1,4 +1,5 @@
 import { Icons } from "@/common/icons";
+import { presetUiThemes } from "@/common/ui-theme";
 import { ColorEditButton } from "@/components/color-edit-button";
 import { Knob } from "@/components/knob";
 import { UpperLabel } from "@/components/upper-label";
@@ -6,6 +7,9 @@ import { autoPersistenceTask } from "@/periphery/auto-persistence-task";
 import { store } from "@/store/store";
 import { IconButton } from "@/views/settings/components/icon-button";
 import { loadLocalImageFile } from "@/views/settings/local-image-file-loader";
+import { GeneralSelector } from "@lib/components/headless/general-selector";
+import { cz } from "@lib/utils/cz";
+import { createSelectorOptions } from "@lib/utils/selector-option";
 
 const handlers = {
   async loadImage() {
@@ -24,16 +28,59 @@ const handlers = {
     localStorage.removeItem("boardBgImageUrl");
     autoPersistenceTask.ensureLatestSaved();
   },
+  setPreset(presetKey: UiThemePresetKey | "none") {
+    if (presetKey !== "none") {
+      store.setUiTheme(presetUiThemes[presetKey]);
+    }
+  },
 };
 
-export const SettingsContent_Theme = () => {
+type UiThemePresetKey = keyof typeof presetUiThemes;
+
+const presetOptions = createSelectorOptions<UiThemePresetKey | "none">([
+  ["none", "--"],
+  ["basic", "Basic"],
+  ["theme1", "Theme 1"],
+  ["theme2", "Theme 2"],
+  ["theme3", "Theme 3"],
+  ["theme4", "Theme 4"],
+  ["theme5", "Theme 5"],
+]);
+
+const PresetSelector = () => {
+  const styles = {
+    selectorOuter: "relative w-90px h-26px flex-c hover:opacity-80",
+    selector: cz(
+      "size-full border-none outline-none appearance-none cursor-pointer",
+    ),
+    selectorDisplay: cz(
+      "absolute-full flex-ha gap-2 justify-between px-2",
+      "bg-#ddd text-#333 text-xs pointer-events-none",
+    ),
+  };
+  return (
+    <div className={styles.selectorOuter}>
+      <GeneralSelector
+        className={styles.selector}
+        options={presetOptions}
+        value="none"
+        onChange={handlers.setPreset}
+      />
+      <div className={styles.selectorDisplay}>
+        <span>Preset</span>
+        <Icons.ArrowDown />
+      </div>
+    </div>
+  );
+};
+
+const ThemeEditContents = () => {
   const { uiTheme } = store.useSnapshot();
   const { patchUiTheme } = store;
 
   const styles = {
     header: "text-sm font-500 text-white bg-#aaa w-60px h-30px flex-c",
   };
-
   return (
     <div className="flex-v gap-3">
       <div className="flex-ha pt-3 gap-4">
@@ -84,6 +131,15 @@ export const SettingsContent_Theme = () => {
           />
         </UpperLabel>
       </div>
+    </div>
+  );
+};
+
+export const SettingsContent_Theme = () => {
+  return (
+    <div className="flex-v gap-3 pt-2">
+      <PresetSelector />
+      <ThemeEditContents />
     </div>
   );
 };

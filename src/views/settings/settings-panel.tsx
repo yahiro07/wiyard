@@ -34,7 +34,7 @@ const SettingsPanel = () => {
         <Icons.Settings size={18} />
         <h3 className="font-500 text-17px">Settings</h3>
       </div>
-      <div className="bg-#ccc p-3 text-#444 min-h-400px">
+      <div className="bg-#ccc p-3 text-#444 min-h-340px">
         <div className="flex-v gap-2">
           <SettingsPanelTabButtons />
           {settingsPanelTab === "general" && <SettingsContent_General />}

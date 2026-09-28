@@ -6,7 +6,7 @@ export type UiTheme = {
   graphBgOpacity: number;
 };
 
-export const uiThemes = {
+export const presetUiThemes = {
   basic: {
     boardBgColor: "#000",
     boardBgImageUrl: null,
@@ -51,4 +51,4 @@ export const uiThemes = {
   },
 } satisfies Record<string, UiTheme>;
 
-export const defaultUiTheme: UiTheme = uiThemes.theme1;
+export const defaultUiTheme: UiTheme = presetUiThemes.theme1;
