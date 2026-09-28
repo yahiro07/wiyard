@@ -9,16 +9,22 @@ const DockCleanupButton = ({
   icon: IConComponent,
   iconSize,
   iconAngle,
+  disabled,
 }: {
   onClick: () => void;
   icon: IconType;
   iconSize: number;
   iconAngle?: number;
+  disabled?: boolean;
 }) => {
   return (
     <button
       type="button"
-      className={cz("cursor-pointer p-1 hover:opacity-80")}
+      disabled={disabled}
+      className={cz(
+        "cursor-pointer p-1 hover:opacity-80",
+        disabled && "opacity-30 pointer-events-none",
+      )}
       style={{ transform: `rotate(${iconAngle}deg)` }}
       onClick={onClick}
     >
@@ -28,6 +34,10 @@ const DockCleanupButton = ({
 };
 
 export const DockCleanupButtons = () => {
+  const { windowSpecs } = storeSlice.useSnapshot();
+  const hasWindows = Object.values(windowSpecs).some(
+    (windowSpec) => windowSpec?.status !== "none",
+  );
   return (
     <div className="flex-ha">
       {/* <DockCleanupButton
@@ -40,6 +50,7 @@ export const DockCleanupButtons = () => {
         onClick={actions.closeAll}
         icon={Icons.Broom}
         iconSize={20}
+        disabled={!hasWindows}
       />
     </div>
   );

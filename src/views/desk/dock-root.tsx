@@ -103,7 +103,41 @@ const ElevationButton = () => {
   );
 };
 
-const DockContents = () => {
+const DeskViewButton = () => {
+  return (
+    <WindowDockItemView
+      title="desk view"
+      onClick={windowSystem.toggleMinimizeAll}
+      children={
+        <DockIcon
+          icon={Icons.Desktop}
+          bgColor="#909098"
+          textColor="#fff"
+          fontSize={24}
+        />
+      }
+    />
+  );
+};
+
+const PluginPickerButton = () => {
+  return (
+    <WindowDockItemView
+      title="plugin picker"
+      onClick={actions.toggleUnitPickerVisible}
+      children={
+        <DockIcon
+          icon={Icons.Apps}
+          bgColor="#fff"
+          textColor="#ccd"
+          fontSize={30}
+        />
+      }
+    />
+  );
+};
+
+const DockContentsCentered = () => {
   return (
     <div
       className="grid w-full items-center gap-6"
@@ -115,38 +149,29 @@ const DockContents = () => {
 
       <div className="flex-ha gap-2">
         <BuiltinDockItemsView target="head" />
-
-        <WindowDockItemView
-          title="desk view"
-          onClick={windowSystem.toggleMinimizeAll}
-          children={
-            <DockIcon
-              icon={Icons.Desktop}
-              bgColor="#909098"
-              textColor="#fff"
-              fontSize={24}
-            />
-          }
-        />
+        <DeskViewButton />
         {false && <ElevationButton />}
-        <WindowDockItemView
-          title="plugin picker"
-          onClick={actions.toggleUnitPickerVisible}
-          children={
-            <DockIcon
-              icon={Icons.Apps}
-              bgColor="#fff"
-              textColor="#ccd"
-              fontSize={30}
-            />
-          }
-        />
+        <PluginPickerButton />
         <DockCleanupButtons />
       </div>
 
       <div className="flex-ha gap-2">
         <UnitDockItemsView />
       </div>
+    </div>
+  );
+};
+
+const DockContents = () => {
+  return (
+    <div className="flex-c gap-2">
+      <BuiltinDockItemsView target="head" />
+      <DeskViewButton />
+      {false && <ElevationButton />}
+      <PluginPickerButton />
+      <BuiltinDockItemsView target="rest" />
+      <UnitDockItemsView />
+      <DockCleanupButtons />
     </div>
   );
 };
@@ -174,7 +199,7 @@ export const BottomBarWithDock = () => {
     <div className="py-2.5 bg-gray-600 flex-c">
       {/* <ScalerBoxSC scale={0.9}> */}
       {/* <WindowDockWH> */}
-      <DockContents />
+      {false ? <DockContentsCentered /> : <DockContents />}
       {/* </WindowDockWH> */}
       {/* </ScalerBoxSC> */}
     </div>
