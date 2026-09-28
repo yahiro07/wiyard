@@ -28,7 +28,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     title: "piano roll",
     dockItemSpec: {
       icon: builtinAppIcons.pianoRoll,
-      bgColor: "#46a",
+      bgColor: "#67d",
       fontSize: 26,
     },
     windowInitialSize: { width: 1000, height: 600 },
@@ -39,7 +39,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     title: "control surface",
     dockItemSpec: {
       icon: builtinAppIcons.controlSurface,
-      bgColor: "#46a",
+      bgColor: "#58c",
       fontSize: 28,
     },
     windowInitialSize: { width: 800, height: 400 },
@@ -49,7 +49,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     title: "automation",
     dockItemSpec: {
       icon: builtinAppIcons.automation,
-      bgColor: "#46a",
+      bgColor: "#58c",
       fontSize: 23,
     },
     windowInitialSize: { width: 900, height: 220 },
@@ -60,7 +60,7 @@ export const builtinAppItems: BuiltinAppItem[] = [
     title: "keyboard",
     dockItemSpec: {
       icon: builtinAppIcons.keyboard,
-      bgColor: "#46a",
+      bgColor: "#58c",
       fontSize: 28,
     },
     windowInitialSize: { width: 480, height: 154 },

@@ -1,6 +1,6 @@
 import { appEnvs } from "@/common/app-envs";
 import { projectsModel } from "@/project/projects-model";
-import { store, windowSystem } from "@/store/store";
+import { store } from "@/store/store";
 import {
   ControlButtons,
   ControlButtonsRight,
@@ -10,7 +10,7 @@ import { ProjectButtons } from "@/views/controls/project-buttons";
 export const TopBar = () => {
   const handleClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
-      windowSystem.toggleMinimizeAll();
+      // windowSystem.toggleMinimizeAll();
     }
   };
   const handleTitleClick = (e: React.MouseEvent) => {

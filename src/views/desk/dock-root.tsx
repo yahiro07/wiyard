@@ -1,9 +1,9 @@
 import { cz } from "@lib/utils/cz";
 import {
+  DockCleanupButtons,
   WindowDockItem,
   WindowDockItemView,
   WindowDockMV,
-  WindowDockWH,
 } from "@lib/window-system";
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
@@ -12,7 +12,6 @@ import { store, windowSystem } from "@/store/store";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { getCatalogItemWithFallback } from "@/domain/unit-entries";
 import { appConfig } from "@/common/app-config";
-import { ScalerBoxSC } from "@lib/components/headless/scaler-box-sc";
 
 const DockIcon = ({
   icon: IconComponent,
@@ -59,10 +58,12 @@ const UnitDockItemsView = () => {
   );
 };
 
-const BuiltinDockItemsView = () => {
+const BuiltinDockItemsView = ({ target }: { target: "head" | "rest" }) => {
+  const items =
+    target === "head" ? builtinAppItems.slice(0, 1) : builtinAppItems.slice(1);
   return (
     <>
-      {builtinAppItems.map((item) => {
+      {items.map((item) => {
         const { windowId, title, dockItemSpec } = item;
         return (
           <WindowDockItem
@@ -86,34 +87,48 @@ const BuiltinDockItemsView = () => {
 
 const DockContents = () => {
   return (
-    <>
-      <WindowDockItemView
-        title="plugin picker"
-        onClick={actions.toggleUnitPickerVisible}
-        children={
-          <DockIcon
-            icon={Icons.Apps}
-            bgColor="#fff"
-            textColor="#ccd"
-            fontSize={30}
-          />
-        }
-      />
-      <WindowDockItemView
-        title="desk view"
-        onClick={windowSystem.toggleMinimizeAll}
-        children={
-          <DockIcon
-            icon={Icons.Desktop}
-            bgColor="#909098"
-            textColor="#fff"
-            fontSize={24}
-          />
-        }
-      />
-      <BuiltinDockItemsView />
-      <UnitDockItemsView />
-    </>
+    <div
+      className="grid w-full items-center gap-6"
+      style={{ gridTemplateColumns: "minmax(0, 1fr) auto minmax(0, 1fr)" }}
+    >
+      <div className="flex-ha gap-2 justify-end">
+        <BuiltinDockItemsView target="rest" />
+      </div>
+
+      <div className="flex-ha gap-2">
+        <BuiltinDockItemsView target="head" />
+
+        <WindowDockItemView
+          title="desk view"
+          onClick={windowSystem.toggleMinimizeAll}
+          children={
+            <DockIcon
+              icon={Icons.Desktop}
+              bgColor="#909098"
+              textColor="#fff"
+              fontSize={24}
+            />
+          }
+        />
+        <WindowDockItemView
+          title="plugin picker"
+          onClick={actions.toggleUnitPickerVisible}
+          children={
+            <DockIcon
+              icon={Icons.Apps}
+              bgColor="#fff"
+              textColor="#ccd"
+              fontSize={30}
+            />
+          }
+        />
+        <DockCleanupButtons />
+      </div>
+
+      <div className="flex-ha gap-2">
+        <UnitDockItemsView />
+      </div>
+    </div>
   );
 };
 
@@ -138,11 +153,11 @@ export const BottomBarWithDock = () => {
   if (appConfig.dockPlacement !== "bottomBar") return;
   return (
     <div className="py-2.5 bg-gray-600 flex-c">
-      <ScalerBoxSC scale={0.9}>
-        <WindowDockWH>
-          <DockContents />
-        </WindowDockWH>
-      </ScalerBoxSC>
+      {/* <ScalerBoxSC scale={0.9}> */}
+      {/* <WindowDockWH> */}
+      <DockContents />
+      {/* </WindowDockWH> */}
+      {/* </ScalerBoxSC> */}
     </div>
   );
 };

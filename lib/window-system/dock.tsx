@@ -27,7 +27,7 @@ const DockCleanupButton = ({
   );
 };
 
-const DockCleanupButtons = () => {
+export const DockCleanupButtons = () => {
   return (
     <div className="flex-ha">
       {/* <DockCleanupButton
@@ -57,7 +57,6 @@ export const WindowDockMV = ({ children }: { children: ReactNode }) => {
           borderRadius: "12px",
         }}
       >
-        <DockCleanupButtons />
         {children}
       </div>
     </>
@@ -67,10 +66,7 @@ export const WindowDockMV = ({ children }: { children: ReactNode }) => {
 export const WindowDockWH = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <div className={cz("flex-c gap-2")}>
-        <DockCleanupButtons />
-        {children}
-      </div>
+      <div className={cz("flex-c gap-2")}>{children}</div>
     </>
   );
 };
@@ -129,9 +125,10 @@ export const WindowDockItem = ({
   const { windowSpecs, windowsEvacuated } = storeSlice.useSnapshot();
   const windowSpec = windowSpecs[id];
   const closed = windowSpec?.status === "none";
+  const visible = windowSpec?.status === "visible";
   const minimized = windowSpec?.status === "minimized";
   const pinned = windowSpec?.pinned;
-  if (minimized || pinned) {
+  if (visible || minimized || pinned) {
     return (
       <WindowDockItemView
         title={title}
