@@ -7,7 +7,7 @@ export const appConfig = {
   supportAutomationPorts: true,
   showAutomationTargetParameterSelectionMenuOnConnection: false,
   dockPlacement: "bottomBar" as DockPlacement,
-  minScaling: 0.1,
+  minScaling: 0.25,
   maxScaling: 2,
   showWireConnectionPreviewFloatingWireEnd: true,
   maxNoteChannels: 4,
