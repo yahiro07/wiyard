@@ -74,14 +74,6 @@ export const WindowDockMV = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const WindowDockWH = ({ children }: { children: ReactNode }) => {
-  return (
-    <>
-      <div className={cz("flex-c gap-2")}>{children}</div>
-    </>
-  );
-};
-
 export const WindowDockItemView = ({
   title,
   children,

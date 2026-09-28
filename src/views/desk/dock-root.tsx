@@ -13,6 +13,7 @@ import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { getCatalogItemWithFallback } from "@/domain/unit-entries";
 import { appConfig } from "@/common/app-config";
 import { getSortOrder } from "@lib/utils/array-object-helper";
+import { ScalerBoxSC } from "@lib/components/headless/scaler-box-sc";
 
 const DockIcon = ({
   icon: IconComponent,
@@ -204,11 +205,9 @@ export const BottomBarWithDock = () => {
   if (appConfig.dockPlacement !== "bottomBar") return;
   return (
     <div className="py-2.5 bg-gray-600 flex-c">
-      {/* <ScalerBoxSC scale={0.9}> */}
-      {/* <WindowDockWH> */}
-      {false ? <DockContentsCentered /> : <DockContents />}
-      {/* </WindowDockWH> */}
-      {/* </ScalerBoxSC> */}
+      <ScalerBoxSC scale={0.9}>
+        {false ? <DockContentsCentered /> : <DockContents />}
+      </ScalerBoxSC>
     </div>
   );
 };
