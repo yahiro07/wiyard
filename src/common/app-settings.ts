@@ -7,6 +7,7 @@ export type AppSettings = {
   mouseWheelZoom: boolean;
   graphElevation: boolean;
   graphElevationUnderlay: GraphElevationUnderlay;
+  pianoRollWindowSideGrip: boolean;
 };
 
 export const defaultAppSettings: AppSettings = {
@@ -16,4 +17,5 @@ export const defaultAppSettings: AppSettings = {
   mouseWheelZoom: false,
   graphElevation: false,
   graphElevationUnderlay: "frosted",
+  pianoRollWindowSideGrip: false,
 };

@@ -135,6 +135,16 @@ const PianoRollWindowTitleBarButtons = () => {
   );
 };
 
+const PianoRollWindowSideGripContainer = () => {
+  const { settings } = store.useSnapshot();
+  if (!settings.pianoRollWindowSideGrip) return;
+  return (
+    <WindowFrameSideTab id={windowIds.pianoRoll}>
+      <builtinAppIcons.pianoRoll size={26} />
+    </WindowFrameSideTab>
+  );
+};
+
 export const PianoRollWindow = () => {
   return (
     <>
@@ -147,9 +157,7 @@ export const PianoRollWindow = () => {
           <PianoRollPanel />
         </ScalerBoxDW>
       </WindowFrame>
-      <WindowFrameSideTab id={windowIds.pianoRoll}>
-        <builtinAppIcons.pianoRoll size={26} />
-      </WindowFrameSideTab>
+      <PianoRollWindowSideGripContainer />
     </>
   );
 };

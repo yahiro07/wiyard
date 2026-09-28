@@ -111,6 +111,13 @@ const CommonFeaturesRows = () => {
           settingsActions.setSettingValue("mouseWheelZoom", value)
         }
       />
+      <CheckBoxLine
+        label="Piano roll window side grip"
+        checked={settings.pianoRollWindowSideGrip}
+        onChange={(value) =>
+          settingsActions.setSettingValue("pianoRollWindowSideGrip", value)
+        }
+      />
     </>
   );
 };
