@@ -14,22 +14,31 @@ const colorStyles = {
 };
 
 export const ScrollBarH = ({
-  position,
+  trackOffset,
+  trackLength,
+  fullLength,
+  step,
   onChange,
 }: {
-  position: number;
-  onChange: (position: number) => void;
+  trackOffset: number;
+  trackLength: number;
+  fullLength: number;
+  step: number;
+  onChange: (offset: number) => void;
 }) => {
   const baseDivRef = useRef<HTMLDivElement>(null);
   const size = useDomElementSize(baseDivRef);
   const dragRange = size?.width ? size.width - 200 : undefined;
+  const trackOffsetMax = fullLength - trackLength;
+  const trackLeftP = trackOffset / fullLength;
+  const trackWidthP = trackLength / fullLength;
   return (
     <KnobFrame
-      value={position}
+      value={trackOffset}
       onChange={onChange}
       min={0}
-      max={1}
-      step={0.01}
+      max={trackOffsetMax}
+      step={step}
       horizontal
       dragRange={dragRange}
       cursor="auto"
@@ -43,7 +52,8 @@ export const ScrollBarH = ({
           className={cz("w-200px h-full absolute top-0")}
           style={{
             ...colorStyles.track,
-            left: `calc(${position * 100}% - ${position * 200}px)`,
+            left: `${trackLeftP * 100}%`,
+            width: `${trackWidthP * 100}%`,
           }}
         />
       </div>

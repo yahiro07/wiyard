@@ -50,9 +50,12 @@ export const EditorCommonLayout = ({
       <div></div>
       <div>
         <ScrollBarH
-          position={sight.xPosition}
+          trackOffset={sight.xBarPosition}
+          trackLength={sight.wBars}
+          fullLength={16}
+          step={1}
           onChange={(v) => {
-            store.setSight({ ...sight, xPosition: v });
+            store.setSight({ ...sight, xBarPosition: v });
           }}
         />
       </div>

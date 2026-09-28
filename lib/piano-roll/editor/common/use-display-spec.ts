@@ -27,8 +27,9 @@ export function useDisplaySpec({
   const maxScrollY = bottomLimit(contentH - viewH, 0);
   const ty = -sight.yPosition * maxScrollY;
 
-  const maxScrollX = bottomLimit(contentW - viewW, 0);
-  const contentX0 = sight.xPosition * maxScrollX;
+  // const maxScrollX = bottomLimit(contentW - viewW, 0);
+  // const contentX0 = sight.xPosition * maxScrollX;
+  const contentX0 = sight.xBarPosition * cellW * 16;
   const tx = -contentX0;
 
   return { viewW, viewH, cellW, cellH, contentW, contentH, tx, ty };

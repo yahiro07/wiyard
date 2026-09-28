@@ -1,5 +1,4 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { createPersistence } from "./persistence";
 import { SequencerEngine } from "./sequencer";
 import { AppStore } from "./store";
 import { createLiveNoteInput } from "./leve-note-input";
@@ -85,7 +84,7 @@ export function setupUnit(
         store.setViewActive(viewActive);
       },
     },
-    persistence: createPersistence(store),
+    // persistence: createPersistence(store),
     cleanup: unsubscribeStore,
   });
 }

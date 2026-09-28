@@ -18,10 +18,10 @@ export type SequencerEditState = {
 };
 
 export type Sight = {
-  xPosition: number; //0~1
+  xBarPosition: number; //0~(16-wBars)
   yPosition: number; //0~1
   yZoom: number; //0~1
-  wBars: number; //1~16
+  wBars: number; //1~8
   withXPadding: boolean;
 };
 

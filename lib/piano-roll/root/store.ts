@@ -44,7 +44,7 @@ const defaultStoreState: StoreState = {
   patternBars: 0.25,
   patternNotes: [],
   sight: {
-    xPosition: 0,
+    xBarPosition: 0,
     yPosition: 0.5,
     yZoom: 0.35,
     wBars: 4,

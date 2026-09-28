@@ -19,8 +19,9 @@ export function useGridDisplaySpec(
   const contentW = cellW * nx;
   const contentH = cellH * numPitches;
 
-  const maxScrollX = bottomLimit(contentW - viewW, 0);
-  const contentX0 = sight.xPosition * maxScrollX;
+  // const maxScrollX = bottomLimit(contentW - viewW, 0);
+  // const contentX0 = sight.xPosition * maxScrollX;
+  const contentX0 = sight.xBarPosition * cellW * 16;
   const contentX1 = contentX0 + viewW;
 
   const maxScrollY = bottomLimit(contentH - viewH, 0);
