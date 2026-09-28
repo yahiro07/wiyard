@@ -16,7 +16,7 @@ import { ControlButtonsInField } from "@/views/controls/control-buttons";
 import { SettingsPanelRoot } from "@/views/desk/settings-panel";
 import { DebugOverlay } from "@/views/desk/debug-overlay";
 import { ScalingGaugeContainer } from "@/views/controls/scaling-gauge";
-import { GraphFloatUpButton } from "@/views/controls/graph-area-buttons";
+import { GraphFloatUpButton } from "@/views/controls/graph-float-up-button";
 import { GraphPlaneRoot } from "@/views/graph/graph-plane";
 import { cz } from "@lib/utils/cz";
 import { appEnvs } from "@/common/app-envs";
