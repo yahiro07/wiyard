@@ -1,4 +1,3 @@
-import { clampValue } from "@lib/utils/number-helper";
 import { useRef } from "react";
 import { useDomElementSize } from "../../../utils/use-dom-element-size";
 import { uiConfig } from "../../definitions/ui-config";
@@ -23,7 +22,8 @@ export const PianoRollEditorView = () => {
   const { store } = useAppContext();
   const { sight, loopBars } = store.useSnapshot();
   const loopSteps = loopBars * 16;
-  const displayBars = clampValue(loopBars * 2, 2, 16);
+  // const displayBars = clampValue(loopBars * 2, 2, 16);
+  const displayBars = 16;
   const displaySteps = displayBars * 16;
 
   const displaySpec = useDisplaySpec({

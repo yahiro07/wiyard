@@ -14,11 +14,13 @@ export function useDisplaySpec({
   sight: Sight;
   mainDivSize: Size | undefined;
 }): DisplaySpec {
-  const cellW = mapUnaryTo(sight.xZoom, 10, 60);
-  const cellH = mapUnaryTo(sight.yZoom, 10, 50);
-
   const viewW = mainDivSize?.width ?? 100;
   const viewH = mainDivSize?.height ?? 100;
+
+  const cellW = viewW / (sight.wBars * 16);
+  // const cellW = mapUnaryTo(sight.xZoom, 10, 60);
+  const cellH = mapUnaryTo(sight.yZoom, 10, 50);
+
   const contentW = cellW * nx;
   const contentH = cellH * numPitches;
 
