@@ -25,7 +25,7 @@ type AppSessionStates = {
   uiTheme: UiTheme;
 };
 
-type PersistenceData = {
+export type PersistenceData = {
   projectData: ProjectData;
   sessionStates: AppSessionStates;
   controlSurfaceState: Record<string, any> | null;
@@ -33,15 +33,30 @@ type PersistenceData = {
 
 const helpers = {
   pickSessionStates(storeState: AppSessionStates) {
-    return pickObjectMembers(storeState, {
-      midiInEnabled: 1,
-      masterVolume: 1,
-      settings: 1,
-      uiTheme: 1,
-    });
+    const uiTheme = { ...storeState.uiTheme };
+    if (uiTheme.boardBgImageUrl?.startsWith("data:")) {
+      uiTheme.boardBgImageUrl = "CUSTOM";
+    }
+    return {
+      ...pickObjectMembers(storeState, {
+        midiInEnabled: 1,
+        masterVolume: 1,
+        settings: 1,
+      }),
+      uiTheme,
+    };
   },
   fixSessionStatesToLoad(sessionStates: AppSessionStates) {
-    const { midiInEnabled, masterVolume, settings, uiTheme } = sessionStates;
+    const {
+      midiInEnabled,
+      masterVolume,
+      settings,
+      uiTheme: inputUiTheme,
+    } = sessionStates;
+    const uiTheme = { ...inputUiTheme };
+    if (uiTheme.boardBgImageUrl === "CUSTOM") {
+      uiTheme.boardBgImageUrl = localStorage.getItem("boardBgImageUrl") ?? null;
+    }
     return {
       midiInEnabled,
       masterVolume,

@@ -1,11 +1,10 @@
 import { dequal } from "dequal";
-import { appPersistence } from "@/project/app-persistence";
+import { appPersistence, PersistenceData } from "@/project/app-persistence";
 import { store } from "@/store/store";
 
-export function setupAutoPersistenceTask() {
-  if (!store.state.autoPersistenceEnabled) return;
+function createAutoPersistenceTask() {
+  let latestData: PersistenceData | undefined;
 
-  let latestData = appPersistence.emitPersistenceData();
   const internal = {
     ensureLatestSaved() {
       const st = store.state;
@@ -17,8 +16,22 @@ export function setupAutoPersistenceTask() {
       }
     },
   };
-  const timerId = setInterval(() => {
-    internal.ensureLatestSaved();
-  }, 5 * 1000);
-  return () => clearInterval(timerId);
+
+  return {
+    setup() {
+      if (!store.state.autoPersistenceEnabled) return;
+      latestData = appPersistence.emitPersistenceData();
+
+      const timerId = setInterval(() => {
+        internal.ensureLatestSaved();
+      }, 5 * 1000);
+      return () => clearInterval(timerId);
+    },
+    ensureLatestSaved() {
+      if (!store.state.autoPersistenceEnabled) return;
+      internal.ensureLatestSaved();
+    },
+  };
 }
+
+export const autoPersistenceTask = createAutoPersistenceTask();

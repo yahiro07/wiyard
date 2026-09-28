@@ -2,6 +2,7 @@ import { Icons } from "@/common/icons";
 import { ColorEditButton } from "@/components/color-edit-button";
 import { Knob } from "@/components/knob";
 import { UpperLabel } from "@/components/upper-label";
+import { autoPersistenceTask } from "@/periphery/auto-persistence-task";
 import { store } from "@/store/store";
 import { IconButton } from "@/views/settings/components/icon-button";
 import { loadLocalImageFile } from "@/views/settings/local-image-file-loader";
@@ -14,10 +15,14 @@ const handlers = {
         `image loaded (${(imageDataUrl.length / 1024).toFixed()} KB)`,
       );
       store.patchUiTheme({ boardBgImageUrl: imageDataUrl });
+      localStorage.setItem("boardBgImageUrl", imageDataUrl);
+      autoPersistenceTask.ensureLatestSaved();
     }
   },
   clearImage() {
     store.patchUiTheme({ boardBgImageUrl: null });
+    localStorage.removeItem("boardBgImageUrl");
+    autoPersistenceTask.ensureLatestSaved();
   },
 };
 
