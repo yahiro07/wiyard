@@ -19,12 +19,14 @@ export const ScrollBarH = ({
   fullLength,
   step,
   onChange,
+  disabledWithNoTrack,
 }: {
   trackOffset: number;
   trackLength: number;
   fullLength: number;
   step: number;
   onChange: (offset: number) => void;
+  disabledWithNoTrack?: boolean;
 }) => {
   const baseDivRef = useRef<HTMLDivElement>(null);
   const size = useDomElementSize(baseDivRef);
@@ -34,6 +36,10 @@ export const ScrollBarH = ({
 
   const trackMaxP = trackOffsetMax / fullLength;
   const dragRange = size?.width ? size.width * trackMaxP : undefined;
+
+  if (disabledWithNoTrack) {
+    return <div className="w-full h-22px" style={colorStyles.base} />;
+  }
 
   return (
     <KnobFrame
