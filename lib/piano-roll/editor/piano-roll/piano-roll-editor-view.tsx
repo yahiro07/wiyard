@@ -1,5 +1,4 @@
-import { useRef } from "react";
-import { useDomElementSize } from "../../../utils/use-dom-element-size";
+import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
 import {
@@ -16,10 +15,10 @@ import {
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
+import { Size } from "@lib/utils/common-types";
 
 export const PianoRollEditorView = () => {
-  const mainDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(mainDivRef);
+  const [mainDivSize, setMainDivSize] = useState<Size | undefined>();
   const keysWidth = 100;
 
   const { store } = useAppContext();
@@ -44,7 +43,7 @@ export const PianoRollEditorView = () => {
   );
   return (
     <EditorCommonLayout
-      mainDivRef={mainDivRef}
+      mainDivSizeCallback={setMainDivSize}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />

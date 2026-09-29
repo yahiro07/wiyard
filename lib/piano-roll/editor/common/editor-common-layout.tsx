@@ -1,24 +1,34 @@
 import { cz } from "@lib/utils/cz";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { ScrollBarH, ScrollBarV } from "../../components/scroll-bar";
 import { useAppContext } from "../../root/app-context";
 import { DisplaySpec } from "./editor-types";
+import { DebugOverlay } from "./debug-overlay";
+import { Size } from "@lib/utils/common-types";
+import { useDomElementSize } from "@lib/utils/use-dom-element-size";
 
 export const EditorCommonLayout = ({
   sideContent,
   mainContent,
-  mainDivRef,
   sideContentWidth,
   positionBarContent,
+  mainDivSizeCallback,
 }: {
   sideContent: ReactNode;
   mainContent: ReactNode;
-  mainDivRef: React.RefObject<HTMLDivElement | null>;
   sideContentWidth: number;
   positionBarContent?: ReactNode;
+  mainDivSizeCallback: (size: Size) => void;
 }) => {
   const { store } = useAppContext();
   const { sight, isPatternView } = store.useSnapshot();
+  const mainDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(mainDivRef);
+  useEffect(() => {
+    if (mainDivSize) {
+      mainDivSizeCallback(mainDivSize);
+    }
+  }, [mainDivSize]);
 
   const hasXPadding = !isPatternView && sight.withXPadding;
   return (
@@ -26,6 +36,7 @@ export const EditorCommonLayout = ({
       className={cz(
         "overflow-hidden relative",
         "w-full h-full grow",
+        // "bg-#505054",
         "[&>div]:overflow-hidden",
       )}
       style={{

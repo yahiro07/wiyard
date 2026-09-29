@@ -1,5 +1,4 @@
-import { useDomElementSize } from "@lib/utils/use-dom-element-size";
-import { useRef } from "react";
+import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
 import {
@@ -16,10 +15,10 @@ import {
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { DiatonicLanesGrid } from "./diatonic-lanes-grid";
 import { DiatonicPitchIndexColumn } from "./diatonic-pitch-index-column";
+import { Size } from "@lib/utils/common-types";
 
 export const DiatonicLanesEditorView = () => {
-  const mainDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(mainDivRef);
+  const [mainDivSize, setMainDivSize] = useState<Size | undefined>();
   const keysWidth = 100;
 
   const { store } = useAppContext();
@@ -46,7 +45,7 @@ export const DiatonicLanesEditorView = () => {
   );
   return (
     <EditorCommonLayout
-      mainDivRef={mainDivRef}
+      mainDivSizeCallback={setMainDivSize}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <DiatonicPitchIndexColumn cellH={displaySpec.cellH} />

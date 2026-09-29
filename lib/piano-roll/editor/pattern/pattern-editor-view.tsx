@@ -1,7 +1,6 @@
 import { cz } from "@lib/utils/cz";
 import { seqNumbers } from "@lib/utils/number-helper";
-import { useRef } from "react";
-import { useDomElementSize } from "../../../utils/use-dom-element-size";
+import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext } from "../../root/app-context";
 import {
@@ -14,6 +13,7 @@ import { useDisplaySpec, useGridDisplaySpec } from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PatternGrid } from "./pattern-grid";
 import { Sight } from "../../definitions/types";
+import { Size } from "@lib/utils/common-types";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   return (
@@ -38,8 +38,7 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
 };
 
 export const PatternEditorView = () => {
-  const mainDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(mainDivRef);
+  const [mainDivSize, setMainDivSize] = useState<Size | undefined>();
   const keysWidth = 100;
   const sectionDuration = 2 * 16; //fixed for pattern
   const { store } = useAppContext();
@@ -65,7 +64,7 @@ export const PatternEditorView = () => {
 
   return (
     <EditorCommonLayout
-      mainDivRef={mainDivRef}
+      mainDivSizeCallback={setMainDivSize}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <PitchIndexColumn cellH={displaySpec.cellH} />
