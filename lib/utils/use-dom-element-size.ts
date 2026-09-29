@@ -28,6 +28,6 @@ export function useDomElementSize(
     if (el) {
       return setupDomSizeAffecter(el, setSize);
     }
-  }, [ref]);
+  }, [ref.current]);
   return size;
 }
