@@ -32,14 +32,25 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     }
   }
 
+  let weakLineInterval = -1;
+  if (ds.wBars <= 2) {
+    weakLineInterval = 1;
+  } else if (ds.wBars <= 4) {
+    weakLineInterval = 2;
+  }
+
   for (let i = 0; i < ds.numStepsFull; i++) {
     const x = i * ds.cellW;
     if (ds.contentX0 <= x && x < ds.contentX1) {
-      let color = "#0002";
+      let color = "#0000";
       if (i % 16 === 0) {
         color = "#0008";
       } else if (i % 4 === 0) {
         color = "#0004";
+      } else {
+        if (weakLineInterval !== -1 && i % weakLineInterval === 0) {
+          color = "#0002";
+        }
       }
       ctx.strokeStyle = color;
       ctx.beginPath();

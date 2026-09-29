@@ -1,7 +1,7 @@
 import { bottomLimit, mapUnaryTo } from "@lib/utils/number-helper";
 import { Size } from "../../../utils/common-types";
 import { Sight } from "../../definitions/types";
-import { DisplaySpec } from "./editor-types";
+import { DisplaySpec, GridDisplaySpec } from "./editor-types";
 import { useMemo } from "react";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { useAppContext } from "../../root/app-context";
@@ -55,7 +55,7 @@ export function useGridDisplaySpec(
   sectionDuration: number,
   numPitches: number,
   keySpec?: SongKeySpec,
-) {
+): GridDisplaySpec {
   const { store } = useAppContext();
   const { sight: inputSight } = store.useSnapshot();
   const sight = fixSightWithLeftPadding(inputSight);
@@ -75,6 +75,8 @@ export function useGridDisplaySpec(
   const contentY0 = sight.yPosition * maxScrollY;
   const contentY1 = contentY0 + viewH;
 
+  const wBars = sight.wBars;
+
   return useMemo(
     () => ({
       contentW,
@@ -90,6 +92,7 @@ export function useGridDisplaySpec(
       numStepsFull: nx,
       numPitchesFull: numPitches,
       keySpec,
+      wBars,
     }),
     [
       contentW,
@@ -105,6 +108,7 @@ export function useGridDisplaySpec(
       nx,
       numPitches,
       keySpec,
+      wBars,
     ],
   );
 }
