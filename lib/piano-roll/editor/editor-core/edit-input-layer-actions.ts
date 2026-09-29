@@ -14,7 +14,7 @@ function createTapChecker() {
     check() {
       const endTime = Date.now();
       const duration = endTime - startTime;
-      return duration <= 100;
+      return duration <= 200;
     },
   };
 }
