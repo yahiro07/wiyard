@@ -16,8 +16,8 @@ function createControlActions(store: AppStore) {
     clearEditData() {
       store.assign({
         inputNotes: [],
-        patternNotes: [],
-        patternEnabled: false,
+        // patternNotes: [],
+        // patternEnabled: false,
         realized: false,
       });
     },
@@ -55,8 +55,7 @@ function createControlActions(store: AppStore) {
         loopBars,
       );
       if (sourceBars > 8) return;
-      const loopSteps = sourceBars * 16;
-      const destStart = loopSteps;
+      const destStart = sourceBars * 16;
       const sourceNotes = inputNotes.filter((n) => n.position < destStart);
       let nextId = nextNoteId(sourceNotes);
       const copies = sourceNotes.map((note) => ({
@@ -70,7 +69,23 @@ function createControlActions(store: AppStore) {
         store.setLoopBars((sourceBars * 2) as LoopBarLength);
       }
     },
-    duplicatePatternNotes2X() {},
+    duplicatePatternNotes2X() {
+      const { patternNotes } = store.state;
+      if (patternNotes.length === 0) return;
+      const tailPos = getNotesTailPositionInBars(patternNotes);
+      const sourceBars = getLoopBarLengthForBarPosition(tailPos);
+      if (sourceBars > 1) return;
+      const destStart = sourceBars * 16;
+      const sourceNotes = patternNotes.filter((n) => n.position < destStart);
+      let nextId = nextNoteId(sourceNotes);
+      const copies = sourceNotes.map((note) => ({
+        id: nextId++,
+        pitch: note.pitch,
+        position: note.position + destStart,
+        duration: note.duration,
+      }));
+      store.setPatternNotes([...sourceNotes, ...copies]);
+    },
     clearPatternNotes() {
       store.assign({ patternNotes: [] });
     },

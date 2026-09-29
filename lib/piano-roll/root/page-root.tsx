@@ -302,8 +302,8 @@ const DuplicateNotes2XButton = () => {
   const controlActions = useControlActions();
   const text = "copy 2x";
   if (!isPatternView) {
-    const tailPos = getNotesTailPositionInBars(inputNotes);
-    const enabled = (0 < tailPos && tailPos <= 8) || loopBars <= 8;
+    const tailBars = getNotesTailPositionInBars(inputNotes);
+    const enabled = (0 < tailBars && tailBars <= 8) || loopBars <= 8;
     return (
       <Button
         disabled={!enabled}
@@ -312,8 +312,8 @@ const DuplicateNotes2XButton = () => {
       />
     );
   } else {
-    const tailPos = getNotesTailPositionInBars(patternNotes);
-    const enabled = 0 < tailPos && tailPos <= 1;
+    const tailBars = getNotesTailPositionInBars(patternNotes);
+    const enabled = 0 < tailBars && tailBars <= 1;
     return (
       <Button
         disabled={!enabled}
