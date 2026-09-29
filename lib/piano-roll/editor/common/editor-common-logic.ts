@@ -1,66 +1,7 @@
-import { bottomLimit, clampValue } from "@lib/utils/number-helper";
-import { useMemo } from "react";
+import { clampValue } from "@lib/utils/number-helper";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
-import { useAppContext } from "../../root/app-context";
-import { DisplaySpec, SectionRange } from "./editor-types";
-
-export function useGridDisplaySpec(
-  displaySpec: DisplaySpec,
-  sectionDuration: number,
-  numPitches: number,
-  keySpec?: SongKeySpec,
-) {
-  const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
-  const { viewW, viewH, cellW, cellH } = displaySpec;
-
-  const nx = sectionDuration;
-  const contentW = cellW * nx;
-  const contentH = cellH * numPitches;
-
-  // const maxScrollX = bottomLimit(contentW - viewW, 0);
-  // const contentX0 = sight.xPosition * maxScrollX;
-  const contentX0 = sight.xBarPosition * cellW * 16;
-  const contentX1 = contentX0 + viewW;
-
-  const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const contentY0 = sight.yPosition * maxScrollY;
-  const contentY1 = contentY0 + viewH;
-
-  return useMemo(
-    () => ({
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      numStepsFull: nx,
-      numPitchesFull: numPitches,
-      keySpec,
-    }),
-    [
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      nx,
-      numPitches,
-      keySpec,
-    ],
-  );
-}
+import { SectionRange } from "./editor-types";
 
 type HitNoteInfo = { note: Note; part: "body" | "tail" };
 

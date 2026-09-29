@@ -6,10 +6,22 @@ import { useMemo } from "react";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { useAppContext } from "../../root/app-context";
 
+function fixSightWithLeftPadding(sight: Sight): Sight {
+  if (sight.withXPadding) {
+    const pad = sight.wBars / 16;
+    return {
+      ...sight,
+      xBarPosition: sight.xBarPosition - pad,
+      wBars: sight.wBars + pad,
+    };
+  }
+  return sight;
+}
+
 export function useDisplaySpec({
   nx,
   numPitches,
-  sight,
+  sight: inputSight,
   mainDivSize,
 }: {
   nx: number;
@@ -17,6 +29,8 @@ export function useDisplaySpec({
   sight: Sight;
   mainDivSize: Size | undefined;
 }): DisplaySpec {
+  const sight = fixSightWithLeftPadding(inputSight);
+
   const viewW = mainDivSize?.width ?? 100;
   const viewH = mainDivSize?.height ?? 100;
 
@@ -45,7 +59,9 @@ export function useGridDisplaySpec(
   keySpec?: SongKeySpec,
 ) {
   const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
+  const { sight: inputSight } = store.useSnapshot();
+  const sight = fixSightWithLeftPadding(inputSight);
+
   const { viewW, viewH, cellW, cellH } = displaySpec;
 
   const nx = sectionDuration;

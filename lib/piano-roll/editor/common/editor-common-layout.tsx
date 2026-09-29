@@ -48,16 +48,19 @@ export const EditorCommonLayout = ({
         />
       </div>
       <div></div>
-      <div>
-        <ScrollBarH
-          trackOffset={sight.xBarPosition}
-          trackLength={sight.wBars}
-          fullLength={16}
-          step={1}
-          onChange={(v) => {
-            store.setSight({ ...sight, xBarPosition: v });
-          }}
-        />
+      <div className="flex-h">
+        {sight.withXPadding && <div className="w-5.9%" />}
+        <div className="grow h-full">
+          <ScrollBarH
+            trackOffset={sight.xBarPosition}
+            trackLength={sight.wBars}
+            fullLength={16}
+            step={1}
+            onChange={(v) => {
+              store.setSight({ ...sight, xBarPosition: v });
+            }}
+          />
+        </div>
       </div>
       <div></div>
     </div>

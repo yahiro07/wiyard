@@ -3,6 +3,7 @@ import { useAppContext } from "./app-context";
 
 export const SideControlBar = () => {
   const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
   const styles = {
     wButton: "w-30px h-30px flex-c bd-white",
     button: "bd-white p-3 cursor-pointer",
@@ -20,7 +21,14 @@ export const SideControlBar = () => {
     <div className="h-full">
       <div className="flex-vc gap-6 h-full justify-between">
         <div className="flex-v gap-1">
-          <button className={styles.wButton}>m</button>
+          <button
+            className={styles.wButton}
+            onClick={() =>
+              store.patchSight({ withXPadding: !sight.withXPadding })
+            }
+          >
+            m
+          </button>
           <button
             className={styles.wButton}
             onClick={() => store.patchSight({ wBars: 2 })}
