@@ -37,14 +37,10 @@ export const ScrollBarH = ({
   const trackMaxP = trackOffsetMax / fullLength;
   const dragRange = size?.width ? size.width * trackMaxP : undefined;
 
-  if (disabledWithNoTrack) {
-    return <div className="w-full h-22px" style={colorStyles.base} />;
-  }
-
   return (
     <KnobFrame
       value={trackOffset}
-      onChange={onChange}
+      onChange={!disabledWithNoTrack ? onChange : undefined}
       min={0}
       max={trackOffsetMax}
       step={step}
@@ -57,14 +53,16 @@ export const ScrollBarH = ({
         className={cz("w-full h-22px relative")}
         style={colorStyles.base}
       >
-        <div
-          className={cz("w-200px h-full absolute top-0")}
-          style={{
-            ...colorStyles.track,
-            left: `${trackLeftP * 100}%`,
-            width: `${trackWidthP * 100}%`,
-          }}
-        />
+        {!disabledWithNoTrack && (
+          <div
+            className={cz("w-200px h-full absolute top-0")}
+            style={{
+              ...colorStyles.track,
+              left: `${trackLeftP * 100}%`,
+              width: `${trackWidthP * 100}%`,
+            }}
+          />
+        )}
       </div>
     </KnobFrame>
   );
