@@ -25,10 +25,18 @@ export function hitTestNote(
     const relPos = note.position - sectionRange.offset;
     const dur = note.duration;
     const noteTailPos = relPos + dur;
-    if (note.duration >= 2 && xi === noteTailPos - 1) {
-      return { note, part: "tail" };
-    } else if (relPos <= xi && xi < relPos + dur) {
-      return { note, part: "body" };
+    if (0) {
+      if (note.duration >= 2 && xi === noteTailPos - 1) {
+        return { note, part: "tail" };
+      } else if (relPos <= xi && xi < relPos + dur) {
+        return { note, part: "body" };
+      }
+    } else {
+      if (noteTailPos - 0.3 <= xiFloat && xiFloat <= noteTailPos + 0.3) {
+        return { note, part: "tail" };
+      } else if (relPos <= xi && xi < relPos + dur) {
+        return { note, part: "body" };
+      }
     }
   }
 }
