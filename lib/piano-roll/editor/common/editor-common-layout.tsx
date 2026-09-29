@@ -19,6 +19,8 @@ export const EditorCommonLayout = ({
 }) => {
   const { store } = useAppContext();
   const { sight, isPatternView } = store.useSnapshot();
+
+  const hasXPadding = !isPatternView && sight.withXPadding;
   return (
     <div
       className={cz(
@@ -48,9 +50,8 @@ export const EditorCommonLayout = ({
         />
       </div>
       <div></div>
-      <div className="flex-h">
-        {!isPatternView && sight.withXPadding && <div className="w-5.9%" />}
-        <div className="grow h-full">
+      <div className="flex-c">
+        <div className={cz("h-full", hasXPadding ? "w-92.4%" : "w-full")}>
           <ScrollBarH
             trackOffset={sight.xBarPosition}
             trackLength={sight.wBars}

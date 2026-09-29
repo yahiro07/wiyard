@@ -8,10 +8,10 @@ import { useAppContext } from "../../root/app-context";
 
 export function fixSightWithLeftPadding(sight: Sight): Sight {
   if (sight.withXPadding) {
-    const pad = sight.wBars / 16;
+    const pad = sight.wBars / 12;
     return {
       ...sight,
-      xBarPosition: sight.xBarPosition - pad,
+      xBarPosition: sight.xBarPosition - pad / 2,
       wBars: sight.wBars + pad,
     };
   }
