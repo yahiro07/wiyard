@@ -40,7 +40,7 @@ export type AppStore = Store<StoreState>;
 const defaultStoreState: StoreState = {
   octaveShift: 0,
   noteDuty: 1,
-  loopBars: 2,
+  loopBars: 1,
   inputNotes: [],
   patternBars: 0.25,
   patternNotes: [],
