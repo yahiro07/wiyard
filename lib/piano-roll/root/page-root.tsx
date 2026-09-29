@@ -23,7 +23,7 @@ import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
 import { SideControlBar } from "./side-control-bar";
-import { resultOf } from "@lib/utils/general-helper";
+import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
 
 const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
 
@@ -148,23 +148,39 @@ const _LoopBarsSelectorContainerEx = () => {
 //   );
 // };
 
+const TrashIconButton = ({
+  disabled,
+  onClick,
+}: {
+  disabled: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <IconButton disabled={disabled} onClick={onClick}>
+      <Icons.Trash size={20} />
+    </IconButton>
+  );
+};
+
 const TrashButtonContainer = () => {
   const { store } = useAppContext();
   const controlActions = useControlActions();
   const { inputNotes, patternNotes, isPatternView } = store.useSnapshot();
-
-  const [hasData, onClick] = resultOf(() => {
-    if (isPatternView) {
-      return [patternNotes.length > 0, controlActions.clearPatternNotes];
-    } else {
-      return [inputNotes.length > 0, controlActions.clearEditData];
-    }
-  });
-  return (
-    <IconButton disabled={!hasData} onClick={onClick}>
-      <Icons.Trash size={20} />
-    </IconButton>
-  );
+  if (!isPatternView) {
+    return (
+      <TrashIconButton
+        disabled={inputNotes.length === 0}
+        onClick={controlActions.clearEditData}
+      />
+    );
+  } else {
+    return (
+      <TrashIconButton
+        disabled={patternNotes.length === 0}
+        onClick={controlActions.clearPatternNotes}
+      />
+    );
+  }
 };
 
 const SightControlKnobs = () => {
@@ -281,16 +297,31 @@ const RealizeButton = () => {
 };
 
 const DuplicateNotes2XButton = () => {
-  const [{ inputNotes, loopBars }] = useStoreAccess();
+  const [{ inputNotes, loopBars, patternNotes, isPatternView }] =
+    useStoreAccess();
   const controlActions = useControlActions();
-  const enabled = inputNotes.length > 0 && loopBars < 16;
-  return (
-    <Button
-      disabled={!enabled}
-      onClick={controlActions.duplicateNotes2X}
-      text="copy 2x"
-    />
-  );
+  const text = "copy 2x";
+  if (!isPatternView) {
+    const tailPos = getNotesTailPositionInBars(inputNotes);
+    const enabled = (0 < tailPos && tailPos <= 8) || loopBars <= 8;
+    return (
+      <Button
+        disabled={!enabled}
+        onClick={controlActions.duplicateInputNotes2X}
+        text={text}
+      />
+    );
+  } else {
+    const tailPos = getNotesTailPositionInBars(patternNotes);
+    const enabled = 0 < tailPos && tailPos <= 1;
+    return (
+      <Button
+        disabled={!enabled}
+        onClick={controlActions.duplicatePatternNotes2X}
+        text={text}
+      />
+    );
+  }
 };
 
 const _KeyDisplay = () => {

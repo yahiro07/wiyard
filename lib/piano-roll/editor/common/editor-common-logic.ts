@@ -94,10 +94,29 @@ export const diatonicLanesPitchHelper = {
   },
 };
 
-export function getLoopBarLengthForStep(xiFloat: number): LoopBarLength {
+function _getLoopBarLengthForStep_0_deprecated(xiFloat: number): LoopBarLength {
   return clampValue(
     (1 << Math.ceil(Math.log2(Math.floor(xiFloat / 4) + 1))) * 0.25,
     0.25,
     16,
   ) as LoopBarLength;
+}
+
+export function getLoopBarLengthForBarPosition(pos: number): LoopBarLength {
+  if (pos <= 0.25) return 0.25;
+  if (pos <= 0.5) return 0.5;
+  if (pos <= 1) return 1;
+  if (pos <= 2) return 2;
+  if (pos <= 4) return 4;
+  if (pos <= 8) return 8;
+  return 16;
+}
+
+export function getLoopBarLengthForStep(xiFloat: number): LoopBarLength {
+  const pos = xiFloat / 16;
+  return getLoopBarLengthForBarPosition(pos);
+}
+
+export function getNotesTailPositionInBars(notes: Note[]): number {
+  return Math.max(0, ...notes.map((it) => it.position + it.duration)) / 16;
 }

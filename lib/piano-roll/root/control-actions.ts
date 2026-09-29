@@ -2,6 +2,10 @@ import { useState } from "react";
 import { LoopBarLength, Note } from "../definitions/types";
 import { useAppContext } from "./app-context";
 import { AppStore } from "./store";
+import {
+  getLoopBarLengthForBarPosition,
+  getNotesTailPositionInBars,
+} from "../editor/common/editor-common-logic";
 
 function nextNoteId(notes: Note[]): number {
   return notes.length > 0 ? Math.max(...notes.map((n) => n.id)) + 1 : 0;
@@ -42,11 +46,16 @@ function createControlActions(store: AppStore) {
         realized: false,
       });
     },
-    duplicateNotes2X() {
-      const st = store.state;
-      const { loopBars, inputNotes } = st;
-      if (loopBars >= 16 || inputNotes.length === 0) return;
-      const loopSteps = loopBars * 16;
+    duplicateInputNotes2X() {
+      const { inputNotes, loopBars } = store.state;
+      if (inputNotes.length === 0) return;
+      const tailPos = getNotesTailPositionInBars(inputNotes);
+      const sourceBars = Math.min(
+        getLoopBarLengthForBarPosition(tailPos),
+        loopBars,
+      );
+      if (sourceBars > 8) return;
+      const loopSteps = sourceBars * 16;
       const destStart = loopSteps;
       const sourceNotes = inputNotes.filter((n) => n.position < destStart);
       let nextId = nextNoteId(sourceNotes);
@@ -56,11 +65,12 @@ function createControlActions(store: AppStore) {
         position: note.position + destStart,
         duration: note.duration,
       }));
-      store.assign({
-        inputNotes: [...sourceNotes, ...copies],
-        loopBars: (loopBars * 2) as LoopBarLength,
-      });
+      store.setInputNotes([...sourceNotes, ...copies]);
+      if (sourceBars * 2 > store.state.loopBars) {
+        store.setLoopBars((sourceBars * 2) as LoopBarLength);
+      }
     },
+    duplicatePatternNotes2X() {},
     clearPatternNotes() {
       store.assign({ patternNotes: [] });
     },
