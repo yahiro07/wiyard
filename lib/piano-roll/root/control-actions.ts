@@ -61,6 +61,9 @@ function createControlActions(store: AppStore) {
         loopBars: (loopBars * 2) as LoopBarLength,
       });
     },
+    clearPatternNotes() {
+      store.assign({ patternNotes: [] });
+    },
   };
 }
 

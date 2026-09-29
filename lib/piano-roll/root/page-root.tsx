@@ -23,6 +23,7 @@ import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view
 import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
 import { SideControlBar } from "./side-control-bar";
+import { resultOf } from "@lib/utils/general-helper";
 
 const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
 
@@ -151,12 +152,16 @@ const TrashButtonContainer = () => {
   const { store } = useAppContext();
   const controlActions = useControlActions();
   const { inputNotes, patternNotes, isPatternView } = store.useSnapshot();
-  const hasData = inputNotes.length > 0 || patternNotes.length > 0;
+
+  const [hasData, onClick] = resultOf(() => {
+    if (isPatternView) {
+      return [patternNotes.length > 0, controlActions.clearPatternNotes];
+    } else {
+      return [inputNotes.length > 0, controlActions.clearEditData];
+    }
+  });
   return (
-    <IconButton
-      disabled={!hasData || isPatternView}
-      onClick={controlActions.clearEditData}
-    >
+    <IconButton disabled={!hasData} onClick={onClick}>
       <Icons.Trash size={20} />
     </IconButton>
   );
