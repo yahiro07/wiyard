@@ -227,10 +227,11 @@ const DiatonicLanesToggleButton = () => {
 };
 
 const LoopGhostToggleButton = () => {
-  const [{ loopGhostEnabled }, mt] = useStoreAccess();
+  const [{ loopGhostEnabled, isPatternView }, mt] = useStoreAccess();
   return (
     <Button
       active={loopGhostEnabled}
+      disabled={isPatternView}
       onClick={mt.toggleLoopGhostEnabled}
       text="ghost"
     />
