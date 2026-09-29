@@ -13,6 +13,7 @@ import { PositionBar } from "../common/position-bar";
 import { useDisplaySpec, useGridDisplaySpec } from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PatternGrid } from "./pattern-grid";
+import { Sight } from "../../definitions/types";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   return (
@@ -42,8 +43,13 @@ export const PatternEditorView = () => {
   const keysWidth = 100;
   const sectionDuration = 2 * 16; //fixed for pattern
   const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
+  const { sight: originalSight } = store.useSnapshot();
 
+  const sight: Sight = {
+    ...originalSight,
+    xBarPosition: 0,
+    wBars: 2,
+  };
   const displaySpec = useDisplaySpec({
     nx: sectionDuration,
     numPitches: uiConfig.numPatternPitches,

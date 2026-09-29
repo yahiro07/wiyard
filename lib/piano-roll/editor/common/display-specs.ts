@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { useAppContext } from "../../root/app-context";
 
-function fixSightWithLeftPadding(sight: Sight): Sight {
+export function fixSightWithLeftPadding(sight: Sight): Sight {
   if (sight.withXPadding) {
     const pad = sight.wBars / 16;
     return {
@@ -21,7 +21,7 @@ function fixSightWithLeftPadding(sight: Sight): Sight {
 export function useDisplaySpec({
   nx,
   numPitches,
-  sight: inputSight,
+  sight,
   mainDivSize,
 }: {
   nx: number;
@@ -29,8 +29,6 @@ export function useDisplaySpec({
   sight: Sight;
   mainDivSize: Size | undefined;
 }): DisplaySpec {
-  const sight = fixSightWithLeftPadding(inputSight);
-
   const viewW = mainDivSize?.width ?? 100;
   const viewH = mainDivSize?.height ?? 100;
 

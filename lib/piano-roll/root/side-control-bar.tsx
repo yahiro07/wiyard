@@ -47,6 +47,12 @@ export const SideControlBar = () => {
           >
             8
           </button>
+          <button
+            className={styles.wButton}
+            onClick={() => store.patchSight({ wBars: 16 })}
+          >
+            16
+          </button>
         </div>
         <div className="flex-v gap-2">
           <button

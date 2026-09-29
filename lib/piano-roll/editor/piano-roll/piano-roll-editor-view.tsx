@@ -8,7 +8,11 @@ import {
 } from "../common/editor-common-layout";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { PositionBar } from "../common/position-bar";
-import { useDisplaySpec, useGridDisplaySpec } from "../common/display-specs";
+import {
+  fixSightWithLeftPadding,
+  useDisplaySpec,
+  useGridDisplaySpec,
+} from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
@@ -19,7 +23,8 @@ export const PianoRollEditorView = () => {
   const keysWidth = 100;
 
   const { store } = useAppContext();
-  const { sight, loopBars } = store.useSnapshot();
+  const { sight: originalSight, loopBars } = store.useSnapshot();
+  const sight = fixSightWithLeftPadding(originalSight);
   const loopSteps = loopBars * 16;
   // const displayBars = clampValue(loopBars * 2, 2, 16);
   const displayBars = 16;
