@@ -1,9 +1,11 @@
 import { createKeyboardUnit } from "@lib/keyboard";
 import { createPianoRollUnit } from "@lib/piano-roll";
 import { HostAppProvider, ReactUnitFrame } from "wafer-host/react";
-import { hostSystem } from "@/domain/host-system-instance";
 import { createAutomationEditorUnit } from "@lib/automation-editor";
 import { createControlSurfaceUnit } from "@lib/control-surface";
+import { createHostSystem } from "wafer-host/core";
+
+const hostSystem = createHostSystem();
 
 const PageRootUnitsDev = () => {
   return (
