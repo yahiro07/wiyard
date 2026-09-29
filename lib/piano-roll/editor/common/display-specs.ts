@@ -34,16 +34,17 @@ export function useDisplaySpec({
 
   const cellW = viewW / (sight.wBars * 16);
   // const cellW = mapUnaryTo(sight.xZoom, 10, 60);
-  const cellH = mapUnaryTo(sight.yZoom, 10, 50);
+  const cellH = mapUnaryTo(sight.yZoom, 15, 40);
 
   const contentW = cellW * nx;
   const contentH = cellH * numPitches;
 
   const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const ty = -sight.yPosition * maxScrollY;
+  let ty = -sight.yPosition * maxScrollY;
+  if (contentH < viewH) {
+    ty = (viewH - contentH) / 2;
+  }
 
-  // const maxScrollX = bottomLimit(contentW - viewW, 0);
-  // const contentX0 = sight.xPosition * maxScrollX;
   const contentX0 = sight.xBarPosition * cellW * 16;
   const tx = -contentX0;
 
@@ -66,14 +67,16 @@ export function useGridDisplaySpec(
   const contentW = cellW * nx;
   const contentH = cellH * numPitches;
 
-  // const maxScrollX = bottomLimit(contentW - viewW, 0);
-  // const contentX0 = sight.xPosition * maxScrollX;
   const contentX0 = sight.xBarPosition * cellW * 16;
   const contentX1 = contentX0 + viewW;
 
   const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const contentY0 = sight.yPosition * maxScrollY;
-  const contentY1 = contentY0 + viewH;
+  let contentY0 = sight.yPosition * maxScrollY;
+  let contentY1 = contentY0 + viewH;
+  if (contentH < viewH) {
+    contentY0 = -(viewH - contentH) / 2;
+    contentY1 = contentH - contentY0;
+  }
 
   const wBars = sight.wBars;
 
