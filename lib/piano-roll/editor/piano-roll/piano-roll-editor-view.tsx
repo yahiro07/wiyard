@@ -6,10 +6,9 @@ import {
   EditorCommonLayout,
   PianoRollEditPartPlane,
 } from "../common/editor-common-layout";
-import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { PositionBar } from "../common/position-bar";
-import { useDisplaySpec } from "../common/use-display-spec";
+import { useDisplaySpec, useGridDisplaySpec } from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";

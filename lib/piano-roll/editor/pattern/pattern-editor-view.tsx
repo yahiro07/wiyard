@@ -8,12 +8,9 @@ import {
   EditorCommonLayout,
   PianoRollEditPartPlane,
 } from "../common/editor-common-layout";
-import {
-  getPatternPitchLabel,
-  useGridDisplaySpec,
-} from "../common/editor-common-logic";
+import { getPatternPitchLabel } from "../common/editor-common-logic";
 import { PositionBar } from "../common/position-bar";
-import { useDisplaySpec } from "../common/use-display-spec";
+import { useDisplaySpec, useGridDisplaySpec } from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PatternGrid } from "./pattern-grid";
 
