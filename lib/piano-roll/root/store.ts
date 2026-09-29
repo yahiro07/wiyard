@@ -32,6 +32,7 @@ type StoreState = {
   keySpec: SongKeySpec;
   liveInputNoteNumbers: number[];
   viewActive: boolean;
+  debugObject: object | null;
 };
 
 export type AppStore = Store<StoreState>;
@@ -66,6 +67,7 @@ const defaultStoreState: StoreState = {
   keySpec: fallbackKeySpec,
   liveInputNoteNumbers: [],
   viewActive: false,
+  debugObject: null,
 };
 if (import.meta.env.DEV && 0) {
   const base = 24;

@@ -40,6 +40,7 @@ export const EditorCommonLayout = ({
       <div>{sideContent}</div>
       <div className="relative" ref={mainDivRef}>
         {mainContent}
+        <DebugOverlay />
       </div>
       <div>
         <ScrollBarV
