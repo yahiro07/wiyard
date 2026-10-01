@@ -59,10 +59,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
         }
       }
       ctx.strokeStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(x, ds.contentY0);
-      ctx.lineTo(x, ds.contentY1);
-      ctx.stroke();
+      dg.drawLine(x, ds.contentY0, x, ds.contentY1);
     }
   }
 
@@ -72,10 +69,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     if (ds.contentY0 <= y && y < ds.contentY1) {
       const isStrong = i % 12 === 0 || i % 12 === 5;
       ctx.strokeStyle = isStrong ? "#0003" : "#0001";
-      ctx.beginPath();
-      ctx.moveTo(ds.contentX0, y);
-      ctx.lineTo(rightX, y);
-      ctx.stroke();
+      dg.drawLine(ds.contentX0, y, rightX, y);
     }
   }
 

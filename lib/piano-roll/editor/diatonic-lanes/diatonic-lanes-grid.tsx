@@ -67,10 +67,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
         }
       }
       ctx.strokeStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(x, ds.contentY0);
-      ctx.lineTo(x, ds.contentY1);
-      ctx.stroke();
+      dg.drawLine(x, ds.contentY0, x, ds.contentY1);
     }
   }
 
@@ -80,10 +77,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       const i2 = i - trDiatonic;
       const strong = i2 % 7 === 0 || i2 % 7 === 3;
       ctx.strokeStyle = strong ? "#0004" : "#0001";
-      ctx.beginPath();
-      ctx.moveTo(ds.contentX0, y);
-      ctx.lineTo(rightX, y);
-      ctx.stroke();
+      dg.drawLine(ds.contentX0, y, rightX, y);
     }
   }
 
