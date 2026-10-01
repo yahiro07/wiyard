@@ -1,11 +1,13 @@
 import { fallbackKeySpec } from "../../definitions/ui-config";
 import { uiColors } from "../../definitions/ui-theme";
+import { createCanvasShapeDrawing } from "../common/canvas-shape-drawing";
 import { GridDisplaySpec } from "../common/editor-types";
 import { GridCanvas } from "../common/grid-canvas";
 
 function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+  const dg = createCanvasShapeDrawing(ctx);
   ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -100,8 +102,8 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       const isBeatDot = i % 4 === 0;
       if (isBeatDot) {
         ctx.fillStyle = "#fff1";
-        ctx.fillRect(x - r, y - r, r * 2, r * 2);
-        ctx.fillRect(x - r, y2 - r, r * 2, r * 2);
+        dg.fillCircle(x, y, r);
+        dg.fillCircle(x, y2, r);
       }
     }
   }
