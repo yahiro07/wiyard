@@ -81,12 +81,14 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   for (let i = 0; i < ds.numStepsFull; i++) {
     const x = i * ds.cellW + ds.cellW / 2 - 3;
     const y = ds.contentH - 24 * ds.cellH - ds.cellH + ds.cellH / 2 - 3;
-
-    if (ds.contentX0 <= x + 3 && x < ds.contentX1) {
+    const y2 = ds.contentH - 36 * ds.cellH - ds.cellH + ds.cellH / 2 - 3;
+    const r = 2.5;
+    if (ds.contentX0 <= x + r && x < ds.contentX1) {
       const isBeatDot = i % 4 === 0;
       if (isBeatDot) {
         ctx.fillStyle = "#fff1";
-        ctx.fillRect(x, y, 6, 6);
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+        ctx.fillRect(x - r, y2 - r, r * 2, r * 2);
       }
     }
   }

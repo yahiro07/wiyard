@@ -55,7 +55,10 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       if (i % 16 === 0) {
         color = "#0008";
       } else if (i % 4 === 0) {
-        color = "#0004";
+        if (ds.wBars === 16 && i % 8 === 4) {
+        } else {
+          color = "#0004";
+        }
       } else {
         if (weakLineInterval !== -1 && i % weakLineInterval === 0) {
           color = "#0002";
@@ -79,6 +82,27 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       ctx.moveTo(ds.contentX0, y);
       ctx.lineTo(rightX, y);
       ctx.stroke();
+    }
+  }
+
+  //beat dots
+  for (let i = 0; i < ds.numStepsFull; i++) {
+    const x = i * ds.cellW + ds.cellW / 2;
+    const y =
+      ds.contentH -
+      (14 + trDiatonic + (keySpec.mode === "minor" ? 5 : 0)) * ds.cellH -
+      ds.cellH +
+      ds.cellH / 2;
+    const y2 = y - 7 * ds.cellH;
+    const r = 2.5;
+
+    if (ds.contentX0 <= x + r && x < ds.contentX1) {
+      const isBeatDot = i % 4 === 0;
+      if (isBeatDot) {
+        ctx.fillStyle = "#fff1";
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+        ctx.fillRect(x - r, y2 - r, r * 2, r * 2);
+      }
     }
   }
   ctx.restore();

@@ -57,6 +57,20 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       ctx.stroke();
     }
   }
+
+  //beat dots
+  for (let i = 0; i < ds.numStepsFull; i++) {
+    const x = i * ds.cellW + ds.cellW / 2;
+    const y = ds.contentH - 7 * ds.cellH - ds.cellH + ds.cellH / 2;
+    const r = 2.5;
+    if (ds.contentX0 <= x + r && x < ds.contentX1) {
+      const isBeatDot = i % 4 === 0;
+      if (isBeatDot) {
+        ctx.fillStyle = "#fff1";
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      }
+    }
+  }
   ctx.restore();
 }
 
