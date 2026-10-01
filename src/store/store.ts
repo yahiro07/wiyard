@@ -10,6 +10,7 @@ import { hostSystem } from "@/domain/host-system-instance";
 import {
   GraphSpec,
   PortStuff,
+  UnitControlEffectItem,
   UnitAddingItem,
   UnitItem,
   UnitStuff,
@@ -20,13 +21,15 @@ import {
   defaultBoardSize,
   defaultGraphSpec,
 } from "@/project/default-data";
-import { ProjectLoadErrorStatus } from "@/store/store-types";
+import { ProjectLoadErrorStatus, SettingsPanelTab } from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
 import { appConfig } from "@/common/app-config";
+import { defaultUiTheme, UiTheme } from "@/common/ui-theme";
 
 export type StoreState = {
   //included in project data
   unitItems: UnitItem[];
+  unitControlEffects: Record<string, UnitControlEffectItem>;
   wireConnectionKeys: string[];
   wireGains: Record<string, number>; //0~1,center 0.5 for unity gain, store only edited values
   wireAutomationParameterIds: Record<string, string>;
@@ -45,6 +48,7 @@ export type StoreState = {
   midiInEnabled: boolean;
   masterVolume: number;
   settings: AppSettings;
+  uiTheme: UiTheme;
   //not persisted
   unitStuffs: Record<string, UnitStuff>;
   portStuffs: Record<string, PortStuff>;
@@ -68,10 +72,12 @@ export type StoreState = {
   settingsPanelVisible: boolean;
   debugObject: object | null;
   graphAreaElevated: boolean;
+  settingsPanelTab: SettingsPanelTab;
 };
 
 const blankStoreState: StoreState = {
   unitItems: [],
+  unitControlEffects: {},
   wireConnectionKeys: [],
   wireAutomationParameterIds: {},
   wireGains: {},
@@ -90,6 +96,7 @@ const blankStoreState: StoreState = {
   midiInEnabled: false,
   masterVolume: 0.5,
   settings: defaultAppSettings,
+  uiTheme: defaultUiTheme,
   //
   unitStuffs: {},
   portStuffs: {},
@@ -113,10 +120,12 @@ const blankStoreState: StoreState = {
   settingsPanelVisible: false,
   debugObject: null,
   graphAreaElevated: false,
+  settingsPanelTab: "general",
 };
 
 export const projectResetterStates: Partial<StoreState> = {
   unitItems: [],
+  unitControlEffects: {},
   wireConnectionKeys: [],
   wireAutomationParameterIds: {},
   wireGains: {},

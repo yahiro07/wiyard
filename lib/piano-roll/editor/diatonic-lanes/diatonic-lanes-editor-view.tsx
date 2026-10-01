@@ -1,29 +1,33 @@
-import { topLimit } from "@lib/utils/number-helper";
-import { useDomElementSize } from "@lib/utils/use-dom-element-size";
-import { useRef } from "react";
+import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 import {
   EditorCommonLayout,
   PianoRollEditPartPlane,
 } from "../common/editor-common-layout";
-import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { PositionBar } from "../common/position-bar";
-import { useDisplaySpec } from "../common/use-display-spec";
+import {
+  fixSightWithLeftPadding,
+  useDisplaySpec,
+  useGridDisplaySpec,
+} from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { DiatonicLanesGrid } from "./diatonic-lanes-grid";
 import { DiatonicPitchIndexColumn } from "./diatonic-pitch-index-column";
+import { Size } from "@lib/utils/common-types";
 
 export const DiatonicLanesEditorView = () => {
-  const mainDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(mainDivRef);
+  const [mainDivSize, setMainDivSize] = useState<Size | undefined>();
   const keysWidth = 100;
 
   const { store } = useAppContext();
-  const { sight, loopBars, keySpec } = store.useSnapshot();
+  const { sight: originalSight, loopBars, keySpec } = store.useSnapshot();
+  const sight = fixSightWithLeftPadding(originalSight);
   const loopSteps = loopBars * 16;
-  const displaySteps = topLimit(loopSteps * 2, 16 * 16);
+  // const displaySteps = topLimit(loopSteps * 2, 16 * 16);
+  const displaySteps = 256;
+
   const numPitches = uiConfig.numDiatonicLanes;
 
   const displaySpec = useDisplaySpec({
@@ -41,7 +45,7 @@ export const DiatonicLanesEditorView = () => {
   );
   return (
     <EditorCommonLayout
-      mainDivRef={mainDivRef}
+      mainDivSizeCallback={setMainDivSize}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <DiatonicPitchIndexColumn cellH={displaySpec.cellH} />

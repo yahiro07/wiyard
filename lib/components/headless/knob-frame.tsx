@@ -9,14 +9,16 @@ type Props = {
   max: number;
   step: number;
   children: ReactNode;
-  onChange: (value: number) => void;
+  onChange?: (value: number) => void;
   dragRange?: number;
   onTap?: () => void;
+  onHold?: () => void;
   horizontal?: boolean;
   invert?: boolean;
   cursor?: string;
   onDragStart?: () => void;
   onDragEnd?: () => void;
+  holdDurationTh?: number;
 };
 
 export function KnobFrame({
@@ -29,37 +31,46 @@ export function KnobFrame({
   onChange,
   dragRange = 100,
   onTap,
+  onHold,
   horizontal,
   invert,
   cursor = "pointer",
   onDragStart,
   onDragEnd,
+  holdDurationTh,
 }: Props) {
   const handlePointerDown = (e0: React.PointerEvent) => {
     const originalValue = value;
     onDragStart?.();
-    startDragSessionEx(e0.nativeEvent, {
-      onMove(_, moveAmount) {
-        let delta =
-          (horizontal ? moveAmount.x : -moveAmount.y) /
-          (dragRange / (max - min));
-        if (invert) {
-          delta *= -1;
-        }
-        let newValue = originalValue + delta;
-        if (step > 0) {
-          newValue = Math.round(newValue / step) * step;
-        }
-        newValue = clampValue(newValue, min, max);
-        onChange(newValue);
+    startDragSessionEx(
+      e0.nativeEvent,
+      {
+        onMove(_, moveAmount) {
+          let delta =
+            (horizontal ? moveAmount.x : -moveAmount.y) /
+            (dragRange / (max - min));
+          if (invert) {
+            delta *= -1;
+          }
+          let newValue = originalValue + delta;
+          if (step > 0) {
+            newValue = Math.round(newValue / step) * step;
+          }
+          newValue = clampValue(newValue, min, max);
+          onChange?.(newValue);
+        },
+        onTap() {
+          onTap?.();
+        },
+        onHold() {
+          onHold?.();
+        },
+        onEnd() {
+          onDragEnd?.();
+        },
       },
-      onTap() {
-        onTap?.();
-      },
-      onEnd() {
-        onDragEnd?.();
-      },
-    });
+      { holdDurationTh },
+    );
   };
   return (
     <div

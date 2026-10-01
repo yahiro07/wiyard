@@ -1,6 +1,6 @@
 import { appEnvs } from "@/common/app-envs";
 import { projectsModel } from "@/project/projects-model";
-import { store, windowSystem } from "@/store/store";
+import { store } from "@/store/store";
 import {
   ControlButtons,
   ControlButtonsRight,
@@ -8,9 +8,11 @@ import {
 import { ProjectButtons } from "@/views/controls/project-buttons";
 
 export const TopBar = () => {
+  const { uiTheme } = store.useSnapshot();
+
   const handleClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
-      windowSystem.toggleMinimizeAll();
+      // windowSystem.toggleMinimizeAll();
     }
   };
   const handleTitleClick = (e: React.MouseEvent) => {
@@ -21,7 +23,8 @@ export const TopBar = () => {
   };
   return (
     <div
-      className="h-50px bg-gray-600 relative flex-ha px-2 justify-between"
+      className="h-50px relative flex-ha px-2 justify-between"
+      style={{ background: uiTheme.titleBarBg }}
       onClick={handleClick}
     >
       <div className="invisible">
@@ -38,7 +41,7 @@ export const TopBar = () => {
           className="pointer-events-auto text-xl font-500 pl-2"
           onClick={handleTitleClick}
         >
-          Wireboard
+          Wiyard
         </h1>
       </div>
     </div>

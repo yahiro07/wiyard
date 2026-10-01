@@ -1,6 +1,6 @@
 import { NoteInputPort } from "wafer-host/unit-types";
 import { SequencerEngine } from "./sequencer";
-import { AppStore } from "./store";
+import { AppStore } from "../model/store";
 
 export function createLiveNoteInput(
   engine: SequencerEngine,

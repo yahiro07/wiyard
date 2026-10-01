@@ -14,22 +14,36 @@ const colorStyles = {
 };
 
 export const ScrollBarH = ({
-  position,
+  trackOffset,
+  trackLength,
+  fullLength,
+  step,
   onChange,
+  disabledWithNoTrack,
 }: {
-  position: number;
-  onChange: (position: number) => void;
+  trackOffset: number;
+  trackLength: number;
+  fullLength: number;
+  step: number;
+  onChange: (offset: number) => void;
+  disabledWithNoTrack?: boolean;
 }) => {
   const baseDivRef = useRef<HTMLDivElement>(null);
   const size = useDomElementSize(baseDivRef);
-  const dragRange = size?.width ? size.width - 200 : undefined;
+  const trackOffsetMax = fullLength - trackLength;
+  const trackLeftP = trackOffset / fullLength;
+  const trackWidthP = trackLength / fullLength;
+
+  const trackMaxP = trackOffsetMax / fullLength;
+  const dragRange = size?.width ? size.width * trackMaxP : undefined;
+
   return (
     <KnobFrame
-      value={position}
-      onChange={onChange}
+      value={trackOffset}
+      onChange={!disabledWithNoTrack ? onChange : undefined}
       min={0}
-      max={1}
-      step={0.01}
+      max={trackOffsetMax}
+      step={step}
       horizontal
       dragRange={dragRange}
       cursor="auto"
@@ -39,13 +53,16 @@ export const ScrollBarH = ({
         className={cz("w-full h-22px relative")}
         style={colorStyles.base}
       >
-        <div
-          className={cz("w-200px h-full absolute top-0")}
-          style={{
-            ...colorStyles.track,
-            left: `calc(${position * 100}% - ${position * 200}px)`,
-          }}
-        />
+        {!disabledWithNoTrack && (
+          <div
+            className={cz("w-200px h-full absolute top-0")}
+            style={{
+              ...colorStyles.track,
+              left: `${trackLeftP * 100}%`,
+              width: `${trackWidthP * 100}%`,
+            }}
+          />
+        )}
       </div>
     </KnobFrame>
   );

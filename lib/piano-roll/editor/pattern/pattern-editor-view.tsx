@@ -1,21 +1,19 @@
 import { cz } from "@lib/utils/cz";
 import { seqNumbers } from "@lib/utils/number-helper";
-import { useRef } from "react";
-import { useDomElementSize } from "../../../utils/use-dom-element-size";
+import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 import {
   EditorCommonLayout,
   PianoRollEditPartPlane,
 } from "../common/editor-common-layout";
-import {
-  getPatternPitchLabel,
-  useGridDisplaySpec,
-} from "../common/editor-common-logic";
+import { getPatternPitchLabel } from "../common/editor-common-logic";
 import { PositionBar } from "../common/position-bar";
-import { useDisplaySpec } from "../common/use-display-spec";
+import { useDisplaySpec, useGridDisplaySpec } from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PatternGrid } from "./pattern-grid";
+import { Sight } from "../../definitions/types";
+import { Size } from "@lib/utils/common-types";
 
 const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
   return (
@@ -40,13 +38,17 @@ const PitchIndexColumn = ({ cellH }: { cellH: number }) => {
 };
 
 export const PatternEditorView = () => {
-  const mainDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(mainDivRef);
+  const [mainDivSize, setMainDivSize] = useState<Size | undefined>();
   const keysWidth = 100;
   const sectionDuration = 2 * 16; //fixed for pattern
   const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
+  const { sight: originalSight } = store.useSnapshot();
 
+  const sight: Sight = {
+    ...originalSight,
+    xBarPosition: 0,
+    wBars: 2,
+  };
   const displaySpec = useDisplaySpec({
     nx: sectionDuration,
     numPitches: uiConfig.numPatternPitches,
@@ -62,7 +64,7 @@ export const PatternEditorView = () => {
 
   return (
     <EditorCommonLayout
-      mainDivRef={mainDivRef}
+      mainDivSizeCallback={setMainDivSize}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <PitchIndexColumn cellH={displaySpec.cellH} />

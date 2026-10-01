@@ -5,7 +5,6 @@ import { useRef } from "react";
 import { AutomationParameterSpec } from "wafer-host/unit-types";
 import { decodeWireConnectionKey } from "@/domain/port-helpers";
 import { store } from "@/store/store";
-import { wireGetters } from "@/store/wire-getters";
 import { useWireMiddlePoint } from "@/views/wiring/wire-view-helpers";
 import { wireColors } from "@/common/appearance";
 
@@ -55,7 +54,7 @@ const AutomationSwitcherMenu = ({
   );
 };
 
-const AutomationSwitcherContainer = ({
+export const AutomationSwitcherContainer = ({
   connectionKey,
 }: {
   connectionKey: string;
@@ -99,7 +98,7 @@ const AutomationSwitcherContainer = ({
           onClick={onAnchorClick}
         >
           <div
-            className="w-3 h-3"
+            className="w-9px h-9px"
             style={{ backgroundColor: wireColors.automation }}
           />
         </div>
@@ -111,18 +110,6 @@ const AutomationSwitcherContainer = ({
           automationParameterSpecs={automationParameterSpecs}
         />
       )}
-    </div>
-  );
-};
-
-export const WireAutomationSwitchersRoot = () => {
-  const connectionKeys =
-    wireGetters.useBoardUnitSubtypedConnectionKeys("automation");
-  return (
-    <div>
-      {connectionKeys.map((key) => (
-        <AutomationSwitcherContainer key={key} connectionKey={key} />
-      ))}
     </div>
   );
 };

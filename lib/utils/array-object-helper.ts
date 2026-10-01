@@ -39,6 +39,19 @@ export function pickObjectMembers<T extends {}, K extends keyof T>(
   return destObj;
 }
 
+export function copyObjectWithOverwrite<T extends object>(
+  base: T,
+  attrs: Partial<T>,
+): T {
+  const target = structuredClone(base);
+  for (const key in attrs) {
+    if (target[key] !== undefined) {
+      target[key] = attrs[key] as T[typeof key];
+    }
+  }
+  return target;
+}
+
 export function getObjectKeys<T extends object>(obj: T): (keyof T)[] {
   return Object.keys(obj) as (keyof T)[];
 }

@@ -1,7 +1,7 @@
 import { Point, Size } from "@lib/utils/common-types";
 import { HsPortDirection, HsPortSubtype } from "wafer-host/core";
 import { CatalogKey } from "@/domain/unit-entries";
-import { AutomationParameterSpec } from "wafer-host/unit-types";
+import { AutomationParameterSpec, PresetProvider } from "wafer-host/unit-types";
 
 export type BoardUnitItem = {
   type: "board";
@@ -44,7 +44,7 @@ export type UnitItem =
   | ControlSurfaceUnitItem;
 
 export const windowIds = {
-  pianoRoll: "pianoRollWIndow",
+  pianoRoll: "pianoRollWindow",
   keyboard: "keyboardWindow",
   automationEditor: "automationEditorWindow",
   controlSurface: "controlSurfaceWindow",
@@ -68,6 +68,7 @@ export type UnitStuff = {
   viewSize?: Size;
   automationParameterSpecs?: AutomationParameterSpec[];
   outputPortsOptInFlags?: Record<string, boolean>;
+  presetProvider?: PresetProvider;
 };
 
 export type PortStuff = {
@@ -87,4 +88,9 @@ export type GraphSpec = {
   contentOffset: Point;
   contentScaling: number;
   planeSize: Size;
+};
+
+export type UnitControlEffectItem = {
+  volume: number;
+  pan: number;
 };

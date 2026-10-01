@@ -8,18 +8,20 @@ export const Knob = ({
   min = 0,
   max = 1,
   step = 0.01,
-  onClick,
+  onTap,
+  onHold,
   disabled,
-  smaller,
+  size = 26,
 }: {
   value: number;
   onChange: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
-  onClick?: () => void;
+  onTap?: () => void;
+  onHold?: () => void;
   disabled?: boolean;
-  smaller?: boolean;
+  size?: number;
 }) => {
   const tickAngle = linearInterpolate(value, min, max, -135, 135);
   return (
@@ -29,20 +31,24 @@ export const Knob = ({
       max={max}
       step={step}
       onChange={onChange}
-      onTap={onClick}
+      onTap={onTap}
+      onHold={onHold}
     >
       <div
-        className={cz(
-          "rounded-full relative bg-gray-500",
-          !smaller ? "w-26px h-26px" : "w-24px h-24px",
-        )}
-        style={{ opacity: disabled ? 0.5 : 1 }}
+        className={cz("rounded-full relative bg-gray-500")}
+        style={{ width: size, height: size, opacity: disabled ? 0.5 : 1 }}
       >
         <div
           className="w-full h-full flex-va"
           style={{ transform: `rotate(${tickAngle}deg)` }}
         >
-          <div className="w-2.5px h-9px bg-white" />
+          <div
+            className="bg-white"
+            style={{
+              width: size * 0.1,
+              height: size * 0.38,
+            }}
+          />
         </div>
       </div>
     </KnobFrame>

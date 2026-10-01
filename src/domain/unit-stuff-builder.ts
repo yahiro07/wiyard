@@ -24,12 +24,16 @@ export function buildUnitStuffLoaded(unitInstance: HsUnitInstance): UnitStuff {
     )
     .map((_p) => {
       const p = _p as HsPortInfoAdditional | HsPortInfoPrimaryInner;
+      let label: string | undefined;
+      if (p.type === "additional" && p.subtype !== "automation") {
+        label = p.label ?? p.portId;
+      }
       return {
         direction: p.direction,
         id: p.portId,
         portKey: `${unitId}.${p.portId}`,
         subtype: p.subtype,
-        label: "label" in p ? p.label : undefined,
+        ...(label ? { label } : {}),
       };
     })
     .sort((a, b) => {
@@ -56,5 +60,6 @@ export function buildUnitStuffLoaded(unitInstance: HsUnitInstance): UnitStuff {
     outputPortSpecs,
     automationParameterSpecs,
     outputPortsOptInFlags,
+    presetProvider: unitInstance.presetProvider,
   };
 }

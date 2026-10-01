@@ -108,7 +108,7 @@ const SightZoomInput = () => {
         onChange={(v) => store.patchSight({ eyeScaling: v })}
         min={0.1}
         max={2}
-        smaller
+        size={24}
       />
     </UpperLabel>
   );
@@ -129,7 +129,7 @@ const GithubLinkButton = () => {
   return (
     <ControlButton
       onClick={() =>
-        window.open("https://github.com/yahiro07/wireboard", "_blank")
+        window.open("https://github.com/yahiro07/wiyard", "_blank")
       }
       children={<Icons.Github size={26} />}
     />

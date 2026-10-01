@@ -16,7 +16,7 @@ export async function saveProjectJsonToLocalFileSystem(
       startIn: "downloads",
       types: [
         {
-          description: "Wireboard project",
+          description: "Wiyard project",
           accept: { "application/json": [".json"] },
         },
       ],

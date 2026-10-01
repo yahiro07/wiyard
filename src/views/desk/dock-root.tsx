@@ -1,9 +1,9 @@
 import { cz } from "@lib/utils/cz";
 import {
+  DockCleanupButtons,
   WindowDockItem,
   WindowDockItemView,
   WindowDockMV,
-  WindowDockWH,
 } from "@lib/window-system";
 import { IconType } from "react-icons";
 import { Icons } from "@/common/icons";
@@ -12,6 +12,7 @@ import { store, windowSystem } from "@/store/store";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import { getCatalogItemWithFallback } from "@/domain/unit-entries";
 import { appConfig } from "@/common/app-config";
+import { getSortOrder } from "@lib/utils/array-object-helper";
 import { ScalerBoxSC } from "@lib/components/headless/scaler-box-sc";
 
 const DockIcon = ({
@@ -39,30 +40,38 @@ const DockIcon = ({
 };
 
 const UnitDockItemsView = () => {
-  const { unitItems } = store.useSnapshot();
+  const { unitItems, windowSpecs } = store.useSnapshot();
+  const sortedItems = unitItems
+    .filter((item) => item.type === "board")
+    .sort(
+      getSortOrder((item) => {
+        const windowSpec = windowSpecs[item.unitId];
+        return windowSpec?.position.x ?? 99999;
+      }),
+    );
   return (
     <>
-      {unitItems
-        .filter((item) => item.type === "board")
-        .map((item) => {
-          const catalogItem = getCatalogItemWithFallback(item.catalogKey);
-          return (
-            <WindowDockItem
-              key={item.unitId}
-              id={item.unitId}
-              title={catalogItem.name}
-              imageUrl={catalogItem.thumbnailUrl}
-            />
-          );
-        })}
+      {sortedItems.map((item) => {
+        const catalogItem = getCatalogItemWithFallback(item.catalogKey);
+        return (
+          <WindowDockItem
+            key={item.unitId}
+            id={item.unitId}
+            title={catalogItem.name}
+            imageUrl={catalogItem.thumbnailUrl}
+          />
+        );
+      })}
     </>
   );
 };
 
-const BuiltinDockItemsView = () => {
+const BuiltinDockItemsView = ({ target }: { target: "head" | "rest" }) => {
+  const items =
+    target === "head" ? builtinAppItems.slice(0, 1) : builtinAppItems.slice(1);
   return (
     <>
-      {builtinAppItems.map((item) => {
+      {items.map((item) => {
         const { windowId, title, dockItemSpec } = item;
         return (
           <WindowDockItem
@@ -84,36 +93,94 @@ const BuiltinDockItemsView = () => {
   );
 };
 
+const ElevationButton = () => {
+  const { graphAreaElevated } = store.useSnapshot();
+  return (
+    <WindowDockItemView
+      title="elevation"
+      onClick={actions.toggleGraphAreaElevated}
+      children={
+        <DockIcon
+          icon={Icons.StackForward}
+          bgColor={graphAreaElevated ? "#6bf" : "#909098"}
+          textColor="#fff"
+          fontSize={30}
+        />
+      }
+    />
+  );
+};
+
+const DeskViewButton = () => {
+  return (
+    <WindowDockItemView
+      title="desk view"
+      onClick={windowSystem.toggleMinimizeAll}
+      children={
+        <DockIcon
+          icon={Icons.Desktop}
+          bgColor="#909098"
+          textColor="#fff"
+          fontSize={24}
+        />
+      }
+    />
+  );
+};
+
+const PluginPickerButton = () => {
+  return (
+    <WindowDockItemView
+      title="plugin picker"
+      onClick={actions.toggleUnitPickerVisible}
+      children={
+        <DockIcon
+          icon={Icons.Apps}
+          bgColor="#fff"
+          textColor="#ccd"
+          fontSize={30}
+        />
+      }
+    />
+  );
+};
+
+const DockContentsCentered = () => {
+  return (
+    <div
+      className="grid w-full items-center gap-6"
+      style={{ gridTemplateColumns: "minmax(0, 1fr) auto minmax(0, 1fr)" }}
+    >
+      <div className="flex-ha gap-2 justify-end">
+        <BuiltinDockItemsView target="rest" />
+      </div>
+
+      <div className="flex-ha gap-2">
+        <BuiltinDockItemsView target="head" />
+        <DeskViewButton />
+        {false && <ElevationButton />}
+        <PluginPickerButton />
+        <DockCleanupButtons />
+      </div>
+
+      <div className="flex-ha gap-2">
+        <UnitDockItemsView />
+      </div>
+    </div>
+  );
+};
+
 const DockContents = () => {
   return (
-    <>
-      <WindowDockItemView
-        title="plugin picker"
-        onClick={actions.toggleUnitPickerVisible}
-        children={
-          <DockIcon
-            icon={Icons.Apps}
-            bgColor="#fff"
-            textColor="#ccd"
-            fontSize={30}
-          />
-        }
-      />
-      <WindowDockItemView
-        title="desk view"
-        onClick={windowSystem.toggleMinimizeAll}
-        children={
-          <DockIcon
-            icon={Icons.Desktop}
-            bgColor="#909098"
-            textColor="#fff"
-            fontSize={24}
-          />
-        }
-      />
-      <BuiltinDockItemsView />
+    <div className="flex-c gap-2">
+      <BuiltinDockItemsView target="head" />
+      <DeskViewButton />
+      {false && <ElevationButton />}
+      <PluginPickerButton />
+      <BuiltinDockItemsView target="rest" />
       <UnitDockItemsView />
-    </>
+      <DockCleanupButtons />
+    </div>
   );
 };
 
@@ -135,13 +202,12 @@ export const InnerDockRoot = () => {
 };
 
 export const BottomBarWithDock = () => {
+  const { uiTheme } = store.useSnapshot();
   if (appConfig.dockPlacement !== "bottomBar") return;
   return (
-    <div className="py-2.5 bg-gray-600 flex-c">
+    <div className="py-2.5 flex-c" style={{ background: uiTheme.titleBarBg }}>
       <ScalerBoxSC scale={0.9}>
-        <WindowDockWH>
-          <DockContents />
-        </WindowDockWH>
+        {false ? <DockContentsCentered /> : <DockContents />}
       </ScalerBoxSC>
     </div>
   );

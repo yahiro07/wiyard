@@ -20,6 +20,7 @@ import {
   NoteInputPortUnitItem,
   PortStuff,
   UnitAddingItem,
+  UnitControlEffectItem,
   UnitStuff,
   windowIds,
 } from "@/domain/types";
@@ -27,6 +28,7 @@ import { CatalogKey } from "@/domain/unit-entries";
 import { unitIdHelper } from "@/domain/unit-id-helper";
 import { cardPlacementHelper } from "@/store/card-placement-helper";
 import { commonGetters } from "@/store/common-getters";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store, windowSystem } from "@/store/store";
 
@@ -34,9 +36,12 @@ const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
     const viewSize = store.state.unitStuffs[windowId]?.viewSize;
     if (viewSize) {
-      const baseHeight = 220;
+      const maxHeight = 220;
       const maxWidth = 440;
-      let scale = Math.min(baseHeight / viewSize.height);
+      let scale = 1;
+      if (viewSize.height > maxHeight) {
+        scale = maxHeight / viewSize.height;
+      }
       if (viewSize.width * scale > maxWidth) {
         scale = maxWidth / viewSize.width;
       }
@@ -121,6 +126,12 @@ const helpers = {
   },
 };
 
+const removeRecordKeys = (dict: Record<string, any>, keys: string[]) => {
+  for (const key of keys) {
+    delete dict[key];
+  }
+};
+
 export const actionsInternal = {
   patchUnitAttrs(unitId: string, attrs: Partial<{ cardPosition: Point }>) {
     store.setUnitItems((prev) =>
@@ -133,16 +144,12 @@ export const actionsInternal = {
     store.setWireConnectionKeys((prev) =>
       prev.filter((key) => !wireConnectionKeys.includes(key)),
     );
-    store.produceWireGains((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
-    store.produceWireAutomationParameterIds((draft) => {
-      for (const key of wireConnectionKeys) {
-        delete draft[key];
-      }
-    });
+    store.produceWireGains((draft) =>
+      removeRecordKeys(draft, wireConnectionKeys),
+    );
+    store.produceWireAutomationParameterIds((draft) =>
+      removeRecordKeys(draft, wireConnectionKeys),
+    );
   },
 };
 
@@ -252,6 +259,11 @@ export const actions = {
       cardPosition: position,
     };
     store.setUnitItems((prev) => [...prev, newUnit]);
+    const isControlEffectEnabled =
+      controlEffectUnitGetters.isUnitControlEffectDefaultEnabled(catalogKey);
+    if (isControlEffectEnabled) {
+      store.patchUnitControlEffects({ [unitId]: { volume: 0.5, pan: 0.5 } });
+    }
   },
   addNoteChannel() {
     const existingPorts = notePortGetters.filterNoteInputPortUnitItems(
@@ -324,6 +336,7 @@ export const actions = {
     actionsInternal.removeWires(wireConnectionKeys);
     store.setUnitItems((prev) => prev.filter((item) => item.unitId !== unitId));
     store.setMenuTargetUnitId(null);
+    store.produceUnitControlEffects((draft) => delete draft[unitId]);
     windowSystem.remove(unitId);
   },
   toggleMidiInEnabled() {
@@ -374,7 +387,33 @@ export const actions = {
   setKeyName(keyName: KeyName) {
     store.setKeyName(keyName);
   },
-  setWireGain(wireConnectionKey: string, value: number) {
-    store.patchWireGains({ [wireConnectionKey]: value });
+  setWireGain(wireConnectionKey: string, value: number | null) {
+    store.produceWireGains((draft) => {
+      setOrDeleteValue(draft, wireConnectionKey, value);
+    });
+  },
+  toggleUnitControlEffect(unitId: string) {
+    store.produceUnitControlEffects((draft) => {
+      if (draft[unitId] === undefined) {
+        draft[unitId] = { volume: 0.5, pan: 0.5 };
+      } else {
+        delete draft[unitId];
+      }
+    });
+  },
+  setUnitControlEffectValue<K extends keyof UnitControlEffectItem>(
+    unitId: string,
+    key: K,
+    value: UnitControlEffectItem[K],
+  ) {
+    store.patchUnitControlEffects((prev) => ({
+      [unitId]: { ...prev[unitId], [key]: value },
+    }));
+  },
+  setGraphAreaElevated(elevated: boolean) {
+    store.setGraphAreaElevated(elevated);
+  },
+  toggleGraphAreaElevated() {
+    store.toggleGraphAreaElevated();
   },
 };

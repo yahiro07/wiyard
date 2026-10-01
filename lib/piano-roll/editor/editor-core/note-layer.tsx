@@ -4,7 +4,7 @@ import { mapUnaryTo, seqNumbers } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext, useStoreAccess } from "../../root/app-context";
+import { useAppContext, useStoreAccess } from "../../model/app-context";
 import {
   diatonicLanesPitchHelper,
   getPatternPitchLabel,

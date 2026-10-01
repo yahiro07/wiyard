@@ -1,29 +1,32 @@
-import { clampValue } from "@lib/utils/number-helper";
-import { useRef } from "react";
-import { useDomElementSize } from "../../../utils/use-dom-element-size";
+import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 import {
   EditorCommonLayout,
   PianoRollEditPartPlane,
 } from "../common/editor-common-layout";
-import { useGridDisplaySpec } from "../common/editor-common-logic";
 import { PlayPositionLineLayer } from "../common/play-position-line-layer";
 import { PositionBar } from "../common/position-bar";
-import { useDisplaySpec } from "../common/use-display-spec";
+import {
+  fixSightWithLeftPadding,
+  useDisplaySpec,
+  useGridDisplaySpec,
+} from "../common/display-specs";
 import { NoteLayerRoot } from "../editor-core/note-layer";
 import { PianoRollGrid } from "./piano-roll-grid";
 import { SideKeyboardColumn } from "./side-keyboard-column";
+import { Size } from "@lib/utils/common-types";
 
 export const PianoRollEditorView = () => {
-  const mainDivRef = useRef<HTMLDivElement>(null);
-  const mainDivSize = useDomElementSize(mainDivRef);
+  const [mainDivSize, setMainDivSize] = useState<Size | undefined>();
   const keysWidth = 100;
 
   const { store } = useAppContext();
-  const { sight, loopBars } = store.useSnapshot();
+  const { sight: originalSight, loopBars } = store.useSnapshot();
+  const sight = fixSightWithLeftPadding(originalSight);
   const loopSteps = loopBars * 16;
-  const displayBars = clampValue(loopBars * 2, 2, 16);
+  // const displayBars = clampValue(loopBars * 2, 2, 16);
+  const displayBars = 16;
   const displaySteps = displayBars * 16;
 
   const displaySpec = useDisplaySpec({
@@ -40,7 +43,7 @@ export const PianoRollEditorView = () => {
   );
   return (
     <EditorCommonLayout
-      mainDivRef={mainDivRef}
+      mainDivSizeCallback={setMainDivSize}
       sideContent={
         <div style={{ transform: `translateY(${displaySpec.ty}px)` }}>
           <SideKeyboardColumn cellH={displaySpec.cellH} width={keysWidth} />

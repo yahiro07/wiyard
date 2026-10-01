@@ -12,6 +12,8 @@ import { store, windowSystem } from "@/store/store";
 import { Point } from "@lib/utils/common-types";
 import { domGetters } from "@/common/dom-ids";
 import { cardPlacementHelper } from "@/store/card-placement-helper";
+import { UnitControlEffectBar } from "@/views/unit-card/unit-cards";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 
 const pickerItemHandlers = {
   handlePointerDown(
@@ -21,33 +23,48 @@ const pickerItemHandlers = {
     const coordinateBaseElement = domGetters.getDomGraphEditPlane();
 
     const getCardPosition = (domPosition: Point) => {
-      const {
-        graphSpec: { planeSize, contentOffset, contentScaling },
-      } = store.state;
-      const relX = domPosition.x - planeSize.width / 2;
-      const relY = domPosition.y - planeSize.height / 2;
-      const pos = {
-        x: relX / contentScaling - contentOffset.x,
-        y: relY / contentScaling - contentOffset.y,
-      };
+      const pos = { x: domPosition.x, y: domPosition.y };
       return cardPlacementHelper.clampCardPositionInGraphPlane(pos);
     };
-    createDragSessionEx(e, { coordinateBaseElement }).run({
+
+    let cancelled = false;
+
+    const dragSession = createDragSessionEx(e, { coordinateBaseElement });
+    const keyboardHandlers = {
+      handleKeyDown(e: KeyboardEvent) {
+        if (e.key === "Escape") {
+          cancelled = true;
+          actions.setUnitAddingItem(null);
+        }
+      },
+      setup() {
+        window.addEventListener("keydown", keyboardHandlers.handleKeyDown);
+      },
+      cleanup() {
+        window.removeEventListener("keydown", keyboardHandlers.handleKeyDown);
+      },
+    };
+    keyboardHandlers.setup();
+
+    dragSession.run({
       onStart() {
         actions.setUnitPickerVisible(false);
         windowSystem.minimizeAll();
       },
       onMove(pos) {
+        if (cancelled) return;
         actions.setUnitAddingItem({
           catalogKey,
           position: getCardPosition(pos),
         });
       },
       onUp(pos) {
+        if (cancelled) return;
         actions.addUnit(catalogKey, getCardPosition(pos));
       },
       onEnd() {
         actions.setUnitAddingItem(null);
+        keyboardHandlers.cleanup();
       },
     });
   },
@@ -78,11 +95,14 @@ const UnitPicker = () => {
                   e.stopPropagation();
                 }}
               >
-                <img
-                  className="h-80px"
-                  src={item.thumbnailUrl}
-                  alt={item.name}
-                />
+                <div className="h-80px max-w-140px">
+                  <img
+                    className="h-full object-cover"
+                    style={{ objectPosition: "left" }}
+                    src={item.thumbnailUrl}
+                    alt={item.name}
+                  />
+                </div>
               </div>
             );
           })}
@@ -94,16 +114,27 @@ const UnitPicker = () => {
 
 const UnitAddingItemView = ({ item }: { item: UnitAddingItem }) => {
   const catalogItem = getCatalogItemWithFallback(item.catalogKey);
+  const isControlEffectDefaultEnabled =
+    controlEffectUnitGetters.isUnitControlEffectDefaultEnabled(item.catalogKey);
   return (
     <div
-      className="absolute -translate-x-1/2 -translate-y-1/2 z-2"
+      className="absolute -translate-x-1/2 -translate-y-1/2 z-2 pointer-events-none"
       style={{ left: item.position.x, top: item.position.y }}
     >
-      <img
-        className="h-100px"
-        src={catalogItem.thumbnailUrl}
-        alt={catalogItem.name}
-      />
+      <div className="h-100px flex-ha rounded-3px shadow-md overflow-hidden bg-#aaa">
+        <img
+          className="h-full min-w-100px max-w-180px object-cover"
+          style={{ objectPosition: "left" }}
+          src={catalogItem.thumbnailUrl}
+          alt={catalogItem.name}
+        />
+        {isControlEffectDefaultEnabled && (
+          <UnitControlEffectBar
+            unitId=""
+            unitControlEffect={{ volume: 0.5, pan: 0.5 }}
+          />
+        )}
+      </div>
     </div>
   );
 };

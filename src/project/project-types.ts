@@ -2,11 +2,17 @@ import { KeyName } from "@lib/contract";
 import { WindowSpec } from "@lib/window-system";
 import { HsUnitStateData } from "wafer-host/core";
 import { FieldSight } from "@/components/field-sight-plane";
-import { GraphSpec, UnitItem, WindowId } from "@/domain/types";
+import {
+  GraphSpec,
+  UnitControlEffectItem,
+  UnitItem,
+  WindowId,
+} from "@/domain/types";
 import { Size } from "@lib/utils/common-types";
 
 export type ProjectStoreStates = {
   unitItems: UnitItem[];
+  unitControlEffects: Record<string, UnitControlEffectItem>;
   wireConnectionKeys: string[];
   wireGains: Record<string, number>;
   wireAutomationParameterIds: Record<string, string>;

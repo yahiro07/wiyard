@@ -10,17 +10,19 @@ import {
   FaWindowMinimize,
 } from "react-icons/fa6";
 import { FiMenu } from "react-icons/fi";
-import { IoMdSettings, IoMdShare } from "react-icons/io";
+import { GiPlayButton } from "react-icons/gi";
+import { IoIosArrowDown, IoMdSettings, IoMdShare } from "react-icons/io";
 import { IoMove, IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
 import {
   PiMusicNoteFill,
   PiPianoKeysFill,
   PiResize,
+  PiSlidersHorizontalFill,
   PiTagSimple,
   PiTrash,
 } from "react-icons/pi";
-import { RiFlashlightFill } from "react-icons/ri";
+import { RiFlashlightFill, RiImage2Fill } from "react-icons/ri";
 import { TbAppsFilled, TbStackForward, TbZoom } from "react-icons/tb";
 import { VscGraphLine } from "react-icons/vsc";
 
@@ -53,4 +55,8 @@ export const Icons = {
   MusicalNotes: PiMusicNoteFill,
   Move: IoMove,
   Resize: PiResize,
+  PlayNarrow: GiPlayButton,
+  Sliders: PiSlidersHorizontalFill,
+  Image: RiImage2Fill,
+  ArrowDown: IoIosArrowDown,
 };

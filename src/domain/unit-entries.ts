@@ -10,6 +10,7 @@ import unitInventories from "../unit-inventories.json";
 import { createKeyboardUnit } from "@lib/keyboard";
 import { createAutomationEditorUnit } from "@lib/automation-editor";
 import { createControlSurfaceUnit } from "@lib/control-surface";
+import { UnitType } from "wafer-host/unit-types";
 
 export type CatalogKey = keyof typeof unitInventories;
 
@@ -28,11 +29,13 @@ export function getCatalogItem(
 export type CatalogItemForDisplay = {
   name: string;
   thumbnailUrl?: string;
+  unitType: UnitType;
 };
 
 const fallbackCatalogItem = {
   name: "Unknown Unit",
   thumbnailUrl: "/assets/unknown-unit.png",
+  unitType: "effect",
 };
 export function getCatalogItemWithFallback(
   catalogKey: CatalogKey,

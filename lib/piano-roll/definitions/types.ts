@@ -18,19 +18,12 @@ export type SequencerEditState = {
 };
 
 export type Sight = {
-  xPosition: number; //0~1
+  xBarPosition: number; //0~(16-wBars)
   yPosition: number; //0~1
-  xZoom: number; //0~1
   yZoom: number; //0~1
+  wBars: number; //1~16
+  withXPadding: boolean;
 };
-
-// export type Sight2 = {
-//   //all values are float
-//   xBarPosition: number; //0~16
-//   xBarDuration: number; //0~16
-//   yPitchCenter: number; //0~61
-//   yPitchRange: number; //0~61
-// };
 
 export type EditorKind = "main" | "pattern" | "mainD";
 

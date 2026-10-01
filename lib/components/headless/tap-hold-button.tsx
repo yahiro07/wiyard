@@ -8,8 +8,8 @@ export const TapHoldButtonFrame = ({
   disabled,
 }: {
   children: ReactNode;
-  onTap: () => void;
-  onHold: () => void;
+  onTap?: () => void;
+  onHold?: () => void;
   disabled?: boolean;
 }) => {
   const handlePointerDown = (e: React.PointerEvent) => {

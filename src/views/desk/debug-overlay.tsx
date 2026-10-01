@@ -3,6 +3,7 @@ import { cz } from "@lib/utils/cz";
 
 export const DebugOverlay = () => {
   const { debugObject } = store.useSnapshot();
+  if (!debugObject) return;
   return (
     <div
       className={cz(

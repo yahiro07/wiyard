@@ -25,6 +25,7 @@ export type GridDisplaySpec = {
   numStepsFull: number;
   numPitchesFull: number;
   keySpec?: SongKeySpec;
+  wBars: number;
 };
 
 export type SectionRange = {

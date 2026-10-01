@@ -30,10 +30,16 @@ export const actionsInternal = {
       },
     });
   },
-  mapWindowStatusAll(fn: (status: WindowStatus) => WindowStatus) {
+  mapWindowStatusAll(
+    fn: (status: WindowStatus) => WindowStatus,
+    excludingIds?: string[],
+  ) {
     const newWindowSpecs = mapObjectValues(
       storeSlice.get().windowSpecs,
-      (spec) => ({ ...spec, status: fn(spec.status) }) as WindowSpec,
+      (spec, id) => {
+        if (excludingIds?.includes(id)) return spec;
+        return { ...spec, status: fn(spec.status) } as WindowSpec;
+      },
     );
     storeSlice.assign({ windowSpecs: newWindowSpecs });
   },
@@ -64,18 +70,22 @@ export const actions = {
     storeSlice.assign({ windowsEvacuated: evacuated });
   },
   minimizeAll() {
-    actionsInternal.mapWindowStatusAll((status) =>
-      status === "visible" ? "minimized" : status,
+    actionsInternal.mapWindowStatusAll(
+      (status) => (status === "visible" ? "minimized" : status),
+      // ["pianoRollWindow"],
     );
   },
   unMinimizeAll() {
-    actionsInternal.mapWindowStatusAll((status) =>
-      status === "minimized" ? "visible" : status,
+    actionsInternal.mapWindowStatusAll(
+      (status) => (status === "minimized" ? "visible" : status),
+      ["pianoRollWindow"],
     );
   },
   toggleMinimizeAll() {
-    const someVisible = Object.values(storeSlice.get().windowSpecs).some(
-      (spec) => spec.status === "visible",
+    const someVisible = Object.entries(storeSlice.get().windowSpecs).some(
+      ([_id, spec]) =>
+        //_id !== "pianoRollWindow" &&
+        spec.status === "visible",
     );
     if (someVisible) {
       actions.minimizeAll();

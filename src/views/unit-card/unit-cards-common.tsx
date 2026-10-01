@@ -1,6 +1,12 @@
 import { Icons } from "@/common/icons";
-import { UnitItem, UnitPortSpec } from "@/domain/types";
+import {
+  BoardUnitItem,
+  UnitItem,
+  UnitPortSpec,
+  UnitStuff,
+} from "@/domain/types";
 import { actions } from "@/store/actions";
+import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 import { store } from "@/store/store";
 import { useUnitCardPortPositionManager } from "@/views/unit-card/unit-card-port-position-manager";
 import { UnitPortsColumn } from "@/views/unit-card/unit-ports";
@@ -8,7 +14,7 @@ import { cz } from "@lib/utils/cz";
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
 
-export function useUnitStuff(unitId: string) {
+export function useUnitStuff(unitId: string): UnitStuff | undefined {
   const { unitStuffs } = store.useSnapshot();
   return unitStuffs[unitId];
 }
@@ -16,20 +22,25 @@ export function useUnitStuff(unitId: string) {
 export const UnitCardOperationOverlay = ({
   unitItem,
 }: {
-  unitItem: UnitItem;
+  unitItem: BoardUnitItem;
 }) => {
+  const isControlEffectCompatible =
+    controlEffectUnitGetters.isUnitControlEffectCompatible(unitItem.catalogKey);
+  const closeOverlay = () => actions.setMenuTargetUnit(null);
+  const buttonClass = "mx-1 my-1.5 cursor-pointer";
+
   return (
     <div
-      className="absolute-full bg-black/30"
+      className="absolute-full bg-black/35"
       onPointerDown={(e) => {
         actions.setMenuTargetUnit(null);
         e.stopPropagation();
       }}
     >
-      <div className="flex justify-end">
+      <div className="absolute-top-center">
         <button
-          className="mx-1 my-1.5 cursor-pointer"
           type="button"
+          className={buttonClass}
           onPointerDown={(e) => {
             actions.removeUnit(unitItem.unitId);
             e.stopPropagation();
@@ -38,6 +49,21 @@ export const UnitCardOperationOverlay = ({
           <Icons.Trash size={24} />
         </button>
       </div>
+      {isControlEffectCompatible && (
+        <div className="absolute top-0 right-0">
+          <button
+            type="button"
+            className={buttonClass}
+            onPointerDown={(e) => {
+              actions.toggleUnitControlEffect(unitItem.unitId);
+              closeOverlay();
+              e.stopPropagation();
+            }}
+          >
+            <Icons.Sliders size={24} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

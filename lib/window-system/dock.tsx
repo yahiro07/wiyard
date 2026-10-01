@@ -9,16 +9,22 @@ const DockCleanupButton = ({
   icon: IConComponent,
   iconSize,
   iconAngle,
+  disabled,
 }: {
   onClick: () => void;
   icon: IconType;
   iconSize: number;
   iconAngle?: number;
+  disabled?: boolean;
 }) => {
   return (
     <button
       type="button"
-      className={cz("cursor-pointer p-1 hover:opacity-80")}
+      disabled={disabled}
+      className={cz(
+        "cursor-pointer p-1 hover:opacity-80",
+        disabled && "opacity-30 pointer-events-none",
+      )}
       style={{ transform: `rotate(${iconAngle}deg)` }}
       onClick={onClick}
     >
@@ -27,7 +33,11 @@ const DockCleanupButton = ({
   );
 };
 
-const DockCleanupButtons = () => {
+export const DockCleanupButtons = () => {
+  const { windowSpecs } = storeSlice.useSnapshot();
+  const hasWindows = Object.values(windowSpecs).some(
+    (windowSpec) => windowSpec?.status !== "none",
+  );
   return (
     <div className="flex-ha">
       {/* <DockCleanupButton
@@ -40,6 +50,7 @@ const DockCleanupButtons = () => {
         onClick={actions.closeAll}
         icon={Icons.Broom}
         iconSize={20}
+        disabled={!hasWindows}
       />
     </div>
   );
@@ -57,18 +68,6 @@ export const WindowDockMV = ({ children }: { children: ReactNode }) => {
           borderRadius: "12px",
         }}
       >
-        <DockCleanupButtons />
-        {children}
-      </div>
-    </>
-  );
-};
-
-export const WindowDockWH = ({ children }: { children: ReactNode }) => {
-  return (
-    <>
-      <div className={cz("flex-c gap-2")}>
-        <DockCleanupButtons />
         {children}
       </div>
     </>
@@ -129,9 +128,10 @@ export const WindowDockItem = ({
   const { windowSpecs, windowsEvacuated } = storeSlice.useSnapshot();
   const windowSpec = windowSpecs[id];
   const closed = windowSpec?.status === "none";
+  const visible = windowSpec?.status === "visible";
   const minimized = windowSpec?.status === "minimized";
   const pinned = windowSpec?.pinned;
-  if (minimized || pinned) {
+  if (visible || minimized || pinned) {
     return (
       <WindowDockItemView
         title={title}

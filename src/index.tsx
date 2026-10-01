@@ -3,12 +3,18 @@ import "virtual:uno.css";
 import "./page.css";
 import { mountAppRoot } from "@lib/utils/mount-app-root";
 import { productionFix } from "@/periphery/production-fix-wrapper";
-import { AppUnitsDev } from "@/units-dev";
 import { appPersistence } from "@/project/app-persistence";
 import { appEnvs } from "@/common/app-envs";
 
 function appPreMount() {
   appPersistence.load();
+}
+
+function suppressBrowserDefaultHandlers() {
+  window.addEventListener("contextmenu", (e) => e.preventDefault());
+  window.addEventListener("dragstart", (e) => {
+    if (e.target instanceof HTMLImageElement) e.preventDefault();
+  });
 }
 
 function start() {
@@ -18,16 +24,7 @@ function start() {
   }
   appPreMount();
   mountAppRoot(<App />);
-  window.addEventListener("contextmenu", (e) => e.preventDefault());
+  suppressBrowserDefaultHandlers();
 }
 
-function startDev() {
-  mountAppRoot(<AppUnitsDev />);
-  window.addEventListener("contextmenu", (e) => e.preventDefault());
-}
-
-if (appEnvs.isDevelopment && location.search.includes("unit-dev")) {
-  startDev();
-} else {
-  start();
-}
+start();

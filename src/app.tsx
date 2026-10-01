@@ -1,7 +1,6 @@
 import { ReactNode, useEffect, useMemo } from "react";
 import { HostAppProvider } from "wafer-host/react";
 import { hostSystem } from "@/domain/host-system-instance";
-import { setupAutoPersistenceTask } from "@/periphery/auto-persistence-task";
 import { useMidiInputHandling } from "@/periphery/midi-input-handling";
 import { useSetupSongKeySupport } from "@/periphery/song-key-support";
 import { useProjectInitialStateFix } from "@/periphery/store-state-fix";
@@ -12,17 +11,18 @@ import { ErrorBoundary } from "react-error-boundary";
 import { FallbackRender } from "@/periphery/fallback-render";
 import { mapKnobGainDb } from "@lib/utils/volume-curve";
 import { usePlaybackController } from "@/periphery/playback-controller";
+import { autoPersistenceTask } from "@/periphery/auto-persistence-task";
 
 function useUpdateDebugValues() {
   const { graphSpec } = store.useSnapshot();
   useEffect(() => {
-    store.setDebugObject(graphSpec);
+    // store.setDebugObject(graphSpec);
   }, [graphSpec]);
 }
 
 const EffectsHookBox = () => {
   useMidiInputHandling();
-  useEffect(setupAutoPersistenceTask, []);
+  useEffect(autoPersistenceTask.setup, []);
   useSetupSongKeySupport();
   useProjectInitialStateFix();
   useSetupUnitPortMasking();

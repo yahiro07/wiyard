@@ -1,10 +1,12 @@
 import { uiColors } from "../../definitions/ui-theme";
+import { createCanvasShapeDrawing } from "../common/canvas-shape-drawing";
 import { GridDisplaySpec } from "../common/editor-types";
 import { GridCanvas } from "../common/grid-canvas";
 
 function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+  const dg = createCanvasShapeDrawing(ctx);
   ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -40,10 +42,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
         color = "#0004";
       }
       ctx.strokeStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(x, ds.contentY0);
-      ctx.lineTo(x, ds.contentY1);
-      ctx.stroke();
+      dg.drawLine(x, ds.contentY0, x, ds.contentY1);
     }
   }
 
@@ -51,10 +50,21 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = (ds.numPitchesFull - i) * ds.cellH;
     if (ds.contentY0 <= y && y < ds.contentY1) {
-      ctx.beginPath();
-      ctx.moveTo(ds.contentX0, y);
-      ctx.lineTo(rightX, y);
-      ctx.stroke();
+      dg.drawLine(ds.contentX0, y, rightX, y);
+    }
+  }
+
+  //beat dots
+  for (let i = 0; i < ds.numStepsFull; i++) {
+    const x = i * ds.cellW + ds.cellW / 2;
+    const y = ds.contentH - 7 * ds.cellH - ds.cellH + ds.cellH / 2;
+    const r = 2.5;
+    if (ds.contentX0 <= x + r && x < ds.contentX1) {
+      const isBeatDot = i % 4 === 0;
+      if (isBeatDot) {
+        ctx.fillStyle = "#fff1";
+        dg.fillCircle(x, y, r);
+      }
     }
   }
   ctx.restore();

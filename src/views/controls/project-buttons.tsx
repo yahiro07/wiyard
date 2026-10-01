@@ -44,7 +44,7 @@ export const ProjectButtons = () => {
     store.setSecondBarVisible(false);
   };
   useHandleClickOutside(divRef, closeMenu, {
-    withPropagation: true,
+    withStopPropagation: true,
     targetMethod: "click",
   });
   const withClose = (fn: () => void | Promise<void>) => {
