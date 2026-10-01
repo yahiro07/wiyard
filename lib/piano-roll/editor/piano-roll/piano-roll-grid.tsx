@@ -46,7 +46,10 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       if (i % 16 === 0) {
         color = "#0008";
       } else if (i % 4 === 0) {
-        color = "#0004";
+        if (ds.wBars === 16 && i % 8 === 4) {
+        } else {
+          color = "#0004";
+        }
       } else {
         if (weakLineInterval !== -1 && i % weakLineInterval === 0) {
           color = "#0002";
