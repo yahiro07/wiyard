@@ -21,6 +21,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     ds.contentY1 - ds.contentY0,
   );
 
+  //horizontal black key bands
   ctx.fillStyle = uiColors.clPianoRollBgBlackKey;
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = ds.contentH - i * ds.cellH - ds.cellH;
@@ -32,13 +33,13 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     }
   }
 
+  //vertical lines
   let weakLineInterval = -1;
   if (ds.wBars <= 2) {
     weakLineInterval = 1;
   } else if (ds.wBars <= 4) {
     weakLineInterval = 2;
   }
-
   for (let i = 0; i < ds.numStepsFull; i++) {
     const x = i * ds.cellW;
     if (ds.contentX0 <= x && x < ds.contentX1) {
@@ -63,6 +64,7 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
     }
   }
 
+  //horizontal lines
   for (let i = 0; i < ds.numPitchesFull; i++) {
     const y = (ds.numPitchesFull - i) * ds.cellH;
     if (ds.contentY0 <= y && y < ds.contentY1) {
@@ -72,6 +74,20 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
       ctx.moveTo(ds.contentX0, y);
       ctx.lineTo(rightX, y);
       ctx.stroke();
+    }
+  }
+
+  //beat dots
+  for (let i = 0; i < ds.numStepsFull; i++) {
+    const x = i * ds.cellW + ds.cellW / 2 - 3;
+    const y = ds.contentH - 24 * ds.cellH - ds.cellH + ds.cellH / 2 - 3;
+
+    if (ds.contentX0 <= x + 3 && x < ds.contentX1) {
+      const isBeatDot = i % 4 === 0;
+      if (isBeatDot) {
+        ctx.fillStyle = "#fff1";
+        ctx.fillRect(x, y, 6, 6);
+      }
     }
   }
   ctx.restore();
