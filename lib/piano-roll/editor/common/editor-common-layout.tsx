@@ -6,6 +6,7 @@ import { DisplaySpec } from "./editor-types";
 import { DebugOverlay } from "./debug-overlay";
 import { Size } from "@lib/utils/common-types";
 import { useDomElementSize } from "@lib/utils/use-dom-element-size";
+import { Icons } from "../../components/icons";
 
 export const EditorCommonLayout = ({
   sideContent,
@@ -76,7 +77,14 @@ export const EditorCommonLayout = ({
           />
         </div>
       </div>
-      <div></div>
+      <div className="flex-c">
+        <button
+          className="cursor-pointer text-#999"
+          onClick={store.toggleSideControlsVisible}
+        >
+          <Icons.RightSideBar />
+        </button>
+      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import {
   PatternBarLength,
   Sight,
 } from "../definitions/types";
-import { fallbackKeySpec } from "../definitions/ui-config";
+import { appConfig, fallbackKeySpec } from "../definitions/ui-config";
 
 type StoreState = {
   //persisted
@@ -33,6 +33,7 @@ type StoreState = {
   liveInputNoteNumbers: number[];
   viewActive: boolean;
   debugObject: object | null;
+  sideControlsVisible: boolean;
 };
 
 export type AppStore = Store<StoreState>;
@@ -74,8 +75,9 @@ const defaultStoreState: StoreState = {
   liveInputNoteNumbers: [],
   viewActive: false,
   debugObject: null,
+  sideControlsVisible: false,
 };
-if (import.meta.env.DEV && 0) {
+if (appConfig.isDevelopment && 0) {
   const base = 24;
   defaultStoreState.inputNotes = [
     { id: 0, position: 0, duration: 2, pitch: base + 0 },
@@ -102,6 +104,9 @@ if (import.meta.env.DEV && 0) {
     defaultStoreState.keySpec = { root, mode, relativeKeyTranspose };
   };
   setKeySpec(0, "major"); //C
+}
+if (appConfig.isDevelopment) {
+  defaultStoreState.sideControlsVisible = true;
 }
 
 export function createAppStore(): AppStore {

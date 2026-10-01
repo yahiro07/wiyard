@@ -374,8 +374,8 @@ const TopBar = () => {
 };
 
 const PageRootInner = () => {
-  const { isPatternView, diatonicLanesEnabled } =
-    useAppContext().store.useSnapshot();
+  const [{ isPatternView, diatonicLanesEnabled, sideControlsVisible }] =
+    useStoreAccess();
   return (
     <div
       className="w-full h-full flex-vc gap-1 p-2 text-white"
@@ -390,7 +390,7 @@ const PageRootInner = () => {
           )}
           {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
         </div>
-        <SideControlBar />
+        {sideControlsVisible && <SideControlBar />}
       </div>
     </div>
   );
