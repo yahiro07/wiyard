@@ -190,7 +190,13 @@ const SightControlKnobs = () => {
         <DisplayWidthSelectionKnob />
       </LabeledBox>
       <LabeledBox label="yzoom">
-        <Knob value={sight.yZoom} onChange={(v) => patchSight({ yZoom: v })} />
+        <Knob
+          value={sight.yZoom}
+          onChange={(v) => patchSight({ yZoom: v })}
+          min={0}
+          max={1}
+          step={0.05}
+        />
       </LabeledBox>
     </div>
   );
