@@ -20,6 +20,8 @@ import { useAppContext, useStoreAccess } from "../model/app-context";
 import { useControlActions } from "../model/control-actions";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
 import { appConfig } from "../definitions/ui-config";
+import { XYZoomPad } from "../components/xy-zoom-pad";
+import { linearInterpolate } from "@lib/utils/number-helper";
 
 const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
 
@@ -178,6 +180,38 @@ const DisplayWidthSelectionKnob = () => {
   );
 };
 
+const XYZoomPadContainer = () => {
+  const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
+  const patchSight = (attrs: Partial<Sight>) => {
+    store.setSight({ ...sight, ...attrs });
+  };
+  const wBarOptions = [2, 4, 8, 16];
+  const wBarsIndex = wBarOptions.indexOf(sight.wBars);
+  const onXYChange = (x: number, y: number) => {
+    const wBars = wBarOptions[x];
+    const yZoom = y;
+    patchSight({ wBars, yZoom });
+  };
+  const xTickRate = [0.25, 0.5, 0.75, 1][wBarsIndex];
+  const yTickRate = linearInterpolate(sight.yZoom, 0, 1, 0.25, 1);
+  return (
+    <XYZoomPad
+      xValue={wBarsIndex}
+      xMin={0}
+      xMax={3}
+      xStep={1}
+      yValue={sight.yZoom}
+      yMin={0}
+      yMax={1}
+      yStep={0.1}
+      onXYChange={onXYChange}
+      xTickRate={xTickRate}
+      yTickRate={yTickRate}
+    />
+  );
+};
+
 const SightControlKnobs = () => {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
@@ -186,7 +220,7 @@ const SightControlKnobs = () => {
   };
   return (
     <div className="flex-ha gap-2">
-      <LabeledBox label="wbars">
+      <LabeledBox label="bars">
         <DisplayWidthSelectionKnob />
       </LabeledBox>
       <LabeledBox label="yzoom">
@@ -199,6 +233,14 @@ const SightControlKnobs = () => {
         />
       </LabeledBox>
     </div>
+  );
+};
+
+const SightControlXYPad = () => {
+  return (
+    <LabeledBox>
+      <XYZoomPadContainer />
+    </LabeledBox>
   );
 };
 
@@ -327,33 +369,38 @@ const DuplicateNotes2XButton = () => {
 
 export const TopControlBar = () => {
   return (
-    <div className="w-full flex-v gap-4">
+    <div className="w-full flex-v gap-4 pb-2px">
       <div className="flex-ha justify-between">
         <div className="font-bold text-24px">Piano Roll</div>
-        <div className="flex-ha gap-7">
+        <div className="flex-ha gap-8">
           <div className="flex-ha gap-6">
             <SongKeySelector />
-
-            <div className="flex-ha gap-2">
-              <DiatonicLanesToggleButton />
-              <DiatonicLanesAllowSemitoneInputToggleButton />
-            </div>
-
-            <div className="flex-ha">
-              <ViewModeSelector />
-              <PatternToggleButton />
-              <RealizeButton />
-            </div>
-            <LoopGhostToggleButton />
-            <DuplicateNotes2XButton />
-
-            <TrashButtonContainer />
+            <LabeledBox>
+              <div className="flex-ha gap-2">
+                <DiatonicLanesToggleButton />
+                <DiatonicLanesAllowSemitoneInputToggleButton />
+              </div>
+            </LabeledBox>
+            <LabeledBox>
+              <div className="flex-ha">
+                <ViewModeSelector />
+                <PatternToggleButton />
+                <RealizeButton />
+              </div>
+            </LabeledBox>
+            <LabeledBox>
+              <div className="flex-ha gap-6">
+                <LoopGhostToggleButton />
+                <DuplicateNotes2XButton />
+                <TrashButtonContainer />
+              </div>
+            </LabeledBox>
             <OctaveKnobContainer />
             <DutyKnobContainer />
             <LoopBarsSelectorContainer />
           </div>
           {/* <PagerContainer /> */}
-          <SightControlKnobs />
+          {0 ? <SightControlXYPad /> : <SightControlKnobs />}
         </div>
       </div>
     </div>
