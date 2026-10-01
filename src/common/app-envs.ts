@@ -15,7 +15,7 @@ export const appEnvs = {
 };
 if (appEnvs.isDevelopment) {
   assignTyped(appEnvs, {
-    cfPagesUrl: "https://aaabbb123.wireboard.pages.dev",
+    cfPagesUrl: "https://aaabbb123.wiyard.pages.dev",
     cfPagesDeployId: "aaabbb123",
   });
 }

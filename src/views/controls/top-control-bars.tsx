@@ -41,7 +41,7 @@ export const TopBar = () => {
           className="pointer-events-auto text-xl font-500 pl-2"
           onClick={handleTitleClick}
         >
-          Wireboard
+          Wiyard
         </h1>
       </div>
     </div>

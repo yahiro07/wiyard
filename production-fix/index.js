@@ -5,7 +5,7 @@
 
 function getDeployId() {
   const firstSegment = location.host.split(".")[0];
-  return firstSegment === "wireboard" ? "main" : firstSegment;
+  return firstSegment === "wiyard" ? "main" : firstSegment;
 }
 
 const productionFixes = {

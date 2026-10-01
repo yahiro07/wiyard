@@ -66,6 +66,8 @@ const helpers = {
   },
 };
 
+const localStorageKey = "wiyard-states";
+
 export const appPersistence = {
   emitPersistenceData(): PersistenceData {
     const projectData = projectDataIo.emitProjectData();
@@ -78,7 +80,7 @@ export const appPersistence = {
   },
   save(data: PersistenceData) {
     try {
-      localStorage.setItem("wireboard-states", JSON.stringify(data));
+      localStorage.setItem(localStorageKey, JSON.stringify(data));
       console.log("saved");
       // console.log(JSON.stringify(data, null, 2));
     } catch (error) {
@@ -104,7 +106,7 @@ export const appPersistence = {
 
     if (urlDataText) {
       try {
-        const storageText = localStorage.getItem("wireboard-states");
+        const storageText = localStorage.getItem(localStorageKey);
         let controlSurfaceState: Record<string, any> | null = null;
         if (storageText) {
           const data = tryParseJsonOrNull<PersistenceData>(storageText);
@@ -137,7 +139,7 @@ export const appPersistence = {
       store.setLoadedFromSharedUrl(true);
     } else {
       try {
-        const text = localStorage.getItem("wireboard-states");
+        const text = localStorage.getItem(localStorageKey);
         let controlSurfaceState: Record<string, any> | null = null;
 
         if (text) {

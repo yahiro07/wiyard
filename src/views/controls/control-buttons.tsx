@@ -129,7 +129,7 @@ const GithubLinkButton = () => {
   return (
     <ControlButton
       onClick={() =>
-        window.open("https://github.com/yahiro07/wireboard", "_blank")
+        window.open("https://github.com/yahiro07/wiyard", "_blank")
       }
       children={<Icons.Github size={26} />}
     />
