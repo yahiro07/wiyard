@@ -120,3 +120,10 @@ export function getLoopBarLengthForStep(xiFloat: number): LoopBarLength {
 export function getNotesTailPositionInBars(notes: Note[]): number {
   return Math.max(0, ...notes.map((it) => it.position + it.duration)) / 16;
 }
+
+export function getInputNoteStride(wBars: number): number {
+  if (wBars <= 2) return 1;
+  if (wBars <= 4) return 2;
+  if (wBars <= 8) return 4;
+  return 8;
+}

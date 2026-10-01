@@ -24,7 +24,7 @@ type setCursorFn = (cursor: string) => void;
 export function createNoteEditActions(
   store: AppStore,
   editorKind: EditorKind,
-  sectionDuration: number,
+  editStride: number,
 ) {
   const isPattern = editorKind === "pattern";
   // const numPitches = isPattern ? uiConfig.numPatternPitches : uiConfig.numKeys;
@@ -41,6 +41,8 @@ export function createNoteEditActions(
       isPattern ? null : store.state.previewNotePitch,
     setPreviewNotePitch: isPattern ? () => {} : store.setPreviewNotePitch,
   };
+
+  const sectionDuration = isPattern ? 32 : 256;
 
   const core = {
     mapYIndexToPitch(yi: number) {
@@ -74,7 +76,7 @@ export function createNoteEditActions(
     ): { xi: number; xiFloat: number; yi: number; yiFloat: number } {
       const rect = el.getBoundingClientRect();
       const xiFloat = ((x - rect.left) / rect.width) * sectionDuration;
-      const xi = Math.floor(xiFloat);
+      const xi = Math.floor(xiFloat / editStride) * editStride;
       const yiFloat = (1 - (y - rect.top) / rect.height) * numPitches;
       const yi = Math.floor(yiFloat);
       return { xi, xiFloat, yi, yiFloat };
@@ -87,7 +89,7 @@ export function createNoteEditActions(
       const newNote: Note = {
         id: nextId,
         position,
-        duration: 1,
+        duration: editStride,
         pitch,
       };
       storeAccess.setNotes((prev) => [...prev, newNote]);
@@ -209,7 +211,12 @@ export function createNoteEditActions(
             const deltaXi = movedCoord.xi - originalCoord.xi;
             const deltaYi = movedCoord.yiFloat - originalCoord.yiFloat;
 
-            const duration = originalNote.duration + deltaXi;
+            // const duration = originalNote.duration + deltaXi;
+            const duration = Math.max(
+              editStride,
+              Math.floor((originalNote.duration + deltaXi) / editStride) *
+                editStride,
+            );
             let canShiftPitch = false;
             if (1) {
               //allow pitch change for duration edit
