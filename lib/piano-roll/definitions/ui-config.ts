@@ -2,6 +2,7 @@ import { SongKeySpec } from "wafer-host/unit-types";
 
 export const appConfig = {
   isDevelopment: import.meta.env.DEV,
+  isOnUnitsDevPage: location.href.includes("units-dev"),
 };
 
 const octaveCount = 5;

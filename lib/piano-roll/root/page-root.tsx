@@ -6,6 +6,7 @@ import {
 } from "@lib/utils/selector-option";
 import {
   allKeyNames,
+  mapSongKeySpecFromKeyName,
   mapSongKeySpecToKeyName,
 } from "@lib/utils/song-key-helper";
 import { Button } from "../components/button";
@@ -24,6 +25,7 @@ import { useAppContext, useStoreAccess } from "./app-context";
 import { useControlActions } from "./control-actions";
 import { SideControlBar } from "./side-control-bar";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
+import { appConfig } from "../definitions/ui-config";
 
 const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
 
@@ -33,6 +35,11 @@ const SongKeySelector = () => {
   const currentKeyName = mapSongKeySpecToKeyName(keySpec);
 
   const handleChange = (keyName: KeyName) => {
+    if (appConfig.isOnUnitsDevPage) {
+      const newKeySpec = mapSongKeySpecFromKeyName(keyName);
+      store.setKeySpec(newKeySpec);
+    }
+
     const message: MessageFromUnit = {
       type: "setKeyName",
       keyName,
