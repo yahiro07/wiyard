@@ -1,12 +1,25 @@
 import { clampValue } from "@lib/utils/number-helper";
 import { useAppContext } from "./app-context";
+import { Icons } from "../components/icons";
+import { cz } from "@lib/utils/cz";
 
 export const SideControlBar = () => {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
   const styles = {
-    wButton: "w-30px h-30px flex-c bd-white",
-    button: "bd-white p-3 cursor-pointer",
+    wButton: cz(
+      "w-30px h-30px flex-c",
+      "bg-#999 text-xs",
+      "cursor-pointer hover:opacity-80",
+      "disabled:(opacity-50 pointer-events-none)",
+      "[&.active]:bg-#8ae",
+    ),
+    shiftButton: cz(
+      "w-36px h-76px flex-c",
+      "bg-#999 text-xl",
+      "cursor-pointer hover:opacity-80",
+      "disabled:(opacity-50 pointer-events-none)",
+    ),
   };
   const shiftXBarPosition = (dir: number) => {
     const { sight } = store.state;
@@ -20,52 +33,44 @@ export const SideControlBar = () => {
   return (
     <div className="h-full">
       <div className="flex-vc gap-6 h-full justify-between">
-        <div className="flex-v gap-1">
+        <div className="flex-v gap-2">
           <button
-            className={styles.wButton}
+            className={cz(styles.wButton, sight.withXPadding && "active")}
             onClick={() =>
               store.patchSight({ withXPadding: !sight.withXPadding })
             }
           >
-            m
+            <Icons.LayoutSlider size={16} />
           </button>
-          <button
-            className={styles.wButton}
-            onClick={() => store.patchSight({ wBars: 2 })}
-          >
-            2
-          </button>
-          <button
-            className={styles.wButton}
-            onClick={() => store.patchSight({ wBars: 4 })}
-          >
-            4
-          </button>
-          <button
-            className={styles.wButton}
-            onClick={() => store.patchSight({ wBars: 8 })}
-          >
-            8
-          </button>
-          <button
-            className={styles.wButton}
-            onClick={() => store.patchSight({ wBars: 16 })}
-          >
-            16
-          </button>
+          <div className="flex-v gap-1">
+            {[2, 4, 8, 16].map((b) => {
+              const active = sight.wBars === b;
+              return (
+                <button
+                  key={b}
+                  className={cz(styles.wButton, active && "active")}
+                  onClick={() => store.patchSight({ wBars: b })}
+                >
+                  {b}
+                </button>
+              );
+            })}
+          </div>
         </div>
         <div className="flex-v gap-2">
           <button
-            className={styles.button}
+            className={styles.shiftButton}
+            disabled={sight.xBarPosition === 0}
             onClick={() => shiftXBarPosition(-1)}
           >
-            &lt;
+            <Icons.CaretLeft />
           </button>
           <button
-            className={styles.button}
+            className={styles.shiftButton}
+            disabled={sight.xBarPosition === 16 - sight.wBars}
             onClick={() => shiftXBarPosition(1)}
           >
-            &gt;
+            <Icons.CaretRight />
           </button>
         </div>
         <div className="h-140px" />
