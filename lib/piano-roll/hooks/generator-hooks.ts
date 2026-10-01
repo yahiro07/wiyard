@@ -1,7 +1,7 @@
 import { useLayoutEffect } from "react";
-import { useAppContext } from "../root/app-context";
-import { SequencerEngine } from "../root/sequencer";
-import { generateMappedNotes } from "./pattern-mapper";
+import { useAppContext } from "../model/app-context";
+import { SequencerEngine } from "../engine/sequencer";
+import { generateMappedNotes } from "../engine/pattern-mapper";
 
 export function useGenerateMappedNotes(engine: SequencerEngine) {
   const { store } = useAppContext();

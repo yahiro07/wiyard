@@ -6,9 +6,10 @@ import {
   PatternBarLength,
   Sight,
 } from "../definitions/types";
-import { fallbackKeySpec } from "../definitions/ui-config";
+import { appConfig, fallbackKeySpec } from "../definitions/ui-config";
 
 type StoreState = {
+  //persisted
   octaveShift: number;
   noteDuty: number;
   loopBars: LoopBarLength;
@@ -16,35 +17,48 @@ type StoreState = {
   patternBars: PatternBarLength;
   patternNotes: Note[];
   sight: Sight;
-  isPatternView: boolean;
   patternEnabled: boolean;
   realized: boolean;
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
   diatonicLanesAllowSemitoneInput: boolean;
   loopGhostEnabled: boolean;
-  //
+  //volatile
+  isPatternView: boolean;
   mappedNotes: Note[] | null;
   playPos: number | null;
-  // pageIndex: number;
   previewNotePitch: number | null;
   stateLoadRevision: number;
   keySpec: SongKeySpec;
   liveInputNoteNumbers: number[];
   viewActive: boolean;
+  debugObject: object | null;
+  sideControlsVisible: boolean;
 };
 
 export type AppStore = Store<StoreState>;
 
+export const resetterStates = {
+  isPatternView: false,
+  mappedNotes: null,
+  playPos: null,
+  previewNotePitch: null,
+} satisfies Partial<StoreState>;
+
 const defaultStoreState: StoreState = {
   octaveShift: 0,
   noteDuty: 1,
-  loopBars: 2,
+  loopBars: 1,
   inputNotes: [],
   patternBars: 0.25,
   patternNotes: [],
-  sight: { xPosition: 0, yPosition: 0.5, xZoom: 0.35, yZoom: 0.35 },
-  isPatternView: false,
+  sight: {
+    xBarPosition: 0,
+    yPosition: 0.5,
+    yZoom: 0.35,
+    wBars: 4,
+    withXPadding: false,
+  },
   patternEnabled: false,
   realized: false,
   backupInputNotes: null,
@@ -52,16 +66,18 @@ const defaultStoreState: StoreState = {
   diatonicLanesAllowSemitoneInput: false,
   loopGhostEnabled: false,
   //
+  isPatternView: false,
   mappedNotes: null,
   playPos: null,
-  // pageIndex: 0,
   previewNotePitch: null,
   stateLoadRevision: 0,
   keySpec: fallbackKeySpec,
   liveInputNoteNumbers: [],
   viewActive: false,
+  debugObject: null,
+  sideControlsVisible: false,
 };
-if (import.meta.env.DEV && 0) {
+if (appConfig.isDevelopment && 0) {
   const base = 24;
   defaultStoreState.inputNotes = [
     { id: 0, position: 0, duration: 2, pitch: base + 0 },
@@ -88,6 +104,9 @@ if (import.meta.env.DEV && 0) {
     defaultStoreState.keySpec = { root, mode, relativeKeyTranspose };
   };
   setKeySpec(0, "major"); //C
+}
+if (appConfig.isDevelopment) {
+  defaultStoreState.sideControlsVisible = true;
 }
 
 export function createAppStore(): AppStore {

@@ -1,65 +1,7 @@
-import { bottomLimit, clampValue } from "@lib/utils/number-helper";
-import { useMemo } from "react";
+import { clampValue } from "@lib/utils/number-helper";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
-import { useAppContext } from "../../root/app-context";
-import { DisplaySpec, SectionRange } from "./editor-types";
-
-export function useGridDisplaySpec(
-  displaySpec: DisplaySpec,
-  sectionDuration: number,
-  numPitches: number,
-  keySpec?: SongKeySpec,
-) {
-  const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
-  const { viewW, viewH, cellW, cellH } = displaySpec;
-
-  const nx = sectionDuration;
-  const contentW = cellW * nx;
-  const contentH = cellH * numPitches;
-
-  const maxScrollX = bottomLimit(contentW - viewW, 0);
-  const contentX0 = sight.xPosition * maxScrollX;
-  const contentX1 = contentX0 + viewW;
-
-  const maxScrollY = bottomLimit(contentH - viewH, 0);
-  const contentY0 = sight.yPosition * maxScrollY;
-  const contentY1 = contentY0 + viewH;
-
-  return useMemo(
-    () => ({
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      numStepsFull: nx,
-      numPitchesFull: numPitches,
-      keySpec,
-    }),
-    [
-      contentW,
-      contentH,
-      viewW,
-      viewH,
-      contentX0,
-      contentX1,
-      contentY0,
-      contentY1,
-      cellW,
-      cellH,
-      nx,
-      numPitches,
-      keySpec,
-    ],
-  );
-}
+import { SectionRange } from "./editor-types";
 
 type HitNoteInfo = { note: Note; part: "body" | "tail" };
 
@@ -83,10 +25,18 @@ export function hitTestNote(
     const relPos = note.position - sectionRange.offset;
     const dur = note.duration;
     const noteTailPos = relPos + dur;
-    if (note.duration >= 2 && xi === noteTailPos - 1) {
-      return { note, part: "tail" };
-    } else if (relPos <= xi && xi < relPos + dur) {
-      return { note, part: "body" };
+    if (0) {
+      if (note.duration >= 2 && xi === noteTailPos - 1) {
+        return { note, part: "tail" };
+      } else if (relPos <= xi && xi < relPos + dur) {
+        return { note, part: "body" };
+      }
+    } else {
+      if (noteTailPos - 0.3 <= xiFloat && xiFloat <= noteTailPos + 0.3) {
+        return { note, part: "tail" };
+      } else if (relPos <= xi && xi < relPos + dur) {
+        return { note, part: "body" };
+      }
     }
   }
 }
@@ -144,10 +94,36 @@ export const diatonicLanesPitchHelper = {
   },
 };
 
-export function getLoopBarLengthForStep(xiFloat: number): LoopBarLength {
+function _getLoopBarLengthForStep_0_deprecated(xiFloat: number): LoopBarLength {
   return clampValue(
     (1 << Math.ceil(Math.log2(Math.floor(xiFloat / 4) + 1))) * 0.25,
     0.25,
     16,
   ) as LoopBarLength;
+}
+
+export function getLoopBarLengthForBarPosition(pos: number): LoopBarLength {
+  if (pos <= 0.25) return 0.25;
+  if (pos <= 0.5) return 0.5;
+  if (pos <= 1) return 1;
+  if (pos <= 2) return 2;
+  if (pos <= 4) return 4;
+  if (pos <= 8) return 8;
+  return 16;
+}
+
+export function getLoopBarLengthForStep(xiFloat: number): LoopBarLength {
+  const pos = xiFloat / 16;
+  return getLoopBarLengthForBarPosition(pos);
+}
+
+export function getNotesTailPositionInBars(notes: Note[]): number {
+  return Math.max(0, ...notes.map((it) => it.position + it.duration)) / 16;
+}
+
+export function getInputNoteStride(wBars: number): number {
+  if (wBars <= 2) return 1;
+  if (wBars <= 4) return 2;
+  if (wBars <= 8) return 4;
+  return 8;
 }

@@ -1,11 +1,11 @@
 import { KeyName, MessageFromUnit } from "@lib/contract";
-import { colorStyle } from "@lib/utils/color-style";
 import {
   createPlainSelectorOptions,
   createSelectorOptions,
 } from "@lib/utils/selector-option";
 import {
   allKeyNames,
+  mapSongKeySpecFromKeyName,
   mapSongKeySpecToKeyName,
 } from "@lib/utils/song-key-helper";
 import { Button } from "../components/button";
@@ -16,12 +16,12 @@ import { LabeledBox } from "../components/labeled-box";
 import { Selector } from "../components/selector";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
-import { uiColors } from "../definitions/ui-theme";
-import { DiatonicLanesEditorView } from "../editor/diatonic-lanes/diatonic-lanes-editor-view";
-import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
-import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
-import { useAppContext, useStoreAccess } from "./app-context";
-import { useControlActions } from "./control-actions";
+import { useAppContext, useStoreAccess } from "../model/app-context";
+import { useControlActions } from "../model/control-actions";
+import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
+import { appConfig } from "../definitions/ui-config";
+import { XYZoomPad } from "../components/xy-zoom-pad";
+import { linearInterpolate } from "@lib/utils/number-helper";
 
 const keyNameOptions = createPlainSelectorOptions<KeyName>(allKeyNames);
 
@@ -31,6 +31,11 @@ const SongKeySelector = () => {
   const currentKeyName = mapSongKeySpecToKeyName(keySpec);
 
   const handleChange = (keyName: KeyName) => {
+    if (appConfig.isOnUnitsDevPage) {
+      const newKeySpec = mapSongKeySpecFromKeyName(keyName);
+      store.setKeySpec(newKeySpec);
+    }
+
     const message: MessageFromUnit = {
       type: "setKeyName",
       keyName,
@@ -119,45 +124,91 @@ const _LoopBarsSelectorContainerEx = () => {
   );
 };
 
-// const _PagerContainer = () => {
-//   const { store } = useAppContext();
-//   const st = store.useSnapshot();
-//   const totalPages = Math.max(1, st.loopBars / 2);
-//   const canShiftLeft = st.pageIndex > 0;
-//   const canShiftRight = st.pageIndex < totalPages - 1;
-
-//   const shiftPage = (dir: -1 | 1) => {
-//     store.setPageIndex(st.pageIndex + dir);
-//   };
-//   return (
-//     <LabeledBox label="">
-//       <div className="flex-ha gap-2">
-//         <Button disabled={!canShiftLeft} onClick={() => shiftPage(-1)}>
-//           <Icons.CaretLeft size={20} />
-//         </Button>
-//         <div className="w-50px flex-c">
-//           {st.pageIndex + 1} / {totalPages}
-//         </div>
-//         <Button disabled={!canShiftRight} onClick={() => shiftPage(1)}>
-//           <Icons.CaretRight size={20} />
-//         </Button>
-//       </div>
-//     </LabeledBox>
-//   );
-// };
+const TrashIconButton = ({
+  disabled,
+  onClick,
+}: {
+  disabled: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <IconButton disabled={disabled} onClick={onClick}>
+      <Icons.Trash size={20} />
+    </IconButton>
+  );
+};
 
 const TrashButtonContainer = () => {
   const { store } = useAppContext();
   const controlActions = useControlActions();
   const { inputNotes, patternNotes, isPatternView } = store.useSnapshot();
-  const hasData = inputNotes.length > 0 || patternNotes.length > 0;
+  if (!isPatternView) {
+    return (
+      <TrashIconButton
+        disabled={inputNotes.length === 0}
+        onClick={controlActions.clearEditData}
+      />
+    );
+  } else {
+    return (
+      <TrashIconButton
+        disabled={patternNotes.length === 0}
+        onClick={controlActions.clearPatternNotes}
+      />
+    );
+  }
+};
+
+const DisplayWidthSelectionKnob = () => {
+  const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
+  const patchSight = (attrs: Partial<Sight>) => {
+    store.setSight({ ...sight, ...attrs });
+  };
+  const wBarOptions = [2, 4, 8, 16];
+  const value = wBarOptions.indexOf(sight.wBars);
+  const onChange = (v: number) => {
+    patchSight({ wBars: wBarOptions[v] });
+  };
   return (
-    <IconButton
-      disabled={!hasData || isPatternView}
-      onClick={controlActions.clearEditData}
-    >
-      <Icons.Trash size={20} />
-    </IconButton>
+    <Knob
+      value={value}
+      onChange={onChange}
+      max={wBarOptions.length - 1}
+      step={1}
+    />
+  );
+};
+
+const XYZoomPadContainer = () => {
+  const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
+  const patchSight = (attrs: Partial<Sight>) => {
+    store.setSight({ ...sight, ...attrs });
+  };
+  const wBarOptions = [2, 4, 8, 16];
+  const wBarsIndex = wBarOptions.indexOf(sight.wBars);
+  const onXYChange = (x: number, y: number) => {
+    const wBars = wBarOptions[x];
+    const yZoom = y;
+    patchSight({ wBars, yZoom });
+  };
+  const xTickRate = [0.25, 0.5, 0.75, 1][wBarsIndex];
+  const yTickRate = linearInterpolate(sight.yZoom, 0, 1, 0.25, 1);
+  return (
+    <XYZoomPad
+      xValue={wBarsIndex}
+      xMin={0}
+      xMax={3}
+      xStep={1}
+      yValue={sight.yZoom}
+      yMin={0}
+      yMax={1}
+      yStep={0.1}
+      onXYChange={onXYChange}
+      xTickRate={xTickRate}
+      yTickRate={yTickRate}
+    />
   );
 };
 
@@ -169,13 +220,27 @@ const SightControlKnobs = () => {
   };
   return (
     <div className="flex-ha gap-2">
-      <LabeledBox label="xzoom">
-        <Knob value={sight.xZoom} onChange={(v) => patchSight({ xZoom: v })} />
+      <LabeledBox label="bars">
+        <DisplayWidthSelectionKnob />
       </LabeledBox>
       <LabeledBox label="yzoom">
-        <Knob value={sight.yZoom} onChange={(v) => patchSight({ yZoom: v })} />
+        <Knob
+          value={sight.yZoom}
+          onChange={(v) => patchSight({ yZoom: v })}
+          min={0}
+          max={1}
+          step={0.05}
+        />
       </LabeledBox>
     </div>
+  );
+};
+
+const SightControlXYPad = () => {
+  return (
+    <LabeledBox>
+      <XYZoomPadContainer />
+    </LabeledBox>
   );
 };
 
@@ -221,10 +286,11 @@ const DiatonicLanesToggleButton = () => {
 };
 
 const LoopGhostToggleButton = () => {
-  const [{ loopGhostEnabled }, mt] = useStoreAccess();
+  const [{ loopGhostEnabled, isPatternView }, mt] = useStoreAccess();
   return (
     <Button
       active={loopGhostEnabled}
+      disabled={isPatternView}
       onClick={mt.toggleLoopGhostEnabled}
       text="ghost"
     />
@@ -274,78 +340,69 @@ const RealizeButton = () => {
 };
 
 const DuplicateNotes2XButton = () => {
-  const [{ inputNotes, loopBars }] = useStoreAccess();
+  const [{ inputNotes, loopBars, patternNotes, isPatternView }] =
+    useStoreAccess();
   const controlActions = useControlActions();
-  const enabled = inputNotes.length > 0 && loopBars < 16;
-  return (
-    <Button
-      disabled={!enabled}
-      onClick={controlActions.duplicateNotes2X}
-      text="copy 2x"
-    />
-  );
+  const text = "copy 2x";
+  if (!isPatternView) {
+    const tailBars = getNotesTailPositionInBars(inputNotes);
+    const enabled = (0 < tailBars && tailBars <= 8) || loopBars <= 8;
+    return (
+      <Button
+        disabled={!enabled}
+        onClick={controlActions.duplicateInputNotes2X}
+        text={text}
+      />
+    );
+  } else {
+    const tailBars = getNotesTailPositionInBars(patternNotes);
+    const enabled = 0 < tailBars && tailBars <= 1;
+    return (
+      <Button
+        disabled={!enabled}
+        onClick={controlActions.duplicatePatternNotes2X}
+        text={text}
+      />
+    );
+  }
 };
 
-const _KeyDisplay = () => {
-  const [{ keySpec }] = useStoreAccess();
-  const keyName = keySpec ? mapSongKeySpecToKeyName(keySpec) : "";
-  return <div>key: {keyName}</div>;
-};
-
-const TopBar = () => {
+export const TopControlBar = () => {
   return (
-    <div className="w-full flex-v gap-4">
+    <div className="w-full flex-v gap-4 pb-2px">
       <div className="flex-ha justify-between">
         <div className="font-bold text-24px">Piano Roll</div>
-        <div className="flex-ha gap-7">
+        <div className="flex-ha gap-8">
           <div className="flex-ha gap-6">
             <SongKeySelector />
-            {/* <KeyDisplay /> */}
-
-            <div className="flex-ha gap-2">
-              <DiatonicLanesToggleButton />
-              <DiatonicLanesAllowSemitoneInputToggleButton />
-            </div>
-
-            <div className="flex-ha">
-              <ViewModeSelector />
-              <PatternToggleButton />
-              <RealizeButton />
-            </div>
-            <LoopGhostToggleButton />
-            <DuplicateNotes2XButton />
-
-            <TrashButtonContainer />
+            <LabeledBox>
+              <div className="flex-ha gap-2">
+                <DiatonicLanesToggleButton />
+                <DiatonicLanesAllowSemitoneInputToggleButton />
+              </div>
+            </LabeledBox>
+            <LabeledBox>
+              <div className="flex-ha">
+                <ViewModeSelector />
+                <PatternToggleButton />
+                <RealizeButton />
+              </div>
+            </LabeledBox>
+            <LabeledBox>
+              <div className="flex-ha gap-6">
+                <LoopGhostToggleButton />
+                <DuplicateNotes2XButton />
+                <TrashButtonContainer />
+              </div>
+            </LabeledBox>
             <OctaveKnobContainer />
             <DutyKnobContainer />
             <LoopBarsSelectorContainer />
           </div>
           {/* <PagerContainer /> */}
-          <SightControlKnobs />
+          {0 ? <SightControlXYPad /> : <SightControlKnobs />}
         </div>
       </div>
     </div>
   );
-};
-
-const PageRootInner = () => {
-  const { isPatternView, diatonicLanesEnabled } =
-    useAppContext().store.useSnapshot();
-  return (
-    <div
-      className="w-full h-full flex-vc gap-1 p-2 text-white"
-      style={colorStyle({ bg: uiColors.clPanelBody })}
-    >
-      <TopBar />
-      {isPatternView && <PatternEditorView />}
-      {!isPatternView && diatonicLanesEnabled && <DiatonicLanesEditorView />}
-      {!isPatternView && !diatonicLanesEnabled && <PianoRollEditorView />}
-    </div>
-  );
-};
-
-export const PageRoot = () => {
-  const [{ viewActive }] = useStoreAccess();
-  if (!viewActive) return null;
-  return <PageRootInner />;
 };

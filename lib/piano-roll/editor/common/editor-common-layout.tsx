@@ -1,29 +1,43 @@
 import { cz } from "@lib/utils/cz";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { ScrollBarH, ScrollBarV } from "../../components/scroll-bar";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 import { DisplaySpec } from "./editor-types";
+import { DebugOverlay } from "./debug-overlay";
+import { Size } from "@lib/utils/common-types";
+import { useDomElementSize } from "@lib/utils/use-dom-element-size";
+import { Icons } from "../../components/icons";
 
 export const EditorCommonLayout = ({
   sideContent,
   mainContent,
-  mainDivRef,
   sideContentWidth,
   positionBarContent,
+  mainDivSizeCallback,
 }: {
   sideContent: ReactNode;
   mainContent: ReactNode;
-  mainDivRef: React.RefObject<HTMLDivElement | null>;
   sideContentWidth: number;
   positionBarContent?: ReactNode;
+  mainDivSizeCallback: (size: Size) => void;
 }) => {
   const { store } = useAppContext();
-  const { sight } = store.useSnapshot();
+  const { sight, isPatternView } = store.useSnapshot();
+  const mainDivRef = useRef<HTMLDivElement>(null);
+  const mainDivSize = useDomElementSize(mainDivRef);
+  useEffect(() => {
+    if (mainDivSize) {
+      mainDivSizeCallback(mainDivSize);
+    }
+  }, [mainDivSize]);
+
+  const hasXPadding = !isPatternView && sight.withXPadding;
   return (
     <div
       className={cz(
         "overflow-hidden relative",
-        "w-full grow",
+        "w-full h-full grow",
+        // "bg-#505054",
         "[&>div]:overflow-hidden",
       )}
       style={{
@@ -38,6 +52,7 @@ export const EditorCommonLayout = ({
       <div>{sideContent}</div>
       <div className="relative" ref={mainDivRef}>
         {mainContent}
+        <DebugOverlay />
       </div>
       <div>
         <ScrollBarV
@@ -48,15 +63,28 @@ export const EditorCommonLayout = ({
         />
       </div>
       <div></div>
-      <div>
-        <ScrollBarH
-          position={sight.xPosition}
-          onChange={(v) => {
-            store.setSight({ ...sight, xPosition: v });
-          }}
-        />
+      <div className="flex-c">
+        <div className={cz("h-full", hasXPadding ? "w-92.4%" : "w-full")}>
+          <ScrollBarH
+            trackOffset={sight.xBarPosition}
+            trackLength={sight.wBars}
+            fullLength={16}
+            step={1}
+            onChange={(v) => {
+              store.setSight({ ...sight, xBarPosition: v });
+            }}
+            disabledWithNoTrack={sight.wBars === 16 || isPatternView}
+          />
+        </div>
       </div>
-      <div></div>
+      <div className="flex-c">
+        <button
+          className="cursor-pointer text-#999"
+          onClick={store.toggleSideControlsVisible}
+        >
+          <Icons.RightSideBar />
+        </button>
+      </div>
     </div>
   );
 };

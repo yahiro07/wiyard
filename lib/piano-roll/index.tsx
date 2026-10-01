@@ -1,11 +1,11 @@
 import { ReactUnitTemplateFn } from "wafer-host/react";
-import { useGenerateMappedNotes } from "./logic/generator-hooks";
-import { useFixStates } from "./logic/state-fix-hooks";
-import { AppProvider } from "./root/app-context";
-import { setupUnit } from "./root/drivers";
-import { PageRoot } from "./root/page-root";
-import { createSequencerEngine, SequencerEngine } from "./root/sequencer";
-import { createAppStore } from "./root/store";
+import { useGenerateMappedNotes } from "./hooks/generator-hooks";
+import { useFixStates } from "./hooks/state-fix-hooks";
+import { AppProvider } from "./model/app-context";
+import { setupUnit } from "./model/drivers";
+import { PageRoot } from "./view/page-root";
+import { createSequencerEngine, SequencerEngine } from "./engine/sequencer";
+import { createAppStore } from "./model/store";
 
 const EffectsHookBox = ({ engine }: { engine: SequencerEngine }) => {
   useGenerateMappedNotes(engine);

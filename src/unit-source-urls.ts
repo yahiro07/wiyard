@@ -55,13 +55,15 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferCustomUnitsLocalDir}/ts/dist/react-synth/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/poly-synth/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/model-1/`,
+      `file://${waferCustomUnitsLocalDir}/js/pg01web/`,
+
       `file://${waferUnitsLocalDistDir}/sirius/`,
       `file://${waferUnitsLocalDistDir}/luna/`,
       `file://${waferUnitsLocalDistDir}/altair-xm/`,
 
       `file://${waferUnitsLocalDistDir}/step-automator/`,
 
-      `file://${waferUnitsLocalDistDir}/toner-compressor/`,
+      // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
       `file://${waferUnitsLocalDistDir}/sunset-chorus-mini/`,
       `file://${waferUnitsLocalDistDir}/lofi2/`,
@@ -84,8 +86,8 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/mz2/`,
       `file://${waferUnitsLocalDistDir}/noise-mix/`,
       `file://${waferUnitsLocalDistDir}/crusher/`,
-      // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
-      `file://${waferUnitsLocalDistDir}/toner-panner/`,
+      `file://${waferUnitsLocalDistDir}/toner-compressor-lite/`,
+      // `file://${waferUnitsLocalDistDir}/toner-panner/`,
       `file://${waferUnitsLocalDistDir}/toner-tilt-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-3band-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-reverb/`,

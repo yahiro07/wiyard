@@ -9,7 +9,7 @@ type Props = {
   max: number;
   step: number;
   children: ReactNode;
-  onChange: (value: number) => void;
+  onChange?: (value: number) => void;
   dragRange?: number;
   onTap?: () => void;
   onHold?: () => void;
@@ -57,7 +57,7 @@ export function KnobFrame({
             newValue = Math.round(newValue / step) * step;
           }
           newValue = clampValue(newValue, min, max);
-          onChange(newValue);
+          onChange?.(newValue);
         },
         onTap() {
           onTap?.();

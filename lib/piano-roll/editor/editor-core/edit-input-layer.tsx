@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAppContext } from "../../root/app-context";
-import { hitTestNote } from "../common/editor-common-logic";
+import { useAppContext } from "../../model/app-context";
+import { getInputNoteStride, hitTestNote } from "../common/editor-common-logic";
 import { IPointerEvent } from "../common/editor-types";
 import { createNoteEditActions } from "./edit-input-layer-actions";
 import { useNoteLayerContext } from "./note-layer-context";
@@ -8,10 +8,14 @@ import { useNoteLayerContext } from "./note-layer-context";
 export const EditInputLayer = () => {
   const { sectionRange, editorKind, notes, loopSteps } = useNoteLayerContext();
   const { store } = useAppContext();
-  const { keySpec } = store.useSnapshot();
+  const { keySpec, sight } = store.useSnapshot();
+
+  const editStride =
+    editorKind === "pattern" ? 1 : getInputNoteStride(sight.wBars);
+
   const noteEditActions = useMemo(
-    () => createNoteEditActions(store, editorKind, sectionRange.duration),
-    [store, sectionRange, editorKind],
+    () => createNoteEditActions(store, editorKind, editStride),
+    [store, editorKind, editStride],
   );
 
   const [cursor, setCursor] = useState<string>("auto");
