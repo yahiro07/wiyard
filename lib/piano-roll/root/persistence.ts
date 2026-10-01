@@ -6,45 +6,10 @@ import {
   PatternBarLength,
   Sight,
 } from "../definitions/types";
-import { AppStore } from "./store";
-
-namespace _persistenceSpecTypes {
-  type _StoreState = {
-    octaveShift: number; //+100
-    noteDuty: number; //*255
-    playPos: number | null;
-    loopBars: LoopBarLength; //*4
-    pageIndex: number;
-    inputNotes: Note[]; //length 2bytes, ...[id>>8&0xff, id&0xff, position, duration, pitch]
-    previewNotePitch: number | null;
-    stateLoadRevision: number;
-    sight: Sight; //[xPosition*255, yPosition*255, xZoom*255, yZoom*255]
-    patternNotes: Note[]; //length 2bytes, ...[id>>8&0xff, id&0xff, position, duration, pitch]
-    isPatternView: boolean;
-    patternBars: PatternBarLength; //*4
-    patternEnabled: boolean; //0 or 1
-    mappedNotes: Note[] | null;
-    realized: boolean; //0 or 1
-    backupInputNotes: Note[] | null; //length 2bytes, ...[id>>8&0xff, id&0xff, position, duration, pitch]
-    diatonicLanesEnabled: boolean; //0 or 1
-    diatonicLanesAllowSemitoneInput: boolean; //0 or 1
-  };
-}
+import { AppStore, resetterStates } from "./store";
 
 const loopBarLengths: LoopBarLength[] = [0.25, 0.5, 1, 2, 4, 8, 16];
 const patternBarLengths: PatternBarLength[] = [0.25, 0.5, 1, 2];
-
-function unaryToByte(value: number): number {
-  return (clampValue(value, 0, 1) * 255) >>> 0;
-}
-
-function unaryFromByte(byte: number): number {
-  return byte / 255;
-}
-
-function boolToByte(value: boolean): number {
-  return value ? 1 : 0;
-}
 
 function encodeNotes(notes: Note[]): number[] {
   return [
@@ -62,28 +27,21 @@ function encodeNotes(notes: Note[]): number[] {
 
 function createByteReader(bytes: Uint8Array, offset: number, ok: boolean) {
   const self = {
-    readByte(): number {
+    next(): number {
       if (offset >= bytes.length) {
         ok = false;
         return 0;
       }
       return bytes[offset++];
     },
-    readBoolByte(): boolean {
-      const byte = self.readByte();
-      if (byte !== 0 && byte !== 1) {
-        ok = false;
-      }
-      return byte === 1;
-    },
     readNotes(): Note[] {
-      const count = (self.readByte() << 8) | self.readByte();
+      const count = (self.next() << 8) | self.next();
       const notes: Note[] = [];
       for (let i = 0; i < count; i++) {
-        const id = (self.readByte() << 8) | self.readByte();
-        const position = self.readByte();
-        const duration = self.readByte();
-        const pitch = self.readByte();
+        const id = (self.next() << 8) | self.next();
+        const position = self.next();
+        const duration = self.next();
+        const pitch = self.next();
         notes.push({ id, position, duration, pitch });
       }
       return notes;
@@ -98,8 +56,23 @@ function createByteReader(bytes: Uint8Array, offset: number, ok: boolean) {
   return self;
 }
 
+const bytesSerializer = {
+  float: (value: number) => (value * 255) >>> 0,
+  uint: (value: number) => value,
+  bool: (value: boolean) => (value ? 1 : 0),
+  octave: (value: number) => value + 100,
+  loopBars: (value: number) => Math.floor(value * 4),
+};
+const bytesDeserializer = {
+  float: (byte: number) => clampValue(byte / 255, 0, 1),
+  uint: (byte: number, min: number, max: number) => clampValue(byte, min, max),
+  bool: (byte: number) => byte !== 0,
+  octave: (byte: number) => clampValue(byte - 100, -2, 2),
+  loopBars: (byte: number) => byte / 4,
+};
+
 export function createPersistence(store: AppStore): Persistence {
-  const magics = { first: 123, second: 46 };
+  const magics = { first: 123, second: 47, tail: 124 };
 
   return {
     emitStateBytes(): Uint8Array {
@@ -108,61 +81,72 @@ export function createPersistence(store: AppStore): Persistence {
         st.backupInputNotes === null
           ? [0]
           : [1, ...encodeNotes(st.backupInputNotes)];
+
+      const bs = bytesSerializer;
       return new Uint8Array([
         magics.first,
         magics.second,
-        st.octaveShift + 100,
-        unaryToByte(st.noteDuty),
-        Math.floor(st.loopBars * 4),
+        bs.octave(st.octaveShift),
+        bs.float(st.noteDuty),
+        bs.loopBars(st.loopBars),
         ...encodeNotes(st.inputNotes),
-        unaryToByte(st.sight.xPosition),
-        unaryToByte(st.sight.yPosition),
-        unaryToByte(st.sight.xZoom),
-        unaryToByte(st.sight.yZoom),
+        bs.uint(st.sight.xBarPosition),
+        bs.float(st.sight.yPosition),
+        bs.uint(st.sight.wBars),
+        bs.float(st.sight.yZoom),
+        bs.bool(st.sight.withXPadding),
         ...encodeNotes(st.patternNotes),
-        Math.floor(st.patternBars * 4),
-        boolToByte(st.patternEnabled),
-        boolToByte(st.realized),
+        bs.loopBars(st.patternBars),
+        bs.bool(st.patternEnabled),
+        bs.bool(st.realized),
         ...backupBytes,
-        boolToByte(st.diatonicLanesEnabled),
-        boolToByte(st.diatonicLanesAllowSemitoneInput),
+        bs.bool(st.diatonicLanesEnabled),
+        bs.bool(st.diatonicLanesAllowSemitoneInput),
+        bs.bool(st.loopGhostEnabled),
+        magics.tail,
       ]);
     },
     applyStateBytes(bytes) {
       if (!(bytes[0] === magics.first && bytes[1] === magics.second)) return;
       const reader = createByteReader(bytes, 2, true);
-      const octaveShift = reader.readByte() - 100;
-      const noteDuty = unaryFromByte(reader.readByte());
-      const loopBars = reader.readByte() / 4;
+      const bd = bytesDeserializer;
+      const octaveShift = bd.octave(reader.next());
+      const noteDuty = bd.float(reader.next());
+      const loopBars = bd.loopBars(reader.next());
       const inputNotes = reader.readNotes();
       const sight: Sight = {
-        xPosition: unaryFromByte(reader.readByte()),
-        yPosition: unaryFromByte(reader.readByte()),
-        xZoom: unaryFromByte(reader.readByte()),
-        yZoom: unaryFromByte(reader.readByte()),
+        xBarPosition: bd.uint(reader.next(), 0, 16),
+        yPosition: bd.float(reader.next()),
+        wBars: bd.uint(reader.next(), 1, 16),
+        yZoom: bd.float(reader.next()),
+        withXPadding: bd.bool(reader.next()),
       };
       const patternNotes = reader.readNotes();
-      const patternBars = reader.readByte() / 4;
-      const patternEnabled = reader.readBoolByte();
-      const realized = reader.readBoolByte();
-      const backupPresent = reader.readBoolByte();
+      const patternBars = bd.loopBars(reader.next());
+      const patternEnabled = bd.bool(reader.next());
+      const realized = bd.bool(reader.next());
+      const backupPresent = bd.bool(reader.next());
       const backupInputNotes = backupPresent ? reader.readNotes() : null;
-      const diatonicLanesEnabled = reader.readBoolByte();
-      const diatonicLanesAllowSemitoneInput = reader.readBoolByte();
+      const diatonicLanesEnabled = bd.bool(reader.next());
+      const diatonicLanesAllowSemitoneInput = bd.bool(reader.next());
+      const loopGhostEnabled = bd.bool(reader.next());
+      const tailMagic = reader.next();
       const valid = [
         reader.ok,
         reader.offset === bytes.length,
+        tailMagic === magics.tail,
         -2 <= octaveShift && octaveShift <= 2,
         0 <= noteDuty && noteDuty <= 1,
         loopBarLengths.includes(loopBars as LoopBarLength),
-        0 <= sight.xPosition && sight.xPosition <= 1,
+        0 <= sight.xBarPosition && sight.xBarPosition <= 16,
         0 <= sight.yPosition && sight.yPosition <= 1,
-        0 <= sight.xZoom && sight.xZoom <= 1,
+        1 <= sight.wBars && sight.wBars <= 16,
         0 <= sight.yZoom && sight.yZoom <= 1,
         patternBarLengths.includes(patternBars as PatternBarLength),
       ].every(Boolean);
       if (!valid) return;
       store.assign({
+        ...resetterStates,
         octaveShift,
         noteDuty,
         loopBars: loopBars as LoopBarLength,
@@ -175,6 +159,7 @@ export function createPersistence(store: AppStore): Persistence {
         backupInputNotes,
         diatonicLanesEnabled,
         diatonicLanesAllowSemitoneInput,
+        loopGhostEnabled,
       });
       store.setStateLoadRevision((prev) => prev + 1);
     },

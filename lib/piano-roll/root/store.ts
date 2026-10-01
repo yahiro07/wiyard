@@ -9,6 +9,7 @@ import {
 import { fallbackKeySpec } from "../definitions/ui-config";
 
 type StoreState = {
+  //persisted
   octaveShift: number;
   noteDuty: number;
   loopBars: LoopBarLength;
@@ -16,17 +17,16 @@ type StoreState = {
   patternBars: PatternBarLength;
   patternNotes: Note[];
   sight: Sight;
-  isPatternView: boolean;
   patternEnabled: boolean;
   realized: boolean;
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
   diatonicLanesAllowSemitoneInput: boolean;
   loopGhostEnabled: boolean;
-  //
+  //volatile
+  isPatternView: boolean;
   mappedNotes: Note[] | null;
   playPos: number | null;
-  // pageIndex: number;
   previewNotePitch: number | null;
   stateLoadRevision: number;
   keySpec: SongKeySpec;
@@ -36,6 +36,13 @@ type StoreState = {
 };
 
 export type AppStore = Store<StoreState>;
+
+export const resetterStates = {
+  isPatternView: false,
+  mappedNotes: null,
+  playPos: null,
+  previewNotePitch: null,
+} satisfies Partial<StoreState>;
 
 const defaultStoreState: StoreState = {
   octaveShift: 0,
@@ -51,7 +58,6 @@ const defaultStoreState: StoreState = {
     wBars: 4,
     withXPadding: false,
   },
-  isPatternView: false,
   patternEnabled: false,
   realized: false,
   backupInputNotes: null,
@@ -59,9 +65,9 @@ const defaultStoreState: StoreState = {
   diatonicLanesAllowSemitoneInput: false,
   loopGhostEnabled: false,
   //
+  isPatternView: false,
   mappedNotes: null,
   playPos: null,
-  // pageIndex: 0,
   previewNotePitch: null,
   stateLoadRevision: 0,
   keySpec: fallbackKeySpec,
