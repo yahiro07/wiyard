@@ -4,3 +4,5 @@ export type ProjectLoadErrorStatus = {
 };
 
 export type SettingsPanelTab = "general" | "theme";
+
+export type InfoPanelTab = "about" | "credits";

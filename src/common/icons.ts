@@ -1,5 +1,5 @@
 import { AiOutlineControl } from "react-icons/ai";
-import { BsArrowRight, BsViewList } from "react-icons/bs";
+import { BsArrowRight, BsInfoCircle, BsViewList } from "react-icons/bs";
 import { CgPiano } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
@@ -59,4 +59,5 @@ export const Icons = {
   Sliders: PiSlidersHorizontalFill,
   Image: RiImage2Fill,
   ArrowDown: IoIosArrowDown,
+  Info: BsInfoCircle,
 };

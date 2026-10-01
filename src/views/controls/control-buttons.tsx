@@ -131,7 +131,7 @@ const GithubLinkButton = () => {
       onClick={() =>
         window.open("https://github.com/yahiro07/wiyard", "_blank")
       }
-      children={<Icons.Github size={26} />}
+      children={<Icons.Github size={24} />}
     />
   );
 };
@@ -142,6 +142,15 @@ const SettingsButton = () => {
       // onClick={() => store.setSettingsPanelVisible(true)}
       onClick={() => store.toggleSettingsPanelVisible()}
       children={<Icons.Settings size={28} />}
+    />
+  );
+};
+
+const InfoButton = () => {
+  return (
+    <ControlButton
+      onClick={() => store.toggleInfoPanelVisible()}
+      children={<Icons.Info size={24} />}
     />
   );
 };
@@ -167,8 +176,9 @@ export const ControlButtons = () => {
 export const ControlButtonsRight = () => {
   return (
     <div className="flex-h gap-2.5">
-      <SettingsButton />
       <GithubLinkButton />
+      <InfoButton />
+      <SettingsButton />
     </div>
   );
 };
