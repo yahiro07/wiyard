@@ -157,6 +157,27 @@ const TrashButtonContainer = () => {
   }
 };
 
+const DisplayWidthSelectionKnob = () => {
+  const { store } = useAppContext();
+  const { sight } = store.useSnapshot();
+  const patchSight = (attrs: Partial<Sight>) => {
+    store.setSight({ ...sight, ...attrs });
+  };
+  const wBarOptions = [2, 4, 8, 16];
+  const value = wBarOptions.indexOf(sight.wBars);
+  const onChange = (v: number) => {
+    patchSight({ wBars: wBarOptions[v] });
+  };
+  return (
+    <Knob
+      value={value}
+      onChange={onChange}
+      max={wBarOptions.length - 1}
+      step={1}
+    />
+  );
+};
+
 const SightControlKnobs = () => {
   const { store } = useAppContext();
   const { sight } = store.useSnapshot();
@@ -165,9 +186,9 @@ const SightControlKnobs = () => {
   };
   return (
     <div className="flex-ha gap-2">
-      {/* <LabeledBox label="xzoom">
-        <Knob value={sight.xZoom} onChange={(v) => patchSight({ xZoom: v })} />
-      </LabeledBox> */}
+      <LabeledBox label="wbars">
+        <DisplayWidthSelectionKnob />
+      </LabeledBox>
       <LabeledBox label="yzoom">
         <Knob value={sight.yZoom} onChange={(v) => patchSight({ yZoom: v })} />
       </LabeledBox>
