@@ -63,7 +63,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
 
       `file://${waferUnitsLocalDistDir}/step-automator/`,
 
-      `file://${waferUnitsLocalDistDir}/toner-compressor/`,
+      // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
       `file://${waferUnitsLocalDistDir}/sunset-chorus-mini/`,
       `file://${waferUnitsLocalDistDir}/lofi2/`,
@@ -86,7 +86,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/mz2/`,
       `file://${waferUnitsLocalDistDir}/noise-mix/`,
       `file://${waferUnitsLocalDistDir}/crusher/`,
-      // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
+      `file://${waferUnitsLocalDistDir}/toner-compressor-lite/`,
       // `file://${waferUnitsLocalDistDir}/toner-panner/`,
       `file://${waferUnitsLocalDistDir}/toner-tilt-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-3band-eq/`,
