@@ -86,7 +86,7 @@ const blankStoreState: StoreState = {
   windowsEvacuated: false,
   currentNoteChannelId: "",
   currentAutomationChannelId: null,
-  bpm: 120,
+  bpm: 130,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
   unitClockingFlags: {},
