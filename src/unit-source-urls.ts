@@ -4,37 +4,56 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r26`;
-    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r21`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r27`;
+    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r22`;
 
     return [
       `${waferUnitsBase}/fluorite-piano-roll/`,
       //
       `${waferUnitsBase}/graphite-drum-machine/`,
-
+      `${waferUnitsBase}/techno-beat-machine/`,
       `${waferCustomUnitsBase}/js808/`,
+      `${waferCustomUnitsBase}/shiny-drum-machine/`,
+      `${waferUnitsBase}/bs03/`,
+
       `${waferCustomUnitsBase}/webaudio-tinysynth-mini/`,
       `${waferCustomUnitsBase}/super-oscillator/`,
       `${waferCustomUnitsBase}/midi-synth/`,
       `${waferCustomUnitsBase}/webaudio-synth-v2/`,
-      `${waferUnitsBase}/bs03/`,
-      `${waferUnitsBase}/techno-beat-machine/`,
-      `${waferCustomUnitsBase}/shiny-drum-machine/`,
-      `${waferUnitsBase}/sirius/`,
-      `${waferUnitsBase}/luna/`,
-      `${waferUnitsBase}/altair-xm/`,
-
-      `${waferCustomUnitsBase}/webaudio-spectrum/`,
-      `${waferCustomUnitsBase}/web-audio-mixer/`,
-      `${waferCustomUnitsBase}/vue-audio-mixer/`,
-
-      `${waferUnitsBase}/sunset-delay/`,
-      `${waferUnitsBase}/sunset-chorus-mini/`,
-      `${waferUnitsBase}/lofi2/`,
-
       `${waferCustomUnitsBase}/react-synth/`,
       `${waferCustomUnitsBase}/poly-synth/`,
       `${waferCustomUnitsBase}/model-1/`,
+      `${waferCustomUnitsBase}/pg01web/`,
+
+      `${waferUnitsBase}/sirius/`,
+      `${waferUnitsBase}/luna/`,
+      `${waferUnitsBase}/altair-xm/`,
+      `${waferUnitsBase}/orion/`,
+
+      `${waferUnitsBase}/channel-strip/`,
+      `${waferUnitsBase}/sunset-delay/`,
+      `${waferUnitsBase}/sunset-chorus-mini/`,
+      `${waferUnitsBase}/noise-mix/`,
+      `${waferUnitsBase}/crusher/`,
+      `${waferUnitsBase}/lofi2/`,
+      `${waferUnitsBase}/toner-3band-eq/`,
+      `${waferUnitsBase}/toner-tilt-eq/`,
+      `${waferUnitsBase}/toner-limiter/`,
+      `${waferUnitsBase}/toner-compressor-lite/`,
+      `${waferUnitsBase}/toner-saturation/`,
+      `${waferUnitsBase}/toner-reverb/`,
+      `${waferUnitsBase}/toner-panner/`,
+      `${waferUnitsBase}/fc1/`,
+      `${waferUnitsBase}/mz1/`,
+      `${waferUnitsBase}/mz2/`,
+
+      `${waferUnitsBase}/tonerio-sequencer/`,
+      `${waferUnitsBase}/step-automator/`,
+      `${waferUnitsBase}/waveform-checker/`,
+
+      `${waferCustomUnitsBase}/sidechain-compressor/`,
+      `${waferCustomUnitsBase}/web-audio-mixer/`,
+      `${waferCustomUnitsBase}/vue-audio-mixer/`,
     ];
   } else {
     const waferUnitsLocalDistDir = toAbsolutePath("../../wafer-units/dist");
@@ -60,8 +79,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/sirius/`,
       `file://${waferUnitsLocalDistDir}/luna/`,
       `file://${waferUnitsLocalDistDir}/altair-xm/`,
-
-      `file://${waferUnitsLocalDistDir}/step-automator/`,
 
       // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
@@ -98,6 +115,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferCustomUnitsLocalDir}/js/vissonance/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/threejs-audio-reactive-visual/`,
       `file://${waferCustomUnitsLocalDir}/js/audio-input-effects/`,
+      `file://${waferUnitsLocalDistDir}/step-automator/`,
       `file://${waferUnitsLocalDistDir}/tone-wheel/`,
     ];
   }
