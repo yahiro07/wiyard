@@ -1,5 +1,5 @@
 import { clampValue } from "@lib/utils/number-helper";
-import { useAppContext } from "./app-context";
+import { useAppContext } from "../model/app-context";
 import { Icons } from "../components/icons";
 import { cz } from "@lib/utils/cz";
 

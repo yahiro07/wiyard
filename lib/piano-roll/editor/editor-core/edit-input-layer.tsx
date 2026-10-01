@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 import { getInputNoteStride, hitTestNote } from "../common/editor-common-logic";
 import { IPointerEvent } from "../common/editor-types";
 import { createNoteEditActions } from "./edit-input-layer-actions";

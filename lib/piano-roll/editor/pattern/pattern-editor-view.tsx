@@ -2,7 +2,7 @@ import { cz } from "@lib/utils/cz";
 import { seqNumbers } from "@lib/utils/number-helper";
 import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 import {
   EditorCommonLayout,
   PianoRollEditPartPlane,

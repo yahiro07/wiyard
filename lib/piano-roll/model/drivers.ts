@@ -1,7 +1,7 @@
 import { UnitInterface } from "wafer-host/unit-types";
-import { SequencerEngine } from "./sequencer";
+import { SequencerEngine } from "../engine/sequencer";
 import { AppStore } from "./store";
-import { createLiveNoteInput } from "./live-note-input";
+import { createLiveNoteInput } from "../engine/live-note-input";
 import { createPersistence } from "./persistence";
 
 export function setupUnit(

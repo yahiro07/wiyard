@@ -4,7 +4,7 @@ import { seqNumbers } from "@lib/utils/number-helper";
 import { useState } from "react";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { appConfig, uiConfig } from "../../definitions/ui-config";
-import { useStoreAccess } from "../../root/app-context";
+import { useStoreAccess } from "../../model/app-context";
 import { diatonicLanesPitchHelper } from "../common/editor-common-logic";
 import { getNoteNameLabel } from "../common/note-name-helper";
 

@@ -4,7 +4,7 @@ import { Sight } from "../../definitions/types";
 import { DisplaySpec, GridDisplaySpec } from "./editor-types";
 import { useMemo } from "react";
 import { SongKeySpec } from "wafer-host/unit-types";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 
 export function fixSightWithLeftPadding(sight: Sight): Sight {
   if (sight.withXPadding) {

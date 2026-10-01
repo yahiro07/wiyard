@@ -1,4 +1,4 @@
-import { useStoreAccess } from "../../root/app-context";
+import { useStoreAccess } from "../../model/app-context";
 
 export const DebugOverlay = () => {
   const [{ debugObject }] = useStoreAccess();

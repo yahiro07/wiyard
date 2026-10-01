@@ -3,7 +3,7 @@ import { uiColors } from "../definitions/ui-theme";
 import { DiatonicLanesEditorView } from "../editor/diatonic-lanes/diatonic-lanes-editor-view";
 import { PatternEditorView } from "../editor/pattern/pattern-editor-view";
 import { PianoRollEditorView } from "../editor/piano-roll/piano-roll-editor-view";
-import { useStoreAccess } from "./app-context";
+import { useStoreAccess } from "../model/app-context";
 import { SideControlBar } from "./side-control-bar";
 import { TopControlBar } from "./top-control-bar";
 

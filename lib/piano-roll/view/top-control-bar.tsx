@@ -16,8 +16,8 @@ import { LabeledBox } from "../components/labeled-box";
 import { Selector } from "../components/selector";
 import { ShiftSelector } from "../components/shift-selector";
 import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
-import { useAppContext, useStoreAccess } from "./app-context";
-import { useControlActions } from "./control-actions";
+import { useAppContext, useStoreAccess } from "../model/app-context";
+import { useControlActions } from "../model/control-actions";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
 import { appConfig } from "../definitions/ui-config";
 

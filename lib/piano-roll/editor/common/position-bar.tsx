@@ -1,6 +1,6 @@
 import { seqNumbers } from "@lib/utils/number-helper";
 import { useCallback } from "react";
-import { useAppContext, useStoreAccess } from "../../root/app-context";
+import { useAppContext, useStoreAccess } from "../../model/app-context";
 import { HorizontalScrollPlane } from "./editor-common-layout";
 import { getLoopBarLengthForStep } from "./editor-common-logic";
 import { DisplaySpec } from "./editor-types";

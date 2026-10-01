@@ -1,7 +1,7 @@
 import { startDragSessionV0 } from "@lib/utils/drag-session-v0";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { uiConfig } from "../../definitions/ui-config";
-import { AppStore } from "../../root/store";
+import { AppStore } from "../../model/store";
 import {
   diatonicLanesPitchHelper,
   getLoopBarLengthForStep,

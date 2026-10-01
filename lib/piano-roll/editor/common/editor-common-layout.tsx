@@ -1,7 +1,7 @@
 import { cz } from "@lib/utils/cz";
 import { ReactNode, useEffect, useRef } from "react";
 import { ScrollBarH, ScrollBarV } from "../../components/scroll-bar";
-import { useAppContext } from "../../root/app-context";
+import { useAppContext } from "../../model/app-context";
 import { DisplaySpec } from "./editor-types";
 import { DebugOverlay } from "./debug-overlay";
 import { Size } from "@lib/utils/common-types";

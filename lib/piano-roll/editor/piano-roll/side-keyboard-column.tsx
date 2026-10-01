@@ -4,7 +4,7 @@ import { seqNumbers } from "@lib/utils/number-helper";
 import { useState } from "react";
 import { uiConfig } from "../../definitions/ui-config";
 import { getNoteNameLabel } from "../common/note-name-helper";
-import { useStoreAccess } from "../../root/app-context";
+import { useStoreAccess } from "../../model/app-context";
 
 const keyTypes = [
   "whiteL",
