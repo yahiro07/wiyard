@@ -79,6 +79,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/sirius/`,
       `file://${waferUnitsLocalDistDir}/luna/`,
       `file://${waferUnitsLocalDistDir}/altair-xm/`,
+      `file://${waferUnitsLocalDistDir}/radiant-rs/`,
 
       // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
