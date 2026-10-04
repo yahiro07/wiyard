@@ -81,7 +81,7 @@ const UnitPicker = () => {
       onPointerDown={() => actions.setUnitPickerVisible(false)}
     >
       <div className="flex-vc gap-6 w-90%">
-        <div className="h-20px">{selectedItem?.name}</div>
+        <div className="h-20px text-white">{selectedItem?.name}</div>
         <div className="flex-c gap-4 flex-wrap px-6">
           {showcaseEntries.map((item) => {
             return (
