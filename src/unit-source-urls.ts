@@ -8,8 +8,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
     const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r22`;
 
     return [
-      `${waferUnitsBase}/fluorite-piano-roll/`,
-      //
       `${waferUnitsBase}/graphite-drum-machine/`,
       `${waferUnitsBase}/techno-beat-machine/`,
       `${waferCustomUnitsBase}/js808/`,
@@ -59,8 +57,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
     const waferUnitsLocalDistDir = toAbsolutePath("../../wafer-units/dist");
     const waferCustomUnitsLocalDir = toAbsolutePath("../../wafer-custom-units");
     return [
-      `file://${waferUnitsLocalDistDir}/fluorite-piano-roll/`,
-      //
       `file://${waferUnitsLocalDistDir}/graphite-drum-machine/`,
       `file://${waferUnitsLocalDistDir}/techno-beat-machine/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/js808/`,
@@ -81,7 +77,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/altair-xm/`,
       `file://${waferUnitsLocalDistDir}/radiant-rs/`,
 
-      // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
       `file://${waferUnitsLocalDistDir}/sunset-chorus-mini/`,
       `file://${waferUnitsLocalDistDir}/lofi2/`,

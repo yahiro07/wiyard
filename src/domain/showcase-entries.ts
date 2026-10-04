@@ -1,9 +1,7 @@
 import { allCatalogItems } from "@/domain/unit-entries";
 import { literalIncludedIn } from "@lib/utils/array-object-helper";
 
-export const showcaseEntries = allCatalogItems.filter(
-  (item) => item.catalogKey !== "fluoritePianoRoll",
-);
+export const showcaseEntries = allCatalogItems;
 
 export const unitPlaybackCapabilityFlags = Object.fromEntries(
   allCatalogItems.map((item) => [
