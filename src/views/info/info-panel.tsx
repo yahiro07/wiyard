@@ -26,7 +26,7 @@ const InfoPanelTabButtons = () => {
   );
 };
 
-const SettingsPanel = () => {
+const InfoPanel = () => {
   const { infoPanelTab } = store.useSnapshot();
   return (
     <div className="w-400px m-2">
@@ -37,8 +37,10 @@ const SettingsPanel = () => {
       <div className="bg-#ccc p-4  text-#444 min-h-400px">
         <div className="flex-v gap-2">
           <InfoPanelTabButtons />
-          {infoPanelTab === "about" && <AboutContents />}
-          {infoPanelTab === "credits" && <CreditsContents />}
+          <div className="h-400px overflow-x-hidden overflow-y-scroll">
+            {infoPanelTab === "about" && <AboutContents />}
+            {infoPanelTab === "credits" && <CreditsContents />}
+          </div>
         </div>
       </div>
     </div>
@@ -50,7 +52,7 @@ const InfoPanelOuter = () => {
   useHandleClickOutside(
     baseDivRef,
     () => {
-      store.setSettingsPanelVisible(false);
+      store.setInfoPanelVisible(false);
     },
     {
       targetMethod: "pointerdown",
@@ -60,7 +62,7 @@ const InfoPanelOuter = () => {
   );
   return (
     <div ref={baseDivRef}>
-      <SettingsPanel />
+      <InfoPanel />
     </div>
   );
 };
