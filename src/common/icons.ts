@@ -1,5 +1,5 @@
 import { AiOutlineControl } from "react-icons/ai";
-import { BsArrowRight, BsViewList } from "react-icons/bs";
+import { BsArrowRight, BsInfoCircle, BsViewList } from "react-icons/bs";
 import { CgPiano } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa6";
 import { FiMenu } from "react-icons/fi";
 import { GiPlayButton } from "react-icons/gi";
+import { GrDocumentText } from "react-icons/gr";
 import { IoIosArrowDown, IoMdSettings, IoMdShare } from "react-icons/io";
 import { IoMove, IoPlaySharp } from "react-icons/io5";
 import { MdAdd, MdClose, MdOutlineViewTimeline } from "react-icons/md";
@@ -59,4 +60,6 @@ export const Icons = {
   Sliders: PiSlidersHorizontalFill,
   Image: RiImage2Fill,
   ArrowDown: IoIosArrowDown,
+  Info: BsInfoCircle,
+  Document: GrDocumentText,
 };

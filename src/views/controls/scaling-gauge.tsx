@@ -35,7 +35,7 @@ export const ScalingGaugeContainer = () => {
   return (
     <div
       className={cz(
-        "w-36px h-90px bg-gray-500 flex-va justify-between rounded-3px",
+        "w-36px h-90px bg-#909098 flex-va justify-between rounded-3px",
         "text-white cursor-pointer hover:opacity-90",
       )}
       onPointerDown={handleScalingGaugePointerDown}

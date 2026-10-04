@@ -23,7 +23,7 @@ const SettingRow = ({
   return (
     <div className="flex-ha gap-2">
       <div className="font-500 flex-ha gap-2px">
-        <Icons.Tag />
+        <Icons.Sliders size={18} />
         {header}
       </div>
       <div>{children}</div>
