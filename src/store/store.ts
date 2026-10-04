@@ -21,7 +21,11 @@ import {
   defaultBoardSize,
   defaultGraphSpec,
 } from "@/project/default-data";
-import { ProjectLoadErrorStatus, SettingsPanelTab } from "@/store/store-types";
+import {
+  InfoPanelTab,
+  ProjectLoadErrorStatus,
+  SettingsPanelTab,
+} from "@/store/store-types";
 import { AppSettings, defaultAppSettings } from "@/common/app-settings";
 import { appConfig } from "@/common/app-config";
 import { defaultUiTheme, UiTheme } from "@/common/ui-theme";
@@ -73,6 +77,8 @@ export type StoreState = {
   debugObject: object | null;
   graphAreaElevated: boolean;
   settingsPanelTab: SettingsPanelTab;
+  infoPanelVisible: boolean;
+  infoPanelTab: InfoPanelTab;
 };
 
 const blankStoreState: StoreState = {
@@ -86,7 +92,7 @@ const blankStoreState: StoreState = {
   windowsEvacuated: false,
   currentNoteChannelId: "",
   currentAutomationChannelId: null,
-  bpm: 120,
+  bpm: 130,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
   unitClockingFlags: {},
@@ -121,6 +127,8 @@ const blankStoreState: StoreState = {
   debugObject: null,
   graphAreaElevated: false,
   settingsPanelTab: "general",
+  infoPanelVisible: false,
+  infoPanelTab: "about",
 };
 
 export const projectResetterStates: Partial<StoreState> = {
@@ -162,6 +170,8 @@ if (1) {
     // unitPickerVisible: true,
     // uiScaling: 0.9,
     // secondBarVisible: true,
+    // infoPanelVisible: true,
+    // infoPanelTab: "credits",
   });
 }
 

@@ -4,12 +4,10 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r27`;
-    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r22`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r28`;
+    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r23`;
 
     return [
-      `${waferUnitsBase}/fluorite-piano-roll/`,
-      //
       `${waferUnitsBase}/graphite-drum-machine/`,
       `${waferUnitsBase}/techno-beat-machine/`,
       `${waferCustomUnitsBase}/js808/`,
@@ -26,9 +24,10 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferCustomUnitsBase}/pg01web/`,
 
       `${waferUnitsBase}/sirius/`,
+      `${waferUnitsBase}/orion/`,
       `${waferUnitsBase}/luna/`,
       `${waferUnitsBase}/altair-xm/`,
-      `${waferUnitsBase}/orion/`,
+      `${waferUnitsBase}/radiant-rs/`,
 
       `${waferUnitsBase}/channel-strip/`,
       `${waferUnitsBase}/sunset-delay/`,
@@ -59,8 +58,6 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
     const waferUnitsLocalDistDir = toAbsolutePath("../../wafer-units/dist");
     const waferCustomUnitsLocalDir = toAbsolutePath("../../wafer-custom-units");
     return [
-      `file://${waferUnitsLocalDistDir}/fluorite-piano-roll/`,
-      //
       `file://${waferUnitsLocalDistDir}/graphite-drum-machine/`,
       `file://${waferUnitsLocalDistDir}/techno-beat-machine/`,
       `file://${waferCustomUnitsLocalDir}/ts/dist/js808/`,
@@ -79,8 +76,8 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/sirius/`,
       `file://${waferUnitsLocalDistDir}/luna/`,
       `file://${waferUnitsLocalDistDir}/altair-xm/`,
+      `file://${waferUnitsLocalDistDir}/radiant-rs/`,
 
-      // `file://${waferUnitsLocalDistDir}/toner-compressor/`,
       `file://${waferUnitsLocalDistDir}/sunset-delay/`,
       `file://${waferUnitsLocalDistDir}/sunset-chorus-mini/`,
       `file://${waferUnitsLocalDistDir}/lofi2/`,
@@ -104,7 +101,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/noise-mix/`,
       `file://${waferUnitsLocalDistDir}/crusher/`,
       `file://${waferUnitsLocalDistDir}/toner-compressor-lite/`,
-      // `file://${waferUnitsLocalDistDir}/toner-panner/`,
+      `file://${waferUnitsLocalDistDir}/toner-panner/`,
       `file://${waferUnitsLocalDistDir}/toner-tilt-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-3band-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-reverb/`,

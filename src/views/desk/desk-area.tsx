@@ -20,6 +20,7 @@ import { GraphFloatUpButton } from "@/views/controls/graph-float-up-button";
 import { GraphPlaneRoot } from "@/views/graph/graph-plane";
 import { cz } from "@lib/utils/cz";
 import { appEnvs } from "@/common/app-envs";
+import { InfoPanelRoot } from "@/views/info/info-panel";
 
 const FieldSightPlaneWrapper = ({
   children,
@@ -132,6 +133,7 @@ const ForegroundUiPlane = () => {
       {/* <InFieldControlUi /> */}
       <DeskAreaRightSideControls />
       <SettingsPanelRoot />
+      <InfoPanelRoot />
     </>
   );
 };

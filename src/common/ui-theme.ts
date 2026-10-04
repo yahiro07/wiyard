@@ -29,7 +29,8 @@ export const presetUiThemes = {
   },
   theme2: {
     boardBgColor: "#000",
-    boardBgImageUrl: "/dev/bg/bg15.jpg",
+    boardBgImageUrl: "/images/bg1.avif",
+    // boardBgImageUrl: "/dev/bg/bg15.jpg",
     boardBgMix: 1,
     graphBgColor: "#144",
     graphBgOpacity: 0.5,
@@ -38,7 +39,8 @@ export const presetUiThemes = {
   },
   theme3: {
     boardBgColor: "#000",
-    boardBgImageUrl: "/dev/bg/bg5.jpg",
+    boardBgImageUrl: "/images/bg1.avif",
+    // boardBgImageUrl: "/dev/bg/bg5.jpg",
     boardBgMix: 1,
     graphBgColor: "#008",
     graphBgOpacity: 0.4,
@@ -47,7 +49,8 @@ export const presetUiThemes = {
   },
   theme4: {
     boardBgColor: "#fff",
-    boardBgImageUrl: "/dev/bg/bg22.jpg",
+    boardBgImageUrl: "/images/bg1.avif",
+    // boardBgImageUrl: "/dev/bg/bg22.jpg",
     boardBgMix: 0.8,
     graphBgColor: "#fff",
     graphBgOpacity: 0.2,
@@ -56,7 +59,8 @@ export const presetUiThemes = {
   },
   theme5: {
     boardBgColor: "#206",
-    boardBgImageUrl: "/dev/bg/bg18.jpg",
+    boardBgImageUrl: "/images/bg1.avif",
+    // boardBgImageUrl: "/dev/bg/bg18.jpg",
     boardBgMix: 0.3,
     graphBgColor: "#004",
     graphBgOpacity: 0.25,
