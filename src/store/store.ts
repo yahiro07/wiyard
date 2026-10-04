@@ -171,6 +171,7 @@ if (1) {
     // uiScaling: 0.9,
     // secondBarVisible: true,
     infoPanelVisible: true,
+    infoPanelTab: "credits",
   });
 }
 
