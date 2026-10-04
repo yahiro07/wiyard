@@ -4,8 +4,8 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r27`;
-    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r22`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r28`;
+    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r23`;
 
     return [
       `${waferUnitsBase}/graphite-drum-machine/`,
@@ -24,9 +24,10 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferCustomUnitsBase}/pg01web/`,
 
       `${waferUnitsBase}/sirius/`,
+      `${waferUnitsBase}/orion/`,
       `${waferUnitsBase}/luna/`,
       `${waferUnitsBase}/altair-xm/`,
-      `${waferUnitsBase}/orion/`,
+      `${waferUnitsBase}/radiant-rs/`,
 
       `${waferUnitsBase}/channel-strip/`,
       `${waferUnitsBase}/sunset-delay/`,
@@ -100,7 +101,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/noise-mix/`,
       `file://${waferUnitsLocalDistDir}/crusher/`,
       `file://${waferUnitsLocalDistDir}/toner-compressor-lite/`,
-      // `file://${waferUnitsLocalDistDir}/toner-panner/`,
+      `file://${waferUnitsLocalDistDir}/toner-panner/`,
       `file://${waferUnitsLocalDistDir}/toner-tilt-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-3band-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-reverb/`,
