@@ -170,8 +170,8 @@ if (1) {
     // unitPickerVisible: true,
     // uiScaling: 0.9,
     // secondBarVisible: true,
-    infoPanelVisible: true,
-    infoPanelTab: "credits",
+    // infoPanelVisible: true,
+    // infoPanelTab: "credits",
   });
 }
 
