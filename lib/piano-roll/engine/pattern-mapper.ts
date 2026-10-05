@@ -1,6 +1,7 @@
 import { clampValue, seqNumbers } from "@lib/utils/number-helper";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { LoopBarLength, Note, PatternBarLength } from "../definitions/types";
+import { uiConfig } from "../definitions/ui-config";
 
 type NotesMapperFn = (args: {
   inputNotes: Note[];
@@ -44,7 +45,7 @@ const notesMapperBasic1 = createNotesMapperFn(
       return patternNotes.map((patternNote) => {
         const pitch = shiftNotePitch(
           inputNote.pitch,
-          patternNote.pitch - 7,
+          patternNote.pitch - uiConfig.patternPitchCenter,
           scalePitches,
         );
         return {

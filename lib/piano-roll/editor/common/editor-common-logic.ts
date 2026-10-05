@@ -2,6 +2,7 @@ import { clampValue } from "@lib/utils/number-helper";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { SectionRange } from "./editor-types";
+import { uiConfig } from "../../definitions/ui-config";
 
 type HitNoteInfo = { note: Note; part: "body" | "tail" };
 
@@ -42,7 +43,10 @@ export function hitTestNote(
 }
 
 export function getPatternPitchLabel(pitch: number) {
-  return pitch - 7 >= 0 ? pitch - 7 + 1 : pitch - 7 - 1;
+  const pitchCenter = uiConfig.patternPitchCenter;
+  return pitch - pitchCenter >= 0
+    ? pitch - pitchCenter + 1
+    : pitch - pitchCenter - 1;
 }
 
 const subMapD = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];
