@@ -1,10 +1,7 @@
 import { SongKeySpec } from "wafer-host/unit-types";
 import { LoopBarLength, Note, PatternMode } from "../definitions/types";
-import { createNotesMapperBasic1 } from "./mappers/basic1";
-
-const notesMappers = {
-  basic1: createNotesMapperBasic1(),
-};
+import { notesMapperBasic1 } from "./mappers/basic1";
+import { notesMapperShift2 } from "./mappers/shift2";
 
 export function generateMappedNotes(
   inputNotes: Note[],
@@ -16,15 +13,8 @@ export function generateMappedNotes(
   },
 ): Note[] {
   const { loopBars, keySpec, patternMode } = configs;
-  if (patternMode === "1") {
-    return notesMappers.basic1({
-      inputNotes,
-      patternNotes,
-      loopBars,
-      keySpec,
-    });
-  } else if (patternMode === "2") {
-    return [];
-  }
-  return [];
+  const mapperFn =
+    { "1": notesMapperBasic1, "2": notesMapperShift2 }["2"] ??
+    notesMapperBasic1;
+  return mapperFn({ inputNotes, patternNotes, loopBars, keySpec });
 }
