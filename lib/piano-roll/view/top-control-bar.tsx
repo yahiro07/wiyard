@@ -15,7 +15,7 @@ import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { Selector } from "../components/selector";
 import { ShiftSelector } from "../components/shift-selector";
-import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
+import { LoopBarLength, Sight } from "../definitions/types";
 import { useAppContext, useStoreAccess } from "../model/app-context";
 import { useControlActions } from "../model/control-actions";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
@@ -85,13 +85,6 @@ const loopBarsOptions = createSelectorOptions<LoopBarLength>(
   ]),
 );
 
-const patternBarsOptions = createSelectorOptions<PatternBarLength>(
-  ([0.25, 0.5, 1, 2] satisfies LoopBarLength[]).map((v) => [
-    v,
-    `${v < 1 ? `1/${1 / v}` : v}`,
-  ]),
-);
-
 const LoopBarsSelectorContainer = () => {
   const [{ loopBars }, mt] = useStoreAccess();
   return (
@@ -108,17 +101,14 @@ const LoopBarsSelectorContainer = () => {
 
 const _LoopBarsSelectorContainerEx = () => {
   const { store } = useAppContext();
-  const { loopBars, patternBars, isPatternView } = store.useSnapshot();
-  const [options, value, onChange] = isPatternView
-    ? [patternBarsOptions, patternBars, store.setPatternBars]
-    : [loopBarsOptions, loopBars, store.setLoopBars];
+  const { loopBars } = store.useSnapshot();
   return (
-    <LabeledBox label={isPatternView ? "pt bars" : "loop bars"}>
+    <LabeledBox label="loop bars">
       <ShiftSelector
         minWidth={50}
-        value={value}
-        options={options}
-        onChange={onChange as (value: LoopBarLength | PatternBarLength) => void}
+        value={loopBars}
+        options={loopBarsOptions}
+        onChange={store.setLoopBars}
       />
     </LabeledBox>
   );

@@ -1,15 +1,9 @@
 import { clampValue } from "@lib/utils/number-helper";
 import { Persistence } from "wafer-host/unit-types";
-import {
-  LoopBarLength,
-  Note,
-  PatternBarLength,
-  Sight,
-} from "../definitions/types";
+import { LoopBarLength, Note, Sight } from "../definitions/types";
 import { AppStore, resetterStates } from "./store";
 
 const loopBarLengths: LoopBarLength[] = [0.25, 0.5, 1, 2, 4, 8, 16];
-const patternBarLengths: PatternBarLength[] = [0.25, 0.5, 1, 2];
 
 function encodeNotes(notes: Note[]): number[] {
   return [
@@ -76,7 +70,7 @@ const bytesDeserializer = {
 };
 
 export function createPersistence(store: AppStore): Persistence {
-  const magics = { first: 123, second: 48, tail: 124 };
+  const magics = { first: 123, second: 49, tail: 124 };
 
   return {
     emitStateBytes(): Uint8Array {
@@ -100,7 +94,6 @@ export function createPersistence(store: AppStore): Persistence {
         bs.float(st.sight.yZoom),
         bs.bool(st.sight.withXPadding),
         ...encodeNotes(st.patternNotes),
-        bs.loopBars(st.patternBars),
         bs.bool(st.patternEnabled),
         bs.bool(st.realized),
         ...backupBytes,
@@ -126,7 +119,6 @@ export function createPersistence(store: AppStore): Persistence {
         withXPadding: bd.bool(reader.next()),
       };
       const patternNotes = reader.readNotes();
-      const patternBars = bd.loopBars(reader.next());
       const patternEnabled = bd.bool(reader.next());
       const realized = bd.bool(reader.next());
       const backupPresent = bd.bool(reader.next());
@@ -146,7 +138,6 @@ export function createPersistence(store: AppStore): Persistence {
         0 <= sight.yPosition && sight.yPosition <= 1,
         1 <= sight.wBars && sight.wBars <= 16,
         0 <= sight.yZoom && sight.yZoom <= 1,
-        patternBarLengths.includes(patternBars as PatternBarLength),
       ].every(Boolean);
       if (!valid) return;
       store.assign({
@@ -157,7 +148,6 @@ export function createPersistence(store: AppStore): Persistence {
         inputNotes,
         sight,
         patternNotes,
-        patternBars: patternBars as PatternBarLength,
         patternEnabled,
         realized,
         backupInputNotes,
