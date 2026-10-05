@@ -31,7 +31,7 @@ const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
     noteDuty,
     editStride,
   } = useNoteLayerContext();
-  const [{ keySpec }] = useStoreAccess();
+  const [{ keySpec, hoverNoteInfo }] = useStoreAccess();
   const { cellW, cellH } = displaySpec;
   const pos = note.position - sectionRange.offset;
   const yi0 = note.pitch;
@@ -72,6 +72,8 @@ const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
   const cutoutPercent = (1 - dutyM) * 100;
 
   const canAdjustDuration = note.duration >= editStride;
+  const isHovering = hoverNoteInfo?.noteId === note.id;
+
   return (
     <div
       className={styleNoteView.base}
@@ -98,7 +100,7 @@ const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
             style={{ width: `${cutoutPercent}%` }}
           />
         )}
-        {canAdjustDuration && (
+        {canAdjustDuration && isHovering && (
           <div
             className={styleNoteView.grip}
             style={{ width: editStride * 0.4 * cellW }}
@@ -118,7 +120,7 @@ const styleNoteView = {
   ),
   cutout: "absolute top-0 right-0 bg-black/15 h-full",
   grip: "absolute top-0 right-0 flex-c h-full",
-  gripInner: "w-8px h-8px rounded-full bg-black/12",
+  gripInner: "w-8px h-8px rounded-full bg-black/15",
 };
 
 const NotesBlockView = ({

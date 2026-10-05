@@ -1,6 +1,7 @@
 import { createStore, Store } from "snap-store";
 import { SongKeySpec } from "wafer-host/unit-types";
 import {
+  HoverNoteInfo,
   LoopBarLength,
   Note,
   PatternBarLength,
@@ -34,6 +35,7 @@ type StoreState = {
   viewActive: boolean;
   debugObject: object | null;
   sideControlsVisible: boolean;
+  hoverNoteInfo: HoverNoteInfo | null;
 };
 
 export type AppStore = Store<StoreState>;
@@ -76,6 +78,7 @@ const defaultStoreState: StoreState = {
   viewActive: false,
   debugObject: null,
   sideControlsVisible: false,
+  hoverNoteInfo: null,
 };
 if (appConfig.isDevelopment && 0) {
   const base = 24;

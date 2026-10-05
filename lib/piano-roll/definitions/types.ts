@@ -28,3 +28,8 @@ export type Sight = {
 export type EditorKind = "main" | "pattern" | "mainD";
 
 export type NoteKind = "input" | "pattern" | "mapped";
+
+export type HoverNoteInfo = {
+  noteId: number;
+  part: "body" | "tail";
+};
