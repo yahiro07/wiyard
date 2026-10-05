@@ -62,6 +62,9 @@ const bytesSerializer = {
   bool: (value: boolean) => (value ? 1 : 0),
   octave: (value: number) => value + 100,
   loopBars: (value: number) => Math.floor(value * 4),
+  sightBars: (value: number) => {
+    return Math.round(value * 10); //0.0~16.0 --> 0~160
+  },
 };
 const bytesDeserializer = {
   float: (byte: number) => clampValue(byte / 255, 0, 1),
@@ -69,10 +72,11 @@ const bytesDeserializer = {
   bool: (byte: number) => byte !== 0,
   octave: (byte: number) => clampValue(byte - 100, -2, 2),
   loopBars: (byte: number) => byte / 4,
+  sightBars: (byte: number) => byte / 10,
 };
 
 export function createPersistence(store: AppStore): Persistence {
-  const magics = { first: 123, second: 47, tail: 124 };
+  const magics = { first: 123, second: 48, tail: 124 };
 
   return {
     emitStateBytes(): Uint8Array {
@@ -90,9 +94,9 @@ export function createPersistence(store: AppStore): Persistence {
         bs.float(st.noteDuty),
         bs.loopBars(st.loopBars),
         ...encodeNotes(st.inputNotes),
-        bs.uint(st.sight.xBarPosition),
+        bs.sightBars(st.sight.xBarPosition),
         bs.float(st.sight.yPosition),
-        bs.uint(Math.round(st.sight.wBars)),
+        bs.sightBars(st.sight.wBars),
         bs.float(st.sight.yZoom),
         bs.bool(st.sight.withXPadding),
         ...encodeNotes(st.patternNotes),
@@ -115,9 +119,9 @@ export function createPersistence(store: AppStore): Persistence {
       const loopBars = bd.loopBars(reader.next());
       const inputNotes = reader.readNotes();
       const sight: Sight = {
-        xBarPosition: bd.uint(reader.next(), 0, 16),
+        xBarPosition: bd.sightBars(reader.next()),
         yPosition: bd.float(reader.next()),
-        wBars: bd.uint(reader.next(), 1, 16),
+        wBars: bd.sightBars(reader.next()),
         yZoom: bd.float(reader.next()),
         withXPadding: bd.bool(reader.next()),
       };
