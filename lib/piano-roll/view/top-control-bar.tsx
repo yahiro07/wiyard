@@ -15,7 +15,7 @@ import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { Selector } from "../components/selector";
 import { ShiftSelector } from "../components/shift-selector";
-import { LoopBarLength, Sight } from "../definitions/types";
+import { LoopBarLength, PatternMode, Sight } from "../definitions/types";
 import { useAppContext, useStoreAccess } from "../model/app-context";
 import { useControlActions } from "../model/control-actions";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
@@ -227,13 +227,26 @@ const SightControlXYPad = () => {
 };
 
 const ViewModeSelector = () => {
-  const { store } = useAppContext();
-  const { isPatternView } = store.useSnapshot();
+  const [{ isPatternView }, mt] = useStoreAccess();
   return (
     <Button
       active={isPatternView}
-      onClick={store.toggleIsPatternView}
+      onClick={mt.toggleIsPatternView}
       text="pattern"
+    />
+  );
+};
+
+const patternModeOptions = createPlainSelectorOptions<PatternMode>(["1", "2"]);
+
+const PatternModeSelector = () => {
+  const [{ patternMode }, mt] = useStoreAccess();
+  return (
+    <Selector
+      className="w-30px"
+      value={patternMode}
+      options={patternModeOptions}
+      onChange={mt.setPatternMode}
     />
   );
 };
@@ -365,13 +378,16 @@ export const TopControlBar = () => {
             </LabeledBox>
             <LabeledBox>
               <div className="flex-ha">
-                <ViewModeSelector />
+                <div className="flex-ha gap-2px">
+                  <ViewModeSelector />
+                  <PatternModeSelector />
+                </div>
                 <PatternToggleButton />
                 <RealizeButton />
               </div>
             </LabeledBox>
             <LabeledBox>
-              <div className="flex-ha gap-6">
+              <div className="flex-ha gap-3">
                 <LoopGhostToggleButton />
                 <DuplicateNotes2XButton />
                 <TrashButtonContainer />

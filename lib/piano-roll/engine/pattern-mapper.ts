@@ -14,7 +14,7 @@ export function generateMappedNotes(
 ): Note[] {
   const { loopBars, keySpec, patternMode } = configs;
   const mapperFn =
-    { "1": notesMapperBasic1, "2": notesMapperShift2 }["2"] ??
+    { "1": notesMapperBasic1, "2": notesMapperShift2 }[patternMode] ??
     notesMapperBasic1;
   return mapperFn({ inputNotes, patternNotes, loopBars, keySpec });
 }
