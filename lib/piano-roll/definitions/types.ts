@@ -32,4 +32,4 @@ export type HoverNoteInfo = {
   part: "body" | "tail";
 };
 
-export type PatternMode = "1" | "2";
+export type PatternMode = 1 | 2;

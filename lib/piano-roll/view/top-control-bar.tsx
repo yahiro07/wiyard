@@ -237,7 +237,7 @@ const ViewModeSelector = () => {
   );
 };
 
-const patternModeOptions = createPlainSelectorOptions<PatternMode>(["1", "2"]);
+const patternModeOptions = createPlainSelectorOptions<PatternMode>([1, 2]);
 
 const PatternModeSelector = () => {
   const [{ patternMode }, mt] = useStoreAccess();

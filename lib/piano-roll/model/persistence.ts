@@ -1,6 +1,6 @@
 import { clampValue } from "@lib/utils/number-helper";
 import { Persistence } from "wafer-host/unit-types";
-import { LoopBarLength, Note, Sight } from "../definitions/types";
+import { LoopBarLength, Note, PatternMode, Sight } from "../definitions/types";
 import { AppStore, resetterStates } from "./store";
 
 const loopBarLengths: LoopBarLength[] = [0.25, 0.5, 1, 2, 4, 8, 16];
@@ -70,7 +70,7 @@ const bytesDeserializer = {
 };
 
 export function createPersistence(store: AppStore): Persistence {
-  const magics = { first: 123, second: 49, tail: 124 };
+  const magics = { first: 123, second: 50, tail: 124 };
 
   return {
     emitStateBytes(): Uint8Array {
@@ -95,6 +95,7 @@ export function createPersistence(store: AppStore): Persistence {
         bs.bool(st.sight.withXPadding),
         ...encodeNotes(st.patternNotes),
         bs.bool(st.patternEnabled),
+        bs.uint(st.patternMode),
         bs.bool(st.realized),
         ...backupBytes,
         bs.bool(st.diatonicLanesEnabled),
@@ -120,6 +121,7 @@ export function createPersistence(store: AppStore): Persistence {
       };
       const patternNotes = reader.readNotes();
       const patternEnabled = bd.bool(reader.next());
+      const patternMode = bd.uint(reader.next(), 1, 2);
       const realized = bd.bool(reader.next());
       const backupPresent = bd.bool(reader.next());
       const backupInputNotes = backupPresent ? reader.readNotes() : null;
@@ -138,6 +140,7 @@ export function createPersistence(store: AppStore): Persistence {
         0 <= sight.yPosition && sight.yPosition <= 1,
         1 <= sight.wBars && sight.wBars <= 16,
         0 <= sight.yZoom && sight.yZoom <= 1,
+        patternMode === 1 || patternMode === 2,
       ].every(Boolean);
       if (!valid) return;
       store.assign({
@@ -149,6 +152,7 @@ export function createPersistence(store: AppStore): Persistence {
         sight,
         patternNotes,
         patternEnabled,
+        patternMode: patternMode as PatternMode,
         realized,
         backupInputNotes,
         diatonicLanesEnabled,

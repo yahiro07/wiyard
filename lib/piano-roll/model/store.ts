@@ -61,7 +61,7 @@ const defaultStoreState: StoreState = {
     withXPadding: false,
   },
   patternEnabled: false,
-  patternMode: "1",
+  patternMode: 1,
   realized: false,
   backupInputNotes: null,
   diatonicLanesEnabled: false,
