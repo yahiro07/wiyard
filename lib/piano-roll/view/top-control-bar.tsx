@@ -19,7 +19,7 @@ import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
 import { useAppContext, useStoreAccess } from "../model/app-context";
 import { useControlActions } from "../model/control-actions";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
-import { appConfig } from "../definitions/ui-config";
+import { appConfig, uiConfig } from "../definitions/ui-config";
 import { XYZoomPad } from "../components/xy-zoom-pad";
 import { linearInterpolate } from "@lib/utils/number-helper";
 
@@ -165,7 +165,7 @@ const DisplayWidthSelectionKnob = () => {
   const patchSight = (attrs: Partial<Sight>) => {
     store.setSight({ ...sight, ...attrs });
   };
-  const wBarOptions = [2, 4, 8];
+  const wBarOptions = uiConfig.displayBarOptions;
   const value = wBarOptions.indexOf(sight.wBars);
   const onChange = (v: number) => {
     patchSight({ wBars: wBarOptions[v] });
@@ -186,7 +186,7 @@ const XYZoomPadContainer = () => {
   const patchSight = (attrs: Partial<Sight>) => {
     store.setSight({ ...sight, ...attrs });
   };
-  const wBarOptions = [2, 4, 8];
+  const wBarOptions = uiConfig.displayBarOptions;
   const wBarsIndex = wBarOptions.indexOf(sight.wBars);
   const onXYChange = (x: number, y: number) => {
     const wBars = wBarOptions[x];
