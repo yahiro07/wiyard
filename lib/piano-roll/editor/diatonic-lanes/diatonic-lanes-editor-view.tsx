@@ -36,13 +36,14 @@ export const DiatonicLanesEditorView = () => {
     sight,
     mainDivSize,
   });
-
   const gridDisplaySpec = useGridDisplaySpec(
     displaySpec,
     displaySteps,
     numPitches,
+    sight,
     keySpec,
   );
+
   return (
     <EditorCommonLayout
       mainDivSizeCallback={setMainDivSize}
