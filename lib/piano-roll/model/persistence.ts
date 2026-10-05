@@ -92,7 +92,7 @@ export function createPersistence(store: AppStore): Persistence {
         ...encodeNotes(st.inputNotes),
         bs.uint(st.sight.xBarPosition),
         bs.float(st.sight.yPosition),
-        bs.uint(st.sight.wBars),
+        bs.uint(Math.round(st.sight.wBars)),
         bs.float(st.sight.yZoom),
         bs.bool(st.sight.withXPadding),
         ...encodeNotes(st.patternNotes),

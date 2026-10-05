@@ -165,19 +165,11 @@ const DisplayWidthSelectionKnob = () => {
   const patchSight = (attrs: Partial<Sight>) => {
     store.setSight({ ...sight, ...attrs });
   };
-  const wBarOptions = uiConfig.displayBarOptions;
-  const value = wBarOptions.indexOf(sight.wBars);
+  const value = Math.log2(sight.wBars);
   const onChange = (v: number) => {
-    patchSight({ wBars: wBarOptions[v] });
+    patchSight({ wBars: 2 ** v });
   };
-  return (
-    <Knob
-      value={value}
-      onChange={onChange}
-      max={wBarOptions.length - 1}
-      step={1}
-    />
-  );
+  return <Knob value={value} onChange={onChange} min={1} step={0.01} max={4} />;
 };
 
 const XYZoomPadContainer = () => {
