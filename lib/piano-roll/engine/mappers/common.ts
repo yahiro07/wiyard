@@ -36,6 +36,16 @@ export function ceilPatternSteps(step: number) {
   if (step <= 8) return 8;
   if (step <= 16) return 16;
   if (step <= 32) return 32;
+  if (step <= 64) return 64;
+  if (step <= 128) return 128;
+  return 256; //max 16bars
+}
+
+export function getCeiledStepsForNotes(notes: Note[]): number {
+  if (notes.length === 0) return 0;
+  return ceilPatternSteps(
+    Math.max(...notes.map((it) => it.position + it.duration)),
+  )!;
 }
 
 export function applyMappedNoteIds(notes: Note[]): Note[] {

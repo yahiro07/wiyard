@@ -4,7 +4,7 @@ import {
   NotesMapperFn,
   applyMappedNoteIds,
   buildScalePitches,
-  ceilPatternSteps,
+  getCeiledStepsForNotes,
   makePatternNotesRepeated,
   shiftNotePitch,
 } from "./common";
@@ -87,9 +87,7 @@ export const notesMapperShift2: NotesMapperFn = ({
     return [];
   }
   const scalePitches = buildScalePitches(keySpec);
-  const patternSteps = ceilPatternSteps(
-    Math.max(...patternNotes.map((note) => note.position + note.duration)),
-  )!;
+  const patternSteps = getCeiledStepsForNotes(patternNotes);
   const repeatedPatternNotes = makePatternNotesRepeated(
     patternNotes,
     patternSteps,
