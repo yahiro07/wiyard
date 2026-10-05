@@ -3,6 +3,7 @@ import { SongKeySpec } from "wafer-host/unit-types";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { SectionRange } from "./editor-types";
 import { uiConfig } from "../../definitions/ui-config";
+import { getSortOrder } from "@lib/utils/array-object-helper";
 
 type HitNoteInfo = { note: Note; part: "body" | "tail" };
 
@@ -17,8 +18,12 @@ export function hitTestNote(
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
   const isDiatonic = editorKind === "mainD";
-  for (let i = notes.length - 1; i >= 0; i--) {
-    const note = notes[i];
+
+  const notesSorted = notes
+    .slice()
+    .sort(getSortOrder((it) => (it.parentNoteId ? 1000 : 0 + it.position)));
+
+  for (const note of notesSorted) {
     const noteYi = isDiatonic
       ? diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch, keySpec)
       : note.pitch;
