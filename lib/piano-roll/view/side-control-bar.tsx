@@ -18,7 +18,7 @@ const DisplayWidthControlButtons = () => {
   return (
     <div className="flex-v gap-2">
       <div className="flex-v gap-1">
-        {[16, 8, 4, 2].map((b) => {
+        {[8, 4, 2].map((b) => {
           const active = sight.wBars === b;
           return (
             <button

@@ -165,7 +165,7 @@ const DisplayWidthSelectionKnob = () => {
   const patchSight = (attrs: Partial<Sight>) => {
     store.setSight({ ...sight, ...attrs });
   };
-  const wBarOptions = [2, 4, 8, 16];
+  const wBarOptions = [2, 4, 8];
   const value = wBarOptions.indexOf(sight.wBars);
   const onChange = (v: number) => {
     patchSight({ wBars: wBarOptions[v] });
@@ -186,7 +186,7 @@ const XYZoomPadContainer = () => {
   const patchSight = (attrs: Partial<Sight>) => {
     store.setSight({ ...sight, ...attrs });
   };
-  const wBarOptions = [2, 4, 8, 16];
+  const wBarOptions = [2, 4, 8];
   const wBarsIndex = wBarOptions.indexOf(sight.wBars);
   const onXYChange = (x: number, y: number) => {
     const wBars = wBarOptions[x];
