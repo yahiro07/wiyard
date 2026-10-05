@@ -31,3 +31,5 @@ export type HoverNoteInfo = {
   noteId: number;
   part: "body" | "tail";
 };
+
+export type PatternMode = "1" | "2";

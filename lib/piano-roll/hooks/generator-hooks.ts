@@ -5,13 +5,20 @@ import { generateMappedNotes } from "../engine/pattern-mapper";
 
 export function useGenerateMappedNotes(engine: SequencerEngine) {
   const { store } = useAppContext();
-  const { inputNotes, patternNotes, loopBars, patternEnabled, keySpec } =
-    store.useSnapshot();
+  const {
+    inputNotes,
+    patternNotes,
+    loopBars,
+    patternEnabled,
+    patternMode,
+    keySpec,
+  } = store.useSnapshot();
   useLayoutEffect(() => {
     const mappedNotes = patternEnabled
       ? generateMappedNotes(inputNotes, patternNotes, {
           loopBars,
           keySpec,
+          patternMode,
         })
       : null;
     store.setMappedNotes(mappedNotes);
@@ -20,9 +27,11 @@ export function useGenerateMappedNotes(engine: SequencerEngine) {
     inputNotes,
     patternNotes,
     patternEnabled,
+    patternMode,
     store.setMappedNotes,
     loopBars,
     keySpec,
+
     engine.setNotes,
   ]);
 }

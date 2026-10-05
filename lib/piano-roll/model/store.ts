@@ -4,6 +4,7 @@ import {
   HoverNoteInfo,
   LoopBarLength,
   Note,
+  PatternMode,
   Sight,
 } from "../definitions/types";
 import { appConfig, fallbackKeySpec } from "../definitions/ui-config";
@@ -17,6 +18,7 @@ type StoreState = {
   patternNotes: Note[];
   sight: Sight;
   patternEnabled: boolean;
+  patternMode: PatternMode;
   realized: boolean;
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
@@ -59,6 +61,7 @@ const defaultStoreState: StoreState = {
     withXPadding: false,
   },
   patternEnabled: false,
+  patternMode: "1",
   realized: false,
   backupInputNotes: null,
   diatonicLanesEnabled: false,
