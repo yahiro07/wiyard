@@ -39,6 +39,7 @@ export const EditInputLayer = () => {
       yiFloat,
       editorKind,
       keySpec,
+      editStride,
     );
 
     if (hitNoteInfo?.note.parentNoteId !== undefined) {

@@ -1,4 +1,4 @@
-import { clampValue } from "@lib/utils/number-helper";
+import { clampValue, inBetween } from "@lib/utils/number-helper";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { SectionRange } from "./editor-types";
@@ -13,6 +13,7 @@ export function hitTestNote(
   yiFloat: number,
   editorKind: EditorKind,
   keySpec: SongKeySpec,
+  editStride: number,
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
   const isDiatonic = editorKind === "mainD";
@@ -26,7 +27,18 @@ export function hitTestNote(
     const relPos = note.position - sectionRange.offset;
     const dur = note.duration;
     const noteTailPos = relPos + dur;
-    if (0) {
+
+    if (1) {
+      const d = editStride * 0.4;
+      if (
+        note.duration >= editStride &&
+        inBetween(xiFloat, noteTailPos - d, noteTailPos)
+      ) {
+        return { note, part: "tail" };
+      } else if (relPos <= xi && xi < relPos + dur) {
+        return { note, part: "body" };
+      }
+    } else if (0) {
       if (note.duration >= 2 && xi === noteTailPos - 1) {
         return { note, part: "tail" };
       } else if (relPos <= xi && xi < relPos + dur) {

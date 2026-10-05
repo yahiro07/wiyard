@@ -7,6 +7,7 @@ import { uiConfig } from "../../definitions/ui-config";
 import { useAppContext, useStoreAccess } from "../../model/app-context";
 import {
   diatonicLanesPitchHelper,
+  getInputNoteStride,
   getPatternPitchLabel,
 } from "../common/editor-common-logic";
 import { DisplaySpec } from "../common/editor-types";
@@ -28,6 +29,7 @@ const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
     patternEnabled,
     octaveShift,
     noteDuty,
+    editStride,
   } = useNoteLayerContext();
   const [{ keySpec }] = useStoreAccess();
   const { cellW, cellH } = displaySpec;
@@ -69,6 +71,7 @@ const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
   const dutyM = mapUnaryTo(duty, 0.2, 1);
   const cutoutPercent = (1 - dutyM) * 100;
 
+  const canAdjustDuration = note.duration >= editStride;
   return (
     <div
       className={styleNoteView.base}
@@ -95,6 +98,14 @@ const NoteView = ({ note, isGhost }: { note: Note; isGhost: boolean }) => {
             style={{ width: `${cutoutPercent}%` }}
           />
         )}
+        {canAdjustDuration && (
+          <div
+            className={styleNoteView.grip}
+            style={{ width: editStride * 0.4 * cellW }}
+          >
+            <div className={styleNoteView.gripInner} />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -106,6 +117,8 @@ const styleNoteView = {
     "relative",
   ),
   cutout: "absolute top-0 right-0 bg-black/15 h-full",
+  grip: "absolute top-0 right-0 flex-c h-full",
+  gripInner: "w-8px h-8px rounded-full bg-black/12",
 };
 
 const NotesBlockView = ({
@@ -222,7 +235,11 @@ export const NoteLayerRoot = ({
     patternEnabled,
     octaveShift,
     noteDuty,
+    sight,
   } = store.useSnapshot();
+
+  const editStride =
+    editorKind === "pattern" ? 1 : getInputNoteStride(sight.wBars);
 
   const sectionRange = useMemo(
     () => ({ offset: 0, duration: displaySteps }),
@@ -249,6 +266,7 @@ export const NoteLayerRoot = ({
       patternEnabled,
       octaveShift,
       noteDuty,
+      editStride,
     }),
     [
       sectionRange,
@@ -260,6 +278,7 @@ export const NoteLayerRoot = ({
       patternEnabled,
       octaveShift,
       noteDuty,
+      editStride,
     ],
   );
 

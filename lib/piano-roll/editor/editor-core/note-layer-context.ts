@@ -12,6 +12,7 @@ export type NoteLayerContextValue = {
   patternEnabled: boolean;
   octaveShift: number;
   noteDuty: number;
+  editStride: number;
 };
 
 export const noteLayerContext = createContext<NoteLayerContextValue>({} as any);
