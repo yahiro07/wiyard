@@ -83,13 +83,14 @@ function createProjectsModel(): ProjectsModel {
     },
     debugDumpProjectData() {
       const projectData = projectDataIo.emitProjectData();
-      if (1) {
-        projectData.storeStates.windowSpecs = {
-          [windowIds.keyboard]:
-            projectData.storeStates.windowSpecs[windowIds.keyboard],
+      if (0) {
+        //dump for default project
+        const pd = structuredClone(projectData);
+        pd.storeStates.windowSpecs = {
+          [windowIds.keyboard]: pd.storeStates.windowSpecs[windowIds.keyboard],
         };
-        projectData.unitStates = [];
-        console.log(JSON.stringify(projectData, null, 2));
+        pd.unitStates = [];
+        console.log(JSON.stringify(pd, null, 2));
       }
       if (1) {
         const projectDataText =
