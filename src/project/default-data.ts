@@ -2,6 +2,7 @@ import { KeyName } from "@lib/contract";
 import { GraphSpec, UnitItem } from "@/domain/types";
 import { ProjectData, projectsConstants } from "@/project/project-types";
 import { appEnvs } from "@/common/app-envs";
+import { defaultAppWorkspaceSettings } from "@/common/app-settings";
 
 export const defaultBoardSize = { width: 4000, height: 2800 };
 
@@ -48,6 +49,7 @@ function createBlankScene(): ProjectData {
       graphSpec: defaultGraphSpec,
     },
     unitStates: [],
+    workspaceSettings: defaultAppWorkspaceSettings,
   };
 }
 export const blankScene = createBlankScene();

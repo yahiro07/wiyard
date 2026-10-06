@@ -1,3 +1,4 @@
+import { defaultAppWorkspaceSettings } from "@/common/app-settings";
 import { defaultBoardSize, defaultGraphSpec } from "@/project/default-data";
 import { ProjectData } from "@/project/project-types";
 
@@ -81,6 +82,7 @@ export const defaultData2 = {
       graphSpec: defaultGraphSpec,
     },
     unitStates: [],
+    workspaceSettings: defaultAppWorkspaceSettings,
   },
 } satisfies Record<string, ProjectData>;
 

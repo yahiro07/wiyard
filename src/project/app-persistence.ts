@@ -94,8 +94,11 @@ export const appPersistence = {
     const wrapApplyProjectData = async (
       projectData: ProjectData,
       controlSurfaceState: Record<string, any> | null,
+      applyWorkspaceSettings: boolean,
     ) => {
-      await projectDataIo.applyProjectData(projectData);
+      await projectDataIo.applyProjectData(projectData, {
+        applyWorkspaceSettings,
+      });
       if (controlSurfaceState) {
         hostSystem.sendMessageToUnit(builtinUnitIds.controlSurface, {
           type: "applySessionState",
@@ -127,7 +130,7 @@ export const appPersistence = {
 
         //this floating promise is out of the scope of try-catch block
         //error occurred in each unit is notified to the mount point component
-        void wrapApplyProjectData(projectData, controlSurfaceState);
+        void wrapApplyProjectData(projectData, controlSurfaceState, true);
       } catch (error: any) {
         //fatal
         console.warn(error);
@@ -159,7 +162,7 @@ export const appPersistence = {
 
           //this floating promise is out of the scope of try-catch block
           //error occurred in each unit is notified to the mount point component
-          void wrapApplyProjectData(projectData, controlSurfaceState);
+          void wrapApplyProjectData(projectData, controlSurfaceState, false);
 
           store.setAutoPersistenceEnabled(true);
         } else {

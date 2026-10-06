@@ -19,3 +19,17 @@ export const defaultAppSettings: AppSettings = {
   graphElevationUnderlay: "frosted",
   pianoRollWindowSideGrip: false,
 };
+
+export type AppWorkspaceSettings = {
+  wireVolumeKnobs: boolean;
+  partControlBar: boolean;
+  graphElevation: boolean;
+  pianoRollWindowSideGrip: boolean;
+};
+
+export const defaultAppWorkspaceSettings: AppWorkspaceSettings = {
+  wireVolumeKnobs: false,
+  partControlBar: false,
+  graphElevation: false,
+  pianoRollWindowSideGrip: false,
+};

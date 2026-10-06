@@ -60,7 +60,10 @@ function createProjectsModel(): ProjectsModel {
           //--open in a new tab with the compatible version of the app (safe, recommended)
           //--load the data in this tab (data might be corrupted)
         }
-        void projectDataIo.applyProjectData(projectData, res.fileName);
+        void projectDataIo.applyProjectData(projectData, {
+          importedProjectFileName: res.fileName,
+          applyWorkspaceSettings: true,
+        });
       } catch (error: any) {
         console.warn(error);
         store.setProjectLoadErrorStatus({
