@@ -1,4 +1,5 @@
 import { GraphElevationUnderlay } from "@/common/appearance";
+import { pickObjectMembers } from "@lib/utils/array-object-helper";
 
 export type AppSettings = {
   uiScaling: number;
@@ -15,9 +16,9 @@ export const defaultAppSettings: AppSettings = {
   wireVolumeKnobs: false,
   partControlBar: false,
   mouseWheelZoom: false,
-  graphElevation: false,
+  graphElevation: true,
   graphElevationUnderlay: "frosted",
-  pianoRollWindowSideGrip: false,
+  pianoRollWindowSideGrip: true,
 };
 
 export type AppWorkspaceSettings = {
@@ -27,9 +28,10 @@ export type AppWorkspaceSettings = {
   pianoRollWindowSideGrip: boolean;
 };
 
-export const defaultAppWorkspaceSettings: AppWorkspaceSettings = {
-  wireVolumeKnobs: false,
-  partControlBar: false,
-  graphElevation: false,
-  pianoRollWindowSideGrip: false,
-};
+export const defaultAppWorkspaceSettings: AppWorkspaceSettings =
+  pickObjectMembers(defaultAppSettings, {
+    wireVolumeKnobs: 1,
+    partControlBar: 1,
+    graphElevation: 1,
+    pianoRollWindowSideGrip: 1,
+  });
