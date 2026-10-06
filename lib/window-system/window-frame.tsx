@@ -23,14 +23,14 @@ const ResizeAnchor = ({
     <div
       className={cz(
         "absolute rounded-full",
-        anchor === "tl" && "top-[-12px] left-[-12px] cursor-nwse-resize",
-        anchor === "tr" && "top-[-12px] right-[-12px] cursor-nesw-resize",
-        anchor === "bl" && "bottom-[-12px] left-[-12px] cursor-nesw-resize",
-        anchor === "br" && "bottom-[-12px] right-[-12px] cursor-nwse-resize",
+        anchor === "tl" && "top-[-7px] left-[-7px] cursor-nwse-resize",
+        anchor === "tr" && "top-[-7px] right-[-7px] cursor-nesw-resize",
+        anchor === "bl" && "bottom-[-7px] left-[-7px] cursor-nesw-resize",
+        anchor === "br" && "bottom-[-7px] right-[-7px] cursor-nwse-resize",
       )}
     >
       <div
-        className="w-6 h-6"
+        className="w-20px h-20px"
         onPointerDown={(e) => {
           windowFrameHandlers.handleResizingAnchorPointerDown(
             e,
@@ -210,36 +210,41 @@ const WindowFrameView = ({
           zIndex: isCurrent ? 1 : undefined,
         }}
       >
-        <div
-          className={cz(
-            "relative bd-gray-500/40",
-            "rounded-6px overflow-hidden",
-            isCurrent && "!bd-#68c/50",
-          )}
-          style={{ width: windowBounds.width, height: windowBounds.height }}
-          onPointerDown={(e) =>
-            windowFrameHandlers.handleBasePointerDown(e, windowCoordVm.windowId)
-          }
-        >
-          {displayed && (
-            <TopBar
-              windowCoordVm={windowCoordVm}
-              title={title}
-              isCurrent={isCurrent}
-              closeWindow={closeWindow}
-              toggleMinimized={toggleMinimized}
-              topBarInnerControls={topBarInnerControls}
-              topBarInnerControls2={topBarInnerControls2}
-            />
-          )}
+        <div className="relative">
           <div
-            className="bg-white text-black h-full"
-            style={{
-              width: contentSize.width - 2,
-              height: contentSize.height - 2,
-            }}
+            className={cz(
+              "bd-gray-500/40",
+              "rounded-6px overflow-hidden",
+              isCurrent && "!bd-#68c/50",
+            )}
+            style={{ width: windowBounds.width, height: windowBounds.height }}
+            onPointerDown={(e) =>
+              windowFrameHandlers.handleBasePointerDown(
+                e,
+                windowCoordVm.windowId,
+              )
+            }
           >
-            {children}
+            {displayed && (
+              <TopBar
+                windowCoordVm={windowCoordVm}
+                title={title}
+                isCurrent={isCurrent}
+                closeWindow={closeWindow}
+                toggleMinimized={toggleMinimized}
+                topBarInnerControls={topBarInnerControls}
+                topBarInnerControls2={topBarInnerControls2}
+              />
+            )}
+            <div
+              className="bg-white text-black h-full"
+              style={{
+                width: contentSize.width - 2,
+                height: contentSize.height - 2,
+              }}
+            >
+              {children}
+            </div>
           </div>
           {displayed && (
             <>
