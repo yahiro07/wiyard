@@ -17,6 +17,7 @@ const CatalogItemView = ({ item }: { item: CatalogItem }) => {
         <div className={headerClass}>Original:</div>
         <a
           href={item.originalRepositoryUrl}
+          className="cursor-pointer hover:opacity-80"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -29,6 +30,7 @@ const CatalogItemView = ({ item }: { item: CatalogItem }) => {
           <div className={headerClass}>Forked:</div>
           <a
             href={item.forkedRepositoryUrl}
+            className="cursor-pointer hover:opacity-80"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -44,6 +46,7 @@ const CatalogItemView = ({ item }: { item: CatalogItem }) => {
           <a
             href={item.licenseTextUrl}
             target="_blank"
+            className="cursor-pointer hover:opacity-80"
             rel="noopener noreferrer"
           >
             <Icons.Document size={14} />
