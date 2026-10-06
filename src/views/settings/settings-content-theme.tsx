@@ -1,3 +1,4 @@
+import { appEnvs } from "@/common/app-envs";
 import { Icons } from "@/common/icons";
 import { presetUiThemes } from "@/common/ui-theme";
 import { ColorEditButton } from "@/components/color-edit-button";
@@ -32,6 +33,9 @@ const handlers = {
     if (index !== -1) {
       store.setUiTheme(presetUiThemes[index]);
     }
+  },
+  dumpCurrentTheme() {
+    console.log(JSON.stringify(store.state.uiTheme, null, 2));
   },
 };
 
@@ -138,6 +142,16 @@ const ThemeEditContents = () => {
           onChange={(v) => patchUiTheme({ deskAreaBg: v })}
         />
       </div>
+      {appEnvs.isDevelopment && (
+        <div className="flex-ha">
+          <button
+            className="bg-#aaa rounded-sm  text-white text-sm p-1 px-2 cursor-pointer"
+            onClick={handlers.dumpCurrentTheme}
+          >
+            dump
+          </button>
+        </div>
+      )}
     </div>
   );
 };

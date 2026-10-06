@@ -62,10 +62,28 @@ type WallpaperItem = {
 
 const wallpaperItems: WallpaperItem[] = [
   {
-    imageUrl: "/images/bg1.avif",
+    imageUrl: "/images/bg1s.avif",
     linkUrl:
       "https://www.vecteezy.com/photo/1959731-green-hill-under-clear-blue-sky",
-    linkText: "Vecteezy",
+    linkText: "Vectors by Vecteezy",
+  },
+  {
+    imageUrl: "/images/bg2s.avif",
+    linkUrl:
+      "https://www.magnific.com/free-vector/background-with-natural-landscape-concept_9899830.htm",
+    linkText: "Designed by Magnific",
+  },
+  {
+    imageUrl: "/images/bg3.avif",
+    linkUrl:
+      "https://www.magnific.com/free-vector/flat-natural-landscape-with-trees_5056157.htm",
+    linkText: "Designed by Magnific",
+  },
+  {
+    imageUrl: "/images/bg4.avif",
+    linkUrl:
+      "https://www.magnific.com/free-vector/gradient-winter-landscape_19852085.htm",
+    linkText: "Designed by Magnific",
   },
 ];
 
@@ -79,7 +97,7 @@ const WallpaperItemView = ({ item }: { item: WallpaperItem }) => {
         href={item.linkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-sm"
+        className="text-sm hover:underline"
       >
         {item.linkText}
       </a>
