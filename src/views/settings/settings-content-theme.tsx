@@ -28,23 +28,16 @@ const handlers = {
     localStorage.removeItem("boardBgImageUrl");
     autoPersistenceTask.ensureLatestSaved();
   },
-  setPreset(presetKey: UiThemePresetKey | "none") {
-    if (presetKey !== "none") {
-      store.setUiTheme(presetUiThemes[presetKey]);
+  setPreset(index: number) {
+    if (index !== -1) {
+      store.setUiTheme(presetUiThemes[index]);
     }
   },
 };
 
-type UiThemePresetKey = keyof typeof presetUiThemes;
-
-const presetOptions = createSelectorOptions<UiThemePresetKey | "none">([
-  ["none", "--"],
-  ["basic", "Basic"],
-  ["theme1", "Theme 1"],
-  ["theme2", "Theme 2"],
-  ["theme3", "Theme 3"],
-  ["theme4", "Theme 4"],
-  ["theme5", "Theme 5"],
+const presetOptions = createSelectorOptions<number>([
+  [-1, "--"],
+  ...presetUiThemes.map((theme, i) => [i, theme.name] as [number, string]),
 ]);
 
 const PresetSelector = () => {
@@ -63,7 +56,7 @@ const PresetSelector = () => {
       <GeneralSelector
         className={styles.selector}
         options={presetOptions}
-        value="none"
+        value={-1}
         onChange={handlers.setPreset}
       />
       <div className={styles.selectorDisplay}>
