@@ -54,11 +54,49 @@ const CatalogItemView = ({ item }: { item: CatalogItem }) => {
   );
 };
 
+type WallpaperItem = {
+  imageUrl: string;
+  linkUrl: string;
+  linkText: string;
+};
+
+const wallpaperItems: WallpaperItem[] = [
+  {
+    imageUrl: "/images/bg1.avif",
+    linkUrl:
+      "https://www.vecteezy.com/photo/1959731-green-hill-under-clear-blue-sky",
+    linkText: "Vecteezy",
+  },
+];
+
+const WallpaperItemView = ({ item }: { item: WallpaperItem }) => {
+  return (
+    <div className="flex-ha gap-1">
+      <div className="w-34px h-20px">
+        <img src={item.imageUrl} className="w-full h-full object-cover" />
+      </div>
+      <a
+        href={item.linkUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm"
+      >
+        {item.linkText}
+      </a>
+    </div>
+  );
+};
+
 export const CreditsContents = () => {
   return (
     <div className="flex-v gap-4 bg-white p-2">
-      {showcaseEntries.map((item) => (
-        <CatalogItemView item={item} />
+      <h3 className="-mb-2">Plugin Units</h3>
+      {showcaseEntries.map((item, i) => (
+        <CatalogItemView key={i} item={item} />
+      ))}
+      <h3 className="-mb-2">Wallpapers</h3>
+      {wallpaperItems.map((item, i) => (
+        <WallpaperItemView key={i} item={item} />
       ))}
     </div>
   );
