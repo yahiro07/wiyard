@@ -38,7 +38,7 @@ export const TopBar = () => {
       </div>
       <div className="absolute-full pointer-events-none flex-ha">
         <h1
-          className="pointer-events-auto text-xl font-500 pl-2"
+          className="pointer-events-auto pl-3 app-title"
           onClick={handleTitleClick}
         >
           Wiyard
