@@ -54,11 +54,67 @@ const CatalogItemView = ({ item }: { item: CatalogItem }) => {
   );
 };
 
+type WallpaperItem = {
+  imageUrl: string;
+  linkUrl: string;
+  linkText: string;
+};
+
+const wallpaperItems: WallpaperItem[] = [
+  {
+    imageUrl: "/images/bg1s.avif",
+    linkUrl:
+      "https://www.vecteezy.com/photo/1959731-green-hill-under-clear-blue-sky",
+    linkText: "Vectors by Vecteezy",
+  },
+  {
+    imageUrl: "/images/bg2s.avif",
+    linkUrl:
+      "https://www.magnific.com/free-vector/background-with-natural-landscape-concept_9899830.htm",
+    linkText: "Designed by Magnific",
+  },
+  {
+    imageUrl: "/images/bg3.avif",
+    linkUrl:
+      "https://www.magnific.com/free-vector/flat-natural-landscape-with-trees_5056157.htm",
+    linkText: "Designed by Magnific",
+  },
+  {
+    imageUrl: "/images/bg4.avif",
+    linkUrl:
+      "https://www.magnific.com/free-vector/gradient-winter-landscape_19852085.htm",
+    linkText: "Designed by Magnific",
+  },
+];
+
+const WallpaperItemView = ({ item }: { item: WallpaperItem }) => {
+  return (
+    <div className="flex-ha gap-1">
+      <div className="w-34px h-20px">
+        <img src={item.imageUrl} className="w-full h-full object-cover" />
+      </div>
+      <a
+        href={item.linkUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm hover:underline"
+      >
+        {item.linkText}
+      </a>
+    </div>
+  );
+};
+
 export const CreditsContents = () => {
   return (
     <div className="flex-v gap-4 bg-white p-2">
-      {showcaseEntries.map((item) => (
-        <CatalogItemView item={item} />
+      <h3 className="-mb-2">Plugin Units</h3>
+      {showcaseEntries.map((item, i) => (
+        <CatalogItemView key={i} item={item} />
+      ))}
+      <h3 className="-mb-2">Wallpapers</h3>
+      {wallpaperItems.map((item, i) => (
+        <WallpaperItemView key={i} item={item} />
       ))}
     </div>
   );

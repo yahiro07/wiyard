@@ -42,7 +42,7 @@ function createBlankScene(): ProjectData {
       windowSpecs: {},
       windowsEvacuated: false,
       currentWindowId: null,
-      bpm: 120,
+      bpm: 130,
       unitClockingFlags: {},
       boardSize: defaultBoardSize,
       graphSpec: defaultGraphSpec,

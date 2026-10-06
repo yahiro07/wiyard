@@ -70,7 +70,7 @@ export const defaultData2 = {
       currentAutomationChannelId: null,
       currentWindowId: "keyboardWindow",
       windowsEvacuated: false,
-      bpm: 120,
+      bpm: 130,
       sight: {
         eyeScaling: 1,
         eyeOffset: { x: 0, y: 0 },
