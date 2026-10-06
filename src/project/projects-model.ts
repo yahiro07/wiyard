@@ -83,14 +83,15 @@ function createProjectsModel(): ProjectsModel {
     },
     debugDumpProjectData() {
       const projectData = projectDataIo.emitProjectData();
-      if (0) {
+      if (1) {
         projectData.storeStates.windowSpecs = {
           [windowIds.keyboard]:
             projectData.storeStates.windowSpecs[windowIds.keyboard],
         };
         projectData.unitStates = [];
         console.log(JSON.stringify(projectData, null, 2));
-      } else {
+      }
+      if (1) {
         const projectDataText =
           projectDataTextSupport.emitProjectDataText(projectData);
         console.log(projectDataText);
