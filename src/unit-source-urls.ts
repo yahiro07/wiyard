@@ -4,8 +4,8 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r28`;
-    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r23`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r29`;
+    const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r24`;
 
     return [
       `${waferUnitsBase}/graphite-drum-machine/`,
@@ -53,6 +53,8 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferCustomUnitsBase}/sidechain-compressor/`,
       `${waferCustomUnitsBase}/web-audio-mixer/`,
       `${waferCustomUnitsBase}/vue-audio-mixer/`,
+
+      `${waferUnitsBase}/recorder/`,
     ];
   } else {
     const waferUnitsLocalDistDir = toAbsolutePath("../../wafer-units/dist");
