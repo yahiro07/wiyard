@@ -36,15 +36,17 @@ const helpers = {
   getGeneralUnitInitialSize(windowId: string) {
     const viewSize = store.state.unitStuffs[windowId]?.viewSize;
     if (viewSize) {
-      const maxHeight = 220;
-      const maxWidth = 440;
-      let scale = 1;
+      const maxWidth = 510;
+      const maxHeight = 340;
+      let sc1 = 1;
+      let sc2 = 1;
       if (viewSize.height > maxHeight) {
-        scale = maxHeight / viewSize.height;
+        sc1 = maxHeight / viewSize.height;
       }
-      if (viewSize.width * scale > maxWidth) {
-        scale = maxWidth / viewSize.width;
+      if (viewSize.width > maxWidth) {
+        sc2 = maxWidth / viewSize.width;
       }
+      const scale = Math.min(sc1, sc2);
       return sizeOp.rounded({
         width: viewSize.width * scale,
         height: viewSize.height * scale,
