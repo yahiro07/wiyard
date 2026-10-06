@@ -111,11 +111,11 @@ const WallpaperItemView = ({ item }: { item: WallpaperItem }) => {
 export const CreditsContents = () => {
   return (
     <div className="flex-v gap-4 bg-white p-2">
-      <h3 className="-mb-2">Plugin Units</h3>
+      <h3 className="-mb-2 font-500">Plugin Units</h3>
       {showcaseEntries.map((item, i) => (
         <CatalogItemView key={i} item={item} />
       ))}
-      <h3 className="-mb-2">Wallpapers</h3>
+      <h3 className="-mb-2 font-500">Wallpapers</h3>
       {wallpaperItems.map((item, i) => (
         <WallpaperItemView key={i} item={item} />
       ))}
