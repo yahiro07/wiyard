@@ -60,7 +60,10 @@ function createProjectsModel(): ProjectsModel {
           //--open in a new tab with the compatible version of the app (safe, recommended)
           //--load the data in this tab (data might be corrupted)
         }
-        void projectDataIo.applyProjectData(projectData, res.fileName);
+        void projectDataIo.applyProjectData(projectData, {
+          importedProjectFileName: res.fileName,
+          applyWorkspaceSettings: true,
+        });
       } catch (error: any) {
         console.warn(error);
         store.setProjectLoadErrorStatus({
@@ -81,13 +84,15 @@ function createProjectsModel(): ProjectsModel {
     debugDumpProjectData() {
       const projectData = projectDataIo.emitProjectData();
       if (0) {
-        projectData.storeStates.windowSpecs = {
-          [windowIds.keyboard]:
-            projectData.storeStates.windowSpecs[windowIds.keyboard],
+        //dump for default project
+        const pd = structuredClone(projectData);
+        pd.storeStates.windowSpecs = {
+          [windowIds.keyboard]: pd.storeStates.windowSpecs[windowIds.keyboard],
         };
-        projectData.unitStates = [];
-        console.log(JSON.stringify(projectData, null, 2));
-      } else {
+        pd.unitStates = [];
+        console.log(JSON.stringify(pd, null, 2));
+      }
+      if (1) {
         const projectDataText =
           projectDataTextSupport.emitProjectDataText(projectData);
         console.log(projectDataText);

@@ -9,6 +9,7 @@ import {
   WindowId,
 } from "@/domain/types";
 import { Size } from "@lib/utils/common-types";
+import { AppWorkspaceSettings } from "@/common/app-settings";
 
 export type ProjectStoreStates = {
   unitItems: UnitItem[];
@@ -35,6 +36,7 @@ export type ProjectData = {
   formatCode: string;
   storeStates: ProjectStoreStates;
   unitStates: HsUnitStateData[];
+  workspaceSettings: AppWorkspaceSettings;
 };
 
 export const projectsConstants = {

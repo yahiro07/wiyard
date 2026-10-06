@@ -5,7 +5,7 @@ import {
   ProjectStoreStates,
   projectsConstants,
 } from "@/project/project-types";
-import { projectResetterStates, store } from "@/store/store";
+import { projectResetterStates, store, StoreState } from "@/store/store";
 import { appEnvs } from "@/common/app-envs";
 
 const helpers = {
@@ -33,32 +33,49 @@ const helpers = {
       { skipUndefined: true },
     );
   },
+  getWorkspaceSettings(storeState: StoreState) {
+    const settings = storeState.settings;
+    return pickObjectMembers(settings, {
+      wireVolumeKnobs: 1,
+      partControlBar: 1,
+      graphElevation: 1,
+      pianoRollWindowSideGrip: 1,
+    });
+  },
 };
 
 export const projectDataIo = {
   emitProjectData(): ProjectData {
     const unitStates = hostSystem.getAllUnitStates();
+    const workspaceSettings = helpers.getWorkspaceSettings(store.state);
     return {
       appVersionCode: appEnvs.appVersionCode,
       pageDeployId: appEnvs.cfPagesDeployId,
       formatCode: projectsConstants.formatCode,
       storeStates: helpers.filterStoreStateFields(store.state),
       unitStates,
+      workspaceSettings,
     };
   },
   async applyProjectData(
     projectData: ProjectData,
-    importedProjectFileName?: string,
+    options?: {
+      importedProjectFileName?: string;
+      applyWorkspaceSettings?: boolean;
+    },
   ) {
-    const { storeStates, unitStates } = projectData;
+    const { storeStates, unitStates, workspaceSettings } = projectData;
     store.setProjectLoading(true);
     try {
       store.assign({
         ...projectResetterStates,
         ...helpers.filterStoreStateFields(storeStates),
         projectLoadedIndex: store.state.projectLoadedIndex + 1,
-        importedProjectFileName: importedProjectFileName ?? null,
+        importedProjectFileName: options?.importedProjectFileName ?? null,
       });
+      if (options?.applyWorkspaceSettings) {
+        store.patchSettings(workspaceSettings);
+      }
       await hostSystem.waitUnitsLoaded(); //basically this does not throw errors
       if (unitStates) {
         hostSystem.setAllUnitStates(unitStates);

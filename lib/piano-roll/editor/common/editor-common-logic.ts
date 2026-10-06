@@ -1,7 +1,9 @@
-import { clampValue } from "@lib/utils/number-helper";
+import { clampValue, inBetween } from "@lib/utils/number-helper";
 import { SongKeySpec } from "wafer-host/unit-types";
 import { EditorKind, LoopBarLength, Note } from "../../definitions/types";
 import { SectionRange } from "./editor-types";
+import { uiConfig } from "../../definitions/ui-config";
+import { getSortOrder } from "@lib/utils/array-object-helper";
 
 type HitNoteInfo = { note: Note; part: "body" | "tail" };
 
@@ -12,11 +14,16 @@ export function hitTestNote(
   yiFloat: number,
   editorKind: EditorKind,
   keySpec: SongKeySpec,
+  editStride: number,
 ): HitNoteInfo | undefined {
   const xi = Math.floor(xiFloat);
   const isDiatonic = editorKind === "mainD";
-  for (let i = notes.length - 1; i >= 0; i--) {
-    const note = notes[i];
+
+  const notesSorted = notes
+    .slice()
+    .sort(getSortOrder((it) => (it.parentNoteId ? 1000 : 0 + it.position)));
+
+  for (const note of notesSorted) {
     const noteYi = isDiatonic
       ? diatonicLanesPitchHelper.mapPitchToDisplayYIndex(note.pitch, keySpec)
       : note.pitch;
@@ -25,7 +32,18 @@ export function hitTestNote(
     const relPos = note.position - sectionRange.offset;
     const dur = note.duration;
     const noteTailPos = relPos + dur;
-    if (0) {
+
+    if (1) {
+      const d = editStride * 0.4;
+      if (
+        note.duration >= editStride &&
+        inBetween(xiFloat, noteTailPos - d, noteTailPos)
+      ) {
+        return { note, part: "tail" };
+      } else if (relPos <= xi && xi < relPos + dur) {
+        return { note, part: "body" };
+      }
+    } else if (0) {
       if (note.duration >= 2 && xi === noteTailPos - 1) {
         return { note, part: "tail" };
       } else if (relPos <= xi && xi < relPos + dur) {
@@ -42,7 +60,10 @@ export function hitTestNote(
 }
 
 export function getPatternPitchLabel(pitch: number) {
-  return pitch - 7 >= 0 ? pitch - 7 + 1 : pitch - 7 - 1;
+  const pitchCenter = uiConfig.patternPitchCenter;
+  return pitch - pitchCenter >= 0
+    ? pitch - pitchCenter + 1
+    : pitch - pitchCenter - 1;
 }
 
 const subMapD = [0, 0.5, 1, 1.5, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6];

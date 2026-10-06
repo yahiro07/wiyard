@@ -1,15 +1,9 @@
 import { clampValue } from "@lib/utils/number-helper";
 import { Persistence } from "wafer-host/unit-types";
-import {
-  LoopBarLength,
-  Note,
-  PatternBarLength,
-  Sight,
-} from "../definitions/types";
+import { LoopBarLength, Note, PatternMode, Sight } from "../definitions/types";
 import { AppStore, resetterStates } from "./store";
 
 const loopBarLengths: LoopBarLength[] = [0.25, 0.5, 1, 2, 4, 8, 16];
-const patternBarLengths: PatternBarLength[] = [0.25, 0.5, 1, 2];
 
 function encodeNotes(notes: Note[]): number[] {
   return [
@@ -62,6 +56,9 @@ const bytesSerializer = {
   bool: (value: boolean) => (value ? 1 : 0),
   octave: (value: number) => value + 100,
   loopBars: (value: number) => Math.floor(value * 4),
+  sightBars: (value: number) => {
+    return Math.round(value * 10); //0.0~16.0 --> 0~160
+  },
 };
 const bytesDeserializer = {
   float: (byte: number) => clampValue(byte / 255, 0, 1),
@@ -69,10 +66,11 @@ const bytesDeserializer = {
   bool: (byte: number) => byte !== 0,
   octave: (byte: number) => clampValue(byte - 100, -2, 2),
   loopBars: (byte: number) => byte / 4,
+  sightBars: (byte: number) => byte / 10,
 };
 
 export function createPersistence(store: AppStore): Persistence {
-  const magics = { first: 123, second: 47, tail: 124 };
+  const magics = { first: 123, second: 50, tail: 124 };
 
   return {
     emitStateBytes(): Uint8Array {
@@ -90,14 +88,14 @@ export function createPersistence(store: AppStore): Persistence {
         bs.float(st.noteDuty),
         bs.loopBars(st.loopBars),
         ...encodeNotes(st.inputNotes),
-        bs.uint(st.sight.xBarPosition),
+        bs.sightBars(st.sight.xBarPosition),
         bs.float(st.sight.yPosition),
-        bs.uint(st.sight.wBars),
+        bs.sightBars(st.sight.wBars),
         bs.float(st.sight.yZoom),
         bs.bool(st.sight.withXPadding),
         ...encodeNotes(st.patternNotes),
-        bs.loopBars(st.patternBars),
         bs.bool(st.patternEnabled),
+        bs.uint(st.patternMode),
         bs.bool(st.realized),
         ...backupBytes,
         bs.bool(st.diatonicLanesEnabled),
@@ -115,15 +113,15 @@ export function createPersistence(store: AppStore): Persistence {
       const loopBars = bd.loopBars(reader.next());
       const inputNotes = reader.readNotes();
       const sight: Sight = {
-        xBarPosition: bd.uint(reader.next(), 0, 16),
+        xBarPosition: bd.sightBars(reader.next()),
         yPosition: bd.float(reader.next()),
-        wBars: bd.uint(reader.next(), 1, 16),
+        wBars: bd.sightBars(reader.next()),
         yZoom: bd.float(reader.next()),
         withXPadding: bd.bool(reader.next()),
       };
       const patternNotes = reader.readNotes();
-      const patternBars = bd.loopBars(reader.next());
       const patternEnabled = bd.bool(reader.next());
+      const patternMode = bd.uint(reader.next(), 1, 2);
       const realized = bd.bool(reader.next());
       const backupPresent = bd.bool(reader.next());
       const backupInputNotes = backupPresent ? reader.readNotes() : null;
@@ -142,7 +140,7 @@ export function createPersistence(store: AppStore): Persistence {
         0 <= sight.yPosition && sight.yPosition <= 1,
         1 <= sight.wBars && sight.wBars <= 16,
         0 <= sight.yZoom && sight.yZoom <= 1,
-        patternBarLengths.includes(patternBars as PatternBarLength),
+        patternMode === 1 || patternMode === 2,
       ].every(Boolean);
       if (!valid) return;
       store.assign({
@@ -153,8 +151,8 @@ export function createPersistence(store: AppStore): Persistence {
         inputNotes,
         sight,
         patternNotes,
-        patternBars: patternBars as PatternBarLength,
         patternEnabled,
+        patternMode: patternMode as PatternMode,
         realized,
         backupInputNotes,
         diatonicLanesEnabled,

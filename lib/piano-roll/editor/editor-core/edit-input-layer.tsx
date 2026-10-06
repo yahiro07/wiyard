@@ -39,6 +39,7 @@ export const EditInputLayer = () => {
       yiFloat,
       editorKind,
       keySpec,
+      editStride,
     );
 
     if (hitNoteInfo?.note.parentNoteId !== undefined) {
@@ -66,5 +67,36 @@ export const EditInputLayer = () => {
     document.body.style.cursor = cursor;
   }, [cursor]);
 
-  return <div className="absolute-full" onPointerDown={handlePointerDown} />;
+  const handlePointerMove = (e: IPointerEvent) => {
+    const { xiFloat, yiFloat } = noteEditActions.mapPointerPositionToCell(
+      e.currentTarget as HTMLElement,
+      e.clientX,
+      e.clientY,
+    );
+    const hitNoteInfo = hitTestNote(
+      notes,
+      sectionRange,
+      xiFloat,
+      yiFloat,
+      editorKind,
+      keySpec,
+      editStride,
+    );
+    if (hitNoteInfo) {
+      store.setHoverNoteInfo({
+        noteId: hitNoteInfo.note.id,
+        part: hitNoteInfo.part,
+      });
+    } else {
+      store.setHoverNoteInfo(null);
+    }
+  };
+
+  return (
+    <div
+      className="absolute-full"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+    />
+  );
 };

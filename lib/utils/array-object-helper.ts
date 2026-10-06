@@ -92,3 +92,7 @@ export function getSortOrder<T>(
 ) {
   return (a: T, b: T) => (fn(a) - fn(b)) * (order === "asc" ? 1 : -1);
 }
+
+export function uniqueArrayItems<T>(items: T[]): T[] {
+  return items.filter((item, index) => items.indexOf(item) === index);
+}

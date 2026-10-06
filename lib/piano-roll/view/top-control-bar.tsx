@@ -15,11 +15,11 @@ import { Knob } from "../components/knob";
 import { LabeledBox } from "../components/labeled-box";
 import { Selector } from "../components/selector";
 import { ShiftSelector } from "../components/shift-selector";
-import { LoopBarLength, PatternBarLength, Sight } from "../definitions/types";
+import { LoopBarLength, PatternMode, Sight } from "../definitions/types";
 import { useAppContext, useStoreAccess } from "../model/app-context";
 import { useControlActions } from "../model/control-actions";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
-import { appConfig } from "../definitions/ui-config";
+import { appConfig, uiConfig } from "../definitions/ui-config";
 import { XYZoomPad } from "../components/xy-zoom-pad";
 import { linearInterpolate } from "@lib/utils/number-helper";
 
@@ -85,13 +85,6 @@ const loopBarsOptions = createSelectorOptions<LoopBarLength>(
   ]),
 );
 
-const patternBarsOptions = createSelectorOptions<PatternBarLength>(
-  ([0.25, 0.5, 1, 2] satisfies LoopBarLength[]).map((v) => [
-    v,
-    `${v < 1 ? `1/${1 / v}` : v}`,
-  ]),
-);
-
 const LoopBarsSelectorContainer = () => {
   const [{ loopBars }, mt] = useStoreAccess();
   return (
@@ -108,17 +101,14 @@ const LoopBarsSelectorContainer = () => {
 
 const _LoopBarsSelectorContainerEx = () => {
   const { store } = useAppContext();
-  const { loopBars, patternBars, isPatternView } = store.useSnapshot();
-  const [options, value, onChange] = isPatternView
-    ? [patternBarsOptions, patternBars, store.setPatternBars]
-    : [loopBarsOptions, loopBars, store.setLoopBars];
+  const { loopBars } = store.useSnapshot();
   return (
-    <LabeledBox label={isPatternView ? "pt bars" : "loop bars"}>
+    <LabeledBox label="loop bars">
       <ShiftSelector
         minWidth={50}
-        value={value}
-        options={options}
-        onChange={onChange as (value: LoopBarLength | PatternBarLength) => void}
+        value={loopBars}
+        options={loopBarsOptions}
+        onChange={store.setLoopBars}
       />
     </LabeledBox>
   );
@@ -165,19 +155,11 @@ const DisplayWidthSelectionKnob = () => {
   const patchSight = (attrs: Partial<Sight>) => {
     store.setSight({ ...sight, ...attrs });
   };
-  const wBarOptions = [2, 4, 8, 16];
-  const value = wBarOptions.indexOf(sight.wBars);
+  const value = Math.log2(sight.wBars);
   const onChange = (v: number) => {
-    patchSight({ wBars: wBarOptions[v] });
+    patchSight({ wBars: 2 ** v });
   };
-  return (
-    <Knob
-      value={value}
-      onChange={onChange}
-      max={wBarOptions.length - 1}
-      step={1}
-    />
-  );
+  return <Knob value={value} onChange={onChange} min={1} step={0.01} max={4} />;
 };
 
 const XYZoomPadContainer = () => {
@@ -186,7 +168,7 @@ const XYZoomPadContainer = () => {
   const patchSight = (attrs: Partial<Sight>) => {
     store.setSight({ ...sight, ...attrs });
   };
-  const wBarOptions = [2, 4, 8, 16];
+  const wBarOptions = uiConfig.displayBarOptions;
   const wBarsIndex = wBarOptions.indexOf(sight.wBars);
   const onXYChange = (x: number, y: number) => {
     const wBars = wBarOptions[x];
@@ -245,13 +227,26 @@ const SightControlXYPad = () => {
 };
 
 const ViewModeSelector = () => {
-  const { store } = useAppContext();
-  const { isPatternView } = store.useSnapshot();
+  const [{ isPatternView }, mt] = useStoreAccess();
   return (
     <Button
       active={isPatternView}
-      onClick={store.toggleIsPatternView}
+      onClick={mt.toggleIsPatternView}
       text="pattern"
+    />
+  );
+};
+
+const patternModeOptions = createPlainSelectorOptions<PatternMode>([1, 2]);
+
+const PatternModeSelector = () => {
+  const [{ patternMode }, mt] = useStoreAccess();
+  return (
+    <Selector
+      className="w-30px"
+      value={patternMode}
+      options={patternModeOptions}
+      onChange={mt.setPatternMode}
     />
   );
 };
@@ -383,13 +378,16 @@ export const TopControlBar = () => {
             </LabeledBox>
             <LabeledBox>
               <div className="flex-ha">
-                <ViewModeSelector />
+                <div className="flex-ha gap-2px">
+                  <ViewModeSelector />
+                  <PatternModeSelector />
+                </div>
                 <PatternToggleButton />
                 <RealizeButton />
               </div>
             </LabeledBox>
             <LabeledBox>
-              <div className="flex-ha gap-6">
+              <div className="flex-ha gap-3">
                 <LoopGhostToggleButton />
                 <DuplicateNotes2XButton />
                 <TrashButtonContainer />

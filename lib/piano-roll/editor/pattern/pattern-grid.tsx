@@ -1,3 +1,4 @@
+import { uiConfig } from "../../definitions/ui-config";
 import { uiColors } from "../../definitions/ui-theme";
 import { createCanvasShapeDrawing } from "../common/canvas-shape-drawing";
 import { GridDisplaySpec } from "../common/editor-types";
@@ -56,8 +57,9 @@ function renderGrid(canvas: HTMLCanvasElement, ds: GridDisplaySpec) {
 
   //beat dots
   for (let i = 0; i < ds.numStepsFull; i++) {
+    const pitchCenter = uiConfig.patternPitchCenter;
     const x = i * ds.cellW + ds.cellW / 2;
-    const y = ds.contentH - 7 * ds.cellH - ds.cellH + ds.cellH / 2;
+    const y = ds.contentH - pitchCenter * ds.cellH - ds.cellH + ds.cellH / 2;
     const r = 2.5;
     if (ds.contentX0 <= x + r && x < ds.contentX1) {
       const isBeatDot = i % 4 === 0;

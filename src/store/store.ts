@@ -141,7 +141,7 @@ export const projectResetterStates: Partial<StoreState> = {
   currentWindowId: null,
   windowsEvacuated: false,
   currentNoteChannelId: "",
-  bpm: 120,
+  bpm: 130,
   sight: { eyeScaling: 1, eyeOffset: { x: 0, y: 0 } },
   keyName: "C",
   boardSize: defaultBoardSize,
