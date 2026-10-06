@@ -17,13 +17,13 @@ export const Button = ({
   return (
     <div
       className={cz(
-        "flex-c w-40px h-30px bg-#888 font-bold text-white cursor-pointer",
+        "flex-c w-50px h-30px bg-#888 font-600 text-white cursor-pointer",
         active && "!bg-#48c",
         disabled && "opacity-40 pointer-events-none",
       )}
       onClick={onClick}
     >
-      {text && <div className="text-9px">{text}</div>}
+      {text && <div className="text-11px">{text}</div>}
       {children}
     </div>
   );

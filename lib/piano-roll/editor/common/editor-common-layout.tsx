@@ -69,7 +69,7 @@ export const EditorCommonLayout = ({
             trackOffset={sight.xBarPosition}
             trackLength={sight.wBars}
             fullLength={16}
-            step={1}
+            step={0.01}
             onChange={(v) => {
               store.setSight({ ...sight, xBarPosition: v });
             }}

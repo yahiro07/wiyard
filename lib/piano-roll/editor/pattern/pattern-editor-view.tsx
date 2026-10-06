@@ -60,6 +60,7 @@ export const PatternEditorView = () => {
     displaySpec,
     sectionDuration,
     uiConfig.numPatternPitches,
+    sight,
   );
 
   return (

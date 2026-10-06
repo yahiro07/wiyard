@@ -11,6 +11,9 @@ export const uiConfig = {
   numKeys: octaveCount * 12 + 1,
   numDiatonicLanes: octaveCount * 7 + 1,
   numPatternPitches: 7 * 3 + 1,
+  patternPitchCenter: 7,
+  displayBarOptions: [2, 4, 8],
+  // displayBarOptions: [2, 4, 8, 16],
 };
 
 export const fallbackKeySpec: SongKeySpec = {

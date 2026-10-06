@@ -40,6 +40,7 @@ export const PianoRollEditorView = () => {
     displaySpec,
     displaySteps,
     uiConfig.numKeys,
+    sight,
   );
   return (
     <EditorCommonLayout

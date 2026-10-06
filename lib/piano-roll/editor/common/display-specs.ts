@@ -4,7 +4,6 @@ import { Sight } from "../../definitions/types";
 import { DisplaySpec, GridDisplaySpec } from "./editor-types";
 import { useMemo } from "react";
 import { SongKeySpec } from "wafer-host/unit-types";
-import { useAppContext } from "../../model/app-context";
 
 export function fixSightWithLeftPadding(sight: Sight): Sight {
   if (sight.withXPadding) {
@@ -55,12 +54,9 @@ export function useGridDisplaySpec(
   displaySpec: DisplaySpec,
   sectionDuration: number,
   numPitches: number,
+  sight: Sight,
   keySpec?: SongKeySpec,
 ): GridDisplaySpec {
-  const { store } = useAppContext();
-  const { sight: inputSight } = store.useSnapshot();
-  const sight = fixSightWithLeftPadding(inputSight);
-
   const { viewW, viewH, cellW, cellH } = displaySpec;
 
   const nx = sectionDuration;

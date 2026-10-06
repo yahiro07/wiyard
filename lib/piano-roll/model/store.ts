@@ -1,9 +1,10 @@
 import { createStore, Store } from "snap-store";
 import { SongKeySpec } from "wafer-host/unit-types";
 import {
+  HoverNoteInfo,
   LoopBarLength,
   Note,
-  PatternBarLength,
+  PatternMode,
   Sight,
 } from "../definitions/types";
 import { appConfig, fallbackKeySpec } from "../definitions/ui-config";
@@ -14,10 +15,10 @@ type StoreState = {
   noteDuty: number;
   loopBars: LoopBarLength;
   inputNotes: Note[];
-  patternBars: PatternBarLength;
   patternNotes: Note[];
   sight: Sight;
   patternEnabled: boolean;
+  patternMode: PatternMode;
   realized: boolean;
   backupInputNotes: Note[] | null;
   diatonicLanesEnabled: boolean;
@@ -34,6 +35,7 @@ type StoreState = {
   viewActive: boolean;
   debugObject: object | null;
   sideControlsVisible: boolean;
+  hoverNoteInfo: HoverNoteInfo | null;
 };
 
 export type AppStore = Store<StoreState>;
@@ -50,7 +52,6 @@ const defaultStoreState: StoreState = {
   noteDuty: 1,
   loopBars: 1,
   inputNotes: [],
-  patternBars: 0.25,
   patternNotes: [],
   sight: {
     xBarPosition: 0,
@@ -60,6 +61,7 @@ const defaultStoreState: StoreState = {
     withXPadding: false,
   },
   patternEnabled: false,
+  patternMode: 1,
   realized: false,
   backupInputNotes: null,
   diatonicLanesEnabled: false,
@@ -76,6 +78,7 @@ const defaultStoreState: StoreState = {
   viewActive: false,
   debugObject: null,
   sideControlsVisible: false,
+  hoverNoteInfo: null,
 };
 if (appConfig.isDevelopment && 0) {
   const base = 24;
