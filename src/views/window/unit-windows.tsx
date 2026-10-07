@@ -14,7 +14,7 @@ import { unitPlaybackCapabilityFlags } from "@/domain/showcase-entries";
 import { UnitWindowTitleBarPlaybackButtonContainer } from "@/views/controls/playback-buttons";
 import { commonGetters } from "@/store/common-getters";
 import { renderLog } from "@lib/utils/render-log";
-import { ReactUnitFrameWithLog, UnitFrameScaledWithLog } from "@lib/wafer-ex";
+import { ReactUnitFrameWithLog, UnitFrameScaledExWithLog } from "@lib/wafer-ex";
 import { useUnitStuff } from "@/views/unit-card/unit-cards-common";
 import { UnitPresetsMenuButton } from "@/views/window/presets-menu";
 
@@ -93,13 +93,14 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
       // }
     >
       {catalogItem ? (
-        <UnitFrameScaledWithLog
+        <UnitFrameScaledExWithLog
           unitId={unitId}
           unitUrl={catalogItem.loaderPageUrl}
           onIframeMounted={onIframeMounted}
           onUnitInstanceLoaded={reporter.reportLoaded}
           onLoadFailed={reporter.reportFailure}
           viewActive={viewActive}
+          fitMode="cover"
         />
       ) : (
         <div>error: catalog item not found for {catalogKey}</div>
