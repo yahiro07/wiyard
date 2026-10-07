@@ -29,12 +29,12 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferUnitsBase}/altair-xm/`,
       `${waferUnitsBase}/radiant-rs/`,
 
-      `${waferUnitsBase}/channel-strip/`,
       `${waferUnitsBase}/sunset-delay/`,
       `${waferUnitsBase}/sunset-chorus-mini/`,
       `${waferUnitsBase}/noise-mix/`,
       `${waferUnitsBase}/crusher/`,
       `${waferUnitsBase}/lofi2/`,
+      `${waferUnitsBase}/csfx1/`,
       `${waferUnitsBase}/toner-3band-eq/`,
       `${waferUnitsBase}/toner-tilt-eq/`,
       `${waferUnitsBase}/toner-limiter/`,
@@ -96,7 +96,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
 
       `file://${waferCustomUnitsLocalDir}/ts/dist/sidechain-compressor/`,
 
-      `file://${waferUnitsLocalDistDir}/channel-strip/`,
+      `file://${waferUnitsLocalDistDir}/csfx1/`,
       `file://${waferUnitsLocalDistDir}/fc1/`,
       `file://${waferUnitsLocalDistDir}/mz1/`,
       `file://${waferUnitsLocalDistDir}/mz2/`,
@@ -110,12 +110,12 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/toner-limiter/`,
       `file://${waferUnitsLocalDistDir}/toner-saturation/`,
 
-      `file://${waferCustomUnitsLocalDir}/js/circular-audio-wave/`,
-      `file://${waferCustomUnitsLocalDir}/js/vissonance/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/threejs-audio-reactive-visual/`,
-      `file://${waferCustomUnitsLocalDir}/js/audio-input-effects/`,
+      // `file://${waferCustomUnitsLocalDir}/js/circular-audio-wave/`,
+      // `file://${waferCustomUnitsLocalDir}/js/vissonance/`,
+      // `file://${waferCustomUnitsLocalDir}/ts/dist/threejs-audio-reactive-visual/`,
+      // `file://${waferCustomUnitsLocalDir}/js/audio-input-effects/`,
       `file://${waferUnitsLocalDistDir}/step-automator/`,
-      `file://${waferUnitsLocalDistDir}/tone-wheel/`,
+      // `file://${waferUnitsLocalDistDir}/tone-wheel/`,
 
       `file://${waferUnitsLocalDistDir}/recorder/`,
     ];
