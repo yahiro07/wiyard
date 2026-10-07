@@ -131,7 +131,7 @@ const UnitAddingItemView = ({ item }: { item: UnitAddingItem }) => {
         {isControlEffectDefaultEnabled && (
           <UnitControlEffectBar
             unitId=""
-            unitControlEffect={{ volume: 0.5, pan: 0.5 }}
+            unitControlEffect={{ volume: 0.5, pan: 0 }}
           />
         )}
       </div>

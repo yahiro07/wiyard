@@ -264,7 +264,7 @@ export const actions = {
     const isControlEffectEnabled =
       controlEffectUnitGetters.isUnitControlEffectDefaultEnabled(catalogKey);
     if (isControlEffectEnabled) {
-      store.patchUnitControlEffects({ [unitId]: { volume: 0.5, pan: 0.5 } });
+      store.patchUnitControlEffects({ [unitId]: { volume: 0.5, pan: 0 } });
     }
   },
   addNoteChannel() {
