@@ -22,7 +22,7 @@ export function mapVolumeCurve(
 export function mapVolumeCurveCenterUnity(value: number) {
   return mapVolumeCurve(value, {
     pivot: 0.5,
-    topGain: 1.5,
+    topGain: 2,
     lowerCurveExponent: 2.5,
   });
 }
