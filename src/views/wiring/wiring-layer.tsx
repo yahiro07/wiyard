@@ -9,6 +9,8 @@ import { store } from "@/store/store";
 import { resultOf } from "@lib/utils/general-helper";
 import { renderLog } from "@lib/utils/render-log";
 import { wireColors } from "@/common/appearance";
+import { cardPlacementHelper } from "@/store/card-placement-helper";
+import { GraphSpec } from "@/domain/types";
 
 function createCurveLinePath(p0: Point, p1: Point) {
   // const handleLength = Math.max(48, Math.abs(p1.x - p0.x) / 2);
@@ -138,19 +140,29 @@ const DragPreviewWire2 = () => {
   return <WireView signalType={srcPort.subtype} p0={p0} p1={p1} />;
 };
 
+function calcSvgBounds(graphSpec: GraphSpec) {
+  const bounds = cardPlacementHelper.getGraphPlaneVisibleAreaBounds(graphSpec);
+  const pad = 4;
+  const x = bounds.x - pad;
+  const y = bounds.y - pad;
+  const w = bounds.width + pad * 2;
+  const h = bounds.height + pad * 2;
+  return { x, y, w, h };
+}
+
 const WiringLayerSvg = ({ children }: { children: React.ReactNode }) => {
   const { graphSpec } = store.useSnapshot();
-  const { width: w, height: h } = graphSpec.planeSize;
-  const viewBox = `${-w / 2} ${-h / 2} ${w} ${h}`;
+  const bounds = calcSvgBounds(graphSpec);
+  const viewBox = `${bounds.x} ${bounds.y} ${bounds.w} ${bounds.h}`;
   return (
     <svg
       className="absolute pointer-events-none"
       viewBox={viewBox}
       style={{
-        left: -w / 2,
-        top: -h / 2,
-        width: w,
-        height: h,
+        left: bounds.x,
+        top: bounds.y,
+        width: bounds.w,
+        height: bounds.h,
       }}
     >
       {children}
