@@ -57,7 +57,7 @@ const defaultStoreState: StoreState = {
     xBarPosition: 0,
     yPosition: 0.5,
     yZoom: 0.35,
-    wBars: 4,
+    wBars: 2,
     withXPadding: false,
   },
   patternEnabled: false,
@@ -108,7 +108,7 @@ if (appConfig.isDevelopment && 0) {
   };
   setKeySpec(0, "major"); //C
 }
-if (appConfig.isDevelopment) {
+if (appConfig.isLocalDebug && 0) {
   defaultStoreState.sideControlsVisible = true;
 }
 

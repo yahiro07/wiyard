@@ -2,6 +2,7 @@ import { SongKeySpec } from "wafer-host/unit-types";
 
 export const appConfig = {
   isDevelopment: import.meta.env.DEV,
+  isLocalDebug: location.host.includes("localhost"),
   isOnUnitsDevPage: location.href.includes("units-dev"),
 };
 
