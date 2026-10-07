@@ -93,15 +93,18 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
       // }
     >
       {catalogItem ? (
-        <UnitFrameScaledExWithLog
-          unitId={unitId}
-          unitUrl={catalogItem.loaderPageUrl}
-          onIframeMounted={onIframeMounted}
-          onUnitInstanceLoaded={reporter.reportLoaded}
-          onLoadFailed={reporter.reportFailure}
-          viewActive={viewActive}
-          fitMode="cover"
-        />
+        <div className="w-full h-full bg-#ccc">
+          <UnitFrameScaledExWithLog
+            unitId={unitId}
+            unitUrl={catalogItem.loaderPageUrl}
+            onIframeMounted={onIframeMounted}
+            onUnitInstanceLoaded={reporter.reportLoaded}
+            onLoadFailed={reporter.reportFailure}
+            viewActive={viewActive}
+            fitMode="cover"
+            ceilEdge
+          />
+        </div>
       ) : (
         <div>error: catalog item not found for {catalogKey}</div>
       )}

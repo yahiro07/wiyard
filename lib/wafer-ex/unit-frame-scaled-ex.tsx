@@ -14,6 +14,7 @@ type Props = {
   onLoadFailed?(): void;
   viewActive?: boolean;
   fitMode?: "contain" | "cover";
+  ceilEdge?: boolean;
 };
 
 export const UnitFrameScaledEx = ({
@@ -26,6 +27,7 @@ export const UnitFrameScaledEx = ({
   onUnitInstanceLoaded,
   onLoadFailed,
   viewActive,
+  ceilEdge,
   fitMode = "contain",
 }: Props) => {
   const outerDivRef = useRef<HTMLDivElement>(null);
@@ -73,7 +75,12 @@ export const UnitFrameScaledEx = ({
       if (preferJustSize) {
         return { width: `${width}px`, height: `${height}px` };
       } else {
-        return { width: `${100 / scale}%`, height: `${100 / scale}%` };
+        // return { width: `${100 / scale}%`, height: `${100 / scale}%` };//(1)
+        // return { width: `${width / scale}px`, height: `${height / scale}px` }; //(2)
+        return {
+          width: `calc(${100 / scale}% + ${ceilEdge ? 1 : 0}px)`,
+          height: `calc(${100 / scale}% + ${ceilEdge ? 1 : 0}px)`,
+        };
       }
     }
   }, [unitViewSize, scale]);
@@ -94,8 +101,6 @@ export const UnitFrameScaledEx = ({
       <div
         style={{
           flexShrink: 0,
-          // width: `${100 / scale}%`,
-          // height: `${100 / scale}%`,
           width: styleScalerDivSize?.width,
           height: styleScalerDivSize?.height,
           transform: `scale(${scale})`,
