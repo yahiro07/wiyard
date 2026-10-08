@@ -116,6 +116,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       // `file://${waferCustomUnitsLocalDir}/js/audio-input-effects/`,
       `file://${waferUnitsLocalDistDir}/step-automator/`,
       // `file://${waferUnitsLocalDistDir}/tone-wheel/`,
+      `file://${waferUnitsLocalDistDir}/nv1/`,
 
       `file://${waferUnitsLocalDistDir}/recorder/`,
     ];

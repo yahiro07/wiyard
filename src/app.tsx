@@ -12,6 +12,7 @@ import { FallbackRender } from "@/periphery/fallback-render";
 import { mapKnobGainDb } from "@lib/utils/volume-curve";
 import { usePlaybackController } from "@/periphery/playback-controller";
 import { autoPersistenceTask } from "@/periphery/auto-persistence-task";
+import { useSetupNotesVisualizerSupport } from "@/periphery/notes-visualizer-support";
 
 function useUpdateDebugValues() {
   const { graphSpec } = store.useSnapshot();
@@ -28,6 +29,7 @@ const EffectsHookBox = () => {
   useSetupUnitPortMasking();
   usePlaybackController();
   useUpdateDebugValues();
+  useSetupNotesVisualizerSupport();
   return null;
 };
 
