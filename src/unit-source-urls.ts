@@ -117,6 +117,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/step-automator/`,
       // `file://${waferUnitsLocalDistDir}/tone-wheel/`,
       `file://${waferUnitsLocalDistDir}/nv1/`,
+      `file://${waferUnitsLocalDistDir}/horizon/`,
 
       `file://${waferUnitsLocalDistDir}/recorder/`,
     ];
