@@ -7,8 +7,8 @@ export const appConfig = {
   supportAutomationPorts: true,
   showAutomationTargetParameterSelectionMenuOnConnection: false,
   dockPlacement: "bottomBar" as DockPlacement,
-  minScaling: 0.25,
-  maxScaling: 2,
+  minScaling: 0.1,
+  maxScaling: 3,
   showWireConnectionPreviewFloatingWireEnd: true,
   maxNoteChannels: 4,
   maxAutomationChannels: 4,
@@ -20,6 +20,6 @@ export const featureFlags = {
 
 if (appEnvs.isDevelopment) {
   assignTyped(appConfig, {
-    maxNoteChannels: 12,
+    maxNoteChannels: 6,
   });
 }
