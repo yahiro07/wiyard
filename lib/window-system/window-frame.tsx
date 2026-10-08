@@ -294,7 +294,7 @@ export const WindowFrame = ({
       toggleMinimized={() => actions.toggleWindowMinimized(id)}
       topBarInnerControls={topBarInnerControls}
       topBarInnerControls2={topBarInnerControls2}
-      zOrder={windowSpec?.zOrder || 0}
+      zOrder={windowSpec?.zOrder}
     />
   );
 };

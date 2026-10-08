@@ -72,6 +72,7 @@ export const defaultData2 = {
             width: 480,
             height: 154,
           },
+          zOrder: 0,
           status: "visible",
           pinned: true,
         },
