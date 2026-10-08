@@ -1,6 +1,6 @@
 import { AiOutlineControl } from "react-icons/ai";
 import { BsArrowRight, BsInfoCircle, BsViewList } from "react-icons/bs";
-import { CgPiano } from "react-icons/cg";
+import { CgPiano, CgSpinnerTwoAlt } from "react-icons/cg";
 import {
   FaArrowRightFromBracket,
   FaArrowRightToBracket,
@@ -62,4 +62,5 @@ export const Icons = {
   ArrowDown: IoIosArrowDown,
   Info: BsInfoCircle,
   Document: GrDocumentText,
+  Spinner: CgSpinnerTwoAlt,
 };
