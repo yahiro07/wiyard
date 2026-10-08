@@ -59,7 +59,7 @@ const EvacuatedBar = ({
       style={{
         left: windowCoordVm.position.x,
         top: 0,
-        zIndex: isCurrent ? 1 : undefined,
+        zIndex: isCurrent ? 1000 : undefined,
       }}
     >
       <div
@@ -176,6 +176,7 @@ const WindowFrameView = ({
   toggleMinimized,
   topBarInnerControls,
   topBarInnerControls2,
+  zOrder,
 }: {
   title: string;
   windowCoordVm: WindowCoordViewModel;
@@ -187,6 +188,7 @@ const WindowFrameView = ({
   toggleMinimized: () => void;
   topBarInnerControls?: ReactNode;
   topBarInnerControls2?: ReactNode;
+  zOrder: number;
 }) => {
   const { contentSize, windowBounds } = windowCoordVm;
   const displayed = !evacuated && windowStatus === "visible";
@@ -207,7 +209,8 @@ const WindowFrameView = ({
           top: windowBounds.y,
           //windows are always exist in dom, so as to keep units working
           display: displayed ? "block" : "none",
-          zIndex: isCurrent ? 1 : undefined,
+          // zIndex: isCurrent ? 1 : undefined,
+          zIndex: zOrder,
         }}
       >
         <div className="relative">
@@ -291,6 +294,7 @@ export const WindowFrame = ({
       toggleMinimized={() => actions.toggleWindowMinimized(id)}
       topBarInnerControls={topBarInnerControls}
       topBarInnerControls2={topBarInnerControls2}
+      zOrder={windowSpec?.zOrder || 0}
     />
   );
 };

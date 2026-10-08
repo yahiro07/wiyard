@@ -16,6 +16,7 @@ export type WindowCoordViewModel = {
 const fallbackWindowSpec: WindowSpec = {
   position: { x: 0, y: 0 },
   contentSize: { width: 300, height: 200 },
+  zOrder: 0,
   status: "none",
 };
 

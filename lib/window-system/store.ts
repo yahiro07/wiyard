@@ -1,5 +1,6 @@
 import { WindowSpec, WindowStatus, WindowSystemStoreSlice } from "./types";
 import { mapObjectValues } from "@lib/utils/array-object-helper";
+import { windowSpecHelper } from "./window-spec-helper";
 
 export const storeSlice: WindowSystemStoreSlice = {} as any;
 
@@ -61,6 +62,18 @@ export const actions = {
   },
   setCurrentWindowId(windowId: string | null) {
     storeSlice.assign({ currentWindowId: windowId });
+    if (windowId) {
+      const newZOrder = windowSpecHelper.getNextWindowZOrderTopmost(
+        storeSlice.get().windowSpecs,
+      );
+      actionsInternal.patchWindowSpec(windowId, { zOrder: newZOrder });
+      if (newZOrder >= 1000) {
+        const newWindowSpecs = windowSpecHelper.refreshZOrders(
+          storeSlice.get().windowSpecs,
+        );
+        storeSlice.assign({ windowSpecs: newWindowSpecs });
+      }
+    }
   },
   toggleWindowsEvacuated() {
     const curr = storeSlice.get().windowsEvacuated;
