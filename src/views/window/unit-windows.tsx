@@ -18,6 +18,20 @@ import { ReactUnitFrameWithLog, UnitFrameScaledExWithLog } from "@lib/wafer-ex";
 import { useUnitStuff } from "@/views/unit-card/unit-cards-common";
 import { UnitPresetsMenuButton } from "@/views/window/presets-menu";
 
+const UnitWindowLoadingOverlay = ({ loading }: { loading: boolean }) => {
+  return (
+    <div
+      className="absolute-full bg-gray-100 flex-c pointer-events-none"
+      style={{
+        opacity: loading ? 1 : 0,
+        transition: "opacity 0.3s ease-in-out",
+      }}
+    >
+      <Icons.Spinner className="animate-spin" size={44} color="gray" />
+    </div>
+  );
+};
+
 const useUnitIframeMountedCallback = (unitItem: BoardUnitItem) => {
   return useCallback(
     (iframe: HTMLIFrameElement) => {
@@ -108,6 +122,9 @@ const BoardUnitWindow = ({ unitItem }: { unitItem: BoardUnitItem }) => {
       ) : (
         <div>error: catalog item not found for {catalogKey}</div>
       )}
+      <UnitWindowLoadingOverlay
+        loading={!unitStuff || unitStuff.status === "loading"}
+      />
     </WindowFrame>
   );
 };
