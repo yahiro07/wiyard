@@ -99,7 +99,6 @@ if (appConfig.isDevelopment && 0) {
   // defaultStoreState.isPatternView = true;
   // defaultStoreState.patternEnabled = true;
   defaultStoreState.loopBars = 1;
-  defaultStoreState.loopGhostEnabled = true;
 
   defaultStoreState.diatonicLanesEnabled = true;
   const setKeySpec = (root: number, mode: "major" | "minor") => {

@@ -22,3 +22,7 @@ export const fallbackKeySpec: SongKeySpec = {
   mode: "major",
   relativeKeyTranspose: 0,
 };
+
+export const featureFlags = {
+  loopGhost: false,
+};

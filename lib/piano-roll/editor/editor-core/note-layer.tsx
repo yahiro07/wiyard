@@ -3,7 +3,7 @@ import { cz } from "@lib/utils/cz";
 import { mapUnaryTo, seqNumbers } from "@lib/utils/number-helper";
 import { useMemo } from "react";
 import { EditorKind, Note, NoteKind } from "../../definitions/types";
-import { uiConfig } from "../../definitions/ui-config";
+import { featureFlags, uiConfig } from "../../definitions/ui-config";
 import { useAppContext, useStoreAccess } from "../../model/app-context";
 import {
   diatonicLanesPitchHelper,
@@ -233,7 +233,7 @@ export const NoteLayerRoot = ({
     inputNotes,
     mappedNotes,
     patternNotes,
-    loopGhostEnabled,
+    loopGhostEnabled: loopGhostEnabledInput,
     patternEnabled,
     octaveShift,
     noteDuty,
@@ -256,6 +256,8 @@ export const NoteLayerRoot = ({
     }
     return tmpNotes.sort((a, b) => a.pitch - b.pitch);
   }, [inputNotes, mappedNotes, patternNotes, editorKind]);
+
+  const loopGhostEnabled = featureFlags.loopGhost && loopGhostEnabledInput;
 
   const contextValue = useMemo(
     () => ({

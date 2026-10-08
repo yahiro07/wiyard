@@ -19,7 +19,7 @@ import { LoopBarLength, PatternMode, Sight } from "../definitions/types";
 import { useAppContext, useStoreAccess } from "../model/app-context";
 import { useControlActions } from "../model/control-actions";
 import { getNotesTailPositionInBars } from "../editor/common/editor-common-logic";
-import { appConfig, uiConfig } from "../definitions/ui-config";
+import { appConfig, featureFlags, uiConfig } from "../definitions/ui-config";
 import { XYZoomPad } from "../components/xy-zoom-pad";
 import { linearInterpolate } from "@lib/utils/number-helper";
 
@@ -388,7 +388,7 @@ export const TopControlBar = () => {
             </LabeledBox>
             <LabeledBox>
               <div className="flex-ha gap-3">
-                <LoopGhostToggleButton />
+                {featureFlags.loopGhost && <LoopGhostToggleButton />}
                 <DuplicateNotes2XButton />
                 <TrashButtonContainer />
               </div>

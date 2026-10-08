@@ -4,6 +4,7 @@ import { getInputNoteStride, hitTestNote } from "../common/editor-common-logic";
 import { IPointerEvent } from "../common/editor-types";
 import { createNoteEditActions } from "./edit-input-layer-actions";
 import { useNoteLayerContext } from "./note-layer-context";
+import { featureFlags } from "../../definitions/ui-config";
 
 export const EditInputLayer = () => {
   const { sectionRange, editorKind, notes, loopSteps } = useNoteLayerContext();
@@ -27,7 +28,7 @@ export const EditInputLayer = () => {
       e.clientY,
     );
     if (xiFloat > loopSteps) {
-      if (store.state.loopGhostEnabled) {
+      if (featureFlags.loopGhost && store.state.loopGhostEnabled) {
         noteEditActions.autoExtendEnsureLoopBarsForTail(xiFloat);
         return;
       }
