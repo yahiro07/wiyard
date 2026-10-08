@@ -7,6 +7,7 @@ import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
 import { notePortGetters } from "@/store/note-port-getters";
 import { store } from "@/store/store";
 import { isDefined } from "@lib/utils/general-helper";
+import { mapVolumeCurveCenterUnity } from "@lib/utils/volume-curve";
 import { useMemo } from "react";
 
 type ConnectionSpec = {
@@ -68,7 +69,10 @@ export const connectionsPresenter = {
       wireAutomationParameterIds,
       portStuffs,
       currentNoteChannelId,
+      settings,
     } = store.useSnapshot();
+
+    const wireVolumeKnobsEnabled = settings.wireVolumeKnobs;
 
     return useMemo(() => {
       return wireConnectionKeys
@@ -82,8 +86,10 @@ export const connectionsPresenter = {
             return null;
           }
           if (subType === "audio") {
-            const level = wireGains[connectionKey] ?? 0.5;
-            const gain = level * 2;
+            const level = wireVolumeKnobsEnabled
+              ? (wireGains[connectionKey] ?? 0.5)
+              : 0.5;
+            const gain = mapVolumeCurveCenterUnity(level);
             let source = sourcePortKey;
             const { sourceUnitId, sourcePortId, destinationPortKey } =
               decodeWireConnectionKey(connectionKey);
@@ -122,6 +128,7 @@ export const connectionsPresenter = {
       wireAutomationParameterIds,
       portStuffs,
       currentNoteChannelId,
+      wireVolumeKnobsEnabled,
     ]);
   },
 };
