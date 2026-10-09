@@ -9,7 +9,7 @@ export const KeyboardWindow = () => {
   const viewActive = commonGetters.useWindowVisible(windowIds.keyboard);
   return (
     <WindowFrame id={windowIds.keyboard} title="keyboard">
-      <ScalerBoxAutoSized>
+      <ScalerBoxAutoSized fitMode="cover">
         <ReactUnitFrame
           unitId={builtinUnitIds.keyboard}
           unitTemplateFn={interUnitFactories.keyboard}

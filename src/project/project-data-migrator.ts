@@ -7,5 +7,10 @@ export function migrateProjectData(projectData: ProjectData): ProjectData {
       `cannot migrate data, data version is too old: ${projectData.appVersionCode}`,
     );
   }
+  for (const spec of Object.values(projectData.storeStates.windowSpecs)) {
+    if (spec.zOrder === undefined) {
+      spec.zOrder = 0;
+    }
+  }
   return projectData;
 }

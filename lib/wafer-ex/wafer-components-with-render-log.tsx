@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Connection, ReactUnitFrame, UnitFrameScaled } from "wafer-host/react";
 import { renderLog } from "../utils/render-log";
+import { UnitFrameScaledEx } from "./unit-frame-scaled-ex";
 
 function makeComponentWithLog<T extends object>(
   fc: FC<T>,
@@ -27,5 +28,12 @@ export const UnitFrameScaledWithLog = makeComponentWithLog(
   UnitFrameScaled,
   (props) => {
     renderLog("UnitFrameScaled", props.unitId);
+  },
+);
+
+export const UnitFrameScaledExWithLog = makeComponentWithLog(
+  UnitFrameScaledEx,
+  (props) => {
+    renderLog("UnitFrameScaledEx", props.unitId);
   },
 );

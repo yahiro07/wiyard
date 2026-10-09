@@ -4,7 +4,7 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r29`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r30`;
     const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r24`;
 
     return [
@@ -29,12 +29,12 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferUnitsBase}/altair-xm/`,
       `${waferUnitsBase}/radiant-rs/`,
 
-      `${waferUnitsBase}/channel-strip/`,
       `${waferUnitsBase}/sunset-delay/`,
       `${waferUnitsBase}/sunset-chorus-mini/`,
       `${waferUnitsBase}/noise-mix/`,
       `${waferUnitsBase}/crusher/`,
       `${waferUnitsBase}/lofi2/`,
+      `${waferUnitsBase}/csfx1/`,
       `${waferUnitsBase}/toner-3band-eq/`,
       `${waferUnitsBase}/toner-tilt-eq/`,
       `${waferUnitsBase}/toner-limiter/`,
@@ -53,7 +53,8 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferCustomUnitsBase}/sidechain-compressor/`,
       `${waferCustomUnitsBase}/web-audio-mixer/`,
       `${waferCustomUnitsBase}/vue-audio-mixer/`,
-
+      `${waferUnitsBase}/nv1/`,
+      `${waferUnitsBase}/horizon/`,
       `${waferUnitsBase}/recorder/`,
     ];
   } else {
@@ -96,7 +97,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
 
       `file://${waferCustomUnitsLocalDir}/ts/dist/sidechain-compressor/`,
 
-      `file://${waferUnitsLocalDistDir}/channel-strip/`,
+      `file://${waferUnitsLocalDistDir}/csfx1/`,
       `file://${waferUnitsLocalDistDir}/fc1/`,
       `file://${waferUnitsLocalDistDir}/mz1/`,
       `file://${waferUnitsLocalDistDir}/mz2/`,
@@ -110,12 +111,14 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/toner-limiter/`,
       `file://${waferUnitsLocalDistDir}/toner-saturation/`,
 
-      `file://${waferCustomUnitsLocalDir}/js/circular-audio-wave/`,
-      `file://${waferCustomUnitsLocalDir}/js/vissonance/`,
-      `file://${waferCustomUnitsLocalDir}/ts/dist/threejs-audio-reactive-visual/`,
-      `file://${waferCustomUnitsLocalDir}/js/audio-input-effects/`,
+      // `file://${waferCustomUnitsLocalDir}/js/circular-audio-wave/`,
+      // `file://${waferCustomUnitsLocalDir}/js/vissonance/`,
+      // `file://${waferCustomUnitsLocalDir}/ts/dist/threejs-audio-reactive-visual/`,
+      // `file://${waferCustomUnitsLocalDir}/js/audio-input-effects/`,
       `file://${waferUnitsLocalDistDir}/step-automator/`,
-      `file://${waferUnitsLocalDistDir}/tone-wheel/`,
+      // `file://${waferUnitsLocalDistDir}/tone-wheel/`,
+      `file://${waferUnitsLocalDistDir}/nv1/`,
+      `file://${waferUnitsLocalDistDir}/horizon/`,
 
       `file://${waferUnitsLocalDistDir}/recorder/`,
     ];

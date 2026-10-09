@@ -12,7 +12,7 @@ export type UiTheme = {
 export const presetUiThemes: UiTheme[] = [
   {
     name: "theme1",
-    boardBgColor: "#000",
+    boardBgColor: "#dddddd",
     boardBgImageUrl: "/images/bg1.avif",
     boardBgMix: 1,
     graphBgColor: "#008",
@@ -22,7 +22,7 @@ export const presetUiThemes: UiTheme[] = [
   },
   {
     name: "theme2",
-    boardBgColor: "#000",
+    boardBgColor: "#dddddd",
     boardBgImageUrl: "/images/bg2.avif",
     boardBgMix: 1,
     graphBgColor: "#144",
@@ -42,7 +42,7 @@ export const presetUiThemes: UiTheme[] = [
   },
   {
     name: "theme4",
-    boardBgColor: "#000",
+    boardBgColor: "#dddddd",
     boardBgImageUrl: "/images/bg4.avif",
     boardBgMix: 1,
     graphBgColor: "#2a4492",

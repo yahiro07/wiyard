@@ -66,7 +66,7 @@ export function createCustomSequencerTickDriver(
             for (const [_, unit] of activeUnitsMap) {
               if (!newUnitIds.has(unit.unitId)) {
                 processUnitsStartStop([unit], "stop");
-                hostSystem.notesDispatcher.flushAllNotesOff({
+                hostSystem.notesDispatcher.flushPendingNotesOff({
                   noteSourceUnitId: unit.unitId,
                 });
                 activeUnitsMap.delete(unit.unitId);
@@ -89,7 +89,8 @@ export function createCustomSequencerTickDriver(
     stop() {
       if (running) {
         core.stop();
-        hostSystem.notesDispatcher.flushAllNotesOff();
+        // hostSystem.notesDispatcher.flushPendingNotesOff();
+        hostSystem.notesDispatcher.forceStopActiveNotes();
         const activeUnits = Array.from(activeUnitsMap.values());
         processUnitsStartStop(activeUnits, "stop");
         activeUnitsMap.clear();

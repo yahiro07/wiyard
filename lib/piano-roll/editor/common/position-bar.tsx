@@ -4,6 +4,7 @@ import { useAppContext, useStoreAccess } from "../../model/app-context";
 import { HorizontalScrollPlane } from "./editor-common-layout";
 import { getLoopBarLengthForStep } from "./editor-common-logic";
 import { DisplaySpec } from "./editor-types";
+import { featureFlags } from "../../definitions/ui-config";
 
 type PositionBarProps = {
   displaySpec: DisplaySpec;
@@ -103,7 +104,7 @@ export const PositionBar = ({
               loopX={loopX}
               endX={endX}
               cellW={cellW}
-              loopGhostEnabled={loopGhostEnabled}
+              loopGhostEnabled={featureFlags.loopGhost && loopGhostEnabled}
             />
           )}
           {seqNumbers(barCount).map((i) => (

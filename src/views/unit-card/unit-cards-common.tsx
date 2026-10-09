@@ -19,6 +19,20 @@ export function useUnitStuff(unitId: string): UnitStuff | undefined {
   return unitStuffs[unitId];
 }
 
+export const UnitCardLoadingOverlay = ({ loading }: { loading: boolean }) => {
+  return (
+    <div
+      className="absolute-full bg-gray-100 flex-c pointer-events-none"
+      style={{
+        opacity: loading ? 0.7 : 0,
+        transition: "opacity 0.3s ease-in-out",
+      }}
+    >
+      <Icons.Spinner className="animate-spin" size={34} color="gray" />
+    </div>
+  );
+};
+
 export const UnitCardOperationOverlay = ({
   unitItem,
 }: {

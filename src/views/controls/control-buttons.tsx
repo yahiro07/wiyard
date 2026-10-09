@@ -139,8 +139,10 @@ const GithubLinkButton = () => {
 const SettingsButton = () => {
   return (
     <ControlButton
-      // onClick={() => store.setSettingsPanelVisible(true)}
-      onClick={() => store.toggleSettingsPanelVisible()}
+      onClick={() => {
+        store.toggleSettingsPanelVisible();
+        store.setInfoPanelVisible(false);
+      }}
       children={<Icons.Settings size={28} />}
     />
   );
@@ -149,7 +151,10 @@ const SettingsButton = () => {
 const InfoButton = () => {
   return (
     <ControlButton
-      onClick={() => store.toggleInfoPanelVisible()}
+      onClick={() => {
+        store.toggleInfoPanelVisible();
+        store.setSettingsPanelVisible(false);
+      }}
       children={<Icons.Info size={24} />}
     />
   );

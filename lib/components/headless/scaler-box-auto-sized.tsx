@@ -3,10 +3,12 @@ import { ReactNode, useMemo, useRef } from "react";
 
 export function ScalerBoxAutoSized({
   children,
-  overflow = "hidden",
+  overflow,
+  fitMode = "contain",
 }: {
   children: ReactNode;
   overflow?: "visible" | "hidden";
+  fitMode?: "contain" | "cover";
 }) {
   const baseDivRef = useRef<HTMLDivElement>(null);
   const innerDivRef = useRef<HTMLDivElement>(null);
@@ -17,7 +19,8 @@ export function ScalerBoxAutoSized({
   const scale = useMemo(() => {
     if (!outerSize || !innerSize) return 1;
     if (innerSize.width === 0 || innerSize.height === 0) return 1;
-    return Math.min(
+    const minMaxFn = fitMode === "contain" ? Math.min : Math.max;
+    return minMaxFn(
       outerSize.width / innerSize.width,
       outerSize.height / innerSize.height,
     );

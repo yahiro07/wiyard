@@ -66,7 +66,7 @@ export const ControlSurfaceWindow = () => {
 
   return (
     <WindowFrame id={windowIds.controlSurface} title="control surface">
-      <ScalerBoxAutoSized>
+      <ScalerBoxAutoSized fitMode="cover">
         <ReactUnitFrame
           unitId={builtinUnitIds.controlSurface}
           unitTemplateFn={interUnitFactories.controlSurface}

@@ -16,6 +16,7 @@ import {
   useUnitStuff,
   UnitCardOperationOverlay,
   EdgeUnitCardView,
+  UnitCardLoadingOverlay,
 } from "@/views/unit-card/unit-cards-common";
 import { ControlSurfaceUnitCardRoot } from "@/views/unit-card/control-surface-unit-card";
 import { renderLog } from "@lib/utils/render-log";
@@ -62,6 +63,7 @@ export const UnitControlEffectBar = ({
         <Knob
           value={pan}
           onChange={(v) => actions.setUnitControlEffectValue(unitId, "pan", v)}
+          min={-1}
           // onTap={() => actions.setUnitControlEffectValue(unitId, "pan", 0.5)}
           size={23}
         />
@@ -118,6 +120,9 @@ const BoardUnitCard = ({ unitItem }: { unitItem: BoardUnitItem }) => {
                   error: catalog item not found for {unitItem.catalogKey}
                 </div>
               )}
+              <UnitCardLoadingOverlay
+                loading={!unitStuff || unitStuff.status === "loading"}
+              />
               <BoardUnitMenuOverlayContainer unitItem={unitItem} />
             </div>
             {unitControlEffect && (

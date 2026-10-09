@@ -9,6 +9,8 @@ import { builtinUnitIds } from "@/domain/unit-entries";
 import { ConnectionWithLog } from "@lib/wafer-ex";
 import { HeadlessGain, HeadlessPanner } from "@lib/port-units";
 import { controlEffectUnitGetters } from "@/store/control-effect-unit-getters";
+import { instrumentUnitOutputLevelScales } from "@/domain/showcase-entries";
+import { mapVolumeCurveCenterUnity } from "@lib/utils/volume-curve";
 
 const InternalSequencerConnections = () => {
   const internalSequencerConnectionSpecs =
@@ -44,12 +46,16 @@ const ControlEffectUnits = () => {
         const controlEffect = unitControlEffects[item.unitId];
         const controlEffectUnitId =
           controlEffectUnitGetters.getControlEffectUnitId(item.unitId);
+        const volume =
+          mapVolumeCurveCenterUnity(controlEffect?.volume ?? 0.5) *
+          (instrumentUnitOutputLevelScales[item.catalogKey] ?? 1);
+        const pan = controlEffect?.pan ?? 0;
         return (
           <HeadlessPanner
             key={controlEffectUnitId}
             unitId={controlEffectUnitId}
-            volume={(controlEffect?.volume ?? 0.5) * 2}
-            pan={controlEffect?.pan ?? 0}
+            volume={volume}
+            pan={pan}
           />
         );
       })}

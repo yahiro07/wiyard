@@ -5,7 +5,7 @@ import {
 } from "@lib/utils/array-object-helper";
 import { Point, Size } from "@lib/utils/common-types";
 import { sizeOp } from "@lib/utils/geometry-helper";
-import { WindowSpec, WindowStatus } from "@lib/window-system";
+import { WindowSpec, windowSpecHelper, WindowStatus } from "@lib/window-system";
 import { appConfig } from "@/common/app-config";
 import { builtinAppItems } from "@/domain/builtin-app-entries";
 import {
@@ -76,9 +76,13 @@ const helpers = {
     const { contentSize, freeRatio, pinned } =
       helpers.getInitialWindowSpecAttrs(windowId);
     // position.y = bottomLimit(position.y, contentSize.height / 2 + 34);
+    const zOrder = windowSpecHelper.getNextWindowZOrderTopmost(
+      store.state.windowSpecs,
+    );
     const newWindowSpec: WindowSpec = {
       position,
       contentSize,
+      zOrder,
       status,
       ...stripUndefined({ freeRatio, pinned }),
     };
@@ -264,7 +268,7 @@ export const actions = {
     const isControlEffectEnabled =
       controlEffectUnitGetters.isUnitControlEffectDefaultEnabled(catalogKey);
     if (isControlEffectEnabled) {
-      store.patchUnitControlEffects({ [unitId]: { volume: 0.5, pan: 0.5 } });
+      store.patchUnitControlEffects({ [unitId]: { volume: 0.5, pan: 0 } });
     }
   },
   addNoteChannel() {

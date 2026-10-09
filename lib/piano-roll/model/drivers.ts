@@ -3,6 +3,7 @@ import { SequencerEngine } from "../engine/sequencer";
 import { AppStore } from "./store";
 import { createLiveNoteInput } from "../engine/live-note-input";
 import { createPersistence } from "./persistence";
+import { inBetween } from "@lib/utils/number-helper";
 
 export function setupUnit(
   unitInterface: UnitInterface,
@@ -66,10 +67,19 @@ export function setupUnit(
         const playPosTotalSteps = store.state.loopBars * 16;
         const playPos = stepPos % playPosTotalSteps;
         store.setPlayPos(playPos);
-        // const expectedPage = Math.floor(playPos / 32);
-        // if (store.state.pageIndex !== expectedPage) {
-        //   store.setPageIndex(expectedPage);
-        // }
+        {
+          const playBarPosition = playPos / 16;
+          const sight = store.state.sight;
+          const isInView = inBetween(
+            playBarPosition,
+            sight.xBarPosition,
+            sight.xBarPosition + sight.wBars,
+          );
+          if (!isInView) {
+            const pos = Math.floor(playBarPosition / sight.wBars) * sight.wBars;
+            store.patchSight({ xBarPosition: pos });
+          }
+        }
       },
       processStep(stepIndex, time, unitDuration) {
         engine.processStep(stepIndex, time, unitDuration);
