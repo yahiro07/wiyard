@@ -4,7 +4,7 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r29`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r30`;
     const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r24`;
 
     return [
@@ -53,7 +53,8 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferCustomUnitsBase}/sidechain-compressor/`,
       `${waferCustomUnitsBase}/web-audio-mixer/`,
       `${waferCustomUnitsBase}/vue-audio-mixer/`,
-
+      `${waferUnitsBase}/nv1/`,
+      `${waferUnitsBase}/horizon/`,
       `${waferUnitsBase}/recorder/`,
     ];
   } else {
