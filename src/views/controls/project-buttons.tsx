@@ -80,7 +80,7 @@ export const ProjectButtons = () => {
       <ProjectButton
         text="demo"
         onClick={withClose(() =>
-          projectsModel.loadProjectDataText(defaultData2S.demo1),
+          projectsModel.loadProjectDataText(defaultData2S.demo2),
         )}
       />
       <ProjectButton
