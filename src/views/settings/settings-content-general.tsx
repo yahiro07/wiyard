@@ -101,7 +101,7 @@ const AppearanceRows = () => {
   return (
     <>
       <CheckBoxLine
-        label="Graph Elevation"
+        label="Graph elevation"
         checked={settings.graphElevation}
         onChange={(value) =>
           settingsActions.setSettingValue("graphElevation", value)
@@ -134,6 +134,22 @@ const AppearanceRows = () => {
   );
 };
 
+const CommonFeaturesRows2 = () => {
+  const { settings } = store.useSnapshot();
+
+  return (
+    <>
+      <CheckBoxLine
+        label="Sync to input MIDI clock"
+        checked={settings.syncToExternalMidiClock}
+        onChange={(value) =>
+          settingsActions.setSettingValue("syncToExternalMidiClock", value)
+        }
+      />
+    </>
+  );
+};
+
 export const SettingsContent_General = () => {
   return (
     <div className="flex-v gap-2">
@@ -146,6 +162,7 @@ export const SettingsContent_General = () => {
           <div className="flex-v gap-1 mt-1">
             <CommonFeaturesRows />
             <AppearanceRows />
+            <CommonFeaturesRows2 />
           </div>
         </div>
       </div>
