@@ -9,6 +9,7 @@ export type AppSettings = {
   graphElevation: boolean;
   graphElevationUnderlay: GraphElevationUnderlay;
   pianoRollWindowSideGrip: boolean;
+  syncToExternalMidiClock: boolean;
 };
 
 export const defaultAppSettings: AppSettings = {
@@ -19,6 +20,7 @@ export const defaultAppSettings: AppSettings = {
   graphElevation: true,
   graphElevationUnderlay: "frosted",
   pianoRollWindowSideGrip: true,
+  syncToExternalMidiClock: false,
 };
 
 export type AppWorkspaceSettings = {
