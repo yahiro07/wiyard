@@ -3,6 +3,7 @@ type MidiKeyboardInputOptions = {
   noteOn?: (noteNumber: number, velocity: number /* 0~1 */) => void;
   noteOff?: (noteNumber: number) => void;
   controlChange?: (controlNumber: number, value: number /* 0~127 */) => void;
+  rawBytes?: (status: number, data1: number, data2: number) => void;
 };
 
 type MidiKeyboardInputCore = {
@@ -38,8 +39,9 @@ function createMidiKeyboardInputCore(
         const [controlNumber, value] = [data1, data2];
         options.controlChange?.(controlNumber, value / 127);
       } else {
-        console.log(status, data1, data2);
+        // console.log(status, data1, data2);
       }
+      options.rawBytes?.(status, data1, data2);
     },
   };
 
