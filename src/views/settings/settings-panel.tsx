@@ -1,3 +1,4 @@
+import { appConfig } from "@/common/app-config";
 import { Icons } from "@/common/icons";
 import { store } from "@/store/store";
 import { Button } from "@/views/settings/components/button";
@@ -34,11 +35,14 @@ const SettingsPanel = () => {
         <Icons.Settings size={18} />
         <h3 className="font-500 text-17px">Settings</h3>
       </div>
-      <div className="bg-#ccc p-3 text-#444 min-h-340px">
+      <div className="bg-#ccc p-3 text-#444 min-h-340px relative">
         <div className="flex-v gap-2">
           <SettingsPanelTabButtons />
           {settingsPanelTab === "general" && <SettingsContent_General />}
           {settingsPanelTab === "theme" && <SettingsContent_Theme />}
+        </div>
+        <div className="absolute top-0 right-0 text-sm p-1 text-#666">
+          Wiyard {appConfig.appVersionCode}
         </div>
       </div>
     </div>
