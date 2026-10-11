@@ -4,6 +4,7 @@ import { assignTyped } from "@lib/utils/array-object-helper";
 type DockPlacement = "leftInner" | "rightInner" | "bottomBar";
 
 export const appConfig = {
+  appVersionCode: "v261012",
   supportAutomationPorts: true,
   showAutomationTargetParameterSelectionMenuOnConnection: false,
   dockPlacement: "bottomBar" as DockPlacement,
