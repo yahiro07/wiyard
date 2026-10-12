@@ -4,7 +4,7 @@ function toAbsolutePath(path: string): string {
 
 export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
   if (!debugUseLocalUnits) {
-    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r30`;
+    const waferUnitsBase = `https://github.com/yahiro07/wafer-units/tree/r31`;
     const waferCustomUnitsBase = `https://github.com/yahiro07/wafer-custom-units/tree/r24`;
 
     return [
@@ -41,6 +41,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `${waferUnitsBase}/toner-compressor-lite/`,
       `${waferUnitsBase}/toner-saturation/`,
       `${waferUnitsBase}/toner-reverb/`,
+      `${waferUnitsBase}/toner-volume/`,
       `${waferUnitsBase}/toner-panner/`,
       `${waferUnitsBase}/fc1/`,
       `${waferUnitsBase}/mz1/`,
@@ -104,6 +105,7 @@ export function getUnitSourceUrls(debugUseLocalUnits?: boolean) {
       `file://${waferUnitsLocalDistDir}/noise-mix/`,
       `file://${waferUnitsLocalDistDir}/crusher/`,
       `file://${waferUnitsLocalDistDir}/toner-compressor-lite/`,
+      `file://${waferUnitsLocalDistDir}/toner-volume/`,
       `file://${waferUnitsLocalDistDir}/toner-panner/`,
       `file://${waferUnitsLocalDistDir}/toner-tilt-eq/`,
       `file://${waferUnitsLocalDistDir}/toner-3band-eq/`,
